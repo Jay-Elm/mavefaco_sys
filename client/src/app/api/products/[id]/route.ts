@@ -1,4 +1,7 @@
 import { prisma } from "@/lib/prisma";
+import { getAuthUser } from "@/lib/getAuthUser";
+import { authorize } from "@/lib/authorize";
+import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -6,35 +9,105 @@ export async function GET(
   context: { params: Promise<{ id: string }> },
 ) {
   try {
-    const params = await context.params;
-
+    const { id } = await context.params;
     const product = await prisma.product.findUnique({
-      where: {
-        id: Number(params.id),
-      },
+      where: { id: Number(id) },
       include: {
         category: true,
-        farmer: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
+        farmer: { select: { id: true, name: true, email: true } },
       },
     });
 
-    if (!product) {
+    if (!product)
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
-    }
 
     return NextResponse.json(product);
   } catch (error) {
     console.error(error);
+    return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
+  }
+}
 
-    return NextResponse.json(
-      { error: "Failed to fetch product" },
-      { status: 500 },
-    );
+export async function PATCH(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> },
+) {
+  try {
+    const user = getAuthUser(req);
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!authorize(user, [ROLES.ADMIN, ROLES.MANAGER, ROLES.FARMER]))
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+    const { id } = await context.params;
+    const productId = Number(id);
+    if (isNaN(productId))
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+
+    const product = await prisma.product.findUnique({ where: { id: productId } });
+    if (!product)
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+
+    if (user.role === ROLES.FARMER && product.farmerId !== user.id)
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+    const body = await req.json();
+    const { name, description, price, stock, imageUrl, categoryId } = body;
+
+    const updated = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        ...(name !== undefined && { name }),
+        ...(description !== undefined && { description }),
+        ...(price !== undefined && { price: Number(price) }),
+        ...(stock !== undefined && { stock: Number(stock) }),
+        ...(imageUrl !== undefined && { imageUrl }),
+        ...(categoryId !== undefined && { categoryId: Number(categoryId) }),
+      },
+      include: { category: true, farmer: { select: { id: true, name: true, email: true } } },
+    });
+
+    return NextResponse.json(updated);
+  } catch {
+    return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> },
+) {
+  try {
+    const user = getAuthUser(req);
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!authorize(user, [ROLES.ADMIN, ROLES.MANAGER, ROLES.FARMER]))
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+    const { id } = await context.params;
+    const productId = Number(id);
+    if (isNaN(productId))
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+
+    const product = await prisma.product.findUnique({ where: { id: productId } });
+    if (!product)
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+
+    // Farmers can only delete their own products
+    if (user.role === ROLES.FARMER && product.farmerId !== user.id)
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+    await prisma.product.delete({ where: { id: productId } });
+
+    await prisma.auditLog.create({
+      data: {
+        action: "DELETE_PRODUCT",
+        entityType: "PRODUCT",
+        entityId: productId,
+        userId: user.id,
+      },
+    });
+
+    return NextResponse.json({ message: "Product deleted" });
+  } catch {
+    return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
   }
 }

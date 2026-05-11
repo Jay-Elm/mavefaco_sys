@@ -29,6 +29,13 @@ export async function POST(req: Request) {
       );
     }
 
+    if (user.suspended) {
+      return NextResponse.json(
+        { error: "Your account has been suspended. Contact an administrator." },
+        { status: 403 },
+      );
+    }
+
     const token = jwt.sign(
       {
         id: user.id,

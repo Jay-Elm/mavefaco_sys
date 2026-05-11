@@ -77,13 +77,13 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
 
     const categoryId = searchParams.get("categoryId");
+    const farmerId = searchParams.get("farmerId");
 
     const products = await prisma.product.findMany({
-      where: categoryId
-        ? {
-            categoryId: Number(categoryId),
-          }
-        : {},
+      where: {
+        ...(categoryId && { categoryId: Number(categoryId) }),
+        ...(farmerId && { farmerId: Number(farmerId) }),
+      },
       include: {
         category: true,
         farmer: {
