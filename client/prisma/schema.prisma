@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          Int         @id @default(autoincrement())
+  name        String
+  email       String      @unique
+  password    String
+  role        String      @default("customer")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  products    Product[]
+  orders      Order[]
+  auditLogs   AuditLog[]
+}
+
+model Category {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  createdAt   DateTime    @default(now())
+
+  products    Product[]
+}
+
+model Product {
+  id            Int         @id @default(autoincrement())
+  name          String
+  description   String
+  price         Float
+  stock         Int
+  imageUrl      String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  farmerId      Int
+  farmer        User        @relation(fields: [farmerId], references: [id])
+
+  categoryId    Int
+  category      Category    @relation(fields: [categoryId], references: [id])
+
+  orderItems    OrderItem[]
+}
+
+model Order {
+  id            Int          @id @default(autoincrement())
+  totalAmount   Float
+  status        String       @default("pending")
+  createdAt     DateTime     @default(now())
+
+  customerId    Int
+  customer      User         @relation(fields: [customerId], references: [id])
+
+  items         OrderItem[]
+}
+
+model OrderItem {
+  id            Int        @id @default(autoincrement())
+
+  quantity      Int
+  price         Float
+
+  orderId       Int
+  order         Order      @relation(fields: [orderId], references: [id])
+
+  productId     Int
+  product       Product    @relation(fields: [productId], references: [id])
+}
+
+model AuditLog {
+  id            Int        @id @default(autoincrement())
+
+  action        String
+  entityType    String
+  entityId      Int
+  timestamp     DateTime   @default(now())
+
+  userId        Int
+  user          User       @relation(fields: [userId], references: [id])
+}
