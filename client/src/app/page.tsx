@@ -6,6 +6,7 @@ import { ShoppingBag, Users, Leaf, ArrowRight } from "lucide-react";
 async function getFeaturedProducts() {
   return prisma.product.findMany({
     take: 6,
+    where: { approved: true },
     orderBy: { createdAt: "desc" },
     include: {
       category: true,

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { getAuthUser } from "@/lib/getAuthUser";
+import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
@@ -12,7 +12,7 @@ export async function PATCH(
   context: { params: Promise<{ id: string }> },
 ) {
   try {
-    const user = getAuthUser(req);
+    const user = await getActiveAuthUser(req);
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     if (!authorize(user, [ROLES.FARMER]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -39,19 +39,33 @@ export async function PATCH(
         { status: 400 },
       );
 
-    const updated = await prisma.order.update({
-      where: { id: orderId },
-      data: { status },
-      select: { id: true, status: true },
-    });
+    const updated = await prisma.$transaction(async (tx) => {
+      const result = await tx.order.update({
+        where: { id: orderId },
+        data: { status },
+        select: { id: true, status: true },
+      });
 
-    await prisma.auditLog.create({
-      data: {
-        action: "UPDATE_ORDER_STATUS",
-        entityType: "ORDER",
-        entityId: orderId,
-        userId: user.id,
-      },
+      if (status === "cancelled") {
+        const items = await tx.orderItem.findMany({ where: { orderId } });
+        for (const item of items) {
+          await tx.product.update({
+            where: { id: item.productId },
+            data: { stock: { increment: item.quantity } },
+          });
+        }
+      }
+
+      await tx.auditLog.create({
+        data: {
+          action: status === "cancelled" ? "CANCEL_ORDER" : "UPDATE_ORDER_STATUS",
+          entityType: "ORDER",
+          entityId: orderId,
+          userId: user.id,
+        },
+      });
+
+      return result;
     });
 
     return NextResponse.json(updated);

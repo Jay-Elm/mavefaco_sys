@@ -6,12 +6,13 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { UserPlus, Leaf } from 'lucide-react'
+import { UserPlus, Leaf, ShoppingBag } from 'lucide-react'
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
   email: z.string().email('Enter a valid email'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
+  role: z.enum(['customer', 'farmer']),
 })
 
 type RegisterForm = z.infer<typeof registerSchema>
@@ -24,8 +25,12 @@ export default function RegisterPage() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterForm>({ resolver: zodResolver(registerSchema) })
+  } = useForm<RegisterForm>({ resolver: zodResolver(registerSchema), defaultValues: { role: 'customer' } })
+
+  const selectedRole = watch('role')
 
   async function onSubmit(data: RegisterForm) {
     setServerError('')
@@ -74,6 +79,42 @@ export default function RegisterPage() {
               Account created! Redirecting to login…
             </div>
           )}
+
+          {/* Role selector */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">I am registering as</label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setValue('role', 'customer')}
+                className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-lg border-2 text-sm font-medium transition-colors ${
+                  selectedRole === 'customer'
+                    ? 'border-green-600 bg-green-50 text-green-800'
+                    : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <ShoppingBag size={20} />
+                Customer
+              </button>
+              <button
+                type="button"
+                onClick={() => setValue('role', 'farmer')}
+                className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-lg border-2 text-sm font-medium transition-colors ${
+                  selectedRole === 'farmer'
+                    ? 'border-green-600 bg-green-50 text-green-800'
+                    : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                <Leaf size={20} />
+                Farmer
+              </button>
+            </div>
+            {selectedRole === 'farmer' && (
+              <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-2">
+                Farmer accounts require ID verification before you can list products. You can submit your ID after logging in.
+              </p>
+            )}
+          </div>
 
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">

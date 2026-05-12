@@ -1,29 +1,30 @@
 # Where We Left Off
 
-_Updated: 2026-05-12_
+_Updated: 2026-05-12 (session 2)_
 
 ## Last completed task
 
-**Farmer Dashboard MVP** — fully built and complete.
+**Customer Use Case MVP** — fully built and complete.
 
-All pages under `/farmer/` are done (layout, overview, products list, new product, edit product, orders, profile).
-All supporting API routes are done (`/api/farmer/orders`, `/api/farmer/orders/[id]`, `/api/users/me`, PATCH on `/api/products/[id]`).
-Navbar updated with role-based links (farmers see "My Farm", admins/managers see "Dashboard").
+- `CartContext` (localStorage-backed) + `CartProvider` wired into `Providers.tsx`
+- `AddToCartButton` client component on `/products/[id]` — replaces the disabled "coming soon" button
+- `/cart` page — item list with qty controls, order summary, Place Order button
+- `POST /api/orders` — atomic transaction: validates stock, creates Order + OrderItems, decrements stock, audit logs
+- `GET /api/customer/orders` — returns caller's own orders
+- `/customer/orders` page — order history with expandable rows and status badges
+- Navbar updated: cart icon with live badge count, "My Orders" link for customer role
 
 ---
 
 ## Immediate next candidates
 
-These are the most impactful gaps remaining, in rough priority order:
+1. **End-to-end smoke test** — no manual testing done yet. Run `npm run dev` and walk: register as farmer → add product → register as customer → add to cart → place order → check /customer/orders.
 
-1. **Customer cart + checkout + order placement** — customers can browse products but have no way to buy anything. This is the biggest missing piece for the core user journey.
-   - Need: cart state (localStorage or DB), checkout page, `POST /api/orders` route that creates `Order` + `OrderItem` rows, decrements stock.
+2. **Input validation hardening** — `PATCH /api/products/[id]` and `POST /api/products` accept fields without strict type/length checks. Add Zod schemas on the API layer.
 
-2. **Verify everything works end-to-end** — no manual testing has been done yet. Run `npm run dev` and walk through: register as farmer → add product → register as customer → (future) buy product.
+3. **Money type fix** — `price` and `totalAmount` are `Float` in Prisma. Should migrate to `Decimal` before production to avoid rounding errors.
 
-3. **Input validation hardening** — `PATCH /api/products/[id]` and `POST /api/products` accept fields without strict type/length validation. Consider adding Zod schemas on the API layer.
-
-4. **Money type fix** — `price` and `totalAmount` are `Float` in the schema. Floating-point arithmetic causes rounding errors in financial calculations. Should migrate to `Decimal` before going to production.
+4. **Stock sync in cart** — cart items store `stock` at add-time; if another user buys the same product, cart's displayed max won't update until refresh. The API validates real stock at order time (safe), but the UI could get out of date.
 
 ---
 
@@ -45,6 +46,11 @@ src/app/
     products/page.tsx
     orders/page.tsx
     audit-logs/page.tsx
+
+  cart/page.tsx                   ← cart + checkout
+
+  customer/                       ← customer role
+    orders/page.tsx               ← order history
 
   farmer/                         ← farmer role
     layout.tsx
@@ -71,8 +77,11 @@ src/app/
     admin/audit-logs/route.ts
     farmer/orders/route.ts        ← GET (farmer's orders)
     farmer/orders/[id]/route.ts   ← PATCH (status)
+    orders/route.ts               ← POST (place order — any authenticated)
+    customer/orders/route.ts      ← GET (caller's own orders)
 
 src/contexts/AuthContext.tsx      ← JWT + localStorage auth state
+src/contexts/CartContext.tsx      ← localStorage cart state
 src/lib/
   auth.ts                         ← signToken, verifyToken
   authorize.ts                    ← authorize(user, roles[])

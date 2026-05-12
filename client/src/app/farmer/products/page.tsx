@@ -3,13 +3,14 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, Trash2, Pencil, Plus, AlertTriangle } from 'lucide-react'
+import { Loader2, Package, Trash2, Pencil, Plus, AlertTriangle, CheckCircle, Clock } from 'lucide-react'
 
 interface ProductRow {
   id: number
   name: string
   price: number
   stock: number
+  approved: boolean
   createdAt: string
   category: { name: string }
 }
@@ -82,13 +83,14 @@ export default function FarmerProductsPage() {
               <th className="px-5 py-3 text-left font-medium text-gray-500">Category</th>
               <th className="px-5 py-3 text-right font-medium text-gray-500">Price</th>
               <th className="px-5 py-3 text-center font-medium text-gray-500">Stock</th>
+              <th className="px-5 py-3 text-center font-medium text-gray-500">Status</th>
               <th className="px-5 py-3 text-right font-medium text-gray-500">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
             {products.length === 0 ? (
               <tr>
-                <td colSpan={5} className="text-center py-12 text-gray-400">
+                <td colSpan={6} className="text-center py-12 text-gray-400">
                   <Package size={32} className="mx-auto mb-2" />
                   No products yet
                 </td>
@@ -116,6 +118,17 @@ export default function FarmerProductsPage() {
                         {p.stock}
                       </span>
                     </td>
+                    <td className="px-5 py-3 text-center">
+                      {p.approved ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
+                          <CheckCircle size={11} /> Approved
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-yellow-700 bg-yellow-100 px-2 py-0.5 rounded-full">
+                          <Clock size={11} /> Pending
+                        </span>
+                      )}
+                    </td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
                         {deletingId === p.id && (
@@ -142,7 +155,7 @@ export default function FarmerProductsPage() {
 
                   {deleteError?.id === p.id && (
                     <tr className="bg-red-50">
-                      <td colSpan={5} className="px-5 py-2">
+                      <td colSpan={6} className="px-5 py-2">
                         <span className="flex items-center gap-2 text-xs text-red-700">
                           <AlertTriangle size={13} />
                           {deleteError.msg}

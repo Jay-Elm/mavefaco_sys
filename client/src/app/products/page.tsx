@@ -1,19 +1,35 @@
-import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import ProductCard from '@/components/ProductCard'
-import { Package, SlidersHorizontal } from 'lucide-react'
+import ProductFilters from '@/components/ProductFilters'
+import { Package } from 'lucide-react'
+import { Suspense } from 'react'
 
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ categoryId?: string }>
+  searchParams: Promise<{ categoryId?: string; search?: string; minPrice?: string; maxPrice?: string }>
 }) {
-  const { categoryId } = await searchParams
+  const { categoryId, search, minPrice, maxPrice } = await searchParams
+
   const activeCategoryId = categoryId ? Number(categoryId) : null
+  const minPriceNum = minPrice ? Number(minPrice) : null
+  const maxPriceNum = maxPrice ? Number(maxPrice) : null
 
   const [products, categories] = await Promise.all([
     prisma.product.findMany({
-      where: activeCategoryId ? { categoryId: activeCategoryId } : {},
+      where: {
+        approved: true,
+        ...(activeCategoryId ? { categoryId: activeCategoryId } : {}),
+        ...(search ? { name: { contains: search, mode: 'insensitive' } } : {}),
+        ...(minPriceNum !== null || maxPriceNum !== null
+          ? {
+              price: {
+                ...(minPriceNum !== null ? { gte: minPriceNum } : {}),
+                ...(maxPriceNum !== null ? { lte: maxPriceNum } : {}),
+              },
+            }
+          : {}),
+      },
       include: {
         category: true,
         farmer: { select: { id: true, name: true, email: true } },
@@ -30,44 +46,15 @@ export default async function ProductsPage({
         <p className="text-gray-500 mt-1">Browse fresh products from local farmers</p>
       </div>
 
-      {/* Category filter */}
-      {categories.length > 0 && (
-        <div className="flex items-center gap-2 mb-8 flex-wrap">
-          <SlidersHorizontal size={16} className="text-gray-500 shrink-0" />
-          <Link
-            href="/products"
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              !activeCategoryId
-                ? 'bg-green-700 text-white'
-                : 'bg-white text-gray-600 border border-gray-300 hover:border-green-500 hover:text-green-700'
-            }`}
-          >
-            All
-          </Link>
-          {categories.map((cat) => (
-            <Link
-              key={cat.id}
-              href={`/products?categoryId=${cat.id}`}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                activeCategoryId === cat.id
-                  ? 'bg-green-700 text-white'
-                  : 'bg-white text-gray-600 border border-gray-300 hover:border-green-500 hover:text-green-700'
-              }`}
-            >
-              {cat.name}
-            </Link>
-          ))}
-        </div>
-      )}
+      <Suspense>
+        <ProductFilters categories={categories} />
+      </Suspense>
 
-      {/* Product grid */}
       {products.length === 0 ? (
         <div className="text-center py-20 text-gray-400">
           <Package size={48} className="mx-auto mb-4" />
           <p className="text-lg font-medium text-gray-500">No products found</p>
-          <p className="text-sm mt-1">
-            {activeCategoryId ? 'Try a different category.' : 'Check back soon!'}
-          </p>
+          <p className="text-sm mt-1">Try adjusting your search or filters.</p>
         </div>
       ) : (
         <>

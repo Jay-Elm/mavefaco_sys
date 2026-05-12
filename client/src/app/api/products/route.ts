@@ -1,33 +1,21 @@
 import { prisma } from "@/lib/prisma";
-import { verifyToken } from "@/lib/auth";
+import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const authHeader = req.headers.get("authorization");
+    const actor = await getActiveAuthUser(req);
+    if (!actor) return NextResponse.json({ error: "No token provided" }, { status: 401 });
 
-    if (!authHeader) {
-      return NextResponse.json({ error: "No token provided" }, { status: 401 });
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    const decoded = verifyToken(token);
-
-    if (!decoded) {
-      return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-    }
-
-    const isAuthorized = authorize(decoded, [
-      ROLES.FARMER,
-      ROLES.MANAGER,
-      ROLES.ADMIN,
-    ]);
-
-    if (!isAuthorized) {
+    if (!authorize(actor, [ROLES.FARMER, ROLES.MANAGER, ROLES.ADMIN]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
+    if (actor.role === ROLES.FARMER) {
+      const dbUser = await prisma.user.findUnique({ where: { id: actor.id }, select: { verified: true } });
+      if (!dbUser?.verified)
+        return NextResponse.json({ error: "Your account must be verified before listing products. Please submit your ID for verification." }, { status: 403 });
     }
 
     const body = await req.json();
@@ -42,7 +30,8 @@ export async function POST(req: NextRequest) {
         stock,
         categoryId,
         imageUrl,
-        farmerId: decoded.id,
+        farmerId: actor.id,
+        approved: false,
       },
     });
 
@@ -51,7 +40,7 @@ export async function POST(req: NextRequest) {
         action: "CREATE_PRODUCT",
         entityType: "PRODUCT",
         entityId: product.id,
-        userId: decoded.id,
+        userId: actor.id,
       },
     });
 
@@ -83,6 +72,7 @@ export async function GET(req: NextRequest) {
       where: {
         ...(categoryId && { categoryId: Number(categoryId) }),
         ...(farmerId && { farmerId: Number(farmerId) }),
+        ...(!farmerId && { approved: true }),
       },
       include: {
         category: true,

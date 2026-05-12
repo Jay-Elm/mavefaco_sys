@@ -29,11 +29,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-gray-50">
+      <body className="h-full flex flex-col bg-gray-50">
         <Providers>
           <Navbar />
-          <main className="flex-1">{children}</main>
-          <footer className="bg-green-800 text-green-200 text-center py-4 text-sm">
+          <main className="flex-1 min-h-0 overflow-y-auto">{children}</main>
+          <footer className="shrink-0 bg-green-800 text-green-200 text-center py-4 text-sm">
             © 2026 CoopMarket — Connecting farmers and communities.
           </footer>
         </Providers>

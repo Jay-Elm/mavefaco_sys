@@ -14,13 +14,21 @@ import {
   Loader2,
 } from 'lucide-react'
 
-const NAV = [
+const ADMIN_NAV = [
   { href: '/dashboard', label: 'Overview', icon: LayoutDashboard, exact: true },
   { href: '/dashboard/users', label: 'Users', icon: Users },
   { href: '/dashboard/categories', label: 'Categories', icon: Tag },
   { href: '/dashboard/products', label: 'Products', icon: Package },
   { href: '/dashboard/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/dashboard/audit-logs', label: 'Audit Logs', icon: ScrollText },
+]
+
+const MANAGER_NAV = [
+  { href: '/dashboard', label: 'Overview', icon: LayoutDashboard, exact: true },
+  { href: '/dashboard/users', label: 'Users', icon: Users },
+  { href: '/dashboard/categories', label: 'Categories', icon: Tag },
+  { href: '/dashboard/products', label: 'Products', icon: Package },
+  { href: '/dashboard/orders', label: 'Orders', icon: ShoppingCart },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -39,6 +47,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     }
   }, [loading, isAuthenticated, user, router])
 
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh] text-gray-400">
@@ -52,9 +61,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-8rem)]">
-      {/* Sidebar */}
-      <aside className="w-56 shrink-0 bg-gray-900 text-gray-300 flex flex-col">
+    <div className="flex h-full overflow-hidden">
+      {/* Sidebar — scrolls independently if nav items overflow */}
+      <aside className="w-56 shrink-0 bg-gray-900 text-gray-300 flex flex-col overflow-y-auto">
         <div className="px-4 py-5 border-b border-gray-700">
           <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
             {user.role === 'admin' ? 'Admin' : 'Manager'} Panel
@@ -63,7 +72,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
 
         <nav className="flex-1 py-4 px-2 space-y-0.5">
-          {NAV.map(({ href, label, icon: Icon, exact }) => {
+          {(user.role === 'admin' ? ADMIN_NAV : MANAGER_NAV).map(({ href, label, icon: Icon, exact }) => {
             const active = exact ? pathname === href : pathname.startsWith(href + '/') || pathname === href
             return (
               <Link
@@ -87,8 +96,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </aside>
 
-      {/* Main content */}
-      <div className="flex-1 bg-gray-50 overflow-auto">
+      {/* Main content — scrolls independently */}
+      <div className="flex-1 bg-gray-50 overflow-y-auto">
         {children}
       </div>
     </div>

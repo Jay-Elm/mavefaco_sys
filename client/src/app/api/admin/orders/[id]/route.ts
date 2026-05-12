@@ -1,17 +1,26 @@
 import { prisma } from "@/lib/prisma";
-import { getAuthUser } from "@/lib/getAuthUser";
+import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 
 const VALID_STATUSES = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
 
+// Managers follow a forward-only state machine; admins have full override
+const MANAGER_TRANSITIONS: Record<string, string[]> = {
+  pending:   ["confirmed", "cancelled"],
+  confirmed: ["shipped",   "cancelled"],
+  shipped:   ["delivered", "cancelled"],
+  delivered: [],
+  cancelled: [],
+};
+
 export async function PATCH(
   req: NextRequest,
   context: { params: Promise<{ id: string }> },
 ) {
   try {
-    const user = getAuthUser(req);
+    const user = await getActiveAuthUser(req);
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     if (!authorize(user, [ROLES.ADMIN, ROLES.MANAGER]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -26,6 +35,18 @@ export async function PATCH(
 
     if (!VALID_STATUSES.includes(status))
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+
+    const existing = await prisma.order.findUnique({ where: { id: orderId }, select: { status: true } });
+    if (!existing) return NextResponse.json({ error: "Order not found" }, { status: 404 });
+
+    if (user.role === ROLES.MANAGER) {
+      const allowed = MANAGER_TRANSITIONS[existing.status] ?? [];
+      if (!allowed.includes(status))
+        return NextResponse.json(
+          { error: `Cannot move order from "${existing.status}" to "${status}"` },
+          { status: 400 },
+        );
+    }
 
     const order = await prisma.order.update({
       where: { id: orderId },

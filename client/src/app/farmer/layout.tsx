@@ -24,6 +24,7 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
     if (user?.role !== 'farmer') { router.replace('/'); return }
   }, [loading, isAuthenticated, user, router])
 
+
   if (loading || !isAuthenticated || user?.role !== 'farmer') {
     return (
       <div className="flex items-center justify-center h-screen text-gray-400">
@@ -33,8 +34,9 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <aside className="w-56 bg-gray-900 text-white flex flex-col">
+    <div className="flex h-full overflow-hidden bg-gray-50">
+      {/* Sidebar — always visible, scrolls independently */}
+      <aside className="w-56 bg-gray-900 text-white flex flex-col overflow-y-auto shrink-0">
         <div className="px-5 py-4 flex items-center gap-2 border-b border-gray-700">
           <Leaf size={18} className="text-green-400" />
           <span className="font-semibold text-sm">Farmer Portal</span>
@@ -71,7 +73,8 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
         </div>
       </aside>
 
-      <main className="flex-1 overflow-auto">{children}</main>
+      {/* Main content — scrolls independently */}
+      <main className="flex-1 overflow-y-auto">{children}</main>
     </div>
   )
 }

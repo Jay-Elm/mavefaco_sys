@@ -43,7 +43,12 @@ export default function LoginPage() {
       }
 
       login(json.token, json.user)
-      router.push('/products')
+      const role = json.user?.role
+      const dest =
+        role === 'admin' || role === 'manager' ? '/dashboard' :
+        role === 'farmer' ? '/farmer' :
+        '/products'
+      router.push(dest)
       router.refresh()
     } catch {
       setServerError('Network error. Please try again.')

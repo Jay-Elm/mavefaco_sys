@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { prisma } from '@/lib/prisma'
 import { Package, ArrowLeft, Tag, User, CalendarDays } from 'lucide-react'
+import AddToCartButton from '@/components/AddToCartButton'
 
 export default async function ProductDetailPage({
   params,
@@ -22,7 +23,7 @@ export default async function ProductDetailPage({
     },
   })
 
-  if (!product) notFound()
+  if (!product || !product.approved) notFound()
 
   const postedDate = new Intl.DateTimeFormat('en-PH', {
     year: 'numeric',
@@ -101,22 +102,17 @@ export default async function ProductDetailPage({
             </div>
 
             <div className="mt-auto space-y-3">
-              {product.stock > 0 ? (
-                <button
-                  disabled
-                  className="w-full bg-green-700 text-white font-semibold py-3 rounded-xl opacity-50 cursor-not-allowed text-sm"
-                  title="Cart coming soon"
-                >
-                  Add to Cart (Coming Soon)
-                </button>
-              ) : (
-                <button
-                  disabled
-                  className="w-full bg-gray-200 text-gray-400 font-semibold py-3 rounded-xl cursor-not-allowed text-sm"
-                >
-                  Out of Stock
-                </button>
-              )}
+              <AddToCartButton
+                product={{
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  imageUrl: product.imageUrl,
+                  stock: product.stock,
+                  farmerId: product.farmer.id,
+                  farmerName: product.farmer.name,
+                }}
+              />
               <Link
                 href="/products"
                 className="block w-full text-center border border-gray-300 text-gray-600 hover:border-green-500 hover:text-green-700 font-medium py-3 rounded-xl text-sm transition-colors"

@@ -6,7 +6,16 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { name, email, password } = body;
+    const { name, email, password, role } = body;
+
+    if (!name || typeof name !== "string" || name.trim().length < 2)
+      return NextResponse.json({ error: "Name must be at least 2 characters" }, { status: 400 });
+    if (!email || typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
+    if (!password || typeof password !== "string" || password.length < 6)
+      return NextResponse.json({ error: "Password must be at least 6 characters" }, { status: 400 });
+
+    const assignedRole = role === "farmer" ? "farmer" : "customer";
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -23,9 +32,10 @@ export async function POST(req: Request) {
 
     const user = await prisma.user.create({
       data: {
-        name,
-        email,
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
         password: hashedPassword,
+        role: assignedRole,
       },
     });
 

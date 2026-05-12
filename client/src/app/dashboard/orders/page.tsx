@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, ShoppingCart } from 'lucide-react'
+import { Loader2, ShoppingCart, AlertTriangle } from 'lucide-react'
 
 interface OrderRow {
   id: number
@@ -15,6 +15,24 @@ interface OrderRow {
 
 const STATUSES = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']
 
+// Manager follows state machine; admin has free override
+const MANAGER_ACTIONS: Record<string, { label: string; next: string; style: string }[]> = {
+  pending:   [
+    { label: 'Confirm',        next: 'confirmed', style: 'bg-blue-100 text-blue-700 hover:bg-blue-200' },
+    { label: 'Cancel',         next: 'cancelled', style: 'bg-red-100 text-red-700 hover:bg-red-200' },
+  ],
+  confirmed: [
+    { label: 'Mark Shipped',   next: 'shipped',   style: 'bg-purple-100 text-purple-700 hover:bg-purple-200' },
+    { label: 'Cancel',         next: 'cancelled', style: 'bg-red-100 text-red-700 hover:bg-red-200' },
+  ],
+  shipped: [
+    { label: 'Mark Delivered', next: 'delivered', style: 'bg-green-100 text-green-700 hover:bg-green-200' },
+    { label: 'Cancel',         next: 'cancelled', style: 'bg-red-100 text-red-700 hover:bg-red-200' },
+  ],
+  delivered: [],
+  cancelled: [],
+}
+
 const STATUS_COLORS: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-800',
   confirmed: 'bg-blue-100 text-blue-800',
@@ -24,11 +42,13 @@ const STATUS_COLORS: Record<string, string> = {
 }
 
 export default function OrdersPage() {
-  const { token } = useAuth()
+  const { token, user } = useAuth()
+  const isManager = user?.role === 'manager'
   const [orders, setOrders] = useState<OrderRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [updatingId, setUpdatingId] = useState<number | null>(null)
+  const [updateError, setUpdateError] = useState<{ id: number; msg: string } | null>(null)
   const [expanded, setExpanded] = useState<number | null>(null)
 
   useEffect(() => {
@@ -46,6 +66,7 @@ export default function OrdersPage() {
   async function handleStatusChange(orderId: number, status: string) {
     if (!token) return
     setUpdatingId(orderId)
+    setUpdateError(null)
     try {
       const res = await fetch(`/api/admin/orders/${orderId}`, {
         method: 'PATCH',
@@ -53,10 +74,10 @@ export default function OrdersPage() {
         body: JSON.stringify({ status }),
       })
       const data = await res.json()
-      if (!res.ok) { alert(data.error); return }
+      if (!res.ok) { setUpdateError({ id: orderId, msg: data.error ?? 'Failed to update order' }); return }
       setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)))
     } catch {
-      alert('Failed to update order')
+      setUpdateError({ id: orderId, msg: 'Request failed' })
     } finally {
       setUpdatingId(null)
     }
@@ -102,6 +123,17 @@ export default function OrdersPage() {
             ) : (
               orders.map((order) => (
                 <React.Fragment key={order.id}>
+                  {updateError?.id === order.id && (
+                    <tr className="bg-red-50">
+                      <td colSpan={6} className="px-5 py-2">
+                        <span className="flex items-center gap-2 text-xs text-red-700">
+                          <AlertTriangle size={13} />
+                          {updateError.msg}
+                          <button onClick={() => setUpdateError(null)} className="ml-auto text-red-500 hover:text-red-700 underline">Dismiss</button>
+                        </span>
+                      </td>
+                    </tr>
+                  )}
                   <tr
                     className="hover:bg-gray-50 transition-colors cursor-pointer"
                     onClick={() => setExpanded(expanded === order.id ? null : order.id)}
@@ -115,23 +147,44 @@ export default function OrdersPage() {
                       ₱{order.totalAmount.toFixed(2)}
                     </td>
                     <td className="px-5 py-3 text-center" onClick={(e) => e.stopPropagation()}>
-                      <div className="flex items-center justify-center gap-1">
-                        {updatingId === order.id && (
-                          <Loader2 size={12} className="animate-spin text-gray-400" />
-                        )}
-                        <select
-                          value={order.status}
-                          onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                          disabled={updatingId === order.id}
-                          className={`text-xs font-medium px-2 py-1 rounded-full border-0 cursor-pointer capitalize ${STATUS_COLORS[order.status] ?? 'bg-gray-100 text-gray-600'}`}
-                        >
-                          {STATUSES.map((s) => (
-                            <option key={s} value={s} className="bg-white text-gray-900">
-                              {s}
-                            </option>
+                      {isManager ? (
+                        <div className="flex items-center justify-center gap-1 flex-wrap">
+                          {updatingId === order.id && (
+                            <Loader2 size={12} className="animate-spin text-gray-400" />
+                          )}
+                          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full capitalize ${STATUS_COLORS[order.status] ?? 'bg-gray-100 text-gray-600'}`}>
+                            {order.status}
+                          </span>
+                          {(MANAGER_ACTIONS[order.status] ?? []).map((action) => (
+                            <button
+                              key={action.next}
+                              onClick={() => handleStatusChange(order.id, action.next)}
+                              disabled={updatingId === order.id}
+                              className={`text-xs font-medium px-2 py-1 rounded-lg transition-colors disabled:opacity-40 ${action.style}`}
+                            >
+                              {action.label}
+                            </button>
                           ))}
-                        </select>
-                      </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center gap-1">
+                          {updatingId === order.id && (
+                            <Loader2 size={12} className="animate-spin text-gray-400" />
+                          )}
+                          <select
+                            value={order.status}
+                            onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                            disabled={updatingId === order.id}
+                            className={`text-xs font-medium px-2 py-1 rounded-full border-0 cursor-pointer capitalize ${STATUS_COLORS[order.status] ?? 'bg-gray-100 text-gray-600'}`}
+                          >
+                            {STATUSES.map((s) => (
+                              <option key={s} value={s} className="bg-white text-gray-900">
+                                {s}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
                     </td>
                     <td className="px-5 py-3 text-gray-500">
                       {new Date(order.createdAt).toLocaleDateString('en-PH')}

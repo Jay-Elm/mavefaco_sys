@@ -3,12 +3,16 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, ShoppingCart, TrendingUp, Plus } from 'lucide-react'
+import { Loader2, Package, ShoppingCart, TrendingUp, Plus, AlertTriangle } from 'lucide-react'
+
+const LOW_STOCK_THRESHOLD = 5
 
 interface Stats {
   productCount: number
   orderCount: number
   totalRevenue: number
+  outOfStock: number
+  lowStock: number
 }
 
 export default function FarmerOverviewPage() {
@@ -24,12 +28,18 @@ export default function FarmerOverviewPage() {
       fetch('/api/farmer/orders', { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json()),
     ])
       .then(([products, orders]) => {
-        const productCount = Array.isArray(products) ? products.length : 0
-        const orderCount = Array.isArray(orders) ? orders.length : 0
-        const totalRevenue = Array.isArray(orders)
-          ? orders.reduce((sum: number, o: { totalAmount: number }) => sum + o.totalAmount, 0)
-          : 0
-        setStats({ productCount, orderCount, totalRevenue })
+        const productList = Array.isArray(products) ? products : []
+        const productCount = productList.length
+        const orderList = Array.isArray(orders) ? orders : []
+        const orderCount = orderList.length
+        // Revenue = sum of own items in delivered orders only
+        const totalRevenue = orderList
+          .filter((o: { status: string }) => o.status === 'delivered')
+          .reduce((sum: number, o: { items: { price: number; quantity: number }[] }) =>
+            sum + (o.items ?? []).reduce((s, item) => s + item.price * item.quantity, 0), 0)
+        const outOfStock = productList.filter((p: { stock: number }) => p.stock === 0).length
+        const lowStock = productList.filter((p: { stock: number }) => p.stock > 0 && p.stock <= LOW_STOCK_THRESHOLD).length
+        setStats({ productCount, orderCount, totalRevenue, outOfStock, lowStock })
       })
       .finally(() => setLoading(false))
   }, [token, user])
@@ -76,6 +86,30 @@ export default function FarmerOverviewPage() {
           </p>
         </div>
       </div>
+
+      {/* Stock alerts */}
+      {((stats?.outOfStock ?? 0) > 0 || (stats?.lowStock ?? 0) > 0) && (
+        <div className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+          <AlertTriangle size={18} className="text-amber-500 flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-amber-800 space-y-1">
+            {(stats?.outOfStock ?? 0) > 0 && (
+              <p>
+                <span className="font-semibold">{stats!.outOfStock} product{stats!.outOfStock > 1 ? 's' : ''} out of stock</span>
+                {' '}— customers cannot order these.
+              </p>
+            )}
+            {(stats?.lowStock ?? 0) > 0 && (
+              <p>
+                <span className="font-semibold">{stats!.lowStock} product{stats!.lowStock > 1 ? 's' : ''} running low</span>
+                {' '}(≤ {LOW_STOCK_THRESHOLD} units remaining).
+              </p>
+            )}
+            <p className="text-amber-600">
+              <a href="/farmer/products" className="underline hover:no-underline">Go to My Products</a> to restock.
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="flex gap-3">
         <Link

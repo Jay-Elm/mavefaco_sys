@@ -1,14 +1,16 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, Trash2, AlertTriangle } from 'lucide-react'
+import { Loader2, Package, Trash2, AlertTriangle, CheckCircle, XCircle, Pencil } from 'lucide-react'
 
 interface ProductRow {
   id: number
   name: string
   price: number
   stock: number
+  approved: boolean
   createdAt: string
   category: { name: string }
   farmer: { name: string; email: string }
@@ -16,38 +18,58 @@ interface ProductRow {
 
 export default function DashboardProductsPage() {
   const { token } = useAuth()
-  const [products, setProducts]     = useState<ProductRow[]>([])
-  const [loading, setLoading]       = useState(true)
-  const [error, setError]           = useState('')
-  const [deletingId, setDeletingId] = useState<number | null>(null)
-  const [deleteError, setDeleteError] = useState<{ id: number; msg: string } | null>(null)
+  const [products, setProducts]       = useState<ProductRow[]>([])
+  const [loading, setLoading]         = useState(true)
+  const [error, setError]             = useState('')
+  const [actingId, setActingId]       = useState<number | null>(null)
+  const [actionError, setActionError] = useState<{ id: number; msg: string } | null>(null)
 
   useEffect(() => {
     if (!token) return
-    fetch('/api/products', { headers: { Authorization: `Bearer ${token}` } })
+    fetch('/api/admin/products', { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => r.json())
       .then((data) => (data.error ? setError(data.error) : setProducts(data)))
       .catch(() => setError('Failed to load products'))
       .finally(() => setLoading(false))
   }, [token])
 
+  async function handleApprove(id: number, approved: boolean) {
+    if (!token) return
+    setActingId(id)
+    setActionError(null)
+    try {
+      const res = await fetch(`/api/admin/products/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ approved }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setActionError({ id, msg: data.error }); return }
+      setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, approved } : p)))
+    } catch {
+      setActionError({ id, msg: 'Request failed' })
+    } finally {
+      setActingId(null)
+    }
+  }
+
   async function handleDelete(id: number, name: string) {
     if (!confirm(`Permanently delete "${name}"?\n\nThis cannot be undone.`)) return
     if (!token) return
-    setDeletingId(id)
-    setDeleteError(null)
+    setActingId(id)
+    setActionError(null)
     try {
       const res = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       })
       const data = await res.json()
-      if (!res.ok) { setDeleteError({ id, msg: data.error }); return }
+      if (!res.ok) { setActionError({ id, msg: data.error }); return }
       setProducts((prev) => prev.filter((p) => p.id !== id))
     } catch {
-      setDeleteError({ id, msg: 'Request failed' })
+      setActionError({ id, msg: 'Request failed' })
     } finally {
-      setDeletingId(null)
+      setActingId(null)
     }
   }
 
@@ -59,11 +81,21 @@ export default function DashboardProductsPage() {
     )
   }
 
+  const pending   = products.filter((p) => !p.approved).length
+  const approved  = products.filter((p) => p.approved).length
+
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Products</h1>
-        <span className="text-sm text-gray-500">{products.length} total</span>
+        <div className="flex items-center gap-3 text-sm text-gray-500">
+          {pending > 0 && (
+            <span className="bg-yellow-100 text-yellow-800 font-semibold px-2.5 py-1 rounded-full">
+              {pending} pending
+            </span>
+          )}
+          <span>{approved} approved / {products.length} total</span>
+        </div>
       </div>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
@@ -77,13 +109,14 @@ export default function DashboardProductsPage() {
               <th className="px-5 py-3 text-left font-medium text-gray-500">Farmer</th>
               <th className="px-5 py-3 text-right font-medium text-gray-500">Price</th>
               <th className="px-5 py-3 text-center font-medium text-gray-500">Stock</th>
+              <th className="px-5 py-3 text-center font-medium text-gray-500">Status</th>
               <th className="px-5 py-3 text-right font-medium text-gray-500">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
             {products.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center py-12 text-gray-400">
+                <td colSpan={7} className="text-center py-12 text-gray-400">
                   <Package size={32} className="mx-auto mb-2" />
                   No products yet
                 </td>
@@ -112,14 +145,51 @@ export default function DashboardProductsPage() {
                         {p.stock}
                       </span>
                     </td>
+                    <td className="px-5 py-3 text-center">
+                      {p.approved ? (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
+                          <CheckCircle size={11} /> Approved
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-yellow-700 bg-yellow-100 px-2 py-0.5 rounded-full">
+                          Pending
+                        </span>
+                      )}
+                    </td>
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        {deletingId === p.id && (
+                        {actingId === p.id && (
                           <Loader2 size={14} className="animate-spin text-gray-400" />
                         )}
+                        {!p.approved ? (
+                          <button
+                            onClick={() => handleApprove(p.id, true)}
+                            disabled={actingId === p.id}
+                            className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition-colors disabled:opacity-40"
+                          >
+                            <CheckCircle size={12} />
+                            Approve
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleApprove(p.id, false)}
+                            disabled={actingId === p.id}
+                            className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors disabled:opacity-40"
+                          >
+                            <XCircle size={12} />
+                            Revoke
+                          </button>
+                        )}
+                        <Link
+                          href={`/dashboard/products/${p.id}/edit`}
+                          className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                        >
+                          <Pencil size={12} />
+                          Edit
+                        </Link>
                         <button
                           onClick={() => handleDelete(p.id, p.name)}
-                          disabled={deletingId === p.id}
+                          disabled={actingId === p.id}
                           className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors disabled:opacity-40"
                         >
                           <Trash2 size={12} />
@@ -129,14 +199,14 @@ export default function DashboardProductsPage() {
                     </td>
                   </tr>
 
-                  {deleteError?.id === p.id && (
+                  {actionError?.id === p.id && (
                     <tr className="bg-red-50">
-                      <td colSpan={6} className="px-5 py-2">
+                      <td colSpan={7} className="px-5 py-2">
                         <span className="flex items-center gap-2 text-xs text-red-700">
                           <AlertTriangle size={13} />
-                          {deleteError.msg}
+                          {actionError.msg}
                           <button
-                            onClick={() => setDeleteError(null)}
+                            onClick={() => setActionError(null)}
                             className="ml-auto text-red-500 hover:text-red-700 underline"
                           >
                             Dismiss

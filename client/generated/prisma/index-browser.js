@@ -127,6 +127,8 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   role: 'role',
   suspended: 'suspended',
+  idImageUrl: 'idImageUrl',
+  verified: 'verified',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -144,6 +146,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   price: 'price',
   stock: 'stock',
   imageUrl: 'imageUrl',
+  approved: 'approved',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   farmerId: 'farmerId',
@@ -154,6 +157,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   totalAmount: 'totalAmount',
   status: 'status',
+  paymentMethod: 'paymentMethod',
+  deliveryMethod: 'deliveryMethod',
   createdAt: 'createdAt',
   customerId: 'customerId'
 };

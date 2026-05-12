@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import { getAuthUser } from "@/lib/getAuthUser";
+import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
 
 async function resolveTarget(id: string) {
   const userId = Number(id);
@@ -19,7 +20,7 @@ export async function PATCH(
   context: { params: Promise<{ id: string }> },
 ) {
   try {
-    const actor = getAuthUser(req);
+    const actor = await getActiveAuthUser(req);
     if (!actor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     if (!authorize(actor, [ROLES.ADMIN, ROLES.MANAGER]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
@@ -39,19 +40,41 @@ export async function PATCH(
     if (actor.role === ROLES.ADMIN && target.role === ROLES.ADMIN)
       return NextResponse.json({ error: "Cannot suspend another admin" }, { status: 403 });
 
-    const { suspended } = await req.json();
-    if (typeof suspended !== "boolean")
-      return NextResponse.json({ error: "suspended must be a boolean" }, { status: 400 });
+    const body = await req.json();
+    const { suspended, verified, newPassword } = body;
+
+    if (typeof suspended !== "boolean" && typeof verified !== "boolean" && typeof newPassword !== "string")
+      return NextResponse.json({ error: "suspended, verified, or newPassword must be provided" }, { status: 400 });
+
+    if (typeof newPassword === "string") {
+      if (newPassword.trim().length < 6)
+        return NextResponse.json({ error: "New password must be at least 6 characters" }, { status: 400 });
+      // Only admins can reset passwords
+      if (actor.role !== ROLES.ADMIN)
+        return NextResponse.json({ error: "Only admins can reset passwords" }, { status: 403 });
+    }
+
+    const hashed = typeof newPassword === "string" ? await bcrypt.hash(newPassword.trim(), 10) : undefined;
 
     const updated = await prisma.user.update({
       where: { id: target.id },
-      data: { suspended },
-      select: { id: true, name: true, email: true, role: true, suspended: true },
+      data: {
+        ...(typeof suspended === "boolean" && { suspended }),
+        ...(typeof verified === "boolean" && { verified }),
+        ...(hashed && { password: hashed }),
+      },
+      select: { id: true, name: true, email: true, role: true, suspended: true, verified: true },
     });
+
+    const action = typeof newPassword === "string"
+      ? "RESET_PASSWORD"
+      : typeof verified === "boolean"
+        ? (verified ? "VERIFY_USER" : "UNVERIFY_USER")
+        : (suspended ? "SUSPEND_USER" : "UNSUSPEND_USER");
 
     await prisma.auditLog.create({
       data: {
-        action: suspended ? "SUSPEND_USER" : "UNSUSPEND_USER",
+        action,
         entityType: "USER",
         entityId: target.id,
         userId: actor.id,
@@ -70,7 +93,7 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> },
 ) {
   try {
-    const actor = getAuthUser(req);
+    const actor = await getActiveAuthUser(req);
     if (!actor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     // Only admins can delete accounts
     if (!authorize(actor, [ROLES.ADMIN]))
@@ -86,27 +109,33 @@ export async function DELETE(
     if (target.role === ROLES.ADMIN)
       return NextResponse.json({ error: "Cannot delete another admin account" }, { status: 403 });
 
-    // Block deletion if the user has orders (preserves order history)
-    if (target._count.orders > 0)
-      return NextResponse.json(
-        {
-          error: `Cannot delete: this user has ${target._count.orders} order(s). Suspend the account instead.`,
-        },
-        { status: 409 },
-      );
+    const ACTIVE_STATUSES = ["pending", "confirmed", "shipped"];
 
-    // Check if any of the user's products appear in order items
-    const productInOrders = await prisma.orderItem.findFirst({
-      where: { product: { farmerId: target.id } },
+    // Block deletion only if the user has active (in-progress) orders
+    const activeOrderCount = await prisma.order.count({
+      where: { customerId: target.id, status: { in: ACTIVE_STATUSES } },
     });
-    if (productInOrders)
+    if (activeOrderCount > 0)
       return NextResponse.json(
-        { error: "Cannot delete: this farmer's products are referenced in existing orders. Suspend instead." },
+        { error: `Cannot delete: this user has ${activeOrderCount} active order(s). Wait for them to complete or cancel, then try again.` },
         { status: 409 },
       );
 
-    // Safe to delete — cascade in a transaction
+    // Block deletion if any of the user's products are in active orders
+    const productInActiveOrders = await prisma.orderItem.findFirst({
+      where: { product: { farmerId: target.id }, order: { status: { in: ACTIVE_STATUSES } } },
+    });
+    if (productInActiveOrders)
+      return NextResponse.json(
+        { error: "Cannot delete: this farmer has products in active orders. Wait for them to complete, then try again." },
+        { status: 409 },
+      );
+
+    // Safe to delete — cascade completed/cancelled orders and all related data
     await prisma.$transaction([
+      prisma.orderItem.deleteMany({ where: { order: { customerId: target.id } } }),
+      prisma.order.deleteMany({ where: { customerId: target.id } }),
+      prisma.orderItem.deleteMany({ where: { product: { farmerId: target.id } } }),
       prisma.product.deleteMany({ where: { farmerId: target.id } }),
       prisma.auditLog.deleteMany({ where: { userId: target.id } }),
       prisma.user.delete({ where: { id: target.id } }),
