@@ -149,8 +149,20 @@ exports.Prisma.ProductScalarFieldEnum = {
   approved: 'approved',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  plantingDate: 'plantingDate',
+  expectedHarvestDate: 'expectedHarvestDate',
+  growthStage: 'growthStage',
+  readyForHarvest: 'readyForHarvest',
   farmerId: 'farmerId',
   categoryId: 'categoryId'
+};
+
+exports.Prisma.CropLogScalarFieldEnum = {
+  id: 'id',
+  type: 'type',
+  note: 'note',
+  createdAt: 'createdAt',
+  productId: 'productId'
 };
 
 exports.Prisma.OrderScalarFieldEnum = {
@@ -169,6 +181,58 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   price: 'price',
   orderId: 'orderId',
   productId: 'productId'
+};
+
+exports.Prisma.AnnouncementScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  body: 'body',
+  type: 'type',
+  createdAt: 'createdAt',
+  authorId: 'authorId'
+};
+
+exports.Prisma.BannerScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  subtitle: 'subtitle',
+  ctaText: 'ctaText',
+  ctaLink: 'ctaLink',
+  color: 'color',
+  active: 'active',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.FaqScalarFieldEnum = {
+  id: 'id',
+  question: 'question',
+  answer: 'answer',
+  displayOrder: 'displayOrder',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.SiteContentScalarFieldEnum = {
+  key: 'key',
+  value: 'value'
+};
+
+exports.Prisma.ReviewScalarFieldEnum = {
+  id: 'id',
+  rating: 'rating',
+  comment: 'comment',
+  createdAt: 'createdAt',
+  customerId: 'customerId',
+  productId: 'productId'
+};
+
+exports.Prisma.MessageScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  read: 'read',
+  createdAt: 'createdAt',
+  senderId: 'senderId',
+  receiverId: 'receiverId'
 };
 
 exports.Prisma.AuditLogScalarFieldEnum = {
@@ -200,8 +264,15 @@ exports.Prisma.ModelName = {
   User: 'User',
   Category: 'Category',
   Product: 'Product',
+  CropLog: 'CropLog',
   Order: 'Order',
   OrderItem: 'OrderItem',
+  Announcement: 'Announcement',
+  Banner: 'Banner',
+  Faq: 'Faq',
+  SiteContent: 'SiteContent',
+  Review: 'Review',
+  Message: 'Message',
   AuditLog: 'AuditLog'
 };
 

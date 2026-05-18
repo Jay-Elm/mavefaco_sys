@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { prisma } from '@/lib/prisma'
 import { Package, ArrowLeft, Tag, User, CalendarDays } from 'lucide-react'
 import AddToCartButton from '@/components/AddToCartButton'
+import ReviewsSection from '@/components/ReviewsSection'
 
 export default async function ProductDetailPage({
   params,
@@ -91,7 +92,12 @@ export default async function ProductDetailPage({
                 <span className="text-gray-500 flex items-center gap-1">
                   <User size={14} /> Farmer
                 </span>
-                <span className="font-medium text-gray-800">{product.farmer.name}</span>
+                <Link
+                  href={`/sellers/${product.farmer.id}`}
+                  className="font-medium text-green-700 hover:underline"
+                >
+                  {product.farmer.name}
+                </Link>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-500 flex items-center gap-1">
@@ -123,6 +129,8 @@ export default async function ProductDetailPage({
           </div>
         </div>
       </div>
+
+      <ReviewsSection productId={productId} />
     </div>
   )
 }

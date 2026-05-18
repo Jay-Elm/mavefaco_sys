@@ -4,12 +4,14 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, LayoutDashboard, Package, ShoppingCart, User, Leaf } from 'lucide-react'
+import { Loader2, LayoutDashboard, Package, ShoppingCart, User, Leaf, Sprout, MessageCircle } from 'lucide-react'
 
 const NAV = [
   { href: '/farmer', label: 'Overview', icon: LayoutDashboard, exact: true },
   { href: '/farmer/products', label: 'My Products', icon: Package },
   { href: '/farmer/orders', label: 'Orders', icon: ShoppingCart },
+  { href: '/farmer/crops', label: 'Crop Monitor', icon: Sprout },
+  { href: '/farmer/messages', label: 'Messages', icon: MessageCircle },
   { href: '/farmer/profile', label: 'Profile', icon: User },
 ]
 

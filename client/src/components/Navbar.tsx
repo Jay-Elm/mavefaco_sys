@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
 import {
   ShoppingBag, LogIn, LogOut, UserPlus, User, Leaf,
-  LayoutDashboard, ShoppingCart, ClipboardList, UserCircle,
+  LayoutDashboard, ShoppingCart, ClipboardList, UserCircle, Info, MessageCircle,
 } from 'lucide-react'
 
 export default function Navbar() {
@@ -50,6 +50,14 @@ export default function Navbar() {
           </Link>
 
           <Link
+            href="/about"
+            className="flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
+          >
+            <Info size={16} />
+            <span>About</span>
+          </Link>
+
+          <Link
             href="/cart"
             className="relative flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
           >
@@ -84,6 +92,13 @@ export default function Navbar() {
               )}
               {user?.role === 'customer' && (
                 <>
+                  <Link
+                    href="/customer/messages"
+                    className="flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
+                  >
+                    <MessageCircle size={16} />
+                    <span>Messages</span>
+                  </Link>
                   <Link
                     href="/customer/orders"
                     className="flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"

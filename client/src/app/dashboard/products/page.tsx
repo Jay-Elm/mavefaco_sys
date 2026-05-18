@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, Trash2, AlertTriangle, CheckCircle, XCircle, Pencil } from 'lucide-react'
+import { Loader2, Package, Trash2, AlertTriangle, CheckCircle, XCircle, Pencil, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download } from 'lucide-react'
+import { downloadCSV } from '@/lib/csv'
 
 interface ProductRow {
   id: number
@@ -14,6 +15,17 @@ interface ProductRow {
   createdAt: string
   category: { name: string }
   farmer: { name: string; email: string }
+  _count: { orderItems: number }
+}
+
+type SortKey = 'name' | 'price' | 'stock' | 'createdAt' | 'orders'
+type SortDir = 'asc' | 'desc'
+
+function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; sortDir: SortDir }) {
+  if (col !== sortKey) return <ChevronsUpDown size={13} className="text-gray-300 inline ml-1" />
+  return sortDir === 'asc'
+    ? <ChevronUp size={13} className="text-gray-600 inline ml-1" />
+    : <ChevronDown size={13} className="text-gray-600 inline ml-1" />
 }
 
 export default function DashboardProductsPage() {
@@ -24,6 +36,12 @@ export default function DashboardProductsPage() {
   const [actingId, setActingId]       = useState<number | null>(null)
   const [actionError, setActionError] = useState<{ id: number; msg: string } | null>(null)
 
+  const [search, setSearch]           = useState('')
+  const [filterCategory, setFilterCategory] = useState('')
+  const [filterStatus, setFilterStatus]     = useState<'all' | 'approved' | 'pending'>('all')
+  const [sortKey, setSortKey]         = useState<SortKey>('createdAt')
+  const [sortDir, setSortDir]         = useState<SortDir>('desc')
+
   useEffect(() => {
     if (!token) return
     fetch('/api/admin/products', { headers: { Authorization: `Bearer ${token}` } })
@@ -32,6 +50,42 @@ export default function DashboardProductsPage() {
       .catch(() => setError('Failed to load products'))
       .finally(() => setLoading(false))
   }, [token])
+
+  const categories = useMemo(() => {
+    const names = [...new Set(products.map((p) => p.category.name))].sort()
+    return names
+  }, [products])
+
+  const displayed = useMemo(() => {
+    let list = [...products]
+
+    if (search.trim()) {
+      const q = search.trim().toLowerCase()
+      list = list.filter(
+        (p) => p.name.toLowerCase().includes(q) || p.farmer.name.toLowerCase().includes(q)
+      )
+    }
+    if (filterCategory) list = list.filter((p) => p.category.name === filterCategory)
+    if (filterStatus === 'approved') list = list.filter((p) => p.approved)
+    if (filterStatus === 'pending')  list = list.filter((p) => !p.approved)
+
+    list.sort((a, b) => {
+      let diff = 0
+      if (sortKey === 'name')      diff = a.name.localeCompare(b.name)
+      if (sortKey === 'price')     diff = a.price - b.price
+      if (sortKey === 'stock')     diff = a.stock - b.stock
+      if (sortKey === 'createdAt') diff = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      if (sortKey === 'orders')    diff = a._count.orderItems - b._count.orderItems
+      return sortDir === 'asc' ? diff : -diff
+    })
+
+    return list
+  }, [products, search, filterCategory, filterStatus, sortKey, sortDir])
+
+  function toggleSort(key: SortKey) {
+    if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
+    else { setSortKey(key); setSortDir('asc') }
+  }
 
   async function handleApprove(id: number, approved: boolean) {
     if (!token) return
@@ -98,31 +152,113 @@ export default function DashboardProductsPage() {
         </div>
       </div>
 
+      {/* Filters toolbar */}
+      <div className="flex flex-wrap items-center gap-3 mb-4">
+        <div className="relative flex-1 min-w-48">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search by product or farmer…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <select
+          value={filterCategory}
+          onChange={(e) => setFilterCategory(e.target.value)}
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+          <option value="">All categories</option>
+          {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+        </select>
+
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value as 'all' | 'approved' | 'pending')}
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+          <option value="all">All statuses</option>
+          <option value="approved">Approved</option>
+          <option value="pending">Pending</option>
+        </select>
+
+        {(search || filterCategory || filterStatus !== 'all') && (
+          <button
+            onClick={() => { setSearch(''); setFilterCategory(''); setFilterStatus('all') }}
+            className="text-xs text-gray-500 hover:text-gray-700 underline"
+          >
+            Clear filters
+          </button>
+        )}
+
+        <span className="ml-auto text-xs text-gray-400">
+          {displayed.length} of {products.length} products
+        </span>
+        <button
+          onClick={() => downloadCSV(
+            'products.csv',
+            ['Product', 'Category', 'Farmer', 'Farmer Email', 'Price (PHP)', 'Stock', 'Orders', 'Status', 'Listed Date'],
+            displayed.map((p) => [
+              p.name, p.category.name, p.farmer.name, p.farmer.email,
+              p.price.toFixed(2), p.stock, p._count.orderItems,
+              p.approved ? 'Approved' : 'Pending',
+              new Date(p.createdAt).toLocaleDateString('en-PH'),
+            ])
+          )}
+          className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 border border-gray-300 rounded-lg px-3 py-1.5 transition-colors shrink-0"
+        >
+          <Download size={12} /> Export CSV
+        </button>
+      </div>
+
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-5 py-3 text-left font-medium text-gray-500">Product</th>
+              <th
+                className="px-5 py-3 text-left font-medium text-gray-500 cursor-pointer select-none hover:text-gray-700"
+                onClick={() => toggleSort('name')}
+              >
+                Product <SortIcon col="name" sortKey={sortKey} sortDir={sortDir} />
+              </th>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Category</th>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Farmer</th>
-              <th className="px-5 py-3 text-right font-medium text-gray-500">Price</th>
-              <th className="px-5 py-3 text-center font-medium text-gray-500">Stock</th>
+              <th
+                className="px-5 py-3 text-right font-medium text-gray-500 cursor-pointer select-none hover:text-gray-700"
+                onClick={() => toggleSort('price')}
+              >
+                Price <SortIcon col="price" sortKey={sortKey} sortDir={sortDir} />
+              </th>
+              <th
+                className="px-5 py-3 text-center font-medium text-gray-500 cursor-pointer select-none hover:text-gray-700"
+                onClick={() => toggleSort('stock')}
+              >
+                Stock <SortIcon col="stock" sortKey={sortKey} sortDir={sortDir} />
+              </th>
+              <th
+                className="px-5 py-3 text-center font-medium text-gray-500 cursor-pointer select-none hover:text-gray-700"
+                onClick={() => toggleSort('orders')}
+              >
+                Orders <SortIcon col="orders" sortKey={sortKey} sortDir={sortDir} />
+              </th>
               <th className="px-5 py-3 text-center font-medium text-gray-500">Status</th>
               <th className="px-5 py-3 text-right font-medium text-gray-500">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
-            {products.length === 0 ? (
+            {displayed.length === 0 ? (
               <tr>
-                <td colSpan={7} className="text-center py-12 text-gray-400">
+                <td colSpan={8} className="text-center py-12 text-gray-400">
                   <Package size={32} className="mx-auto mb-2" />
-                  No products yet
+                  {products.length === 0 ? 'No products yet' : 'No products match your filters'}
                 </td>
               </tr>
             ) : (
-              products.map((p) => (
+              displayed.map((p) => (
                 <React.Fragment key={p.id}>
                   <tr className="hover:bg-gray-50 transition-colors">
                     <td className="px-5 py-3">
@@ -144,6 +280,9 @@ export default function DashboardProductsPage() {
                       <span className={`text-xs font-medium ${p.stock > 0 ? 'text-gray-700' : 'text-red-500'}`}>
                         {p.stock}
                       </span>
+                    </td>
+                    <td className="px-5 py-3 text-center text-xs text-gray-600">
+                      {p._count.orderItems}
                     </td>
                     <td className="px-5 py-3 text-center">
                       {p.approved ? (
@@ -201,7 +340,7 @@ export default function DashboardProductsPage() {
 
                   {actionError?.id === p.id && (
                     <tr className="bg-red-50">
-                      <td colSpan={7} className="px-5 py-2">
+                      <td colSpan={8} className="px-5 py-2">
                         <span className="flex items-center gap-2 text-xs text-red-700">
                           <AlertTriangle size={13} />
                           {actionError.msg}

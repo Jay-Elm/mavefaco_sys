@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, ShoppingCart, TrendingUp, Plus, AlertTriangle } from 'lucide-react'
+import { Loader2, Package, ShoppingCart, TrendingUp, Plus, AlertTriangle, CloudRain, Bug, Flame } from 'lucide-react'
+import WeatherWidget from '@/components/WeatherWidget'
 
 const LOW_STOCK_THRESHOLD = 5
 
@@ -15,13 +16,32 @@ interface Stats {
   lowStock: number
 }
 
+interface AdvisoryLog {
+  id: number
+  type: string
+  note: string
+  createdAt: string
+  product: { name: string; category: { name: string } }
+}
+
+const LOG_TYPE_INFO: Record<string, { label: string; icon: React.ElementType; cls: string }> = {
+  weather_impact: { label: 'Weather', icon: CloudRain, cls: 'text-blue-500' },
+  pest_disease:   { label: 'Pest/Disease', icon: Bug,       cls: 'text-red-500' },
+  damage:         { label: 'Damage',   icon: Flame,     cls: 'text-orange-500' },
+}
+
 export default function FarmerOverviewPage() {
   const { token, user } = useAuth()
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [advisory, setAdvisory] = useState<AdvisoryLog[]>([])
 
   useEffect(() => {
     if (!token || !user) return
+
+    fetch('/api/farmer/advisory', { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => r.json())
+      .then((d) => { if (Array.isArray(d)) setAdvisory(d) })
 
     Promise.all([
       fetch(`/api/products?farmerId=${user.id}`, { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json()),
@@ -107,6 +127,39 @@ export default function FarmerOverviewPage() {
             <p className="text-amber-600">
               <a href="/farmer/products" className="underline hover:no-underline">Go to My Products</a> to restock.
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* Weather widget */}
+      <div className="mb-6">
+        <WeatherWidget />
+      </div>
+
+      {/* Community advisory */}
+      {advisory.length > 0 && (
+        <div className="mb-6 bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <h2 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+            <Bug size={15} className="text-red-500" /> Community Advisory (last 30 days)
+          </h2>
+          <div className="space-y-2">
+            {advisory.slice(0, 5).map((log) => {
+              const info = LOG_TYPE_INFO[log.type]
+              const Icon = info?.icon ?? Bug
+              return (
+                <div key={log.id} className="flex items-start gap-2 text-sm">
+                  <Icon size={14} className={`shrink-0 mt-0.5 ${info?.cls ?? 'text-gray-500'}`} />
+                  <div>
+                    <span className="font-medium text-gray-700">{log.product.category.name}</span>
+                    <span className="text-gray-500 mx-1">—</span>
+                    <span className="text-gray-600">{log.note}</span>
+                    <span className="text-xs text-gray-400 ml-2">
+                      {new Date(log.createdAt).toLocaleDateString('en-PH', { dateStyle: 'medium' })}
+                    </span>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
-import { ShoppingBag, Users, Leaf, ArrowRight } from "lucide-react";
+import { ShoppingBag, Users, Leaf, ArrowRight, Info, AlertTriangle } from "lucide-react";
 
 async function getFeaturedProducts() {
   return prisma.product.findMany({
@@ -15,8 +15,40 @@ async function getFeaturedProducts() {
   });
 }
 
+async function getBanners() {
+  return prisma.banner.findMany({
+    where: { active: true },
+    orderBy: { displayOrder: "asc" },
+  });
+}
+
+async function getAnnouncements() {
+  return prisma.announcement.findMany({
+    orderBy: { createdAt: "desc" },
+    include: { author: { select: { name: true } } },
+  });
+}
+
+const BANNER_BG: Record<string, string> = {
+  green:  "bg-gradient-to-r from-green-600 to-green-800",
+  orange: "bg-gradient-to-r from-orange-500 to-orange-700",
+  blue:   "bg-gradient-to-r from-blue-600 to-blue-800",
+  purple: "bg-gradient-to-r from-purple-600 to-purple-800",
+  teal:   "bg-gradient-to-r from-teal-600 to-teal-800",
+};
+
+const ANNOUNCEMENT_STYLES = {
+  info:     { bar: "bg-blue-600",  bg: "bg-blue-50",  border: "border-blue-200", text: "text-blue-800",  icon: Info },
+  alert:    { bar: "bg-amber-500", bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-800", icon: AlertTriangle },
+  advisory: { bar: "bg-green-600", bg: "bg-green-50", border: "border-green-200", text: "text-green-800", icon: Leaf },
+} as const;
+
 export default async function HomePage() {
-  const featuredProducts = await getFeaturedProducts();
+  const [featuredProducts, announcements, banners] = await Promise.all([
+    getFeaturedProducts(),
+    getAnnouncements(),
+    getBanners(),
+  ]);
 
   return (
     <div>
@@ -53,6 +85,65 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Banners */}
+      {banners.length > 0 && (
+        <section className="py-6 px-4 bg-gray-50">
+          <div className="max-w-4xl mx-auto space-y-4">
+            {banners.map((b) => (
+              <div
+                key={b.id}
+                className={`rounded-xl overflow-hidden text-white ${BANNER_BG[b.color] ?? BANNER_BG.green}`}
+              >
+                <div className="px-8 py-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h3 className="text-lg font-bold">{b.title}</h3>
+                    {b.subtitle && <p className="text-white/80 text-sm mt-0.5">{b.subtitle}</p>}
+                  </div>
+                  {b.ctaText && b.ctaLink && (
+                    <Link
+                      href={b.ctaLink}
+                      className="shrink-0 inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-semibold px-5 py-2 rounded-lg transition-colors text-sm"
+                    >
+                      {b.ctaText} <ArrowRight size={15} />
+                    </Link>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Announcements */}
+      {announcements.length > 0 && (
+        <section className="py-8 px-4 bg-white border-b border-gray-100">
+          <div className="max-w-4xl mx-auto space-y-3">
+            {announcements.map((a) => {
+              const style = ANNOUNCEMENT_STYLES[a.type as keyof typeof ANNOUNCEMENT_STYLES] ?? ANNOUNCEMENT_STYLES.info;
+              const Icon = style.icon;
+              return (
+                <div
+                  key={a.id}
+                  className={`flex gap-4 rounded-xl border ${style.border} ${style.bg} overflow-hidden`}
+                >
+                  <div className={`w-1 shrink-0 ${style.bar}`} />
+                  <div className="py-3 pr-4">
+                    <div className={`flex items-center gap-2 font-semibold text-sm ${style.text} mb-0.5`}>
+                      <Icon size={14} />
+                      {a.title}
+                    </div>
+                    <p className={`text-sm ${style.text} opacity-90`}>{a.body}</p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {new Date(a.createdAt).toLocaleDateString("en-PH", { dateStyle: "medium" })}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* How it works */}
       <section className="py-14 px-4 bg-white">

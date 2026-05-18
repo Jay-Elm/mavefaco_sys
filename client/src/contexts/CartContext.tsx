@@ -14,12 +14,19 @@ export interface CartItem {
   farmerName: string
 }
 
+interface StockRefreshResult {
+  removed: string[]
+  adjusted: string[]
+}
+
 interface CartContextType {
   items: CartItem[]
+  cartReady: boolean
   addItem: (product: Omit<CartItem, 'quantity'>, qty?: number) => 'ok' | 'conflict'
   removeItem: (productId: number) => void
   updateQuantity: (productId: number, quantity: number) => void
   clearCart: () => void
+  refreshStock: () => Promise<StockRefreshResult>
   totalItems: number
   totalAmount: number
 }
@@ -93,11 +100,46 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems([])
   }
 
+  async function refreshStock(): Promise<StockRefreshResult> {
+    if (items.length === 0) return { removed: [], adjusted: [] }
+
+    const snapshot = [...items]
+    const results = await Promise.all(
+      snapshot.map(async item => {
+        try {
+          const res = await fetch(`/api/products/${item.productId}`)
+          if (!res.ok) return { item, stock: 0, gone: true }
+          const data = await res.json()
+          return { item, stock: data.stock as number, gone: false }
+        } catch {
+          return { item, stock: item.stock, gone: false }
+        }
+      })
+    )
+
+    const removed: string[] = []
+    const adjusted: string[] = []
+    const newItems: CartItem[] = []
+
+    for (const result of results) {
+      if (result.gone || result.stock === 0) {
+        removed.push(result.item.name)
+      } else {
+        const newQty = Math.min(result.item.quantity, result.stock)
+        if (newQty < result.item.quantity) adjusted.push(result.item.name)
+        newItems.push({ ...result.item, stock: result.stock, quantity: newQty })
+      }
+    }
+
+    setItems(newItems)
+    return { removed, adjusted }
+  }
+
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0)
   const totalAmount = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, totalItems, totalAmount }}>
+    <CartContext.Provider value={{ items, cartReady: loaded, addItem, removeItem, updateQuantity, clearCart, refreshStock, totalItems, totalAmount }}>
       {children}
     </CartContext.Provider>
   )

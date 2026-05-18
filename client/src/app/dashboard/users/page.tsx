@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import {
   Loader2, Shield, User, Leaf, ShoppingBag,
   Ban, CheckCircle, Trash2, AlertTriangle, ShieldCheck,
-  ExternalLink, KeyRound, X,
+  ExternalLink, KeyRound, X, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download,
 } from 'lucide-react'
+import { downloadCSV } from '@/lib/csv'
 
 interface UserRow {
   id: number
@@ -34,6 +35,16 @@ const ROLE_ICONS: Record<string, React.ReactNode> = {
   customer: <ShoppingBag size={11} />,
 }
 
+type SortKey = 'name' | 'createdAt' | 'products' | 'orders'
+type SortDir = 'asc' | 'desc'
+
+function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; sortDir: SortDir }) {
+  if (col !== sortKey) return <ChevronsUpDown size={13} className="text-gray-300 inline ml-1" />
+  return sortDir === 'asc'
+    ? <ChevronUp size={13} className="text-gray-600 inline ml-1" />
+    : <ChevronDown size={13} className="text-gray-600 inline ml-1" />
+}
+
 export default function UsersPage() {
   const { token, user: currentUser } = useAuth()
   const [users, setUsers]         = useState<UserRow[]>([])
@@ -46,6 +57,12 @@ export default function UsersPage() {
   const [resetError, setResetError] = useState('')
   const [resetSuccess, setResetSuccess] = useState<number | null>(null)
 
+  const [search, setSearch]           = useState('')
+  const [filterRole, setFilterRole]   = useState('')
+  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'suspended'>('all')
+  const [sortKey, setSortKey]         = useState<SortKey>('createdAt')
+  const [sortDir, setSortDir]         = useState<SortDir>('desc')
+
   useEffect(() => {
     if (!token) return
     fetch('/api/admin/users', { headers: { Authorization: `Bearer ${token}` } })
@@ -54,6 +71,36 @@ export default function UsersPage() {
       .catch(() => setError('Failed to load users'))
       .finally(() => setLoading(false))
   }, [token])
+
+  const displayed = useMemo(() => {
+    let list = [...users]
+
+    if (search.trim()) {
+      const q = search.trim().toLowerCase()
+      list = list.filter(
+        (u) => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
+      )
+    }
+    if (filterRole) list = list.filter((u) => u.role === filterRole)
+    if (filterStatus === 'active')    list = list.filter((u) => !u.suspended)
+    if (filterStatus === 'suspended') list = list.filter((u) => u.suspended)
+
+    list.sort((a, b) => {
+      let diff = 0
+      if (sortKey === 'name')      diff = a.name.localeCompare(b.name)
+      if (sortKey === 'createdAt') diff = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      if (sortKey === 'products')  diff = a._count.products - b._count.products
+      if (sortKey === 'orders')    diff = a._count.orders - b._count.orders
+      return sortDir === 'asc' ? diff : -diff
+    })
+
+    return list
+  }, [users, search, filterRole, filterStatus, sortKey, sortDir])
+
+  function toggleSort(key: SortKey) {
+    if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
+    else { setSortKey(key); setSortDir('asc') }
+  }
 
   async function handleSuspend(u: UserRow) {
     if (!token) return
@@ -141,11 +188,78 @@ export default function UsersPage() {
     )
   }
 
+  const activeFilters = search || filterRole || filterStatus !== 'all'
+
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Users</h1>
         <span className="text-sm text-gray-500">{users.length} total</span>
+      </div>
+
+      {/* Filters toolbar */}
+      <div className="flex flex-wrap items-center gap-3 mb-4">
+        <div className="relative flex-1 min-w-48">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search by name or email…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <select
+          value={filterRole}
+          onChange={(e) => setFilterRole(e.target.value)}
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+          <option value="">All roles</option>
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+          <option value="farmer">Farmer</option>
+          <option value="customer">Customer</option>
+        </select>
+
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value as 'all' | 'active' | 'suspended')}
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+        >
+          <option value="all">All statuses</option>
+          <option value="active">Active</option>
+          <option value="suspended">Suspended</option>
+        </select>
+
+        {activeFilters && (
+          <button
+            onClick={() => { setSearch(''); setFilterRole(''); setFilterStatus('all') }}
+            className="text-xs text-gray-500 hover:text-gray-700 underline"
+          >
+            Clear filters
+          </button>
+        )}
+
+        <span className="ml-auto text-xs text-gray-400">
+          {displayed.length} of {users.length} users
+        </span>
+        <button
+          onClick={() => downloadCSV(
+            'users.csv',
+            ['Name', 'Email', 'Role', 'Status', 'Verified', 'Products', 'Orders', 'Joined'],
+            displayed.map((u) => [
+              u.name, u.email, u.role,
+              u.suspended ? 'Suspended' : 'Active',
+              u.role === 'farmer' ? (u.verified ? 'Yes' : 'No') : '-',
+              u._count.products, u._count.orders,
+              new Date(u.createdAt).toLocaleDateString('en-PH'),
+            ])
+          )}
+          className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 border border-gray-300 rounded-lg px-3 py-1.5 transition-colors shrink-0"
+        >
+          <Download size={12} /> Export CSV
+        </button>
       </div>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
@@ -155,24 +269,45 @@ export default function UsersPage() {
         <table className="w-full text-sm min-w-[700px]">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-5 py-3 text-left font-medium text-gray-500 w-64">User</th>
+              <th
+                className="px-5 py-3 text-left font-medium text-gray-500 w-64 cursor-pointer select-none hover:text-gray-700"
+                onClick={() => toggleSort('name')}
+              >
+                User <SortIcon col="name" sortKey={sortKey} sortDir={sortDir} />
+              </th>
               <th className="px-4 py-3 text-left font-medium text-gray-500">Role</th>
               <th className="px-4 py-3 text-center font-medium text-gray-500">Verification</th>
-              <th className="px-4 py-3 text-center font-medium text-gray-500 whitespace-nowrap">Activity</th>
-              <th className="px-4 py-3 text-left font-medium text-gray-500 whitespace-nowrap">Joined</th>
+              <th
+                className="px-4 py-3 text-center font-medium text-gray-500 whitespace-nowrap cursor-pointer select-none hover:text-gray-700"
+                onClick={() => toggleSort('products')}
+              >
+                Products <SortIcon col="products" sortKey={sortKey} sortDir={sortDir} />
+              </th>
+              <th
+                className="px-4 py-3 text-center font-medium text-gray-500 whitespace-nowrap cursor-pointer select-none hover:text-gray-700"
+                onClick={() => toggleSort('orders')}
+              >
+                Orders <SortIcon col="orders" sortKey={sortKey} sortDir={sortDir} />
+              </th>
+              <th
+                className="px-4 py-3 text-left font-medium text-gray-500 whitespace-nowrap cursor-pointer select-none hover:text-gray-700"
+                onClick={() => toggleSort('createdAt')}
+              >
+                Joined <SortIcon col="createdAt" sortKey={sortKey} sortDir={sortDir} />
+              </th>
               <th className="px-4 py-3 text-right font-medium text-gray-500">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {users.length === 0 ? (
+            {displayed.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center py-12 text-gray-400">
+                <td colSpan={7} className="text-center py-12 text-gray-400">
                   <User size={32} className="mx-auto mb-2" />
-                  No users found
+                  {users.length === 0 ? 'No users found' : 'No users match your filters'}
                 </td>
               </tr>
             ) : (
-              users.map((u) => (
+              displayed.map((u) => (
                 <React.Fragment key={u.id}>
                   <tr className={`transition-colors ${u.suspended ? 'bg-red-50/40' : 'hover:bg-gray-50'}`}>
 
@@ -234,15 +369,14 @@ export default function UsersPage() {
                       )}
                     </td>
 
-                    {/* Activity */}
-                    <td className="px-4 py-3 text-center whitespace-nowrap">
-                      <span className="text-xs text-gray-600">
-                        {u._count.products} prod{u._count.products !== 1 ? 's' : ''}
-                      </span>
-                      <span className="text-gray-300 mx-1">·</span>
-                      <span className="text-xs text-gray-600">
-                        {u._count.orders} order{u._count.orders !== 1 ? 's' : ''}
-                      </span>
+                    {/* Products */}
+                    <td className="px-4 py-3 text-center text-xs text-gray-600 whitespace-nowrap">
+                      {u._count.products}
+                    </td>
+
+                    {/* Orders */}
+                    <td className="px-4 py-3 text-center text-xs text-gray-600 whitespace-nowrap">
+                      {u._count.orders}
                     </td>
 
                     {/* Joined */}
@@ -323,7 +457,7 @@ export default function UsersPage() {
                   {/* Inline error row */}
                   {actionError?.id === u.id && (
                     <tr className="bg-red-50">
-                      <td colSpan={6} className="px-5 py-2">
+                      <td colSpan={7} className="px-5 py-2">
                         <span className="flex items-center gap-2 text-xs text-red-700">
                           <AlertTriangle size={13} />
                           {actionError.msg}

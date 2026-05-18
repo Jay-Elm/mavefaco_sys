@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, ShoppingCart, AlertTriangle } from 'lucide-react'
+import { Loader2, ShoppingCart, AlertTriangle, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download } from 'lucide-react'
+import { downloadCSV } from '@/lib/csv'
 
 interface OrderRow {
   id: number
@@ -34,22 +35,37 @@ const MANAGER_ACTIONS: Record<string, { label: string; next: string; style: stri
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  pending: 'bg-yellow-100 text-yellow-800',
+  pending:   'bg-yellow-100 text-yellow-800',
   confirmed: 'bg-blue-100 text-blue-800',
-  shipped: 'bg-purple-100 text-purple-800',
+  shipped:   'bg-purple-100 text-purple-800',
   delivered: 'bg-green-100 text-green-800',
   cancelled: 'bg-red-100 text-red-800',
+}
+
+type SortKey = 'id' | 'totalAmount' | 'createdAt' | 'items'
+type SortDir = 'asc' | 'desc'
+
+function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; sortDir: SortDir }) {
+  if (col !== sortKey) return <ChevronsUpDown size={13} className="text-gray-300 inline ml-1" />
+  return sortDir === 'asc'
+    ? <ChevronUp size={13} className="text-gray-600 inline ml-1" />
+    : <ChevronDown size={13} className="text-gray-600 inline ml-1" />
 }
 
 export default function OrdersPage() {
   const { token, user } = useAuth()
   const isManager = user?.role === 'manager'
-  const [orders, setOrders] = useState<OrderRow[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [orders, setOrders]     = useState<OrderRow[]>([])
+  const [loading, setLoading]   = useState(true)
+  const [error, setError]       = useState('')
   const [updatingId, setUpdatingId] = useState<number | null>(null)
   const [updateError, setUpdateError] = useState<{ id: number; msg: string } | null>(null)
   const [expanded, setExpanded] = useState<number | null>(null)
+
+  const [search, setSearch]           = useState('')
+  const [filterStatus, setFilterStatus] = useState('')
+  const [sortKey, setSortKey]         = useState<SortKey>('createdAt')
+  const [sortDir, setSortDir]         = useState<SortDir>('desc')
 
   useEffect(() => {
     if (!token) return
@@ -62,6 +78,37 @@ export default function OrdersPage() {
       .catch(() => setError('Failed to load orders'))
       .finally(() => setLoading(false))
   }, [token])
+
+  const displayed = useMemo(() => {
+    let list = [...orders]
+
+    if (search.trim()) {
+      const q = search.trim().toLowerCase()
+      list = list.filter(
+        (o) =>
+          o.customer.name.toLowerCase().includes(q) ||
+          o.customer.email.toLowerCase().includes(q) ||
+          String(o.id).includes(q)
+      )
+    }
+    if (filterStatus) list = list.filter((o) => o.status === filterStatus)
+
+    list.sort((a, b) => {
+      let diff = 0
+      if (sortKey === 'id')          diff = a.id - b.id
+      if (sortKey === 'totalAmount') diff = a.totalAmount - b.totalAmount
+      if (sortKey === 'createdAt')   diff = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      if (sortKey === 'items')       diff = a.items.length - b.items.length
+      return sortDir === 'asc' ? diff : -diff
+    })
+
+    return list
+  }, [orders, search, filterStatus, sortKey, sortDir])
+
+  function toggleSort(key: SortKey) {
+    if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
+    else { setSortKey(key); setSortDir('asc') }
+  }
 
   async function handleStatusChange(orderId: number, status: string) {
     if (!token) return
@@ -91,11 +138,65 @@ export default function OrdersPage() {
     )
   }
 
+  const activeFilters = search || filterStatus
+
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
         <span className="text-sm text-gray-500">{orders.length} total</span>
+      </div>
+
+      {/* Filters toolbar */}
+      <div className="flex flex-wrap items-center gap-3 mb-4">
+        <div className="relative flex-1 min-w-48">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search by customer or order ID…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 capitalize"
+        >
+          <option value="">All statuses</option>
+          {STATUSES.map((s) => (
+            <option key={s} value={s} className="capitalize">{s}</option>
+          ))}
+        </select>
+
+        {activeFilters && (
+          <button
+            onClick={() => { setSearch(''); setFilterStatus('') }}
+            className="text-xs text-gray-500 hover:text-gray-700 underline"
+          >
+            Clear filters
+          </button>
+        )}
+
+        <span className="ml-auto text-xs text-gray-400">
+          {displayed.length} of {orders.length} orders
+        </span>
+        <button
+          onClick={() => downloadCSV(
+            'orders.csv',
+            ['Order ID', 'Customer', 'Email', 'Total (PHP)', 'Status', 'Items', 'Date'],
+            displayed.map((o) => [
+              o.id, o.customer.name, o.customer.email,
+              o.totalAmount.toFixed(2), o.status, o.items.length,
+              new Date(o.createdAt).toLocaleDateString('en-PH'),
+            ])
+          )}
+          className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 border border-gray-300 rounded-lg px-3 py-1.5 transition-colors shrink-0"
+        >
+          <Download size={12} /> Export CSV
+        </button>
       </div>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
@@ -104,24 +205,44 @@ export default function OrdersPage() {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
-              <th className="px-5 py-3 text-left font-medium text-gray-500">Order ID</th>
+              <th
+                className="px-5 py-3 text-left font-medium text-gray-500 cursor-pointer select-none hover:text-gray-700"
+                onClick={() => toggleSort('id')}
+              >
+                Order ID <SortIcon col="id" sortKey={sortKey} sortDir={sortDir} />
+              </th>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Customer</th>
-              <th className="px-5 py-3 text-right font-medium text-gray-500">Total</th>
+              <th
+                className="px-5 py-3 text-right font-medium text-gray-500 cursor-pointer select-none hover:text-gray-700"
+                onClick={() => toggleSort('totalAmount')}
+              >
+                Total <SortIcon col="totalAmount" sortKey={sortKey} sortDir={sortDir} />
+              </th>
               <th className="px-5 py-3 text-center font-medium text-gray-500">Status</th>
-              <th className="px-5 py-3 text-left font-medium text-gray-500">Date</th>
-              <th className="px-5 py-3 text-center font-medium text-gray-500">Items</th>
+              <th
+                className="px-5 py-3 text-left font-medium text-gray-500 cursor-pointer select-none hover:text-gray-700"
+                onClick={() => toggleSort('createdAt')}
+              >
+                Date <SortIcon col="createdAt" sortKey={sortKey} sortDir={sortDir} />
+              </th>
+              <th
+                className="px-5 py-3 text-center font-medium text-gray-500 cursor-pointer select-none hover:text-gray-700"
+                onClick={() => toggleSort('items')}
+              >
+                Items <SortIcon col="items" sortKey={sortKey} sortDir={sortDir} />
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
-            {orders.length === 0 ? (
+            {displayed.length === 0 ? (
               <tr>
                 <td colSpan={6} className="text-center py-12 text-gray-400">
                   <ShoppingCart size={32} className="mx-auto mb-2" />
-                  No orders yet
+                  {orders.length === 0 ? 'No orders yet' : 'No orders match your filters'}
                 </td>
               </tr>
             ) : (
-              orders.map((order) => (
+              displayed.map((order) => (
                 <React.Fragment key={order.id}>
                   {updateError?.id === order.id && (
                     <tr className="bg-red-50">

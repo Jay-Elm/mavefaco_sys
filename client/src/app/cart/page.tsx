@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Trash2, Plus, Minus, ShoppingCart, Package, ArrowLeft, Loader2, Wallet, MapPin } from 'lucide-react'
+import { Trash2, Plus, Minus, ShoppingCart, Package, ArrowLeft, Loader2, Wallet, MapPin, AlertTriangle } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
 
@@ -21,12 +21,27 @@ const DELIVERY_METHODS = [
 
 export default function CartPage() {
   const { isAuthenticated, token } = useAuth()
-  const { items, removeItem, updateQuantity, clearCart, totalAmount } = useCart()
+  const { items, cartReady, removeItem, updateQuantity, clearCart, refreshStock, totalAmount } = useCart()
   const router = useRouter()
   const [placing, setPlacing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [paymentMethod, setPaymentMethod] = useState('cod')
   const [deliveryMethod, setDeliveryMethod] = useState('pickup')
+  const [stockWarning, setStockWarning] = useState<string | null>(null)
+  const [checkingStock, setCheckingStock] = useState(false)
+  const stockChecked = useRef(false)
+
+  useEffect(() => {
+    if (!cartReady || stockChecked.current || items.length === 0) return
+    stockChecked.current = true
+    setCheckingStock(true)
+    refreshStock().then(({ removed, adjusted }) => {
+      const parts: string[] = []
+      if (removed.length > 0) parts.push(`${removed.join(', ')} ${removed.length === 1 ? 'is' : 'are'} no longer available and ${removed.length === 1 ? 'was' : 'were'} removed from your cart.`)
+      if (adjusted.length > 0) parts.push(`Quantities for ${adjusted.join(', ')} were reduced to match available stock.`)
+      if (parts.length > 0) setStockWarning(parts.join(' '))
+    }).finally(() => setCheckingStock(false))
+  }, [cartReady, items.length])
 
   async function handleCheckout() {
     if (!isAuthenticated) {
@@ -98,6 +113,20 @@ export default function CartPage() {
           Clear cart
         </button>
       </div>
+
+      {checkingStock && (
+        <div className="mb-4 text-sm text-gray-500 flex items-center gap-2">
+          <Loader2 size={14} className="animate-spin" />
+          Checking stock availability…
+        </div>
+      )}
+
+      {stockWarning && (
+        <div className="mb-6 flex items-start gap-3 bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-xl px-4 py-3">
+          <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
+          <p>{stockWarning}</p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Item list */}

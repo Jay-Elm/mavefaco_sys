@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, CheckCircle, ShieldCheck, ShieldAlert, ExternalLink } from 'lucide-react'
+import { Loader2, CheckCircle, ShieldCheck, ShieldAlert, ExternalLink, KeyRound } from 'lucide-react'
 
 interface ProfileData {
   idImageUrl: string | null
@@ -22,6 +22,13 @@ export default function FarmerProfilePage() {
   const [savingId, setSavingId] = useState(false)
   const [idSuccess, setIdSuccess] = useState(false)
   const [idError, setIdError] = useState('')
+
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [changingPw, setChangingPw] = useState(false)
+  const [pwError, setPwError] = useState('')
+  const [pwSuccess, setPwSuccess] = useState(false)
 
   useEffect(() => {
     if (!token) return
@@ -78,6 +85,33 @@ export default function FarmerProfilePage() {
       setIdError('Request failed')
     } finally {
       setSavingId(false)
+    }
+  }
+
+  async function handleChangePassword(e: React.FormEvent) {
+    e.preventDefault()
+    setPwError('')
+    setPwSuccess(false)
+    if (newPassword !== confirmPassword) { setPwError('Passwords do not match'); return }
+    if (newPassword.length < 6) { setPwError('New password must be at least 6 characters'); return }
+    if (!token) return
+    setChangingPw(true)
+    try {
+      const res = await fetch('/api/users/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setPwError(data.error ?? 'Failed to change password'); return }
+      setPwSuccess(true)
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmPassword('')
+    } catch {
+      setPwError('Request failed')
+    } finally {
+      setChangingPw(false)
     }
   }
 
@@ -181,6 +215,68 @@ export default function FarmerProfilePage() {
             {savingId && <Loader2 size={14} className="animate-spin" />}
             {savingId ? 'Saving…' : 'Submit ID'}
           </button>
+        </form>
+      </div>
+
+      {/* Change Password */}
+      <div className="border-t border-gray-200 pt-8">
+        <div className="flex items-center gap-2 mb-1">
+          <KeyRound size={18} className="text-gray-600" />
+          <h2 className="text-lg font-semibold text-gray-900">Change Password</h2>
+        </div>
+        <p className="text-sm text-gray-500 mb-4">
+          Leave blank if you don&apos;t want to change your password.
+        </p>
+
+        {pwError && <div className="mb-3 text-red-600 text-sm">{pwError}</div>}
+        {pwSuccess && (
+          <div className="mb-3 flex items-center gap-2 text-green-700 text-sm">
+            <CheckCircle size={16} /> Password changed successfully
+          </div>
+        )}
+
+        <form onSubmit={handleChangePassword} className="space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+              minLength={6}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+          <div className="pt-1">
+            <button
+              type="submit"
+              disabled={changingPw || !currentPassword || !newPassword || !confirmPassword}
+              className="inline-flex items-center gap-2 px-5 py-2 bg-gray-800 text-white text-sm font-medium rounded-lg hover:bg-gray-900 transition-colors disabled:opacity-60"
+            >
+              {changingPw && <Loader2 size={14} className="animate-spin" />}
+              {changingPw ? 'Changing…' : 'Change Password'}
+            </button>
+          </div>
         </form>
       </div>
     </div>

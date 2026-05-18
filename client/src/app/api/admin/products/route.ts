@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
       include: {
         category: true,
         farmer: { select: { id: true, name: true, email: true } },
+        _count: { select: { orderItems: true } },
       },
       orderBy: { createdAt: "desc" },
     });

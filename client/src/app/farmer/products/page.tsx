@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, Trash2, Pencil, Plus, AlertTriangle, CheckCircle, Clock } from 'lucide-react'
+import { Loader2, Package, Trash2, Pencil, Plus, AlertTriangle, CheckCircle, Clock, Download, XCircle } from 'lucide-react'
+import { downloadCSV } from '@/lib/csv'
 
 interface ProductRow {
   id: number
@@ -13,6 +14,24 @@ interface ProductRow {
   approved: boolean
   createdAt: string
   category: { name: string }
+}
+
+const LOW_STOCK_THRESHOLD = 5
+
+function StockBadge({ stock }: { stock: number }) {
+  if (stock === 0)
+    return (
+      <span className="inline-flex items-center gap-1 text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-full">
+        <XCircle size={11} /> Out of Stock
+      </span>
+    )
+  if (stock <= LOW_STOCK_THRESHOLD)
+    return (
+      <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
+        <AlertTriangle size={11} /> Low ({stock})
+      </span>
+    )
+  return <span className="text-xs font-medium text-gray-700">{stock}</span>
 }
 
 export default function FarmerProductsPage() {
@@ -64,16 +83,59 @@ export default function FarmerProductsPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">My Products</h1>
-        <Link
-          href="/farmer/products/new"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors"
-        >
-          <Plus size={16} />
-          Add Product
-        </Link>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => downloadCSV(
+              'my-products.csv',
+              ['Product', 'Category', 'Price (PHP)', 'Stock', 'Status', 'Listed Date'],
+              products.map((p) => [
+                p.name, p.category.name, p.price.toFixed(2), p.stock,
+                p.approved ? 'Approved' : 'Pending',
+                new Date(p.createdAt).toLocaleDateString('en-PH'),
+              ])
+            )}
+            disabled={products.length === 0}
+            className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 border border-gray-300 rounded-lg px-3 py-2 transition-colors disabled:opacity-40"
+          >
+            <Download size={12} /> Export CSV
+          </button>
+          <Link
+            href="/farmer/products/new"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors"
+          >
+            <Plus size={16} />
+            Add Product
+          </Link>
+        </div>
       </div>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
+
+      {/* Stock alert banner */}
+      {(() => {
+        const outOfStock = products.filter((p) => p.stock === 0)
+        const lowStock   = products.filter((p) => p.stock > 0 && p.stock <= LOW_STOCK_THRESHOLD)
+        if (outOfStock.length === 0 && lowStock.length === 0) return null
+        return (
+          <div className="mb-5 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+            <AlertTriangle size={16} className="text-amber-500 shrink-0 mt-0.5" />
+            <div className="text-sm text-amber-800 space-y-1">
+              {outOfStock.length > 0 && (
+                <p>
+                  <span className="font-semibold">Out of stock:</span>{' '}
+                  {outOfStock.map((p) => p.name).join(', ')}
+                </p>
+              )}
+              {lowStock.length > 0 && (
+                <p>
+                  <span className="font-semibold">Running low (≤ {LOW_STOCK_THRESHOLD} units):</span>{' '}
+                  {lowStock.map((p) => `${p.name} (${p.stock})`).join(', ')}
+                </p>
+              )}
+            </div>
+          </div>
+        )
+      })()}
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
         <table className="w-full text-sm">
@@ -114,9 +176,7 @@ export default function FarmerProductsPage() {
                       ₱{p.price.toFixed(2)}
                     </td>
                     <td className="px-5 py-3 text-center">
-                      <span className={`text-xs font-medium ${p.stock > 0 ? 'text-gray-700' : 'text-red-500'}`}>
-                        {p.stock}
-                      </span>
+                      <StockBadge stock={p.stock} />
                     </td>
                     <td className="px-5 py-3 text-center">
                       {p.approved ? (

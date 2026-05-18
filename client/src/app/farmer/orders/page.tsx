@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, ShoppingCart, AlertTriangle } from 'lucide-react'
+import { Loader2, ShoppingCart, AlertTriangle, Download } from 'lucide-react'
+import { downloadCSV } from '@/lib/csv'
 
 interface OrderRow {
   id: number
@@ -91,7 +92,24 @@ export default function FarmerOrdersPage() {
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
-        <span className="text-sm text-gray-500">{orders.length} total</span>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-500">{orders.length} total</span>
+          <button
+            onClick={() => downloadCSV(
+              'my-orders.csv',
+              ['Order ID', 'Customer', 'Email', 'Total (PHP)', 'Status', 'Items', 'Date'],
+              orders.map((o) => [
+                o.id, o.customer.name, o.customer.email,
+                o.totalAmount.toFixed(2), o.status, o.items.length,
+                new Date(o.createdAt).toLocaleDateString('en-PH'),
+              ])
+            )}
+            disabled={orders.length === 0}
+            className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 border border-gray-300 rounded-lg px-3 py-2 transition-colors disabled:opacity-40"
+          >
+            <Download size={12} /> Export CSV
+          </button>
+        </div>
       </div>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}

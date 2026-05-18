@@ -11,6 +11,9 @@ import {
   Package,
   ShoppingCart,
   ScrollText,
+  BarChart2,
+  Megaphone,
+  Globe,
   Loader2,
 } from 'lucide-react'
 
@@ -21,6 +24,9 @@ const ADMIN_NAV = [
   { href: '/dashboard/products', label: 'Products', icon: Package },
   { href: '/dashboard/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/dashboard/audit-logs', label: 'Audit Logs', icon: ScrollText },
+  { href: '/dashboard/announcements', label: 'Announcements', icon: Megaphone },
+  { href: '/dashboard/site', label: 'Site Content', icon: Globe },
+  { href: '/dashboard/reports', label: 'Reports', icon: BarChart2 },
 ]
 
 const MANAGER_NAV = [
@@ -29,6 +35,8 @@ const MANAGER_NAV = [
   { href: '/dashboard/categories', label: 'Categories', icon: Tag },
   { href: '/dashboard/products', label: 'Products', icon: Package },
   { href: '/dashboard/orders', label: 'Orders', icon: ShoppingCart },
+  { href: '/dashboard/announcements', label: 'Announcements', icon: Megaphone },
+  { href: '/dashboard/reports', label: 'Reports', icon: BarChart2 },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

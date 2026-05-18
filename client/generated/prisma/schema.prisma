@@ -19,9 +19,13 @@ model User {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  products  Product[]
-  orders    Order[]
-  auditLogs AuditLog[]
+  products         Product[]
+  orders           Order[]
+  auditLogs        AuditLog[]
+  announcements    Announcement[]
+  reviews          Review[]
+  sentMessages     Message[]      @relation("SentMessages")
+  receivedMessages Message[]      @relation("ReceivedMessages")
 }
 
 model Category {
@@ -43,6 +47,11 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  plantingDate        DateTime?
+  expectedHarvestDate DateTime?
+  growthStage         String?
+  readyForHarvest     Boolean   @default(false)
+
   farmerId Int
   farmer   User @relation(fields: [farmerId], references: [id])
 
@@ -50,6 +59,18 @@ model Product {
   category   Category @relation(fields: [categoryId], references: [id])
 
   orderItems OrderItem[]
+  reviews    Review[]
+  cropLogs   CropLog[]
+}
+
+model CropLog {
+  id        Int      @id @default(autoincrement())
+  type      String
+  note      String
+  createdAt DateTime @default(now())
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
 }
 
 model Order {
@@ -77,6 +98,70 @@ model OrderItem {
 
   productId Int
   product   Product @relation(fields: [productId], references: [id])
+}
+
+model Announcement {
+  id        Int      @id @default(autoincrement())
+  title     String
+  body      String
+  type      String   @default("info")
+  createdAt DateTime @default(now())
+
+  authorId Int
+  author   User @relation(fields: [authorId], references: [id])
+}
+
+model Banner {
+  id           Int      @id @default(autoincrement())
+  title        String
+  subtitle     String?
+  ctaText      String?
+  ctaLink      String?
+  color        String   @default("green")
+  active       Boolean  @default(true)
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+}
+
+model Faq {
+  id           Int      @id @default(autoincrement())
+  question     String
+  answer       String
+  displayOrder Int      @default(0)
+  createdAt    DateTime @default(now())
+}
+
+model SiteContent {
+  key   String @id
+  value String
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  customerId Int
+  customer   User @relation(fields: [customerId], references: [id])
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@unique([customerId, productId])
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  senderId Int
+  sender   User @relation("SentMessages", fields: [senderId], references: [id])
+
+  receiverId Int
+  receiver   User @relation("ReceivedMessages", fields: [receiverId], references: [id])
 }
 
 model AuditLog {
