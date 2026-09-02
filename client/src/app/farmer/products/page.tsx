@@ -80,7 +80,7 @@ export default function FarmerProductsPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">My Products</h1>
         <div className="flex items-center gap-2">
@@ -138,7 +138,8 @@ export default function FarmerProductsPage() {
       })()}
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[560px]">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Product</th>
@@ -234,6 +235,7 @@ export default function FarmerProductsPage() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )

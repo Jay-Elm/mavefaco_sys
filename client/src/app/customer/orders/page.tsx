@@ -143,7 +143,7 @@ export default function CustomerOrdersPage() {
           return (
             <div key={order.id} className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
               <button
-                className="w-full flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors"
+                className="w-full flex items-center justify-between px-4 sm:px-6 py-4 hover:bg-gray-50 transition-colors"
                 onClick={() => toggleExpand(order.id)}
               >
                 <div className="flex items-center gap-4 text-left">
@@ -162,7 +162,7 @@ export default function CustomerOrdersPage() {
               </button>
 
               {isOpen && (
-                <div className="border-t border-gray-100 px-6 py-4 space-y-4">
+                <div className="border-t border-gray-100 px-4 sm:px-6 py-4 space-y-4">
                   {/* Items */}
                   <div className="space-y-2">
                     {order.items.map(item => (

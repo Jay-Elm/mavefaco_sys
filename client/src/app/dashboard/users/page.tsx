@@ -191,7 +191,7 @@ export default function UsersPage() {
   const activeFilters = search || filterRole || filterStatus !== 'all'
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Users</h1>
         <span className="text-sm text-gray-500">{users.length} total</span>
@@ -199,7 +199,7 @@ export default function UsersPage() {
 
       {/* Filters toolbar */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
-        <div className="relative flex-1 min-w-48">
+        <div className="relative flex-1 min-w-0 sm:min-w-48">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           <input
             type="text"

@@ -141,7 +141,7 @@ export default function OrdersPage() {
   const activeFilters = search || filterStatus
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
         <span className="text-sm text-gray-500">{orders.length} total</span>
@@ -149,7 +149,7 @@ export default function OrdersPage() {
 
       {/* Filters toolbar */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
-        <div className="relative flex-1 min-w-48">
+        <div className="relative flex-1 min-w-0 sm:min-w-48">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           <input
             type="text"
@@ -202,7 +202,8 @@ export default function OrdersPage() {
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[560px]">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th
@@ -334,6 +335,7 @@ export default function OrdersPage() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )
