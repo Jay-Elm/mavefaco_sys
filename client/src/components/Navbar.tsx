@@ -30,43 +30,31 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 h-16 flex items-center bg-green-800 text-white transition-all duration-200 ${
-        scrolled ? 'shadow-xl shadow-green-900/30' : ''
+      className={`sticky top-0 z-50 h-16 flex items-center bg-[#1B3A2D] text-white transition-shadow duration-200 ${
+        scrolled ? 'shadow-lg shadow-black/20' : ''
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 w-full flex items-center justify-between">
 
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
-          <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
-            <Leaf size={18} className="text-green-300" />
+        <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+          <div className="w-7 h-7 bg-white/10 rounded-md flex items-center justify-center">
+            <Leaf size={16} className="text-green-300" />
           </div>
-          <span className="font-serif text-xl font-bold tracking-tight">
-            Coop<span className="text-orange-400">Market</span>
-          </span>
+          <span className="font-serif text-xl font-bold tracking-tight">CoopMarket</span>
         </Link>
 
         <div className="flex items-center gap-0.5">
-          <Link
-            href="/products"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
-          >
+          <Link href="/products" className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium">
             <ShoppingBag size={15} />
             <span>Products</span>
           </Link>
 
-          <Link
-            href="/about"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
-          >
+          <Link href="/about" className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium">
             <Info size={15} />
             <span>About</span>
           </Link>
 
-          <Link
-            href="/cart"
-            className="relative flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
-          >
+          <Link href="/cart" className="relative flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium">
             <ShoppingCart size={15} />
             <span>Cart</span>
             {totalItems > 0 && (
@@ -79,43 +67,28 @@ export default function Navbar() {
           {isAuthenticated ? (
             <>
               {(user?.role === 'admin' || user?.role === 'manager') && (
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
-                >
+                <Link href="/dashboard" className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium">
                   <LayoutDashboard size={15} />
                   <span>Dashboard</span>
                 </Link>
               )}
               {user?.role === 'farmer' && (
-                <Link
-                  href="/farmer"
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
-                >
+                <Link href="/farmer" className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium">
                   <LayoutDashboard size={15} />
                   <span>My Farm</span>
                 </Link>
               )}
               {user?.role === 'customer' && (
                 <>
-                  <Link
-                    href="/customer/messages"
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
-                  >
+                  <Link href="/customer/messages" className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium">
                     <MessageCircle size={15} />
                     <span>Messages</span>
                   </Link>
-                  <Link
-                    href="/customer/orders"
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
-                  >
+                  <Link href="/customer/orders" className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium">
                     <ClipboardList size={15} />
                     <span>My Orders</span>
                   </Link>
-                  <Link
-                    href="/customer/profile"
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
-                  >
+                  <Link href="/customer/profile" className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium">
                     <UserCircle size={15} />
                     <span>Profile</span>
                   </Link>
@@ -127,27 +100,18 @@ export default function Navbar() {
                 <span className="max-w-[100px] truncate">{user?.name}</span>
               </div>
 
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium ml-0.5"
-              >
+              <button onClick={handleLogout} className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium ml-0.5">
                 <LogOut size={15} />
                 <span>Logout</span>
               </button>
             </>
           ) : (
             <>
-              <Link
-                href="/login"
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
-              >
+              <Link href="/login" className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium">
                 <LogIn size={15} />
                 <span>Login</span>
               </Link>
-              <Link
-                href="/register"
-                className="flex items-center gap-1.5 px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors text-sm font-semibold ml-1"
-              >
+              <Link href="/register" className="flex items-center gap-1.5 px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors text-sm font-semibold ml-1">
                 <UserPlus size={15} />
                 <span>Register</span>
               </Link>

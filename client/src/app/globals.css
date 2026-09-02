@@ -2,15 +2,15 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1a1a1a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-plus-jakarta);
   --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-lora);
+  --font-serif: var(--font-fraunces);
 }
 
 body {
@@ -27,10 +27,10 @@ input, textarea, select {
   opacity: 1;
 }
 
-@keyframes fadeInUp {
+@keyframes heroEntrance {
   from {
     opacity: 0;
-    transform: translateY(28px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -38,12 +38,23 @@ input, textarea, select {
   }
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.7s ease-out forwards;
+.hero-line-1 {
+  animation: heroEntrance 0.7s ease-out forwards;
+}
+.hero-line-2 {
+  opacity: 0;
+  animation: heroEntrance 0.7s ease-out 0.12s forwards;
+}
+.hero-line-3 {
+  opacity: 0;
+  animation: heroEntrance 0.7s ease-out 0.24s forwards;
 }
 
-.animate-delay-100 { animation-delay: 0.1s; opacity: 0; }
-.animate-delay-200 { animation-delay: 0.2s; opacity: 0; }
-.animate-delay-300 { animation-delay: 0.3s; opacity: 0; }
-.animate-delay-400 { animation-delay: 0.4s; opacity: 0; }
-.animate-delay-500 { animation-delay: 0.5s; opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-line-1,
+  .hero-line-2,
+  .hero-line-3 {
+    animation: none;
+    opacity: 1;
+  }
+}
