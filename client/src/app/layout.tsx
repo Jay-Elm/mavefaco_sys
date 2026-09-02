@@ -35,12 +35,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${lora.variable} ${inter.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${lora.variable} ${inter.variable} ${geistMono.variable} antialiased`}
     >
-      <body className="h-full flex flex-col bg-white font-sans">
+      <body className="min-h-screen flex flex-col bg-white font-sans">
         <Providers>
           <Navbar />
-          <main className="flex-1 min-h-0 overflow-y-auto">{children}</main>
+          <main className="flex-1">{children}</main>
 
           {/* Footer */}
           <footer className="shrink-0 bg-green-900 text-white">
@@ -57,7 +57,7 @@ export default function RootLayout({
                 </p>
                 <div className="mt-5 flex items-center gap-2 text-green-400 text-sm">
                   <MapPin size={14} />
-                  <span>Legazpi City, Albay</span>
+                  <span>Tabaco City, Albay</span>
                 </div>
               </div>
 
@@ -121,7 +121,7 @@ export default function RootLayout({
                 <ul className="space-y-3 text-sm text-green-300">
                   <li className="flex items-start gap-2">
                     <MapPin size={14} className="mt-0.5 shrink-0 text-green-500" />
-                    <span>Legazpi City, Albay, Philippines 4500</span>
+                    <span>Tabaco City, Albay, Philippines 4511</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Mail size={14} className="shrink-0 text-green-500" />
@@ -131,7 +131,7 @@ export default function RootLayout({
                   </li>
                   <li className="flex items-center gap-2">
                     <Phone size={14} className="shrink-0 text-green-500" />
-                    <span>+63 52 480 0000</span>
+                    <span>0993-465-6269</span>
                   </li>
                 </ul>
               </div>

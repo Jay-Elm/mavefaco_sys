@@ -36,7 +36,7 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
   }
 
   return (
-    <div className="flex h-full overflow-hidden bg-gray-50">
+    <div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-gray-50">
       {/* Sidebar — always visible, scrolls independently */}
       <aside className="w-56 bg-gray-900 text-white flex flex-col overflow-y-auto shrink-0">
         <div className="px-5 py-4 flex items-center gap-2 border-b border-gray-700">

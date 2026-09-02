@@ -69,7 +69,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="flex h-full overflow-hidden">
+    <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
       {/* Sidebar — scrolls independently if nav items overflow */}
       <aside className="w-56 shrink-0 bg-gray-900 text-gray-300 flex flex-col overflow-y-auto">
         <div className="px-4 py-5 border-b border-gray-700">
