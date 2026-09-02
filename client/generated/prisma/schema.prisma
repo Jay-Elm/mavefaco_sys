@@ -41,7 +41,8 @@ model Product {
   name        String
   description String
   price       Float
-  stock       Int
+  stock       Float
+  unit        String   @default("piece")
   imageUrl    String?
   approved    Boolean  @default(false)
   createdAt   DateTime @default(now())
@@ -90,7 +91,7 @@ model Order {
 model OrderItem {
   id Int @id @default(autoincrement())
 
-  quantity Int
+  quantity Float
   price    Float
 
   orderId Int

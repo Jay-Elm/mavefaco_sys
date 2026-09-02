@@ -10,7 +10,7 @@ interface OrderItem {
   id: number
   quantity: number
   price: number
-  product: { id: number; name: string; imageUrl: string | null }
+  product: { id: number; name: string; imageUrl: string | null; unit: string }
 }
 
 interface Order {
@@ -174,7 +174,7 @@ export default function CustomerOrdersPage() {
                           >
                             {item.product.name}
                           </Link>
-                          <span className="text-gray-400">× {item.quantity}</span>
+                          <span className="text-gray-400">× {parseFloat(item.quantity.toFixed(2))} {item.product.unit}</span>
                         </div>
                         <span className="text-gray-700 font-medium">
                           ₱{(item.price * item.quantity).toFixed(2)}

@@ -4612,6 +4612,7 @@ export namespace Prisma {
     description: string | null
     price: number | null
     stock: number | null
+    unit: string | null
     imageUrl: string | null
     approved: boolean | null
     createdAt: Date | null
@@ -4630,6 +4631,7 @@ export namespace Prisma {
     description: string | null
     price: number | null
     stock: number | null
+    unit: string | null
     imageUrl: string | null
     approved: boolean | null
     createdAt: Date | null
@@ -4648,6 +4650,7 @@ export namespace Prisma {
     description: number
     price: number
     stock: number
+    unit: number
     imageUrl: number
     approved: number
     createdAt: number
@@ -4684,6 +4687,7 @@ export namespace Prisma {
     description?: true
     price?: true
     stock?: true
+    unit?: true
     imageUrl?: true
     approved?: true
     createdAt?: true
@@ -4702,6 +4706,7 @@ export namespace Prisma {
     description?: true
     price?: true
     stock?: true
+    unit?: true
     imageUrl?: true
     approved?: true
     createdAt?: true
@@ -4720,6 +4725,7 @@ export namespace Prisma {
     description?: true
     price?: true
     stock?: true
+    unit?: true
     imageUrl?: true
     approved?: true
     createdAt?: true
@@ -4825,6 +4831,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit: string
     imageUrl: string | null
     approved: boolean
     createdAt: Date
@@ -4862,6 +4869,7 @@ export namespace Prisma {
     description?: boolean
     price?: boolean
     stock?: boolean
+    unit?: boolean
     imageUrl?: boolean
     approved?: boolean
     createdAt?: boolean
@@ -4886,6 +4894,7 @@ export namespace Prisma {
     description?: boolean
     price?: boolean
     stock?: boolean
+    unit?: boolean
     imageUrl?: boolean
     approved?: boolean
     createdAt?: boolean
@@ -4906,6 +4915,7 @@ export namespace Prisma {
     description?: boolean
     price?: boolean
     stock?: boolean
+    unit?: boolean
     imageUrl?: boolean
     approved?: boolean
     createdAt?: boolean
@@ -4926,6 +4936,7 @@ export namespace Prisma {
     description?: boolean
     price?: boolean
     stock?: boolean
+    unit?: boolean
     imageUrl?: boolean
     approved?: boolean
     createdAt?: boolean
@@ -4938,7 +4949,7 @@ export namespace Prisma {
     categoryId?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "stock" | "imageUrl" | "approved" | "createdAt" | "updatedAt" | "plantingDate" | "expectedHarvestDate" | "growthStage" | "readyForHarvest" | "farmerId" | "categoryId", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "stock" | "unit" | "imageUrl" | "approved" | "createdAt" | "updatedAt" | "plantingDate" | "expectedHarvestDate" | "growthStage" | "readyForHarvest" | "farmerId" | "categoryId", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     farmer?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -4971,6 +4982,7 @@ export namespace Prisma {
       description: string
       price: number
       stock: number
+      unit: string
       imageUrl: string | null
       approved: boolean
       createdAt: Date
@@ -5413,7 +5425,8 @@ export namespace Prisma {
     readonly name: FieldRef<"Product", 'String'>
     readonly description: FieldRef<"Product", 'String'>
     readonly price: FieldRef<"Product", 'Float'>
-    readonly stock: FieldRef<"Product", 'Int'>
+    readonly stock: FieldRef<"Product", 'Float'>
+    readonly unit: FieldRef<"Product", 'String'>
     readonly imageUrl: FieldRef<"Product", 'String'>
     readonly approved: FieldRef<"Product", 'Boolean'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
@@ -8875,7 +8888,7 @@ export namespace Prisma {
    */
   interface OrderItemFieldRefs {
     readonly id: FieldRef<"OrderItem", 'Int'>
-    readonly quantity: FieldRef<"OrderItem", 'Int'>
+    readonly quantity: FieldRef<"OrderItem", 'Float'>
     readonly price: FieldRef<"OrderItem", 'Float'>
     readonly orderId: FieldRef<"OrderItem", 'Int'>
     readonly productId: FieldRef<"OrderItem", 'Int'>
@@ -16920,6 +16933,7 @@ export namespace Prisma {
     description: 'description',
     price: 'price',
     stock: 'stock',
+    unit: 'unit',
     imageUrl: 'imageUrl',
     approved: 'approved',
     createdAt: 'createdAt',
@@ -17302,7 +17316,8 @@ export namespace Prisma {
     name?: StringFilter<"Product"> | string
     description?: StringFilter<"Product"> | string
     price?: FloatFilter<"Product"> | number
-    stock?: IntFilter<"Product"> | number
+    stock?: FloatFilter<"Product"> | number
+    unit?: StringFilter<"Product"> | string
     imageUrl?: StringNullableFilter<"Product"> | string | null
     approved?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
@@ -17326,6 +17341,7 @@ export namespace Prisma {
     description?: SortOrder
     price?: SortOrder
     stock?: SortOrder
+    unit?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     approved?: SortOrder
     createdAt?: SortOrder
@@ -17351,7 +17367,8 @@ export namespace Prisma {
     name?: StringFilter<"Product"> | string
     description?: StringFilter<"Product"> | string
     price?: FloatFilter<"Product"> | number
-    stock?: IntFilter<"Product"> | number
+    stock?: FloatFilter<"Product"> | number
+    unit?: StringFilter<"Product"> | string
     imageUrl?: StringNullableFilter<"Product"> | string | null
     approved?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
@@ -17375,6 +17392,7 @@ export namespace Prisma {
     description?: SortOrder
     price?: SortOrder
     stock?: SortOrder
+    unit?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     approved?: SortOrder
     createdAt?: SortOrder
@@ -17400,7 +17418,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Product"> | string
     description?: StringWithAggregatesFilter<"Product"> | string
     price?: FloatWithAggregatesFilter<"Product"> | number
-    stock?: IntWithAggregatesFilter<"Product"> | number
+    stock?: FloatWithAggregatesFilter<"Product"> | number
+    unit?: StringWithAggregatesFilter<"Product"> | string
     imageUrl?: StringNullableWithAggregatesFilter<"Product"> | string | null
     approved?: BoolWithAggregatesFilter<"Product"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
@@ -17545,7 +17564,7 @@ export namespace Prisma {
     OR?: OrderItemWhereInput[]
     NOT?: OrderItemWhereInput | OrderItemWhereInput[]
     id?: IntFilter<"OrderItem"> | number
-    quantity?: IntFilter<"OrderItem"> | number
+    quantity?: FloatFilter<"OrderItem"> | number
     price?: FloatFilter<"OrderItem"> | number
     orderId?: IntFilter<"OrderItem"> | number
     productId?: IntFilter<"OrderItem"> | number
@@ -17568,7 +17587,7 @@ export namespace Prisma {
     AND?: OrderItemWhereInput | OrderItemWhereInput[]
     OR?: OrderItemWhereInput[]
     NOT?: OrderItemWhereInput | OrderItemWhereInput[]
-    quantity?: IntFilter<"OrderItem"> | number
+    quantity?: FloatFilter<"OrderItem"> | number
     price?: FloatFilter<"OrderItem"> | number
     orderId?: IntFilter<"OrderItem"> | number
     productId?: IntFilter<"OrderItem"> | number
@@ -17594,7 +17613,7 @@ export namespace Prisma {
     OR?: OrderItemScalarWhereWithAggregatesInput[]
     NOT?: OrderItemScalarWhereWithAggregatesInput | OrderItemScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"OrderItem"> | number
-    quantity?: IntWithAggregatesFilter<"OrderItem"> | number
+    quantity?: FloatWithAggregatesFilter<"OrderItem"> | number
     price?: FloatWithAggregatesFilter<"OrderItem"> | number
     orderId?: IntWithAggregatesFilter<"OrderItem"> | number
     productId?: IntWithAggregatesFilter<"OrderItem"> | number
@@ -18184,6 +18203,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -18205,6 +18225,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -18224,7 +18245,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18245,7 +18267,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18267,6 +18290,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -18283,7 +18307,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18299,7 +18324,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18450,7 +18476,7 @@ export namespace Prisma {
   }
 
   export type OrderItemUpdateInput = {
-    quantity?: IntFieldUpdateOperationsInput | number
+    quantity?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     order?: OrderUpdateOneRequiredWithoutItemsNestedInput
     product?: ProductUpdateOneRequiredWithoutOrderItemsNestedInput
@@ -18458,7 +18484,7 @@ export namespace Prisma {
 
   export type OrderItemUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    quantity?: IntFieldUpdateOperationsInput | number
+    quantity?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     orderId?: IntFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
@@ -18473,13 +18499,13 @@ export namespace Prisma {
   }
 
   export type OrderItemUpdateManyMutationInput = {
-    quantity?: IntFieldUpdateOperationsInput | number
+    quantity?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
   }
 
   export type OrderItemUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    quantity?: IntFieldUpdateOperationsInput | number
+    quantity?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     orderId?: IntFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
@@ -19215,6 +19241,7 @@ export namespace Prisma {
     description?: SortOrder
     price?: SortOrder
     stock?: SortOrder
+    unit?: SortOrder
     imageUrl?: SortOrder
     approved?: SortOrder
     createdAt?: SortOrder
@@ -19241,6 +19268,7 @@ export namespace Prisma {
     description?: SortOrder
     price?: SortOrder
     stock?: SortOrder
+    unit?: SortOrder
     imageUrl?: SortOrder
     approved?: SortOrder
     createdAt?: SortOrder
@@ -19259,6 +19287,7 @@ export namespace Prisma {
     description?: SortOrder
     price?: SortOrder
     stock?: SortOrder
+    unit?: SortOrder
     imageUrl?: SortOrder
     approved?: SortOrder
     createdAt?: SortOrder
@@ -20594,6 +20623,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -20614,6 +20644,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -20816,7 +20847,8 @@ export namespace Prisma {
     name?: StringFilter<"Product"> | string
     description?: StringFilter<"Product"> | string
     price?: FloatFilter<"Product"> | number
-    stock?: IntFilter<"Product"> | number
+    stock?: FloatFilter<"Product"> | number
+    unit?: StringFilter<"Product"> | string
     imageUrl?: StringNullableFilter<"Product"> | string | null
     approved?: BoolFilter<"Product"> | boolean
     createdAt?: DateTimeFilter<"Product"> | Date | string
@@ -20991,6 +21023,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -21011,6 +21044,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -21271,7 +21305,7 @@ export namespace Prisma {
     OR?: OrderItemScalarWhereInput[]
     NOT?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
     id?: IntFilter<"OrderItem"> | number
-    quantity?: IntFilter<"OrderItem"> | number
+    quantity?: FloatFilter<"OrderItem"> | number
     price?: FloatFilter<"OrderItem"> | number
     orderId?: IntFilter<"OrderItem"> | number
     productId?: IntFilter<"OrderItem"> | number
@@ -21325,6 +21359,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -21345,6 +21380,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -21379,7 +21415,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21399,7 +21436,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21572,6 +21610,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -21592,6 +21631,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -21656,7 +21696,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21676,7 +21717,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21828,6 +21870,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -21848,6 +21891,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -21930,7 +21974,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21950,7 +21995,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22241,6 +22287,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -22305,7 +22352,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22325,7 +22373,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22345,7 +22394,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22506,6 +22556,7 @@ export namespace Prisma {
     description: string
     price: number
     stock: number
+    unit?: string
     imageUrl?: string | null
     approved?: boolean
     createdAt?: Date | string
@@ -22521,7 +22572,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22541,7 +22593,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22561,7 +22614,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
-    stock?: IntFieldUpdateOperationsInput | number
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22596,21 +22650,21 @@ export namespace Prisma {
   }
 
   export type OrderItemUpdateWithoutProductInput = {
-    quantity?: IntFieldUpdateOperationsInput | number
+    quantity?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     order?: OrderUpdateOneRequiredWithoutItemsNestedInput
   }
 
   export type OrderItemUncheckedUpdateWithoutProductInput = {
     id?: IntFieldUpdateOperationsInput | number
-    quantity?: IntFieldUpdateOperationsInput | number
+    quantity?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     orderId?: IntFieldUpdateOperationsInput | number
   }
 
   export type OrderItemUncheckedUpdateManyWithoutProductInput = {
     id?: IntFieldUpdateOperationsInput | number
-    quantity?: IntFieldUpdateOperationsInput | number
+    quantity?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     orderId?: IntFieldUpdateOperationsInput | number
   }
@@ -22666,21 +22720,21 @@ export namespace Prisma {
   }
 
   export type OrderItemUpdateWithoutOrderInput = {
-    quantity?: IntFieldUpdateOperationsInput | number
+    quantity?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     product?: ProductUpdateOneRequiredWithoutOrderItemsNestedInput
   }
 
   export type OrderItemUncheckedUpdateWithoutOrderInput = {
     id?: IntFieldUpdateOperationsInput | number
-    quantity?: IntFieldUpdateOperationsInput | number
+    quantity?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
   }
 
   export type OrderItemUncheckedUpdateManyWithoutOrderInput = {
     id?: IntFieldUpdateOperationsInput | number
-    quantity?: IntFieldUpdateOperationsInput | number
+    quantity?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     productId?: IntFieldUpdateOperationsInput | number
   }

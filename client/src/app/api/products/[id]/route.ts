@@ -59,7 +59,7 @@ export async function PATCH(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     const body = await req.json();
-    const { name, description, price, stock, imageUrl, categoryId } = body;
+    const { name, description, price, stock, unit, imageUrl, categoryId } = body;
 
     // If a farmer edits any content field that actually changed, revoke approval for re-review
     const contentChanged =
@@ -69,6 +69,7 @@ export async function PATCH(
         (name !== undefined && name !== product.name) ||
         (description !== undefined && description !== product.description) ||
         (price !== undefined && Number(price) !== product.price) ||
+        (unit !== undefined && unit !== product.unit) ||
         (categoryId !== undefined && Number(categoryId) !== product.categoryId) ||
         (imageUrl !== undefined && (imageUrl || null) !== product.imageUrl)
       );
@@ -80,6 +81,7 @@ export async function PATCH(
         ...(description !== undefined && { description }),
         ...(price !== undefined && { price: Number(price) }),
         ...(stock !== undefined && { stock: Number(stock) }),
+        ...(unit !== undefined && { unit }),
         ...(imageUrl !== undefined && { imageUrl }),
         ...(categoryId !== undefined && { categoryId: Number(categoryId) }),
         ...(contentChanged && { approved: false }),

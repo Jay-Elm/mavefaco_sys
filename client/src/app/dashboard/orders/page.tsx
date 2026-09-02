@@ -11,7 +11,7 @@ interface OrderRow {
   totalAmount: number
   createdAt: string
   customer: { id: number; name: string; email: string }
-  items: { id: number; quantity: number; price: number; product: { id: number; name: string } }[]
+  items: { id: number; quantity: number; price: number; product: { id: number; name: string; unit: string } }[]
 }
 
 const STATUSES = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']
@@ -321,7 +321,7 @@ export default function OrdersPage() {
                         <div className="space-y-1">
                           {order.items.map((item) => (
                             <div key={item.id} className="flex justify-between text-xs text-gray-600">
-                              <span>{item.product.name} × {item.quantity}</span>
+                              <span>{item.product.name} × {parseFloat(item.quantity.toFixed(2))} {item.product.unit}</span>
                               <span>₱{(item.price * item.quantity).toFixed(2)}</span>
                             </div>
                           ))}

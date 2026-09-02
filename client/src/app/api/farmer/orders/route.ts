@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
         customer: { select: { id: true, name: true, email: true } },
         items: {
           where: { product: { farmerId: user.id } },
-          include: { product: { select: { id: true, name: true } } },
+          include: { product: { select: { id: true, name: true, unit: true } } },
         },
       },
       orderBy: { createdAt: "desc" },

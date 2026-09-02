@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
   }
 
   for (const item of items) {
-    if (!Number.isInteger(item.productId) || !Number.isInteger(item.quantity) || item.quantity < 1) {
+    if (!Number.isInteger(item.productId) || typeof item.quantity !== 'number' || item.quantity <= 0) {
       return NextResponse.json({ error: 'Invalid item data' }, { status: 400 })
     }
   }

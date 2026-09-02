@@ -76,7 +76,7 @@ export default async function ProductDetailPage({
               <span className="text-3xl font-bold text-green-700">
                 ₱{product.price.toFixed(2)}
               </span>
-              <span className="text-sm text-gray-400 ml-2">per unit</span>
+              <span className="text-sm text-gray-400 ml-2">/ {product.unit}</span>
             </div>
 
             <div className="bg-gray-50 rounded-xl p-4 space-y-3 text-sm mb-6">
@@ -85,7 +85,9 @@ export default async function ProductDetailPage({
                 <span
                   className={`font-medium ${product.stock > 0 ? 'text-green-700' : 'text-red-500'}`}
                 >
-                  {product.stock > 0 ? `${product.stock} units` : 'Out of stock'}
+                  {product.stock > 0
+                    ? `${parseFloat(product.stock.toFixed(2))} ${product.unit}`
+                    : 'Out of stock'}
                 </span>
               </div>
               <div className="flex justify-between items-center">
@@ -115,6 +117,7 @@ export default async function ProductDetailPage({
                   price: product.price,
                   imageUrl: product.imageUrl,
                   stock: product.stock,
+                  unit: product.unit,
                   farmerId: product.farmer.id,
                   farmerName: product.farmer.name,
                 }}

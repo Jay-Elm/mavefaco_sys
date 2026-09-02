@@ -19,7 +19,7 @@ export default function EditProductPage() {
   const [error, setError] = useState('')
 
   const [form, setForm] = useState({
-    name: '', description: '', price: '', stock: '', categoryId: '', imageUrl: '',
+    name: '', description: '', price: '', stock: '', unit: 'piece', categoryId: '', imageUrl: '',
   })
 
   useEffect(() => {
@@ -34,6 +34,7 @@ export default function EditProductPage() {
         description: product.description,
         price: String(product.price),
         stock: String(product.stock),
+        unit: product.unit ?? 'piece',
         categoryId: String(product.categoryId),
         imageUrl: product.imageUrl ?? '',
       })
@@ -58,7 +59,8 @@ export default function EditProductPage() {
           name: form.name.trim(),
           description: form.description.trim(),
           price: parseFloat(form.price),
-          stock: parseInt(form.stock, 10),
+          stock: parseFloat(form.stock),
+          unit: form.unit.trim() || 'piece',
           categoryId: parseInt(form.categoryId, 10),
           imageUrl: form.imageUrl.trim() || null,
         }),
@@ -106,19 +108,43 @@ export default function EditProductPage() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Price (₱)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Unit</label>
+            <input
+              name="unit" list="unit-options" value={form.unit} onChange={handleChange} required
+              placeholder="e.g. kg, piece, bundle"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            <datalist id="unit-options">
+              <option value="piece" />
+              <option value="kg" />
+              <option value="gram" />
+              <option value="bundle" />
+              <option value="pack" />
+              <option value="bag" />
+              <option value="tray" />
+              <option value="dozen" />
+              <option value="liter" />
+              <option value="sack" />
+              <option value="bottle" />
+            </datalist>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Price per {form.unit || 'unit'} (₱)</label>
             <input
               name="price" type="number" min="0" step="0.01" value={form.price} onChange={handleChange} required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
-            <input
-              name="stock" type="number" min="0" value={form.stock} onChange={handleChange} required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Stock (in {form.unit || 'units'})
+          </label>
+          <input
+            name="stock" type="number" min="0" step="0.01" value={form.stock} onChange={handleChange} required
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
         </div>
 
         <div>

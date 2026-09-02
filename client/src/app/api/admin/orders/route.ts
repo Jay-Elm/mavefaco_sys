@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
       include: {
         customer: { select: { id: true, name: true, email: true } },
         items: {
-          include: { product: { select: { id: true, name: true } } },
+          include: { product: { select: { id: true, name: true, unit: true } } },
         },
       },
     });

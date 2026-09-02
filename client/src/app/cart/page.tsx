@@ -146,28 +146,36 @@ export default function CartPage() {
 
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-gray-900 truncate">{item.name}</p>
-                <p className="text-sm text-gray-500 mt-0.5">₱{item.price.toFixed(2)} / unit</p>
+                <p className="text-sm text-gray-500 mt-0.5">₱{item.price.toFixed(2)} / {item.unit}</p>
 
                 <div className="flex items-center gap-3 mt-3">
                   <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                     <button
-                      onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                      onClick={() => {
+                        const step = /kg|kilo|gram|\bg\b|lb|liter|litre|ml/.test(item.unit.toLowerCase()) ? 0.25 : 1
+                        updateQuantity(item.productId, parseFloat((item.quantity - step).toFixed(2)))
+                      }}
                       className="px-2.5 py-1.5 hover:bg-gray-100 transition-colors text-gray-600"
                     >
                       <Minus size={14} />
                     </button>
                     <span className="px-3 py-1.5 text-sm font-medium text-gray-800 border-x border-gray-200">
-                      {item.quantity}
+                      {parseFloat(item.quantity.toFixed(2))}
                     </span>
                     <button
-                      onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                      onClick={() => {
+                        const step = /kg|kilo|gram|\bg\b|lb|liter|litre|ml/.test(item.unit.toLowerCase()) ? 0.25 : 1
+                        updateQuantity(item.productId, parseFloat((item.quantity + step).toFixed(2)))
+                      }}
                       disabled={item.quantity >= item.stock}
                       className="px-2.5 py-1.5 hover:bg-gray-100 transition-colors text-gray-600 disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       <Plus size={14} />
                     </button>
                   </div>
-                  <span className="text-xs text-gray-400">of {item.stock} available</span>
+                  <span className="text-xs text-gray-400">
+                    of {parseFloat(item.stock.toFixed(2))} {item.unit} available
+                  </span>
                 </div>
               </div>
 
@@ -192,7 +200,7 @@ export default function CartPage() {
             <div className="space-y-2 text-sm text-gray-600">
               {items.map(item => (
                 <div key={item.productId} className="flex justify-between">
-                  <span className="truncate pr-2">{item.name} × {item.quantity}</span>
+                  <span className="truncate pr-2">{item.name} × {parseFloat(item.quantity.toFixed(2))} {item.unit}</span>
                   <span className="font-medium text-gray-800 flex-shrink-0">
                     ₱{(item.price * item.quantity).toFixed(2)}
                   </span>

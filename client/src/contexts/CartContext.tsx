@@ -10,6 +10,7 @@ export interface CartItem {
   quantity: number
   imageUrl: string | null
   stock: number
+  unit: string
   farmerId: number
   farmerName: string
 }
@@ -92,7 +93,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }
 
   function updateQuantity(productId: number, quantity: number) {
-    if (quantity < 1) { removeItem(productId); return }
+    if (quantity <= 0) { removeItem(productId); return }
     setItems(prev => prev.map(i => (i.productId === productId ? { ...i, quantity } : i)))
   }
 

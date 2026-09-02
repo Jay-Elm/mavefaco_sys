@@ -8,6 +8,7 @@ interface Product {
   description: string
   price: number
   stock: number
+  unit: string
   imageUrl: string | null
   category: { id: number; name: string }
   farmer: { id: number; name: string; email: string }
@@ -43,10 +44,13 @@ export default function ProductCard({ product }: { product: Product }) {
           </h3>
           <p className="text-sm text-gray-500 mt-1 line-clamp-2">{product.description}</p>
           <div className="mt-3 flex items-center justify-between">
-            <span className="text-lg font-bold text-green-700">
-              ₱{product.price.toFixed(2)}
+            <div>
+              <span className="text-lg font-bold text-green-700">₱{product.price.toFixed(2)}</span>
+              <span className="text-xs text-gray-400 ml-1">/ {product.unit}</span>
+            </div>
+            <span className="text-xs text-gray-400">
+              {parseFloat(product.stock.toFixed(2))} {product.unit}
             </span>
-            <span className="text-xs text-gray-400">{product.stock} in stock</span>
           </div>
         </div>
       </Link>
