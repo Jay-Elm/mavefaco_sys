@@ -30,41 +30,47 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`sticky top-0 z-50 h-14 flex items-center bg-green-700 text-white transition-shadow duration-200 ${
-        scrolled ? 'shadow-xl' : 'shadow-md'
+      className={`sticky top-0 z-50 h-16 flex items-center bg-green-800 text-white transition-all duration-200 ${
+        scrolled ? 'shadow-xl shadow-green-900/30' : ''
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 w-full flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 text-xl font-bold hover:opacity-90">
-          <Leaf size={22} />
-          <span>CoopMarket</span>
+
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity">
+          <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center">
+            <Leaf size={18} className="text-green-300" />
+          </div>
+          <span className="font-serif text-xl font-bold tracking-tight">
+            Coop<span className="text-orange-400">Market</span>
+          </span>
         </Link>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           <Link
             href="/products"
-            className="flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
           >
-            <ShoppingBag size={16} />
+            <ShoppingBag size={15} />
             <span>Products</span>
           </Link>
 
           <Link
             href="/about"
-            className="flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
           >
-            <Info size={16} />
+            <Info size={15} />
             <span>About</span>
           </Link>
 
           <Link
             href="/cart"
-            className="relative flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
+            className="relative flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
           >
-            <ShoppingCart size={16} />
+            <ShoppingCart size={15} />
             <span>Cart</span>
             {totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="absolute -top-0.5 -right-0.5 bg-orange-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center leading-none">
                 {totalItems > 9 ? '9+' : totalItems}
               </span>
             )}
@@ -75,18 +81,18 @@ export default function Navbar() {
               {(user?.role === 'admin' || user?.role === 'manager') && (
                 <Link
                   href="/dashboard"
-                  className="flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
                 >
-                  <LayoutDashboard size={16} />
+                  <LayoutDashboard size={15} />
                   <span>Dashboard</span>
                 </Link>
               )}
               {user?.role === 'farmer' && (
                 <Link
                   href="/farmer"
-                  className="flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
                 >
-                  <LayoutDashboard size={16} />
+                  <LayoutDashboard size={15} />
                   <span>My Farm</span>
                 </Link>
               )}
@@ -94,36 +100,38 @@ export default function Navbar() {
                 <>
                   <Link
                     href="/customer/messages"
-                    className="flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
                   >
-                    <MessageCircle size={16} />
+                    <MessageCircle size={15} />
                     <span>Messages</span>
                   </Link>
                   <Link
                     href="/customer/orders"
-                    className="flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
                   >
-                    <ClipboardList size={16} />
+                    <ClipboardList size={15} />
                     <span>My Orders</span>
                   </Link>
                   <Link
                     href="/customer/profile"
-                    className="flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
                   >
-                    <UserCircle size={16} />
+                    <UserCircle size={15} />
                     <span>Profile</span>
                   </Link>
                 </>
               )}
-              <span className="hidden sm:flex items-center gap-1 px-3 py-2 text-sm text-green-200">
-                <User size={16} />
-                {user?.name}
-              </span>
+
+              <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 ml-1 rounded-lg bg-white/10 text-sm text-green-200">
+                <User size={14} />
+                <span className="max-w-[100px] truncate">{user?.name}</span>
+              </div>
+
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium ml-0.5"
               >
-                <LogOut size={16} />
+                <LogOut size={15} />
                 <span>Logout</span>
               </button>
             </>
@@ -131,16 +139,16 @@ export default function Navbar() {
             <>
               <Link
                 href="/login"
-                className="flex items-center gap-1 px-3 py-2 rounded hover:bg-green-600 transition-colors text-sm font-medium"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium"
               >
-                <LogIn size={16} />
+                <LogIn size={15} />
                 <span>Login</span>
               </Link>
               <Link
                 href="/register"
-                className="flex items-center gap-1 px-3 py-2 bg-orange-500 hover:bg-orange-600 rounded transition-colors text-sm font-medium ml-1"
+                className="flex items-center gap-1.5 px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors text-sm font-semibold ml-1"
               >
-                <UserPlus size={16} />
+                <UserPlus size={15} />
                 <span>Register</span>
               </Link>
             </>
