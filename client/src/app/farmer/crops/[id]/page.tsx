@@ -157,19 +157,19 @@ export default function CropDetailPage() {
   )
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-4 sm:p-8 max-w-3xl">
       <Link href="/farmer/crops" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-green-700 mb-6">
         <ArrowLeft size={15} /> Back to Crop Monitor
       </Link>
 
-      <div className="flex items-center gap-3 mb-6">
-        <Sprout size={20} className="text-green-600" />
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">{crop.name}</h1>
+      <div className="flex flex-wrap items-center gap-3 mb-6">
+        <Sprout size={20} className="text-green-600 shrink-0" />
+        <div className="min-w-0">
+          <h1 className="text-2xl font-bold text-gray-900 truncate">{crop.name}</h1>
           <p className="text-sm text-gray-400">{crop.category.name} · {crop.stock} units in stock</p>
         </div>
         {crop.readyForHarvest && (
-          <span className="ml-auto inline-flex items-center gap-1 text-sm font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full">
+          <span className="sm:ml-auto inline-flex items-center gap-1 text-sm font-semibold text-green-700 bg-green-100 px-3 py-1 rounded-full shrink-0">
             <CheckCircle2 size={14} /> Ready for Harvest
           </span>
         )}
@@ -179,7 +179,7 @@ export default function CropDetailPage() {
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
         <h2 className="text-sm font-semibold text-gray-700 mb-4">Crop Details</h2>
         <form onSubmit={handleSave} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">Planting Date</label>
               <input type="date" value={plantingDate} onChange={(e) => setPlantingDate(e.target.value)} className={INPUT} />
@@ -233,7 +233,7 @@ export default function CropDetailPage() {
 
         {/* Add log form */}
         <form onSubmit={handleAddLog} className="space-y-3 mb-6 pb-6 border-b border-gray-100">
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {LOG_TYPES.map(({ value, label, icon: Icon, cls }) => (
               <button
                 key={value}
