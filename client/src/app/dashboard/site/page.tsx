@@ -188,8 +188,8 @@ function BannersTab({ token }: { token: string | null }) {
             <input value={ctaText} onChange={(e) => setCtaText(e.target.value)} placeholder="Button label (e.g. Shop Now)" className={INPUT} />
             <input value={ctaLink} onChange={(e) => setCtaLink(e.target.value)} placeholder="Button link (e.g. /products)" className={INPUT} />
           </div>
-          <div className="flex flex-wrap gap-3 items-center">
-            <div className="flex gap-2 items-center flex-1 min-w-0">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+            <div className="flex gap-2 items-center flex-1">
               {Object.entries(COLORS).map(([key, { label, preview }]) => (
                 <button
                   key={key}
