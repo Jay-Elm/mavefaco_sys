@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -16,10 +16,22 @@ const loginSchema = z.object({
 
 type LoginForm = z.infer<typeof loginSchema>
 
+function roleDest(role?: string) {
+  if (role === 'admin' || role === 'manager') return '/dashboard'
+  if (role === 'farmer') return '/farmer'
+  return '/products'
+}
+
 export default function LoginPage() {
-  const { login } = useAuth()
+  const { login, isAuthenticated, loading, user } = useAuth()
   const router = useRouter()
   const [serverError, setServerError] = useState('')
+
+  useEffect(() => {
+    if (!loading && isAuthenticated) router.replace(roleDest(user?.role))
+  }, [loading, isAuthenticated, user, router])
+
+  if (loading || isAuthenticated) return null
 
   const {
     register,

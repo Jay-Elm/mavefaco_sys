@@ -67,25 +67,27 @@ export default function SitePage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-6 border-b border-gray-200">
-        {([
-          { key: 'banners', label: 'Banners', icon: ImageIcon },
-          { key: 'info',    label: 'Cooperative Info', icon: Info },
-          { key: 'faqs',    label: 'FAQs', icon: HelpCircle },
-        ] as const).map(({ key, label, icon: Icon }) => (
-          <button
-            key={key}
-            onClick={() => setTab(key)}
-            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px ${
-              tab === key
-                ? 'border-green-600 text-green-700'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
-            }`}
-          >
-            <Icon size={15} />
-            {label}
-          </button>
-        ))}
+      <div className="overflow-x-auto -mx-4 sm:mx-0 mb-6">
+        <div className="flex gap-1 border-b border-gray-200 px-4 sm:px-0 min-w-max">
+          {([
+            { key: 'banners', label: 'Banners', icon: ImageIcon },
+            { key: 'info',    label: 'Coop Info', icon: Info },
+            { key: 'faqs',    label: 'FAQs', icon: HelpCircle },
+          ] as const).map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              onClick={() => setTab(key)}
+              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
+                tab === key
+                  ? 'border-green-600 text-green-700'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <Icon size={15} />
+              {label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {tab === 'banners' && <BannersTab token={token} />}
@@ -186,34 +188,36 @@ function BannersTab({ token }: { token: string | null }) {
             <input value={ctaText} onChange={(e) => setCtaText(e.target.value)} placeholder="Button label (e.g. Shop Now)" className={INPUT} />
             <input value={ctaLink} onChange={(e) => setCtaLink(e.target.value)} placeholder="Button link (e.g. /products)" className={INPUT} />
           </div>
-          <div className="flex gap-3 items-center">
-            <div className="flex gap-2 items-center flex-1">
+          <div className="flex flex-wrap gap-3 items-center">
+            <div className="flex gap-2 items-center flex-1 min-w-0">
               {Object.entries(COLORS).map(([key, { label, preview }]) => (
                 <button
                   key={key}
                   type="button"
                   onClick={() => setColor(key)}
                   title={label}
-                  className={`w-7 h-7 rounded-full ${preview} transition-all ${color === key ? 'ring-2 ring-offset-2 ring-gray-400 scale-110' : 'opacity-70 hover:opacity-100'}`}
+                  className={`w-7 h-7 rounded-full shrink-0 ${preview} transition-all ${color === key ? 'ring-2 ring-offset-2 ring-gray-400 scale-110' : 'opacity-70 hover:opacity-100'}`}
                 />
               ))}
-              <span className="text-xs text-gray-500 ml-1">Color: {COLORS[color]?.label}</span>
+              <span className="text-xs text-gray-500 ml-1 whitespace-nowrap">Color: {COLORS[color]?.label}</span>
             </div>
-            <input
-              value={order}
-              onChange={(e) => setOrder(e.target.value)}
-              type="number"
-              placeholder="Order"
-              className="w-20 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-            <button
-              type="submit"
-              disabled={posting || !title.trim()}
-              className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-            >
-              {posting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
-              Add
-            </button>
+            <div className="flex gap-3 items-center">
+              <input
+                value={order}
+                onChange={(e) => setOrder(e.target.value)}
+                type="number"
+                placeholder="Order"
+                className="w-20 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <button
+                type="submit"
+                disabled={posting || !title.trim()}
+                className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+              >
+                {posting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+                Add
+              </button>
+            </div>
           </div>
           {postErr && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle size={12} />{postErr}</p>}
         </form>

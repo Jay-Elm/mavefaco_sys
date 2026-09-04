@@ -1,11 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/AuthContext'
 import { UserPlus, Leaf, ShoppingBag } from 'lucide-react'
 
 const registerSchema = z.object({
@@ -17,10 +18,23 @@ const registerSchema = z.object({
 
 type RegisterForm = z.infer<typeof registerSchema>
 
+function roleDest(role?: string) {
+  if (role === 'admin' || role === 'manager') return '/dashboard'
+  if (role === 'farmer') return '/farmer'
+  return '/products'
+}
+
 export default function RegisterPage() {
+  const { isAuthenticated, loading, user } = useAuth()
   const router = useRouter()
   const [serverError, setServerError] = useState('')
   const [success, setSuccess] = useState(false)
+
+  useEffect(() => {
+    if (!loading && isAuthenticated) router.replace(roleDest(user?.role))
+  }, [loading, isAuthenticated, user, router])
+
+  if (loading || isAuthenticated) return null
 
   const {
     register,
