@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, MessageCircle, User } from 'lucide-react'
 
@@ -13,19 +14,21 @@ interface Conversation {
 }
 
 export default function CustomerMessagesPage() {
-  const { token } = useAuth()
+  const { token, isAuthenticated, loading: authLoading } = useAuth()
+  const router = useRouter()
   const [convs, setConvs] = useState<Conversation[]>([])
-  const [loading, setLoading] = useState(true)
+  const [fetching, setFetching] = useState(true)
 
   useEffect(() => {
-    if (!token) return
+    if (authLoading) return
+    if (!isAuthenticated) { router.replace('/login'); return }
     fetch('/api/messages', { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => r.json())
       .then((d) => { if (Array.isArray(d)) setConvs(d) })
-      .finally(() => setLoading(false))
-  }, [token])
+      .finally(() => setFetching(false))
+  }, [authLoading, isAuthenticated, token, router])
 
-  if (loading) return (
+  if (authLoading || fetching) return (
     <div className="flex items-center justify-center py-20 text-gray-400">
       <Loader2 size={28} className="animate-spin" />
     </div>
