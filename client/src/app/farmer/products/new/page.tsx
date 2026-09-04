@@ -84,6 +84,88 @@ const CATEGORY_KEYWORDS: Record<string, string[]> = {
   ],
 }
 
+// Maps unit value → produce name keywords that are most naturally sold in that unit
+const UNIT_KEYWORDS: Record<string, string[]> = {
+  bundle: [
+    'pechay', 'kangkong', 'sitaw', 'string bean', 'mustasa', 'mustard', 'malunggay', 'moringa',
+    'saluyot', 'camote tops', 'sweet potato tops', 'kinchay', 'parsley', 'coriander', 'wansuy',
+    'cilantro', 'tanglad', 'lemongrass', 'pandan', 'oregano', 'basil', 'balanoy', 'mint',
+    'yerba buena', 'rosemary', 'thyme', 'sage', 'labong', 'bamboo shoot', 'dahon', 'leaf',
+    'herb', 'herba', 'spinach', 'celery', 'leek', 'sibuyas tagalog', 'green onion',
+    'puso ng saging', 'banana blossom',
+  ],
+  kg: [
+    'mangga', 'mango', 'saging', 'banana', 'pinya', 'pineapple', 'rambutan', 'lanzones',
+    'bayabas', 'guava', 'pakwan', 'watermelon', 'melon', 'strawberry', 'grape', 'ubas',
+    'avocado', 'abokado', 'santol', 'balimbing', 'starfruit', 'camachile', 'marang', 'pitaya',
+    'dragon fruit', 'kalamansi', 'calamansi', 'lemon', 'dalandan', 'dalanghita', 'mandarin',
+    'kamatis', 'tomato', 'sibuyas', 'onion', 'bawang', 'garlic', 'luya', 'ginger',
+    'repolyo', 'cabbage', 'labanos', 'radish', 'sayote', 'chayote', 'kalabasa', 'squash',
+    'ampalaya', 'bitter gourd', 'talong', 'eggplant', 'okra', 'patola', 'upo', 'bottle gourd',
+    'broccoli', 'cauliflower', 'mais', 'corn', 'carrot', 'karot', 'pepper', 'sili', 'chili',
+    'kamote', 'sweet potato', 'gabi', 'taro', 'ube', 'cassava', 'kamoteng kahoy', 'singkamas',
+    'potato', 'patatas', 'yam', 'tugui', 'beet', 'beetroot', 'parsnip',
+    'bangus', 'milkfish', 'tilapia', 'galunggong', 'mackerel', 'tuna', 'tulingan', 'tambakol',
+    'salmon', 'sardine', 'herring', 'snapper', 'pompano', 'dalag', 'mudfish', 'hito', 'catfish',
+    'carp', 'carpa', 'squid', 'pusit', 'shrimp', 'hipon', 'prawn', 'alimango', 'crab',
+    'alimasag', 'tahong', 'mussel', 'talaba', 'oyster', 'halaan', 'clam', 'isda', 'fish',
+    'baboy', 'pig', 'pork', 'baka', 'beef', 'kambing', 'goat', 'tupa', 'sheep',
+    'mongo', 'munggo', 'mung bean', 'balatong', 'patani', 'lima bean', 'bataw', 'kadyos',
+    'garbanzos', 'chickpea', 'soybean', 'kidney bean', 'black bean', 'red bean', 'lentil',
+    'muscovado', 'sugar', 'asukal', 'flour', 'harina', 'starch', 'gawgaw',
+    'turmeric', 'luyang dilaw', 'dried fish', 'tuyo', 'tinapa', 'bagoong',
+  ],
+  piece: [
+    'buko', 'coconut', 'niyog', 'langka', 'jackfruit', 'suha', 'pomelo', 'durian',
+    'atis', 'custard apple', 'guyabano', 'soursop', 'papaya', 'pear', 'peras',
+    'apple', 'mansanas', 'caimito', 'manok', 'chicken', 'pato', 'duck', 'turkey',
+    'lapu-lapu', 'grouper', 'maya-maya', 'kesong puti', 'cheese',
+  ],
+  tray: [
+    'itlog', 'egg', 'pugo', 'quail egg', 'native egg', 'organic egg', 'duck egg', 'pato egg',
+  ],
+  dozen: [
+    'itlog', 'egg', 'kalamansi', 'calamansi', 'quail egg', 'pugo',
+  ],
+  sack: [
+    'palay', 'rice', 'bigas', 'mais', 'corn', 'maize', 'trigo', 'wheat', 'millet',
+    'sorghum', 'barley', 'oats', 'rye', 'sago',
+  ],
+  liter: [
+    'gatas', 'milk', 'coconut milk', 'gata', 'goat milk', 'carabao milk',
+    'cooking oil', 'mantika', 'coconut oil', 'langis ng niyog', 'langis',
+  ],
+  bottle: [
+    'vinegar', 'suka', 'sinamak', 'patis', 'fish sauce', 'soy sauce', 'toyo',
+    'cooking oil', 'mantika', 'coconut oil', 'langis', 'syrup', 'honey', 'pulot',
+    'jam', 'jelly', 'hot sauce', 'oyster sauce',
+  ],
+  gram: [
+    'paminta', 'pepper', 'paprika', 'cumin', 'coriander', 'cinnamon', 'kanela',
+    'cloves', 'anise', 'hanis', 'star anise', 'cardamom', 'nutmeg', 'curry',
+    'vanilla', 'dried herb', 'dried spice', 'powder', 'pulbos',
+  ],
+  pack: [
+    'dried', 'smoked', 'tinapa', 'tuyo', 'dried fish', 'pickled', 'fermented', 'preserved',
+    'processed', 'instant', 'mixed', 'seasoning', 'spice mix',
+  ],
+}
+
+function suggestUnit(name: string): string | null {
+  if (!name.trim()) return null
+  const lower = name.toLowerCase()
+
+  let bestUnit: string | null = null
+  let bestScore = 0
+
+  for (const [unit, keywords] of Object.entries(UNIT_KEYWORDS)) {
+    const score = keywords.filter(kw => lower.includes(kw)).length
+    if (score > bestScore) { bestScore = score; bestUnit = unit }
+  }
+
+  return bestScore > 0 ? bestUnit : null
+}
+
 function suggestCategory(name: string, categories: Category[]): Category | null {
   if (!name.trim() || categories.length === 0) return null
   const lower = name.toLowerCase()
@@ -119,6 +201,8 @@ export default function NewProductPage() {
   const [error, setError] = useState('')
   const [suggestion, setSuggestion] = useState<Category | null>(null)
   const [suggestionDismissed, setSuggestionDismissed] = useState(false)
+  const [unitSuggestion, setUnitSuggestion] = useState<string | null>(null)
+  const [unitSuggestionDismissed, setUnitSuggestionDismissed] = useState(false)
 
   const [form, setForm] = useState({
     name: '', description: '', price: '', stock: '', unit: 'piece', categoryId: '', imageUrl: '',
@@ -134,6 +218,9 @@ export default function NewProductPage() {
     const suggested = suggestCategory(name, cats)
     setSuggestion(suggested)
     setSuggestionDismissed(false)
+    const suggestedUnit = suggestUnit(name)
+    setUnitSuggestion(suggestedUnit)
+    setUnitSuggestionDismissed(false)
   }, [])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
@@ -144,9 +231,12 @@ export default function NewProductPage() {
       runSuggestion(value, categories)
     }
     if (name === 'categoryId') {
-      // If farmer manually picks a category, clear suggestion
       setSuggestion(null)
       setSuggestionDismissed(true)
+    }
+    if (name === 'unit') {
+      setUnitSuggestion(null)
+      setUnitSuggestionDismissed(true)
     }
   }
 
@@ -160,6 +250,18 @@ export default function NewProductPage() {
   function dismissSuggestion() {
     setSuggestion(null)
     setSuggestionDismissed(true)
+  }
+
+  function applyUnitSuggestion() {
+    if (!unitSuggestion) return
+    setForm((prev) => ({ ...prev, unit: unitSuggestion }))
+    setUnitSuggestion(null)
+    setUnitSuggestionDismissed(true)
+  }
+
+  function dismissUnitSuggestion() {
+    setUnitSuggestion(null)
+    setUnitSuggestionDismissed(true)
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -192,6 +294,7 @@ export default function NewProductPage() {
   }
 
   const showSuggestion = suggestion !== null && !suggestionDismissed
+  const showUnitSuggestion = unitSuggestion !== null && !unitSuggestionDismissed && unitSuggestion !== form.unit
 
   return (
     <div className="p-4 sm:p-8 max-w-xl">
@@ -220,6 +323,29 @@ export default function NewProductPage() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Unit</label>
+            {showUnitSuggestion && (
+              <div className="mb-2 flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                <Sparkles size={13} className="text-green-600 shrink-0" />
+                <span className="text-xs text-green-800 flex-1">
+                  Suggested: <strong>{unitSuggestion}</strong>
+                </span>
+                <button
+                  type="button"
+                  onClick={applyUnitSuggestion}
+                  className="text-xs font-semibold text-green-700 hover:text-green-900 border border-green-300 rounded px-2 py-0.5 transition-colors"
+                >
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  onClick={dismissUnitSuggestion}
+                  className="text-xs text-green-500 hover:text-green-700 transition-colors"
+                  aria-label="Dismiss unit suggestion"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
             <input
               name="unit" list="unit-options" value={form.unit} onChange={handleChange} required
               placeholder="e.g. kg, piece, bundle"
