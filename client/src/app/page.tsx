@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
+import HomeRedirect from "@/components/HomeRedirect";
+import HomeHeroActions from "@/components/HomeHeroActions";
+import HomeBottomCTAButtons from "@/components/HomeBottomCTAButtons";
 import { ShoppingBag, Leaf, ArrowRight, Info, AlertTriangle, Package, Users, CheckCircle, Star } from "lucide-react";
 
 async function getFeaturedProducts() {
@@ -107,6 +110,7 @@ export default async function HomePage() {
 
   return (
     <div className="bg-white">
+      <HomeRedirect />
 
       {/* ── HERO — split layout ──────────────────────────── */}
       <section className="flex flex-col lg:flex-row" style={{ minHeight: "580px" }}>
@@ -126,22 +130,7 @@ export default async function HomePage() {
             CoopMarket cuts out the middlemen. Order directly from verified local farmers and get produce harvested within the day.
           </p>
 
-          <div className="mt-8 flex flex-col sm:flex-row gap-3 hero-line-3">
-            <Link
-              href="/products"
-              className="inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-7 py-3.5 rounded-lg transition-colors"
-            >
-              <ShoppingBag size={18} />
-              Browse produce
-            </Link>
-            <Link
-              href="/register"
-              className="inline-flex items-center justify-center gap-2 border border-white/25 text-white hover:bg-white/10 font-medium px-7 py-3.5 rounded-lg transition-colors"
-            >
-              Sell your harvest
-              <ArrowRight size={16} />
-            </Link>
-          </div>
+          <HomeHeroActions />
 
           {hasStats && (
             <div className="mt-12 pt-8 border-t border-white/10 flex gap-8 hero-line-3">
@@ -417,15 +406,7 @@ export default async function HomePage() {
           <p className="text-green-200 text-lg mb-9 leading-relaxed">
             Whether you grow food or buy it — CoopMarket is your direct line to Albay&apos;s farming community.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Link href="/register" className="inline-flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-7 py-3.5 rounded-lg transition-colors">
-              Join as a farmer <ArrowRight size={16} />
-            </Link>
-            <Link href="/products" className="inline-flex items-center justify-center gap-2 border border-white/25 text-white hover:bg-white/10 font-medium px-7 py-3.5 rounded-lg transition-colors">
-              <ShoppingBag size={16} />
-              Browse products
-            </Link>
-          </div>
+          <HomeBottomCTAButtons />
         </div>
       </section>
 
