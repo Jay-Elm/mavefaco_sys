@@ -75,7 +75,7 @@ export default function DashboardOverviewPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Overview</h1>
 
       {/* Stat cards */}
@@ -116,9 +116,9 @@ export default function DashboardOverviewPage() {
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
-          <div className="bg-purple-500 text-white p-3 rounded-lg"><TrendingUp size={22} /></div>
-          <div>
-            <p className="text-2xl font-bold text-gray-900">₱{stats.totalRevenue.toFixed(2)}</p>
+          <div className="bg-purple-500 text-white p-3 rounded-lg shrink-0"><TrendingUp size={22} /></div>
+          <div className="min-w-0">
+            <p className="text-2xl font-bold text-gray-900 break-all">₱{stats.totalRevenue.toFixed(2)}</p>
             <p className="text-sm text-gray-500">Total Revenue</p>
           </div>
         </div>
@@ -193,7 +193,7 @@ export default function DashboardOverviewPage() {
         ) : (
           <div className="divide-y divide-gray-50">
             {stats.recentOrders.map((order) => (
-              <div key={order.id} className="px-6 py-4 flex items-center justify-between">
+              <div key={order.id} className="px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <p className="text-sm font-medium text-gray-900">{order.customer.name}</p>
                   <p className="text-xs text-gray-400">{order.customer.email}</p>

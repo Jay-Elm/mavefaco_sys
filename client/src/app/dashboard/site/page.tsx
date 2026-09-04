@@ -60,7 +60,7 @@ export default function SitePage() {
   const [tab, setTab] = useState<Tab>('banners')
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <div className="flex items-center gap-3 mb-6">
         <Globe size={22} className="text-green-700" />
         <h1 className="text-2xl font-bold text-gray-900">Site Content</h1>
@@ -180,7 +180,7 @@ function BannersTab({ token }: { token: string | null }) {
           <Plus size={14} /> Add Banner
         </h2>
         <form onSubmit={handleAdd} className="space-y-3">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title *" className={INPUT} />
             <input value={subtitle} onChange={(e) => setSubtitle(e.target.value)} placeholder="Subtitle (optional)" className={INPUT} />
             <input value={ctaText} onChange={(e) => setCtaText(e.target.value)} placeholder="Button label (e.g. Shop Now)" className={INPUT} />

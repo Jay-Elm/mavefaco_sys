@@ -139,10 +139,10 @@ export default function DashboardProductsPage() {
   const approved  = products.filter((p) => p.approved).length
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4 sm:p-8">
+      <div className="flex flex-wrap items-center justify-between gap-y-3 mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Products</h1>
-        <div className="flex items-center gap-3 text-sm text-gray-500">
+        <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
           {pending > 0 && (
             <span className="bg-yellow-100 text-yellow-800 font-semibold px-2.5 py-1 rounded-full">
               {pending} pending
@@ -216,7 +216,8 @@ export default function DashboardProductsPage() {
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[780px] text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th
@@ -359,6 +360,7 @@ export default function DashboardProductsPage() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )

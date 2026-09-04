@@ -216,11 +216,11 @@ export default function ReportsPage() {
   const deliveryRate = summary.totalOrders > 0 ? (deliveredCount / summary.totalOrders) * 100 : 0
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Reports</h1>
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-3 mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 mr-auto">Reports</h1>
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => downloadFullReport(data)}
             className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-green-700 hover:bg-green-800 text-white rounded-lg transition-colors"
@@ -239,7 +239,8 @@ export default function ReportsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-6 w-fit">
+      <div className="overflow-x-auto mb-6">
+      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 w-fit">
         {TABS.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
@@ -252,6 +253,7 @@ export default function ReportsPage() {
             {label}
           </button>
         ))}
+      </div>
       </div>
 
       {/* ── Sales tab ──────────────────────────────────────────────────────── */}
@@ -291,7 +293,8 @@ export default function ReportsPage() {
             {salesByMonth.length === 0 ? (
               <p className="text-center text-gray-400 py-6">No order data yet</p>
             ) : (
-              <div>
+              <div className="overflow-x-auto">
+              <div className="min-w-[420px]">
                 <div className="grid grid-cols-[8rem_4rem_8rem_1fr] gap-4 pb-2 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wide">
                   <span>Month</span>
                   <span className="text-center">Orders</span>
@@ -319,6 +322,7 @@ export default function ReportsPage() {
                     </div>
                   )
                 })}
+              </div>
               </div>
             )}
           </Section>

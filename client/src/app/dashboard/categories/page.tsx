@@ -130,7 +130,7 @@ export default function CategoriesPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
         <span className="text-sm text-gray-500">{categories.length} total</span>
@@ -207,7 +207,8 @@ export default function CategoriesPage() {
 
       {/* Category list */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[400px] text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th
@@ -266,6 +267,7 @@ export default function CategoriesPage() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )
