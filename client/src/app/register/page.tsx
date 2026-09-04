@@ -34,8 +34,6 @@ export default function RegisterPage() {
     if (!loading && isAuthenticated) router.replace(roleDest(user?.role))
   }, [loading, isAuthenticated, user, router])
 
-  if (loading || isAuthenticated) return null
-
   const {
     register,
     handleSubmit,

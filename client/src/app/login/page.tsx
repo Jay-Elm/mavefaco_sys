@@ -31,8 +31,6 @@ export default function LoginPage() {
     if (!loading && isAuthenticated) router.replace(roleDest(user?.role))
   }, [loading, isAuthenticated, user, router])
 
-  if (loading || isAuthenticated) return null
-
   const {
     register,
     handleSubmit,
@@ -55,13 +53,7 @@ export default function LoginPage() {
       }
 
       login(json.token, json.user)
-      const role = json.user?.role
-      const dest =
-        role === 'admin' || role === 'manager' ? '/dashboard' :
-        role === 'farmer' ? '/farmer' :
-        '/products'
-      router.push(dest)
-      router.refresh()
+      // useEffect handles redirect once isAuthenticated updates
     } catch {
       setServerError('Network error. Please try again.')
     }
