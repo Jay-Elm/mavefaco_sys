@@ -1,11 +1,115 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Sparkles } from 'lucide-react'
 
 interface Category { id: number; name: string }
+
+// Maps category name keywords → produce name keywords (English + Filipino/Tagalog/Bicolano)
+const CATEGORY_KEYWORDS: Record<string, string[]> = {
+  vegetables: [
+    'pechay', 'kangkong', 'sitaw', 'string beans', 'ampalaya', 'bitter gourd', 'okra',
+    'talong', 'eggplant', 'kamatis', 'tomato', 'sibuyas', 'onion', 'bawang', 'garlic',
+    'luya', 'ginger', 'repolyo', 'cabbage', 'labanos', 'radish', 'patola', 'sayote',
+    'chayote', 'kalabasa', 'squash', 'mais', 'corn', 'mustasa', 'mustard', 'spinach',
+    'malunggay', 'moringa', 'saluyot', 'pepper', 'sili', 'chili', 'upo', 'bottle gourd',
+    'papaya', 'dahon', 'leaf', 'gulay', 'vegetable', 'legume', 'bean', 'pea', 'lentil',
+    'broccoli', 'cauliflower', 'carrot', 'karot', 'sibuyas tagalog', 'leek', 'celery',
+    'kinchay', 'parsley', 'sweet potato tops', 'camote tops', 'tanglad', 'lemongrass',
+    'puso ng saging', 'banana blossom', 'labong', 'bamboo shoot',
+  ],
+  fruits: [
+    'mangga', 'mango', 'saging', 'banana', 'pinya', 'pineapple', 'suha', 'pomelo',
+    'dalanghita', 'mandarin', 'dalandan', 'orange', 'kalamansi', 'calamansi', 'lemon',
+    'rambutan', 'lanzones', 'langka', 'jackfruit', 'durian', 'atis', 'custard apple',
+    'guyabano', 'soursop', 'guava', 'bayabas', 'papaya', 'watermelon', 'pakwan',
+    'melon', 'santol', 'buko', 'coconut', 'niyog', 'strawberry', 'grape', 'ubas',
+    'avocado', 'abokado', 'pear', 'peras', 'apple', 'mansanas', 'dragon fruit',
+    'pitaya', 'marang', 'balimbing', 'starfruit', 'caimito', 'camachile',
+  ],
+  'root crops': [
+    'kamote', 'sweet potato', 'gabi', 'taro', 'ube', 'purple yam', 'cassava', 'kamoteng kahoy',
+    'singkamas', 'jicama', 'turnip', 'potato', 'patatas', 'yam', 'tugui', 'arrowroot',
+    'araro', 'radish', 'beet', 'beetroot', 'carrot', 'karot', 'parsnip',
+  ],
+  grains: [
+    'palay', 'rice', 'bigas', 'mais', 'corn', 'maize', 'wheat', 'trigo', 'oats',
+    'millet', 'sorghum', 'quinoa', 'barley', 'buckwheat', 'rye', 'sago',
+  ],
+  legumes: [
+    'mongo', 'munggo', 'mung bean', 'balatong', 'patani', 'lima bean', 'sitaw', 'string bean',
+    'bataw', 'hyacinth bean', 'kadyos', 'pigeon pea', 'garbanzos', 'chickpea',
+    'soybean', 'toyo', 'kidney bean', 'black bean', 'red bean', 'lentil',
+  ],
+  poultry: [
+    'manok', 'chicken', 'itlog', 'egg', 'pato', 'duck', 'quail', 'pugo', 'turkey',
+    'goose', 'guinea fowl', 'native chicken', 'free range', 'organic egg',
+  ],
+  livestock: [
+    'baboy', 'pig', 'pork', 'baka', 'beef', 'cattle', 'cow', 'carabao', 'kalabaw',
+    'kambing', 'goat', 'tupa', 'sheep', 'rabbit', 'kuneho', 'horse', 'kabayo',
+  ],
+  fish: [
+    'bangus', 'milkfish', 'tilapia', 'galunggong', 'mackerel', 'tuna', 'tulingan',
+    'tambakol', 'salmon', 'sardine', 'herring', 'lapu-lapu', 'grouper', 'maya-maya',
+    'snapper', 'pompano', 'dalag', 'mudfish', 'hito', 'catfish', 'carp', 'carpa',
+    'dilis', 'anchovies', 'squid', 'pusit', 'shrimp', 'hipon', 'prawn', 'alimango',
+    'crab', 'alimasag', 'tahong', 'mussel', 'talaba', 'oyster', 'halaan', 'clam',
+    'suso', 'snail', 'seafood', 'isda', 'fish',
+  ],
+  herbs: [
+    'herba', 'herb', 'basil', 'balanoy', 'oregano', 'thyme', 'rosemary', 'mint',
+    'yerba buena', 'peppermint', 'coriander', 'wansuy', 'cilantro', 'parsley',
+    'kinchay', 'sage', 'bay leaf', 'laurel', 'tanglad', 'lemongrass', 'pandan',
+    'turmeric', 'luyang dilaw', 'ginger', 'luya', 'sambong', 'lagundi', 'tsaang gubat',
+  ],
+  spices: [
+    'paminta', 'pepper', 'luya', 'ginger', 'bawang', 'garlic', 'sibuyas', 'onion',
+    'sili', 'chili', 'paprika', 'cumin', 'coriander', 'cinnamon', 'kanela',
+    'cloves', 'sinamak', 'anise', 'hanis', 'turmeric', 'curry', 'bay leaf', 'laurel',
+    'vanilla', 'mustard', 'star anise', 'cardamom', 'nutmeg',
+  ],
+  dairy: [
+    'gatas', 'milk', 'kesong puti', 'cheese', 'yogurt', 'butter', 'mantequilla',
+    'cream', 'condensed', 'evaporated', 'goat milk', 'carabao milk',
+  ],
+  processed: [
+    'vinegar', 'suka', 'cooking oil', 'mantika', 'bagoong', 'shrimp paste',
+    'patis', 'fish sauce', 'soy sauce', 'toyo', 'coconut oil', 'langis ng niyog',
+    'dried fish', 'tuyo', 'tinapa', 'smoked', 'pickled', 'fermented', 'preserved',
+    'jam', 'jelly', 'syrup', 'honey', 'pulot', 'muscovado', 'sugar', 'asukal',
+    'flour', 'harina', 'starch', 'gawgaw',
+  ],
+}
+
+function suggestCategory(name: string, categories: Category[]): Category | null {
+  if (!name.trim() || categories.length === 0) return null
+  const lower = name.toLowerCase()
+
+  for (const cat of categories) {
+    const catKey = cat.name.toLowerCase()
+    // Direct category name match wins first
+    if (lower.includes(catKey)) return cat
+  }
+
+  // Score each category by how many keywords match
+  let bestCat: Category | null = null
+  let bestScore = 0
+
+  for (const cat of categories) {
+    const catKey = Object.keys(CATEGORY_KEYWORDS).find(k =>
+      cat.name.toLowerCase().includes(k) || k.includes(cat.name.toLowerCase())
+    )
+    if (!catKey) continue
+    const keywords = CATEGORY_KEYWORDS[catKey]
+    const score = keywords.filter(kw => lower.includes(kw)).length
+    if (score > bestScore) { bestScore = score; bestCat = cat }
+  }
+
+  return bestScore > 0 ? bestCat : null
+}
 
 export default function NewProductPage() {
   const { token } = useAuth()
@@ -13,6 +117,8 @@ export default function NewProductPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [suggestion, setSuggestion] = useState<Category | null>(null)
+  const [suggestionDismissed, setSuggestionDismissed] = useState(false)
 
   const [form, setForm] = useState({
     name: '', description: '', price: '', stock: '', unit: 'piece', categoryId: '', imageUrl: '',
@@ -24,8 +130,36 @@ export default function NewProductPage() {
       .then((data) => Array.isArray(data) && setCategories(data))
   }, [])
 
+  const runSuggestion = useCallback((name: string, cats: Category[]) => {
+    const suggested = suggestCategory(name, cats)
+    setSuggestion(suggested)
+    setSuggestionDismissed(false)
+  }, [])
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    setForm((prev) => ({ ...prev, [name]: value }))
+
+    if (name === 'name') {
+      runSuggestion(value, categories)
+    }
+    if (name === 'categoryId') {
+      // If farmer manually picks a category, clear suggestion
+      setSuggestion(null)
+      setSuggestionDismissed(true)
+    }
+  }
+
+  function applySuggestion() {
+    if (!suggestion) return
+    setForm((prev) => ({ ...prev, categoryId: String(suggestion.id) }))
+    setSuggestion(null)
+    setSuggestionDismissed(true)
+  }
+
+  function dismissSuggestion() {
+    setSuggestion(null)
+    setSuggestionDismissed(true)
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -57,8 +191,10 @@ export default function NewProductPage() {
     }
   }
 
+  const showSuggestion = suggestion !== null && !suggestionDismissed
+
   return (
-    <div className="p-8 max-w-xl">
+    <div className="p-4 sm:p-8 max-w-xl">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Add Product</h1>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
@@ -68,6 +204,7 @@ export default function NewProductPage() {
           <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
           <input
             name="name" value={form.name} onChange={handleChange} required
+            placeholder="e.g. Pechay, Sweet Potato, Bangus"
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
@@ -122,7 +259,34 @@ export default function NewProductPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="block text-sm font-medium text-gray-700">Category</label>
+          </div>
+
+          {showSuggestion && (
+            <div className="mb-2 flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+              <Sparkles size={13} className="text-green-600 shrink-0" />
+              <span className="text-xs text-green-800 flex-1">
+                Suggested: <strong>{suggestion.name}</strong>
+              </span>
+              <button
+                type="button"
+                onClick={applySuggestion}
+                className="text-xs font-semibold text-green-700 hover:text-green-900 border border-green-300 rounded px-2 py-0.5 transition-colors"
+              >
+                Apply
+              </button>
+              <button
+                type="button"
+                onClick={dismissSuggestion}
+                className="text-xs text-green-500 hover:text-green-700 transition-colors"
+                aria-label="Dismiss suggestion"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
           <select
             name="categoryId" value={form.categoryId} onChange={handleChange} required
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
