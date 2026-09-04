@@ -115,9 +115,9 @@ export default function NewProductPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Description <span className="text-gray-400">(optional)</span></label>
           <textarea
-            name="description" value={form.description} onChange={handleChange} required rows={3}
+            name="description" value={form.description} onChange={handleChange} rows={3}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
           />
         </div>
