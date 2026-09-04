@@ -152,17 +152,22 @@ export default function EditProductPage() {
             {showUnitSuggestion && (
               <SuggestionBanner label={unitSuggestion!} onApply={applyUnitSuggestion} onDismiss={() => { setUnitSuggestion(null); setUnitSuggestionDismissed(true) }} />
             )}
-            <input
-              name="unit" list="unit-options" value={form.unit} onChange={handleChange} required
-              placeholder="e.g. kg, piece, bundle"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-            <datalist id="unit-options">
-              <option value="piece" /><option value="kg" /><option value="gram" />
-              <option value="bundle" /><option value="pack" /><option value="bag" />
-              <option value="tray" /><option value="dozen" /><option value="liter" />
-              <option value="sack" /><option value="bottle" />
-            </datalist>
+            <select
+              name="unit" value={form.unit} onChange={handleChange} required
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+            >
+              <option value="piece">piece</option>
+              <option value="kg">kg</option>
+              <option value="gram">gram</option>
+              <option value="bundle">bundle</option>
+              <option value="pack">pack</option>
+              <option value="bag">bag</option>
+              <option value="tray">tray</option>
+              <option value="dozen">dozen</option>
+              <option value="liter">liter</option>
+              <option value="sack">sack</option>
+              <option value="bottle">bottle</option>
+            </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Price per {form.unit || 'unit'} (₱)</label>
