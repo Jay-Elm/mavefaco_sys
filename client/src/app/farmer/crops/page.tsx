@@ -52,7 +52,7 @@ export default function CropsPage() {
   )
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <div className="flex items-center gap-3 mb-6">
         <Sprout size={22} className="text-green-600" />
         <h1 className="text-2xl font-bold text-gray-900">Crop Monitor</h1>
@@ -71,7 +71,8 @@ export default function CropsPage() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[700px] text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-5 py-3 text-left font-medium text-gray-500">Crop</th>
@@ -140,6 +141,7 @@ export default function CropsPage() {
               })}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

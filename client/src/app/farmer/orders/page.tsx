@@ -89,8 +89,8 @@ export default function FarmerOrdersPage() {
   }
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4 sm:p-8">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
         <div className="flex items-center gap-3">
           <span className="text-sm text-gray-500">{orders.length} total</span>
@@ -115,7 +115,8 @@ export default function FarmerOrdersPage() {
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[640px] text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Order ID</th>
@@ -213,6 +214,7 @@ export default function FarmerOrdersPage() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   )

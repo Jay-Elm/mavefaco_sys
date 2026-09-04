@@ -73,17 +73,17 @@ export default function FarmerOverviewPage() {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Welcome, {user?.name}</h1>
         <p className="text-sm text-gray-500 mt-1">Your farm at a glance</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-gray-500">My Products</span>
-            <Package size={18} className="text-green-600" />
+            <Package size={18} className="text-green-600 shrink-0" />
           </div>
           <p className="text-3xl font-bold text-gray-900">{stats?.productCount ?? 0}</p>
         </div>
@@ -91,17 +91,17 @@ export default function FarmerOverviewPage() {
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-gray-500">Orders</span>
-            <ShoppingCart size={18} className="text-blue-600" />
+            <ShoppingCart size={18} className="text-blue-600 shrink-0" />
           </div>
           <p className="text-3xl font-bold text-gray-900">{stats?.orderCount ?? 0}</p>
         </div>
 
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-gray-500">Total Revenue</span>
-            <TrendingUp size={18} className="text-purple-600" />
+            <span className="text-sm text-gray-500 min-w-0 truncate">Total Revenue</span>
+            <TrendingUp size={18} className="text-purple-600 shrink-0 ml-2" />
           </div>
-          <p className="text-3xl font-bold text-gray-900">
+          <p className="text-2xl sm:text-3xl font-bold text-gray-900 break-all">
             ₱{(stats?.totalRevenue ?? 0).toFixed(2)}
           </p>
         </div>
