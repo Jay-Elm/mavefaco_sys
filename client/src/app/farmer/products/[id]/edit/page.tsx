@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2 } from 'lucide-react'
+import ImageUploader from '@/components/ImageUploader'
 
 interface Category { id: number; name: string }
 
@@ -84,7 +85,7 @@ export default function EditProductPage() {
   }
 
   return (
-    <div className="p-8 max-w-xl">
+    <div className="p-4 sm:p-8 max-w-xl">
       <h1 className="text-2xl font-bold text-gray-900 mb-6">Edit Product</h1>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
@@ -161,10 +162,11 @@ export default function EditProductPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Image URL <span className="text-gray-400">(optional)</span></label>
-          <input
-            name="imageUrl" type="url" value={form.imageUrl} onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          <label className="block text-sm font-medium text-gray-700 mb-1">Product Photo <span className="text-gray-400">(optional)</span></label>
+          <ImageUploader
+            value={form.imageUrl}
+            onChange={(url) => setForm(prev => ({ ...prev, imageUrl: url }))}
+            token={token}
           />
         </div>
 
