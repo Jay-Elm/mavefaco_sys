@@ -17,10 +17,11 @@ export async function getActiveAuthUser(req: NextRequest): Promise<JwtPayload | 
 
   const dbUser = await prisma.user.findUnique({
     where: { id: payload.id },
-    select: { suspended: true },
+    select: { suspended: true, tokenVersion: true },
   });
 
   if (!dbUser || dbUser.suspended) return null;
+  if (dbUser.tokenVersion !== payload.tokenVersion) return null;
 
   return payload;
 }

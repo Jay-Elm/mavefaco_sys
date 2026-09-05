@@ -22,8 +22,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Name must be at least 2 characters" }, { status: 400 });
     if (!email || typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
       return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
-    if (!password || typeof password !== "string" || password.length < 6)
-      return NextResponse.json({ error: "Password must be at least 6 characters" }, { status: 400 });
+    if (!password || typeof password !== "string" || password.length < 12)
+      return NextResponse.json({ error: "Password must be at least 12 characters" }, { status: 400 });
 
     const assignedRole = role === "farmer" ? "farmer" : "customer";
 

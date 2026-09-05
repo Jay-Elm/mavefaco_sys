@@ -156,15 +156,19 @@ Given the ₱ currency and the government-ID verification flow, this app process
 
 Verified with `tsc --noEmit` and `eslint` on all touched files — no new errors or warnings introduced.
 
-### Phase 1 — Short-term (this sprint)
-| # | Finding | Action | Effort |
-|---|---|---|---|
-| 4 | 1.2 / 2.4 No token revocation | Add `tokenVersion` to `User`, embed in JWT, check in `getActiveAuthUser`, bump on logout/password-change/role-change | Medium |
-| 5 | 4.1 Missing security headers | Add CSP (report-only first), `X-Content-Type-Options`, `Referrer-Policy`, HSTS in `next.config.ts` | Small |
-| 6 | 2.3 Unverified upload content | Allow-list image types (drop SVG), verify magic bytes before storing | Small |
-| 7 | 3.1 (cont.) | Extend rate limiting to `/api/upload` and other write-heavy endpoints | Small |
-| 8 | 3.2 DB connection pooling | Confirm/switch `DATABASE_URL` to a pooled endpoint; cap `pg.Pool` `max` | Small |
-| 9 | 3.3 Password floor | Raise minimum length to 12; consider breach-list check | Small |
+### Phase 1 — Short-term (this sprint) — ✅ DONE 2026-09-05
+| # | Finding | Action | Effort | Status |
+|---|---|---|---|---|
+| 4 | 1.2 / 2.4 No token revocation | Added `User.tokenVersion` (migration `20260905114921_add_token_version`), embedded in the JWT at login, checked against the DB in `getActiveAuthUser`. Bumped on: self password change (`users/me` PATCH), admin-forced password reset (`admin/users/[id]` PATCH), and a new `POST /api/auth/logout` that `AuthContext.logout()` now calls — logout and password changes invalidate the token immediately instead of leaving it valid for up to 7 days. Both profile pages now sign the user out and redirect to `/login` after a successful password change, since their current token stops working the moment the bump lands. **Note:** every session token issued before this deploy carries no `tokenVersion` claim, so it will fail the DB comparison and everyone gets signed out once — expected, one-time. | Medium | Done |
+| 5 | 4.1 Missing security headers | Added `headers()` to `next.config.ts`: `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`, HSTS (enforced), plus `Content-Security-Policy-Report-Only` (kept report-only because Next's App Router streams hydration through inline `<script>` tags — tightening `script-src` past `'unsafe-inline'` needs per-request nonces via middleware, left as a follow-up). | Small | Done |
+| 6 | 2.3 Unverified upload content | `api/upload/route.ts` now sniffs the actual file bytes (PNG/JPEG/WEBP magic numbers) instead of trusting `file.type`, and derives the stored extension/content-type from what it detected rather than the client-supplied filename. SVG is no longer accepted in any form. | Small | Done |
+| 7 | 3.1 (cont.) | Extended the Phase 0 rate limiter to `/api/upload` — 20 uploads/hour per authenticated user. | Small | Done |
+| 8 | 3.2 DB connection pooling | Capped `pg.Pool({ max: 5 })` in `src/lib/prisma.ts` with a comment on why, and noted that production's `DATABASE_URL` should point at a pooled endpoint (e.g. Supabase's port-6543 pgbouncer) — **not independently verified**, since that env var lives in Vercel, not this repo; worth a manual check. | Small | Done (pool cap); pooled-endpoint check still pending |
+| 9 | 3.3 Password floor | Raised the minimum to 12 characters everywhere it's enforced: register route, self password-change, admin password-reset, and the matching client-side `zod` schema / `minLength` inputs. Breach-list (HIBP) check not implemented — left for a later pass. | Small | Done |
+
+Verified with `tsc --noEmit`, `eslint`, and a live smoke test against the local dev server: register rejects <12-char passwords, login issues a token carrying `tokenVersion`, `/api/auth/logout` immediately invalidates that token (subsequent request returns 401), the login rate limiter returns 429 after 10 attempts/10min, and `idImageUrl` rejects a `javascript:` payload while accepting a normal `https://` URL.
+
+**Build pipeline change:** `package.json`'s `build` script now runs `prisma migrate deploy` before `prisma generate`/`next build`, so the `tokenVersion` migration (and any future migration) applies to the production database automatically on every Vercel deploy, instead of requiring a manual step. This was a deliberate, confirmed change — flagged separately because shipping the `tokenVersion` code without it would have broken every authenticated request in production until the column existed.
 
 ### Phase 2 — Medium-term (this quarter)
 | # | Finding | Action | Effort |

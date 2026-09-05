@@ -46,8 +46,8 @@ export async function PATCH(req: NextRequest) {
 
     let hashedPassword: string | undefined;
     if (hasPasswordChange) {
-      if (newPassword.length < 6)
-        return NextResponse.json({ error: "New password must be at least 6 characters" }, { status: 400 });
+      if (newPassword.length < 12)
+        return NextResponse.json({ error: "New password must be at least 12 characters" }, { status: 400 });
       const dbUser = await prisma.user.findUnique({ where: { id: actor.id }, select: { password: true } });
       const match = dbUser && await bcrypt.compare(currentPassword, dbUser.password);
       if (!match)
@@ -61,7 +61,7 @@ export async function PATCH(req: NextRequest) {
         ...(name && { name: name.trim() }),
         ...(email && { email: email.trim().toLowerCase() }),
         ...(idImageUrl !== undefined && { idImageUrl: idImageUrl || null }),
-        ...(hashedPassword && { password: hashedPassword }),
+        ...(hashedPassword && { password: hashedPassword, tokenVersion: { increment: 1 } }),
       },
       select: { id: true, name: true, email: true, role: true, idImageUrl: true, verified: true },
     });

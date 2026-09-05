@@ -16,6 +16,7 @@ model User {
   suspended   Boolean     @default(false)
   idImageUrl  String?
   verified    Boolean     @default(false)
+  tokenVersion Int        @default(0)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, CheckCircle, ShieldCheck, ShieldAlert, ExternalLink, KeyRound } from 'lucide-react'
 import { isSafeUrl } from '@/lib/url'
@@ -11,7 +12,8 @@ interface ProfileData {
 }
 
 export default function FarmerProfilePage() {
-  const { token, user, login } = useAuth()
+  const { token, user, login, logout } = useAuth()
+  const router = useRouter()
   const [name, setName] = useState(user?.name ?? '')
   const [email, setEmail] = useState(user?.email ?? '')
   const [submitting, setSubmitting] = useState(false)
@@ -94,7 +96,7 @@ export default function FarmerProfilePage() {
     setPwError('')
     setPwSuccess(false)
     if (newPassword !== confirmPassword) { setPwError('Passwords do not match'); return }
-    if (newPassword.length < 6) { setPwError('New password must be at least 6 characters'); return }
+    if (newPassword.length < 12) { setPwError('New password must be at least 12 characters'); return }
     if (!token) return
     setChangingPw(true)
     try {
@@ -109,6 +111,12 @@ export default function FarmerProfilePage() {
       setCurrentPassword('')
       setNewPassword('')
       setConfirmPassword('')
+      // Changing the password invalidates the current session token server-side —
+      // sign the user out locally and send them back to log in with the new one.
+      setTimeout(() => {
+        logout()
+        router.push('/login')
+      }, 1500)
     } catch {
       setPwError('Request failed')
     } finally {
@@ -256,7 +264,7 @@ export default function FarmerProfilePage() {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={12}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>

@@ -6,7 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, CheckCircle, User, KeyRound } from 'lucide-react'
 
 export default function CustomerProfilePage() {
-  const { isAuthenticated, loading, token, user, login } = useAuth()
+  const { isAuthenticated, loading, token, user, login, logout } = useAuth()
   const router = useRouter()
 
   const [name, setName] = useState('')
@@ -71,6 +71,12 @@ export default function CustomerProfilePage() {
       setNewPassword('')
       setConfirmPassword('')
       setPwSuccess(true)
+      // Changing the password invalidates the current session token server-side —
+      // sign the user out locally and send them back to log in with the new one.
+      setTimeout(() => {
+        logout()
+        router.push('/login')
+      }, 1500)
     } catch {
       setPwError('Request failed')
     } finally {
@@ -193,7 +199,7 @@ export default function CustomerProfilePage() {
                 value={newPassword}
                 onChange={e => setNewPassword(e.target.value)}
                 required
-                minLength={6}
+                minLength={12}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>

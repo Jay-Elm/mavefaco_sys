@@ -2167,10 +2167,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     id: number | null
+    tokenVersion: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: number | null
+    tokenVersion: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -2182,6 +2184,7 @@ export namespace Prisma {
     suspended: boolean | null
     idImageUrl: string | null
     verified: boolean | null
+    tokenVersion: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2195,6 +2198,7 @@ export namespace Prisma {
     suspended: boolean | null
     idImageUrl: string | null
     verified: boolean | null
+    tokenVersion: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2208,6 +2212,7 @@ export namespace Prisma {
     suspended: number
     idImageUrl: number
     verified: number
+    tokenVersion: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2216,10 +2221,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateInputType = {
     id?: true
+    tokenVersion?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
+    tokenVersion?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -2231,6 +2238,7 @@ export namespace Prisma {
     suspended?: true
     idImageUrl?: true
     verified?: true
+    tokenVersion?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2244,6 +2252,7 @@ export namespace Prisma {
     suspended?: true
     idImageUrl?: true
     verified?: true
+    tokenVersion?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2257,6 +2266,7 @@ export namespace Prisma {
     suspended?: true
     idImageUrl?: true
     verified?: true
+    tokenVersion?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2357,6 +2367,7 @@ export namespace Prisma {
     suspended: boolean
     idImageUrl: string | null
     verified: boolean
+    tokenVersion: number
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -2389,6 +2400,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: boolean
     verified?: boolean
+    tokenVersion?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     products?: boolean | User$productsArgs<ExtArgs>
@@ -2410,6 +2422,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: boolean
     verified?: boolean
+    tokenVersion?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2423,6 +2436,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: boolean
     verified?: boolean
+    tokenVersion?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2436,11 +2450,12 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: boolean
     verified?: boolean
+    tokenVersion?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "idImageUrl" | "verified" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "idImageUrl" | "verified" | "tokenVersion" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | User$productsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -2474,6 +2489,7 @@ export namespace Prisma {
       suspended: boolean
       idImageUrl: string | null
       verified: boolean
+      tokenVersion: number
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -2914,6 +2930,7 @@ export namespace Prisma {
     readonly suspended: FieldRef<"User", 'Boolean'>
     readonly idImageUrl: FieldRef<"User", 'String'>
     readonly verified: FieldRef<"User", 'Boolean'>
+    readonly tokenVersion: FieldRef<"User", 'Int'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -16911,6 +16928,7 @@ export namespace Prisma {
     suspended: 'suspended',
     idImageUrl: 'idImageUrl',
     verified: 'verified',
+    tokenVersion: 'tokenVersion',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -17173,6 +17191,7 @@ export namespace Prisma {
     suspended?: BoolFilter<"User"> | boolean
     idImageUrl?: StringNullableFilter<"User"> | string | null
     verified?: BoolFilter<"User"> | boolean
+    tokenVersion?: IntFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     products?: ProductListRelationFilter
@@ -17193,6 +17212,7 @@ export namespace Prisma {
     suspended?: SortOrder
     idImageUrl?: SortOrderInput | SortOrder
     verified?: SortOrder
+    tokenVersion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     products?: ProductOrderByRelationAggregateInput
@@ -17216,6 +17236,7 @@ export namespace Prisma {
     suspended?: BoolFilter<"User"> | boolean
     idImageUrl?: StringNullableFilter<"User"> | string | null
     verified?: BoolFilter<"User"> | boolean
+    tokenVersion?: IntFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     products?: ProductListRelationFilter
@@ -17236,6 +17257,7 @@ export namespace Prisma {
     suspended?: SortOrder
     idImageUrl?: SortOrderInput | SortOrder
     verified?: SortOrder
+    tokenVersion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -17257,6 +17279,7 @@ export namespace Prisma {
     suspended?: BoolWithAggregatesFilter<"User"> | boolean
     idImageUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
     verified?: BoolWithAggregatesFilter<"User"> | boolean
+    tokenVersion?: IntWithAggregatesFilter<"User"> | number
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -18047,6 +18070,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -18067,6 +18091,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -18086,6 +18111,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -18106,6 +18132,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -18126,6 +18153,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -18138,6 +18166,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18151,6 +18180,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -19045,12 +19075,14 @@ export namespace Prisma {
     suspended?: SortOrder
     idImageUrl?: SortOrder
     verified?: SortOrder
+    tokenVersion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
     id?: SortOrder
+    tokenVersion?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -19062,6 +19094,7 @@ export namespace Prisma {
     suspended?: SortOrder
     idImageUrl?: SortOrder
     verified?: SortOrder
+    tokenVersion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -19075,12 +19108,14 @@ export namespace Prisma {
     suspended?: SortOrder
     idImageUrl?: SortOrder
     verified?: SortOrder
+    tokenVersion?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
+    tokenVersion?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -19830,6 +19865,14 @@ export namespace Prisma {
     set?: string | null
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -19930,14 +19973,6 @@ export namespace Prisma {
     update?: MessageUpdateWithWhereUniqueWithoutReceiverInput | MessageUpdateWithWhereUniqueWithoutReceiverInput[]
     updateMany?: MessageUpdateManyWithWhereWithoutReceiverInput | MessageUpdateManyWithWhereWithoutReceiverInput[]
     deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type ProductUncheckedUpdateManyWithoutFarmerNestedInput = {
@@ -21093,6 +21128,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
@@ -21112,6 +21148,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -21233,6 +21270,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
@@ -21252,6 +21290,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -21460,6 +21499,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -21479,6 +21519,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -21536,6 +21577,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -21555,6 +21597,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -21741,6 +21784,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -21760,6 +21804,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -21794,6 +21839,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -21813,6 +21859,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -21831,6 +21878,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -21850,6 +21898,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -21930,6 +21979,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -21949,6 +21999,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -22019,6 +22070,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -22038,6 +22090,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -22061,6 +22114,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -22080,6 +22134,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -22114,6 +22169,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -22133,6 +22189,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -22162,6 +22219,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -22181,6 +22239,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -22199,6 +22258,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -22218,6 +22278,7 @@ export namespace Prisma {
     suspended?: boolean
     idImageUrl?: string | null
     verified?: boolean
+    tokenVersion?: number
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -22252,6 +22313,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -22271,6 +22333,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    tokenVersion?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput

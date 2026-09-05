@@ -51,9 +51,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   function logout() {
+    const currentToken = auth.token
     localStorage.removeItem('token')
     localStorage.removeItem('user')
     setAuth({ token: null, user: null, loading: false })
+
+    // Best-effort: invalidate the token server-side so it can't be reused
+    // even if it was copied out of localStorage before logout.
+    if (currentToken) {
+      fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${currentToken}` },
+      }).catch(() => {})
+    }
   }
 
   return (

@@ -47,8 +47,8 @@ export async function PATCH(
       return NextResponse.json({ error: "suspended, verified, or newPassword must be provided" }, { status: 400 });
 
     if (typeof newPassword === "string") {
-      if (newPassword.trim().length < 6)
-        return NextResponse.json({ error: "New password must be at least 6 characters" }, { status: 400 });
+      if (newPassword.trim().length < 12)
+        return NextResponse.json({ error: "New password must be at least 12 characters" }, { status: 400 });
       // Only admins can reset passwords
       if (actor.role !== ROLES.ADMIN)
         return NextResponse.json({ error: "Only admins can reset passwords" }, { status: 403 });
@@ -61,7 +61,7 @@ export async function PATCH(
       data: {
         ...(typeof suspended === "boolean" && { suspended }),
         ...(typeof verified === "boolean" && { verified }),
-        ...(hashed && { password: hashed }),
+        ...(hashed && { password: hashed, tokenVersion: { increment: 1 } }),
       },
       select: { id: true, name: true, email: true, role: true, suspended: true, verified: true },
     });
