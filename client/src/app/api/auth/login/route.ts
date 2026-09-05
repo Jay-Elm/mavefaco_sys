@@ -2,9 +2,19 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
+import { rateLimit, getClientIp } from "@/lib/rateLimit";
 
 export async function POST(req: Request) {
   try {
+    const ip = getClientIp(req);
+    const { allowed, retryAfterSeconds } = rateLimit(`login:${ip}`, 10, 10 * 60 * 1000);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: "Too many login attempts. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(retryAfterSeconds) } },
+      );
+    }
+
     const body = await req.json();
 
     const { email, password } = body;

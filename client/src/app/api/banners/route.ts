@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
+import { isSafeUrl } from "@/lib/url";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
@@ -25,6 +26,8 @@ export async function POST(req: NextRequest) {
 
     const { title, subtitle, ctaText, ctaLink, color, displayOrder } = await req.json();
     if (!title?.trim()) return NextResponse.json({ error: "Title is required" }, { status: 400 });
+    if (ctaLink?.trim() && !isSafeUrl(ctaLink))
+      return NextResponse.json({ error: "CTA link must be a valid URL or site path" }, { status: 400 });
 
     const validColors = ["green", "orange", "blue", "purple", "teal"];
     const banner = await prisma.banner.create({

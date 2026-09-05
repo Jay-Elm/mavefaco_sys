@@ -8,6 +8,7 @@ import {
   ExternalLink, KeyRound, X, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download,
 } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
+import { isSafeUrl } from '@/lib/url'
 
 interface UserRow {
   id: number
@@ -356,10 +357,12 @@ export default function UsersPage() {
                         ) : u.idImageUrl ? (
                           <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
                             Pending
-                            <a href={u.idImageUrl} target="_blank" rel="noopener noreferrer"
-                              className="hover:text-amber-900 ml-0.5" title="View submitted ID">
-                              <ExternalLink size={10} />
-                            </a>
+                            {isSafeUrl(u.idImageUrl) && (
+                              <a href={u.idImageUrl} target="_blank" rel="noopener noreferrer"
+                                className="hover:text-amber-900 ml-0.5" title="View submitted ID">
+                                <ExternalLink size={10} />
+                              </a>
+                            )}
                           </span>
                         ) : (
                           <span className="text-xs text-gray-400">No ID</span>

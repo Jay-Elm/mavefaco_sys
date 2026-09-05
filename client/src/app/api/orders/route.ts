@@ -82,10 +82,14 @@ export async function POST(req: NextRequest) {
       })
 
       for (const item of items) {
-        await tx.product.update({
-          where: { id: item.productId },
+        const { count } = await tx.product.updateMany({
+          where: { id: item.productId, stock: { gte: item.quantity } },
           data: { stock: { decrement: item.quantity } },
         })
+        if (count === 0) {
+          const product = products.find(p => p.id === item.productId)!
+          throw new Error(`Insufficient stock for "${product.name}" — someone else just bought it`)
+        }
       }
 
       await tx.auditLog.create({

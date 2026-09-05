@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
+import { isSafeUrl } from "@/lib/url";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -31,6 +32,9 @@ export async function PUT(req: NextRequest) {
       "cooperative_name", "about_text", "mission", "vision",
       "contact_email", "contact_phone", "contact_address", "facebook_url",
     ];
+
+    if (updates.facebook_url?.trim() && !isSafeUrl(updates.facebook_url))
+      return NextResponse.json({ error: "Facebook URL must be a valid http(s) URL" }, { status: 400 });
 
     await Promise.all(
       Object.entries(updates)

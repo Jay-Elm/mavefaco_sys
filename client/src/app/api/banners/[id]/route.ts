@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
+import { isSafeUrl } from "@/lib/url";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -17,6 +18,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const body = await req.json();
     const validColors = ["green", "orange", "blue", "purple", "teal"];
+
+    if (body.ctaLink?.trim() && !isSafeUrl(body.ctaLink))
+      return NextResponse.json({ error: "CTA link must be a valid URL or site path" }, { status: 400 });
 
     const banner = await prisma.banner.update({
       where: { id: bannerId },

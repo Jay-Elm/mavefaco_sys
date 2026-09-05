@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, CheckCircle, ShieldCheck, ShieldAlert, ExternalLink, KeyRound } from 'lucide-react'
+import { isSafeUrl } from '@/lib/url'
 
 interface ProfileData {
   idImageUrl: string | null
@@ -193,10 +194,12 @@ export default function FarmerProfilePage() {
         {profileData.idImageUrl && (
           <div className="mb-3 flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-lg px-3 py-2">
             <span className="truncate flex-1">{profileData.idImageUrl}</span>
-            <a href={profileData.idImageUrl} target="_blank" rel="noopener noreferrer"
-              className="text-green-700 hover:text-green-900 flex-shrink-0">
-              <ExternalLink size={14} />
-            </a>
+            {isSafeUrl(profileData.idImageUrl) && (
+              <a href={profileData.idImageUrl} target="_blank" rel="noopener noreferrer"
+                className="text-green-700 hover:text-green-900 flex-shrink-0">
+                <ExternalLink size={14} />
+              </a>
+            )}
           </div>
         )}
 

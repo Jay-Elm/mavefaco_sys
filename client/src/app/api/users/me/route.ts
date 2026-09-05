@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
+import { isSafeUrl } from "@/lib/url";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 
@@ -33,6 +34,9 @@ export async function PATCH(req: NextRequest) {
 
     if (!name && !email && idImageUrl === undefined && !hasPasswordChange)
       return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
+
+    if (idImageUrl && !isSafeUrl(idImageUrl))
+      return NextResponse.json({ error: "ID link must be a valid http(s) URL" }, { status: 400 });
 
     if (email) {
       const existing = await prisma.user.findUnique({ where: { email } });

@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Leaf, Mail, Phone, MapPin, Globe, HelpCircle, Target, Eye } from "lucide-react";
+import { isSafeUrl } from "@/lib/url";
 
 async function getSiteData() {
   const [rows, faqs] = await Promise.all([
@@ -107,7 +108,7 @@ export default async function AboutPage() {
                   <span>{address}</span>
                 </div>
               )}
-              {fbUrl && (
+              {fbUrl && isSafeUrl(fbUrl) && (
                 <div className="flex items-center gap-3 text-sm text-gray-700">
                   <Globe size={16} className="text-green-600 shrink-0" />
                   <a href={fbUrl} target="_blank" rel="noopener noreferrer" className="hover:text-green-700 break-all">{fbUrl}</a>

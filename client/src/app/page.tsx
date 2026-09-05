@@ -5,6 +5,7 @@ import HomeRedirect from "@/components/HomeRedirect";
 import HomeHeroActions from "@/components/HomeHeroActions";
 import HomeBottomCTAButtons from "@/components/HomeBottomCTAButtons";
 import { ShoppingBag, Leaf, ArrowRight, Info, AlertTriangle, Package, Users, CheckCircle, Star } from "lucide-react";
+import { isSafeUrl } from "@/lib/url";
 
 async function getFeaturedProducts() {
   return prisma.product.findMany({
@@ -183,7 +184,7 @@ export default async function HomePage() {
                     <h3 className="font-serif text-lg font-semibold">{b.title}</h3>
                     {b.subtitle && <p className="text-white/75 text-sm mt-0.5">{b.subtitle}</p>}
                   </div>
-                  {b.ctaText && b.ctaLink && (
+                  {b.ctaText && b.ctaLink && isSafeUrl(b.ctaLink) && (
                     <Link href={b.ctaLink} className="shrink-0 inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-medium px-5 py-2 rounded-lg transition-colors text-sm">
                       {b.ctaText} <ArrowRight size={14} />
                     </Link>
