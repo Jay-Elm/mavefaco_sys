@@ -1,10 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { registerSchema } from "@/validators/auth";
+import { generateToken, EMAIL_VERIFICATION_TTL_MS } from "@/lib/token";
+import { sendEmail } from "@/lib/email";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req);
     const { allowed, retryAfterSeconds } = rateLimit(`register:${ip}`, 5, 60 * 60 * 1000);
@@ -43,9 +45,27 @@ export async function POST(req: Request) {
       },
     });
 
+    const { raw, hash } = generateToken();
+    await prisma.emailVerificationToken.create({
+      data: { userId: user.id, tokenHash: hash, expiresAt: new Date(Date.now() + EMAIL_VERIFICATION_TTL_MS) },
+    });
+
+    const verifyUrl = `${req.nextUrl.origin}/verify-email?token=${raw}`;
+    const sent = await sendEmail({
+      to: user.email,
+      subject: "Verify your MaVeFaCo account",
+      html: `
+        <p>Hi ${user.name},</p>
+        <p>Thanks for signing up for MaVeFaCo. Click the link below to verify your email address and activate your account. This link expires in 24 hours.</p>
+        <p><a href="${verifyUrl}">${verifyUrl}</a></p>
+        <p>If you didn't create this account, you can safely ignore this email.</p>
+      `,
+    });
+    if (!sent) console.error(`Failed to send verification email to user ${user.id}`);
+
     return NextResponse.json(
       {
-        message: "User registered successfully",
+        message: "Registration successful. Check your email to verify your account before logging in.",
         user: {
           id: user.id,
           name: user.name,

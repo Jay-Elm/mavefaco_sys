@@ -129,9 +129,19 @@ exports.Prisma.UserScalarFieldEnum = {
   suspended: 'suspended',
   idImagePath: 'idImagePath',
   verified: 'verified',
+  emailVerifiedAt: 'emailVerifiedAt',
   tokenVersion: 'tokenVersion',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.EmailVerificationTokenScalarFieldEnum = {
+  id: 'id',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt',
+  userId: 'userId'
 };
 
 exports.Prisma.PasswordResetTokenScalarFieldEnum = {
@@ -273,6 +283,7 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  EmailVerificationToken: 'EmailVerificationToken',
   PasswordResetToken: 'PasswordResetToken',
   Category: 'Category',
   Product: 'Product',

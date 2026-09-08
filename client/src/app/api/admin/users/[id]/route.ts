@@ -5,6 +5,7 @@ import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { adminUserPatchSchema } from "@/validators/adminUser";
+import { deleteUserAccount } from "@/lib/deleteAccount";
 
 async function resolveTarget(id: string) {
   const userId = Number(id);
@@ -105,57 +106,14 @@ export async function DELETE(
     if (target.role === ROLES.ADMIN)
       return NextResponse.json({ error: "Cannot delete another admin account" }, { status: 403 });
 
-    const ACTIVE_STATUSES = ["pending", "confirmed", "shipped"];
-
-    // Block deletion only if the user has active (in-progress) orders
-    const activeOrderCount = await prisma.order.count({
-      where: { customerId: target.id, status: { in: ACTIVE_STATUSES } },
-    });
-    if (activeOrderCount > 0)
-      return NextResponse.json(
-        { error: `Cannot delete: this user has ${activeOrderCount} active order(s). Wait for them to complete or cancel, then try again.` },
-        { status: 409 },
-      );
-
-    // Block deletion if any of the user's products are in active orders
-    const productInActiveOrders = await prisma.orderItem.findFirst({
-      where: { product: { farmerId: target.id }, order: { status: { in: ACTIVE_STATUSES } } },
-    });
-    if (productInActiveOrders)
-      return NextResponse.json(
-        { error: "Cannot delete: this farmer has products in active orders. Wait for them to complete, then try again." },
-        { status: 409 },
-      );
-
-    // Safe to delete — cascade completed/cancelled orders and all related data
-    await prisma.$transaction([
-      prisma.orderItem.deleteMany({ where: { order: { customerId: target.id } } }),
-      prisma.order.deleteMany({ where: { customerId: target.id } }),
-      prisma.orderItem.deleteMany({ where: { product: { farmerId: target.id } } }),
-      prisma.product.deleteMany({ where: { farmerId: target.id } }),
-      prisma.auditLog.deleteMany({ where: { userId: target.id } }),
-      prisma.user.delete({ where: { id: target.id } }),
-    ]);
-
-    // Retention policy: a submitted ID has no reason to outlive the account
-    // it verifies. Best-effort — never blocks the response on a storage hiccup.
-    if (target.idImagePath) {
-      const supabaseUrl = process.env.SUPABASE_URL;
-      const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-      if (supabaseUrl && serviceKey) {
-        fetch(`${supabaseUrl}/storage/v1/object/id-verification`, {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${serviceKey}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ prefixes: [target.idImagePath] }),
-        }).catch((err) => console.error("id-image: failed to delete on account removal", err));
-      }
+    const result = await deleteUserAccount(target.id);
+    if (!result.ok) {
+      return NextResponse.json({ error: result.error }, { status: result.status });
     }
 
     return NextResponse.json({ message: "User deleted successfully" });
-  } catch {
+  } catch (error) {
+    console.error("DELETE /api/admin/users/[id] error:", error);
     return NextResponse.json({ error: "Failed to delete user" }, { status: 500 });
   }
 }

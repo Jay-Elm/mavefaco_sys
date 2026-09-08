@@ -3,17 +3,22 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, CheckCircle, User, KeyRound } from 'lucide-react'
+import { Loader2, CheckCircle, User, KeyRound, Mail, AlertTriangle } from 'lucide-react'
 
 export default function CustomerProfilePage() {
   const { isAuthenticated, loading, token, user, login, logout } = useAuth()
   const router = useRouter()
 
   const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+
+  const [newEmail, setNewEmail] = useState('')
+  const [emailPassword, setEmailPassword] = useState('')
+  const [emailSubmitting, setEmailSubmitting] = useState(false)
+  const [emailError, setEmailError] = useState('')
+  const [emailSuccess, setEmailSuccess] = useState(false)
 
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -22,11 +27,15 @@ export default function CustomerProfilePage() {
   const [pwError, setPwError] = useState('')
   const [pwSuccess, setPwSuccess] = useState(false)
 
+  const [deletePassword, setDeletePassword] = useState('')
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
+
   useEffect(() => {
     if (loading) return
     if (!isAuthenticated) { router.replace('/login'); return }
     setName(user?.name ?? '')
-    setEmail(user?.email ?? '')
+    setNewEmail(user?.email ?? '')
   }, [loading, isAuthenticated, user, router])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -39,16 +48,45 @@ export default function CustomerProfilePage() {
       const res = await fetch('/api/users/me', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ name: name.trim(), email: email.trim().toLowerCase() }),
+        body: JSON.stringify({ name: name.trim() }),
       })
       const data = await res.json()
-      if (!res.ok) { setError(data.error ?? 'Failed to update profile'); return }
-      login({ ...user!, name: data.name, email: data.email })
+      if (!res.ok) { setError(data.error ?? 'Failed to update name'); return }
+      login({ ...user!, name: data.name })
       setSuccess(true)
     } catch {
       setError('Request failed')
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  async function handleEmailChange(e: React.FormEvent) {
+    e.preventDefault()
+    if (!token) return
+    setEmailError('')
+    setEmailSuccess(false)
+    setEmailSubmitting(true)
+    try {
+      const res = await fetch('/api/users/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ email: newEmail.trim().toLowerCase(), currentPassword: emailPassword }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setEmailError(data.error ?? 'Failed to update email'); return }
+      setEmailSuccess(true)
+      setEmailPassword('')
+      // Changing the email invalidates the current session token server-side —
+      // sign the user out locally and send them back to log in with it.
+      setTimeout(() => {
+        logout()
+        router.push('/login')
+      }, 1500)
+    } catch {
+      setEmailError('Request failed')
+    } finally {
+      setEmailSubmitting(false)
     }
   }
 
@@ -84,6 +122,29 @@ export default function CustomerProfilePage() {
     }
   }
 
+  async function handleDeleteAccount(e: React.FormEvent) {
+    e.preventDefault()
+    if (!token) return
+    if (!confirm('Permanently delete your account?\n\nThis removes your profile, orders, and order history. This cannot be undone.')) return
+    setDeleteError('')
+    setDeleting(true)
+    try {
+      const res = await fetch('/api/users/me', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ currentPassword: deletePassword }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setDeleteError(data.error ?? 'Failed to delete account'); return }
+      logout()
+      router.push('/')
+    } catch {
+      setDeleteError('Request failed')
+    } finally {
+      setDeleting(false)
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20 text-gray-400">
@@ -104,6 +165,7 @@ export default function CustomerProfilePage() {
         </div>
       </div>
 
+      {/* Name */}
       {error && (
         <div className="mb-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
           {error}
@@ -112,7 +174,7 @@ export default function CustomerProfilePage() {
       {success && (
         <div className="mb-4 flex items-center gap-2 text-green-700 text-sm bg-green-50 border border-green-200 rounded-lg px-4 py-3">
           <CheckCircle size={16} />
-          Profile updated successfully
+          Name updated successfully
         </div>
       )}
 
@@ -123,17 +185,6 @@ export default function CustomerProfilePage() {
             <input
               value={name}
               onChange={e => setName(e.target.value)}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
@@ -155,10 +206,68 @@ export default function CustomerProfilePage() {
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors disabled:opacity-60"
             >
               {submitting && <Loader2 size={14} className="animate-spin" />}
-              {submitting ? 'Saving…' : 'Save Changes'}
+              {submitting ? 'Saving…' : 'Save Name'}
             </button>
           </div>
         </form>
+      </div>
+
+      {/* Change email */}
+      <div className="mt-6">
+        <div className="flex items-center gap-2 mb-3">
+          <Mail size={18} className="text-gray-500" />
+          <h2 className="text-lg font-semibold text-gray-900">Change Email</h2>
+        </div>
+        <p className="text-sm text-gray-500 mb-3">
+          Currently: <span className="font-medium text-gray-700">{user?.email}</span>. Changing your email requires your current password and will sign you out.
+        </p>
+
+        {emailError && (
+          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
+            {emailError}
+          </div>
+        )}
+        {emailSuccess && (
+          <div className="mb-4 flex items-center gap-2 text-green-700 text-sm bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+            <CheckCircle size={16} />
+            Email changed — signing you out…
+          </div>
+        )}
+
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+          <form onSubmit={handleEmailChange} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">New Email</label>
+              <input
+                type="email"
+                value={newEmail}
+                onChange={e => setNewEmail(e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+              <input
+                type="password"
+                value={emailPassword}
+                onChange={e => setEmailPassword(e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={emailSubmitting}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors disabled:opacity-60"
+              >
+                {emailSubmitting && <Loader2 size={14} className="animate-spin" />}
+                {emailSubmitting ? 'Saving…' : 'Change Email'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
 
       {/* Change password */}
@@ -221,6 +330,48 @@ export default function CustomerProfilePage() {
               >
                 {pwSubmitting && <Loader2 size={14} className="animate-spin" />}
                 {pwSubmitting ? 'Updating…' : 'Change Password'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      {/* Danger zone */}
+      <div className="mt-6">
+        <div className="flex items-center gap-2 mb-3">
+          <AlertTriangle size={18} className="text-red-500" />
+          <h2 className="text-lg font-semibold text-red-700">Delete Account</h2>
+        </div>
+        <p className="text-sm text-gray-500 mb-3">
+          Permanently deletes your account and order history. You can&apos;t undo this, and it&apos;s blocked while you have any active (pending/confirmed/shipped) orders.
+        </p>
+
+        {deleteError && (
+          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3">
+            {deleteError}
+          </div>
+        )}
+
+        <div className="bg-white rounded-2xl border border-red-200 shadow-sm p-6">
+          <form onSubmit={handleDeleteAccount} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+              <input
+                type="password"
+                value={deletePassword}
+                onChange={e => setDeletePassword(e.target.value)}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+              />
+            </div>
+            <div className="pt-1">
+              <button
+                type="submit"
+                disabled={deleting}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors disabled:opacity-60"
+              >
+                {deleting && <Loader2 size={14} className="animate-spin" />}
+                {deleting ? 'Deleting…' : 'Delete My Account'}
               </button>
             </div>
           </form>

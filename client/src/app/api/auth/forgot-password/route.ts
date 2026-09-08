@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { forgotPasswordSchema } from "@/validators/auth";
-import { generateResetToken, RESET_TOKEN_TTL_MS } from "@/lib/resetToken";
+import { generateToken, RESET_TOKEN_TTL_MS } from "@/lib/token";
 import { sendEmail } from "@/lib/email";
 
 // Always the same response, whether or not the email is registered —
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.user.findUnique({ where: { email } });
     if (user) {
-      const { raw, hash } = generateResetToken();
+      const { raw, hash } = generateToken();
 
       await prisma.$transaction([
         // Invalidate any earlier unused links so only the latest request works.

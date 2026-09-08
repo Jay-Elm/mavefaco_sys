@@ -235,6 +235,31 @@ Verified end-to-end against the local dev server: weak/missing register fields r
 
 ---
 
+## Phase 3 — user-reported gaps (2026-09-08)
+
+Not from the original review — flagged directly by the project owner after using the app. All four were confirmed against the actual code before fixing (not assumed).
+
+| # | Finding | Action | Status |
+|---|---|---|---|
+| 17 | No self-service account deletion | New `DELETE /api/users/me` (customers/farmers only — admins/managers stay console-managed), gated behind re-entering the current password, reuses the same active-order-blocking cascade logic as the existing admin delete | Done, verified |
+| 18 | No email verification at signup | New `EmailVerificationToken` model + `User.emailVerifiedAt`; registration sends a verification link via Brevo and login is blocked until it's clicked; a successful password reset also counts as verification (proves inbox ownership the same way) | Done, verified |
+| 19 | Profile fields changeable with no extra confirmation | `PATCH /api/users/me` now requires re-entering the current password to change **email** specifically (not name) — closes a real account-takeover path where a hijacked session could change the email, then use forgot-password to fully take over without ever knowing the actual password. Changing email now also invalidates the session, same as a password change | Done, verified |
+| 20 | Destructive buttons fire on first click | Added `confirm()` to the actions that were missing it: removing a submitted ID, deleting a crop log entry, and — the most consequential gap — cancelling an order, on all three surfaces that can do it (customer's own order, farmer's order view, admin's order view/dropdown) | Done, verified |
+
+### Item 17/18 migration note
+
+Two new migrations: `20260908120000_add_email_verification` backfills every **existing** account's `emailVerifiedAt` to its `createdAt` — without this, every current user (including the site's own admin account) would have been locked out of login the moment this shipped, since none of them had ever gone through the new verification flow. Confirmed correct against the local dev DB before deploying.
+
+### A real bug this surfaced
+
+While verifying item 17, self-deletion failed for any account that had ever requested a password reset or verified their email — the cascade-delete logic (shared with the existing admin-delete route) never cleared `PasswordResetToken`/`EmailVerificationToken`/`Review`/`Message`/`Announcement`/`CropLog` rows before deleting the user, so Postgres rejected the delete on a foreign-key constraint. Since **every new registration now creates an `EmailVerificationToken` row**, this would have silently broken account deletion for every user going forward, not just an edge case — caught by testing the actual delete against a real account that had just been through the verify-email flow, not just a happy-path account with no history. Fixed in `src/lib/deleteAccount.ts`, and re-verified end-to-end (including confirming the row is actually gone from the database, not just session-invalidated) before shipping.
+
+### Verification
+
+`tsc --noEmit`, `eslint` (21 pre-existing problems, unchanged — one new occurrence in `verify-email/VerifyEmailStatus.tsx` was suppressed with the same `eslint-disable-next-line react-hooks/set-state-in-effect` convention already established in `AuthContext.tsx`, not left as new debt), and a full `next build` (all new pages prerender static as expected, including `/verify-email` which needed the same `useSearchParams` + `Suspense` handling as `/reset-password`) all pass. End-to-end against the local dev server: registration blocks login pre-verification and unblocks it after; existing accounts are unaffected; resend-verification and forgot-password both stay anti-enumeration-safe; name changes stay password-free while email changes require it and kill the session; self-delete correctly rejects missing/wrong password, blocks admin/manager roles, blocks while an active order exists, and — after the cascade fix — succeeds and actually removes the row.
+
+---
+
 ## Summary
 
 The application's core data-access layer is in good shape: Prisma eliminates SQL injection risk, order pricing is server-computed, role assignment can't be self-escalated at registration, and the sampled admin routes show real authorization thought (self-suspend/self-delete guards, role-hierarchy checks). The two findings that matter most are both concrete and fixable in under a day each: the `javascript:` URL stored-XSS path that lets any user pivot into an admin's session (2.1), and the fact that stolen or logged-out tokens stay valid for a week with no way to revoke them (1.1/1.2) — fixing the first without the second still leaves a wide window if a token leaks some other way. Everything else in this plan meaningfully reduces risk but isn't an active, exploitable path today the way those two are.

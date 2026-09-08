@@ -1,15 +1,10 @@
 import { z } from "zod";
+import { requiredString } from "./helpers";
 
 // Shared by the register form (client, via zodResolver) and
 // POST /api/auth/register (server) — one schema so the two can't drift,
 // which they had: the client used zod's built-in email check while the
 // server used a hand-rolled regex.
-// Preprocessing a missing/wrong-type value down to "" before the real check
-// means an absent field fails the same min-length/format check (and gets
-// the same message) as an empty one — rather than zod's generic "expected
-// string, received undefined" for the missing case only.
-const requiredString = (schema: z.ZodString) =>
-  z.preprocess((v) => (typeof v === "string" ? v : ""), schema);
 
 export const registerSchema = z.object({
   name: requiredString(z.string().trim().min(2, "Name must be at least 2 characters")),
@@ -42,3 +37,15 @@ export const resetPasswordSchema = z.object({
 });
 
 export type ResetPasswordInput = z.input<typeof resetPasswordSchema>;
+
+export const verifyEmailSchema = z.object({
+  token: requiredString(z.string().min(1, "Verification link is invalid")),
+});
+
+export type VerifyEmailInput = z.input<typeof verifyEmailSchema>;
+
+export const resendVerificationSchema = z.object({
+  email: requiredString(z.string().trim().toLowerCase().email("Enter a valid email address")),
+});
+
+export type ResendVerificationInput = z.input<typeof resendVerificationSchema>;

@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { resetPasswordSchema } from "@/validators/auth";
-import { hashResetToken } from "@/lib/resetToken";
+import { hashToken } from "@/lib/token";
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,7 +23,8 @@ export async function POST(req: NextRequest) {
     const { token, newPassword } = parsed.data;
 
     const record = await prisma.passwordResetToken.findUnique({
-      where: { tokenHash: hashResetToken(token) },
+      where: { tokenHash: hashToken(token) },
+      include: { user: { select: { emailVerifiedAt: true } } },
     });
 
     if (!record || record.usedAt || record.expiresAt < new Date()) {
@@ -38,7 +39,14 @@ export async function POST(req: NextRequest) {
     await prisma.$transaction([
       prisma.user.update({
         where: { id: record.userId },
-        data: { password: hashedPassword, tokenVersion: { increment: 1 } },
+        data: {
+          password: hashedPassword,
+          tokenVersion: { increment: 1 },
+          // Successfully receiving and clicking this link proves ownership
+          // of the inbox just as well as clicking a verification link
+          // would — don't make someone verify twice.
+          ...(record.user.emailVerifiedAt === null && { emailVerifiedAt: new Date() }),
+        },
       }),
       prisma.passwordResetToken.update({
         where: { id: record.id },

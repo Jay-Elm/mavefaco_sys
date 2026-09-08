@@ -75,6 +75,7 @@ export default function CustomerOrdersPage() {
 
   async function handleAction(orderId: number, status: string) {
     if (!token) return
+    if (status === 'cancelled' && !confirm('Cancel this order? This cannot be undone.')) return
     setActingId(orderId)
     setActionError(null)
     try {

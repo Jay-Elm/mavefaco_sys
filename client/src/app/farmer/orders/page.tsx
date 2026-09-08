@@ -62,6 +62,7 @@ export default function FarmerOrdersPage() {
 
   async function handleStatusChange(orderId: number, status: string) {
     if (!token) return
+    if (status === 'cancelled' && !confirm('Cancel this order? This cannot be undone.')) return
     setUpdatingId(orderId)
     setUpdateError(null)
     try {

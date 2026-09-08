@@ -19,19 +19,41 @@ model User {
   // /api/admin/users/[id]/id-image). Renamed from idImageUrl when ID
   // verification moved off a farmer-supplied free-text link.
   idImagePath String?
+  // Farmer ID-document verification (admin-reviewed) — unrelated to
+  // whether the account's email address has been confirmed.
   verified    Boolean     @default(false)
+  // Null until the address is confirmed via the emailed link. Existing
+  // accounts are backfilled to non-null at migration time (see
+  // 20260908120000_add_email_verification) so this gate only applies to
+  // accounts created after this feature shipped — nobody already-registered
+  // gets locked out.
+  emailVerifiedAt DateTime?
   tokenVersion Int        @default(0)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
-  products             Product[]
-  orders               Order[]
-  auditLogs            AuditLog[]
-  announcements        Announcement[]
-  reviews              Review[]
-  sentMessages         Message[] @relation("SentMessages")
-  receivedMessages     Message[] @relation("ReceivedMessages")
-  passwordResetTokens  PasswordResetToken[]
+  products                 Product[]
+  orders                   Order[]
+  auditLogs                AuditLog[]
+  announcements            Announcement[]
+  reviews                  Review[]
+  sentMessages             Message[] @relation("SentMessages")
+  receivedMessages         Message[] @relation("ReceivedMessages")
+  passwordResetTokens      PasswordResetToken[]
+  emailVerificationTokens  EmailVerificationToken[]
+}
+
+model EmailVerificationToken {
+  id        Int       @id @default(autoincrement())
+  // SHA-256 hash of the token, never the raw value — same principle as
+  // PasswordResetToken.
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
 }
 
 model PasswordResetToken {

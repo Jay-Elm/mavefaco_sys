@@ -136,6 +136,7 @@ export default function CropDetailPage() {
 
   async function handleDeleteLog(logId: number) {
     if (!token) return
+    if (!confirm('Delete this log entry?')) return
     setDeletingLogId(logId)
     try {
       await fetch(`/api/farmer/crops/${productId}/logs/${logId}`, {

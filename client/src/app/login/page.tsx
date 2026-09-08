@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { LogIn, Leaf } from 'lucide-react'
+import { LogIn, Leaf, Mail } from 'lucide-react'
 import { loginSchema, type LoginInput as LoginForm } from '@/validators/auth'
 
 function roleDest(role?: string) {
@@ -19,6 +19,9 @@ export default function LoginPage() {
   const { login, isAuthenticated, loading, user } = useAuth()
   const router = useRouter()
   const [serverError, setServerError] = useState('')
+  const [needsVerification, setNeedsVerification] = useState(false)
+  const [resending, setResending] = useState(false)
+  const [resent, setResent] = useState(false)
 
   useEffect(() => {
     if (!loading && isAuthenticated) router.replace(roleDest(user?.role))
@@ -27,11 +30,14 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<LoginForm>({ resolver: zodResolver(loginSchema) })
 
   async function onSubmit(data: LoginForm) {
     setServerError('')
+    setNeedsVerification(false)
+    setResent(false)
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
@@ -42,6 +48,7 @@ export default function LoginPage() {
 
       if (!res.ok) {
         setServerError(json.error ?? 'Login failed')
+        if (json.code === 'EMAIL_NOT_VERIFIED') setNeedsVerification(true)
         return
       }
 
@@ -49,6 +56,24 @@ export default function LoginPage() {
       // useEffect handles redirect once isAuthenticated updates
     } catch {
       setServerError('Network error. Please try again.')
+    }
+  }
+
+  async function handleResend() {
+    setResending(true)
+    try {
+      await fetch('/api/auth/resend-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: getValues('email') }),
+      })
+      // The API response is deliberately generic (anti-enumeration) — show
+      // the same "sent" state regardless of what actually happened server-side.
+      setResent(true)
+    } catch {
+      // Silent — the button stays available to retry.
+    } finally {
+      setResending(false)
     }
   }
 
@@ -67,8 +92,24 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">
           {serverError && (
-            <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-lg border border-red-200">
-              {serverError}
+            <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-lg border border-red-200 space-y-2">
+              <p>{serverError}</p>
+              {needsVerification && (
+                resent ? (
+                  <p className="text-green-700 flex items-center gap-1">
+                    <Mail size={14} /> New verification link sent — check your email.
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={resending}
+                    className="text-red-800 font-medium underline disabled:opacity-60"
+                  >
+                    {resending ? 'Sending…' : 'Resend verification email'}
+                  </button>
+                )
+              )}
             </div>
           )}
 

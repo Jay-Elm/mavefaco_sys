@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { UserPlus, Leaf, ShoppingBag } from 'lucide-react'
+import { UserPlus, Leaf, ShoppingBag, Mail, CheckCircle } from 'lucide-react'
 import { registerSchema, type RegisterInput as RegisterForm } from '@/validators/auth'
 
 function roleDest(role?: string) {
@@ -51,7 +51,6 @@ export default function RegisterPage() {
       }
 
       setSuccess(true)
-      setTimeout(() => router.push('/login'), 1500)
     } catch {
       setServerError('Network error. Please try again.')
     }
@@ -70,16 +69,21 @@ export default function RegisterPage() {
           <p className="text-gray-500 text-sm mt-1">Join the CoopMarket community</p>
         </div>
 
+        {success ? (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 text-center space-y-3">
+            <Mail size={32} className="mx-auto text-green-600" />
+            <p className="text-sm text-gray-700">
+              Account created! Check your email for a verification link — you&apos;ll need to click it before you can sign in.
+            </p>
+            <Link href="/login" className="inline-flex items-center gap-1 text-sm text-green-700 font-medium hover:underline">
+              <CheckCircle size={14} /> Go to sign in
+            </Link>
+          </div>
+        ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">
           {serverError && (
             <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-lg border border-red-200">
               {serverError}
-            </div>
-          )}
-
-          {success && (
-            <div className="bg-green-50 text-green-700 text-sm px-4 py-3 rounded-lg border border-green-200">
-              Account created! Redirecting to login…
             </div>
           )}
 
@@ -163,7 +167,7 @@ export default function RegisterPage() {
               autoComplete="new-password"
               {...register('password')}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="At least 6 characters"
+              placeholder="At least 12 characters"
             />
             {errors.password && (
               <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>
@@ -172,13 +176,14 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            disabled={isSubmitting || success}
+            disabled={isSubmitting}
             className="w-full flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
           >
             <UserPlus size={16} />
             {isSubmitting ? 'Creating account…' : 'Create Account'}
           </button>
         </form>
+        )}
 
         <p className="text-center text-sm text-gray-500 mt-4">
           Already have an account?{' '}
