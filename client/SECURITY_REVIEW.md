@@ -173,11 +173,11 @@ Verified with `tsc --noEmit`, `eslint`, and a live smoke test against the local 
 ### Phase 2 — Medium-term (this quarter)
 | # | Finding | Action | Effort | Status |
 |---|---|---|---|---|
-| 10 | 1.3 ID image handling | Move ID "upload" from free-text URL to real file upload into a private bucket + signed URLs; define retention/deletion policy | Large | Done, **unverified** — see note below |
+| 10 | 1.3 ID image handling | Move ID "upload" from free-text URL to real file upload into a private bucket + signed URLs; define retention/deletion policy | Large | Done — bucket created and full flow confirmed working live (2026-09-08) |
 | 11 | 1.1 Token storage | Migrate JWT from `localStorage` to `httpOnly` cookie-based sessions | Large | Done, verified |
 | 12 | 4.2 No centralized auth layer | Introduce a `withAuth`/middleware wrapper so route protection is structural, not per-file discipline | Medium | Done, verified |
 | 13 | 4.4 Account recovery / MFA | Build token-based forgot-password flow; add optional TOTP for admin/manager | Medium | **Skipped** — no email provider configured (would need Resend/SendGrid/etc. + an API key); revisit once one exists |
-| 14 | 4.6 Validation consolidation | Move ad-hoc route validation into shared `zod` schemas used both client and server side | Medium | Not started |
+| 14 | 4.6 Validation consolidation | Move ad-hoc route validation into shared `zod` schemas used both client and server side | Medium | Done — see note below for scope |
 
 #### Item 11 — cookie-based sessions (2026-09-08)
 
@@ -202,16 +202,15 @@ Replaced the free-text "paste a URL to your ID" field with a real file upload:
 - Deleting a user account (`DELETE /api/admin/users/[id]`) now also deletes their stored ID image, best-effort — the retention policy is: **an ID image is removed the moment the account that submitted it is removed, or when the farmer withdraws/replaces their submission.** There's no time-based auto-purge (e.g. "delete N days after verification") — that would need a scheduled job (Vercel Cron), which doesn't exist in this project yet; flagged here as a deliberate scope cut, not an oversight.
 - Old pre-migration `idImageUrl` values (external links like Google Drive URLs some farmers may have already submitted) are left in the renamed column as-is rather than wiped, but are now meaningless — the signed-URL endpoint looks them up as storage paths and will 404. Any farmer with a pending (unverified) submission from before this change will need to re-submit through the new upload flow; anyone already `verified: true` is unaffected, since that's a completed decision already recorded independent of the stale path value.
 
-**What's verified vs. not:** everything that doesn't touch actual Supabase Storage was tested end-to-end against the local dev server — auth gating, rate limiting, the `hasIdImage` boolean never leaking a raw path, the signed-URL route's 404 when nothing's submitted, Proxy blocking non-admins from it. **The actual upload-to-bucket and sign-URL calls were never exercised** — this local `.env` only has `DATABASE_URL`/`JWT_SECRET`, not `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` (Vercel-only secrets I don't have access to), so those two Supabase REST calls are implemented against the documented API but unverified. Confirmed with you and proceeding on that basis.
+**Update 2026-09-08:** the private `id-verification` bucket was created (via the Supabase Dashboard) and the full flow was confirmed working in production — farmer ID upload, admin view via signed URL, everything. The Supabase Storage REST calls that couldn't be tested locally (no service-role credentials in this environment) turned out correct as implemented. This item is fully done and verified.
 
-**Action needed before this works in production:** the `id-verification` bucket doesn't exist yet and must be created as **private** (`public: false`) — the app will return "Storage not configured"/upload failures until it does. Run once, with the same service role key Vercel already has configured for `/api/upload`:
-```bash
-curl -X POST "$SUPABASE_URL/storage/v1/bucket" \
-  -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"name":"id-verification","public":false}'
-```
-After that, click through the flow once in a real browser (submit an ID as a farmer, view it as an admin) before trusting it fully.
+### Item 14 — shared zod validators (2026-09-08)
+
+Consolidated validation into `src/validators/` for the routes where client and server logic were actually duplicated (and could actually drift) or where the manual checks were the most security-relevant: `auth.ts` (register/login — used by both the client form via `zodResolver` and the API route), `profile.ts` (`users/me` PATCH), `adminUser.ts` (`admin/users/[id]` PATCH), `banner.ts`, `siteContent.ts`, `order.ts`. Deliberately **not** extended to the remaining ~30 routes (announcements, faqs, categories, crop logs, reviews, messages, products, etc.) — those are simple CRUD with basic inline checks and no client-side duplicate to drift from, so the effort-to-value ratio didn't justify a mechanical sweep. Worth revisiting if any of them grow more complex validation logic later.
+
+This consolidation also fixed a real (if narrow) client/server discrepancy: the client's register form validated email with zod's built-in `.email()` while the server used a hand-rolled regex — different edge-case behavior on the exact same field, now impossible since it's the same schema. It also caught and fixed a regression it would otherwise have introduced: a required field that's entirely *absent* from the request body (as opposed to present-but-empty) initially fell through to zod's generic "expected string, received undefined" instead of the intended message ("Title is required", "Cart is empty", etc.) — fixed by preprocessing missing/wrong-type values to an empty value before the real check runs, in `auth.ts`, `order.ts`, and `banner.ts`.
+
+Verified end-to-end against the local dev server: weak/missing register fields rejected with the right messages, name/email correctly trimmed and lowercased, malformed login body 401s cleanly instead of 500ing, weak password changes rejected, admin patch's "must provide at least one field" refinement still fires, banner `javascript:` CTA links and site-content `javascript:` Facebook URLs still rejected (the XSS guard from Phase 0 survived the refactor), invalid banner colors still fall back to green, and a full order placement still succeeds through the new schema. Full-project `eslint` count unchanged from before this item (21 pre-existing problems, all in files untouched by this work).
 
 ### Ongoing / process
 | # | Finding | Action |

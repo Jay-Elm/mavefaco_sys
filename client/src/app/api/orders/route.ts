@@ -1,41 +1,24 @@
 import { prisma } from '@/lib/prisma'
 import { getActiveAuthUser } from '@/lib/getActiveAuthUser'
 import { NextRequest, NextResponse } from 'next/server'
-
-interface OrderItemInput {
-  productId: number
-  quantity: number
-}
-
-const VALID_PAYMENT_METHODS = ['cod', 'gcash', 'bank_transfer'] as const
-const VALID_DELIVERY_METHODS = ['pickup', 'delivery'] as const
+import { orderSchema } from '@/validators/order'
 
 export async function POST(req: NextRequest) {
   const user = await getActiveAuthUser(req)
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  let body: { items?: OrderItemInput[]; paymentMethod?: string; deliveryMethod?: string }
+  let rawBody: unknown
   try {
-    body = await req.json()
+    rawBody = await req.json()
   } catch {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 })
   }
 
-  const { items, paymentMethod = 'cod', deliveryMethod = 'pickup' } = body
-
-  if (!VALID_PAYMENT_METHODS.includes(paymentMethod as never))
-    return NextResponse.json({ error: 'Invalid payment method' }, { status: 400 })
-  if (!VALID_DELIVERY_METHODS.includes(deliveryMethod as never))
-    return NextResponse.json({ error: 'Invalid delivery method' }, { status: 400 })
-  if (!Array.isArray(items) || items.length === 0) {
-    return NextResponse.json({ error: 'Cart is empty' }, { status: 400 })
+  const parsed = orderSchema.safeParse(rawBody)
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 })
   }
-
-  for (const item of items) {
-    if (!Number.isInteger(item.productId) || typeof item.quantity !== 'number' || item.quantity <= 0) {
-      return NextResponse.json({ error: 'Invalid item data' }, { status: 400 })
-    }
-  }
+  const { items, paymentMethod, deliveryMethod } = parsed.data
 
   try {
     const order = await prisma.$transaction(async (tx) => {

@@ -3,20 +3,11 @@
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { UserPlus, Leaf, ShoppingBag } from 'lucide-react'
-
-const registerSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Enter a valid email'),
-  password: z.string().min(12, 'Password must be at least 12 characters'),
-  role: z.enum(['customer', 'farmer']),
-})
-
-type RegisterForm = z.infer<typeof registerSchema>
+import { registerSchema, type RegisterInput as RegisterForm } from '@/validators/auth'
 
 function roleDest(role?: string) {
   if (role === 'admin' || role === 'manager') return '/dashboard'

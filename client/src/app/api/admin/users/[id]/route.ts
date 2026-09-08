@@ -4,6 +4,7 @@ import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { adminUserPatchSchema } from "@/validators/adminUser";
 
 async function resolveTarget(id: string) {
   const userId = Number(id);
@@ -40,21 +41,16 @@ export async function PATCH(
     if (actor.role === ROLES.ADMIN && target.role === ROLES.ADMIN)
       return NextResponse.json({ error: "Cannot suspend another admin" }, { status: 403 });
 
-    const body = await req.json();
-    const { suspended, verified, newPassword } = body;
-
-    if (typeof suspended !== "boolean" && typeof verified !== "boolean" && typeof newPassword !== "string")
-      return NextResponse.json({ error: "suspended, verified, or newPassword must be provided" }, { status: 400 });
-
-    if (typeof newPassword === "string") {
-      if (newPassword.trim().length < 12)
-        return NextResponse.json({ error: "New password must be at least 12 characters" }, { status: 400 });
-      // Only admins can reset passwords
-      if (actor.role !== ROLES.ADMIN)
-        return NextResponse.json({ error: "Only admins can reset passwords" }, { status: 403 });
+    const parsed = adminUserPatchSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
+    const { suspended, verified, newPassword } = parsed.data;
 
-    const hashed = typeof newPassword === "string" ? await bcrypt.hash(newPassword.trim(), 10) : undefined;
+    if (newPassword !== undefined && actor.role !== ROLES.ADMIN)
+      return NextResponse.json({ error: "Only admins can reset passwords" }, { status: 403 });
+
+    const hashed = newPassword !== undefined ? await bcrypt.hash(newPassword, 10) : undefined;
 
     const updated = await prisma.user.update({
       where: { id: target.id },

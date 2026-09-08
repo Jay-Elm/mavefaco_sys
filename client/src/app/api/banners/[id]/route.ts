@@ -2,8 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
-import { isSafeUrl } from "@/lib/url";
 import { NextRequest, NextResponse } from "next/server";
+import { bannerUpdateSchema } from "@/validators/banner";
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -16,22 +16,22 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const bannerId = parseInt(id);
     if (isNaN(bannerId)) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
-    const body = await req.json();
-    const validColors = ["green", "orange", "blue", "purple", "teal"];
-
-    if (body.ctaLink?.trim() && !isSafeUrl(body.ctaLink))
-      return NextResponse.json({ error: "CTA link must be a valid URL or site path" }, { status: 400 });
+    const parsed = bannerUpdateSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    }
+    const { title, subtitle, ctaText, ctaLink, color, active, displayOrder } = parsed.data;
 
     const banner = await prisma.banner.update({
       where: { id: bannerId },
       data: {
-        ...(body.title !== undefined && { title: body.title.trim() }),
-        ...(body.subtitle !== undefined && { subtitle: body.subtitle?.trim() || null }),
-        ...(body.ctaText !== undefined && { ctaText: body.ctaText?.trim() || null }),
-        ...(body.ctaLink !== undefined && { ctaLink: body.ctaLink?.trim() || null }),
-        ...(body.color !== undefined && { color: validColors.includes(body.color) ? body.color : "green" }),
-        ...(body.active !== undefined && { active: Boolean(body.active) }),
-        ...(body.displayOrder !== undefined && { displayOrder: Number(body.displayOrder) }),
+        ...(title !== undefined && { title }),
+        ...(subtitle !== undefined && { subtitle: subtitle || null }),
+        ...(ctaText !== undefined && { ctaText: ctaText || null }),
+        ...(ctaLink !== undefined && { ctaLink: ctaLink || null }),
+        ...(color !== undefined && { color }),
+        ...(active !== undefined && { active }),
+        ...(displayOrder !== undefined && { displayOrder }),
       },
     });
     return NextResponse.json(banner);

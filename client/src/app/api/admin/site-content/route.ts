@@ -2,8 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
-import { isSafeUrl } from "@/lib/url";
 import { NextRequest, NextResponse } from "next/server";
+import { siteContentSchema } from "@/validators/siteContent";
 
 export async function GET(req: NextRequest) {
   try {
@@ -27,23 +27,19 @@ export async function PUT(req: NextRequest) {
     if (!authorize(actor, [ROLES.ADMIN]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    const updates: Record<string, string> = await req.json();
-    const allowedKeys = [
-      "cooperative_name", "about_text", "mission", "vision",
-      "contact_email", "contact_phone", "contact_address", "facebook_url",
-    ];
-
-    if (updates.facebook_url?.trim() && !isSafeUrl(updates.facebook_url))
-      return NextResponse.json({ error: "Facebook URL must be a valid http(s) URL" }, { status: 400 });
+    const parsed = siteContentSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    }
 
     await Promise.all(
-      Object.entries(updates)
-        .filter(([k]) => allowedKeys.includes(k))
+      Object.entries(parsed.data)
+        .filter(([, value]) => value !== undefined)
         .map(([key, value]) =>
           prisma.siteContent.upsert({
             where: { key },
-            update: { value: String(value) },
-            create: { key, value: String(value) },
+            update: { value: value as string },
+            create: { key, value: value as string },
           })
         )
     );

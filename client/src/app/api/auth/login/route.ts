@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
+import { loginSchema } from "@/validators/auth";
 
 export async function POST(req: Request) {
   try {
@@ -15,9 +16,11 @@ export async function POST(req: Request) {
       );
     }
 
-    const body = await req.json();
-
-    const { email, password } = body;
+    const parsed = loginSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+    }
+    const { email, password } = parsed.data;
 
     const user = await prisma.user.findUnique({
       where: { email },

@@ -2,8 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
-import { isSafeUrl } from "@/lib/url";
 import { NextRequest, NextResponse } from "next/server";
+import { bannerCreateSchema } from "@/validators/banner";
 
 export async function GET() {
   try {
@@ -24,20 +24,20 @@ export async function POST(req: NextRequest) {
     if (!authorize(actor, [ROLES.ADMIN]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    const { title, subtitle, ctaText, ctaLink, color, displayOrder } = await req.json();
-    if (!title?.trim()) return NextResponse.json({ error: "Title is required" }, { status: 400 });
-    if (ctaLink?.trim() && !isSafeUrl(ctaLink))
-      return NextResponse.json({ error: "CTA link must be a valid URL or site path" }, { status: 400 });
+    const parsed = bannerCreateSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    }
+    const { title, subtitle, ctaText, ctaLink, color, displayOrder } = parsed.data;
 
-    const validColors = ["green", "orange", "blue", "purple", "teal"];
     const banner = await prisma.banner.create({
       data: {
-        title: title.trim(),
-        subtitle: subtitle?.trim() || null,
-        ctaText: ctaText?.trim() || null,
-        ctaLink: ctaLink?.trim() || null,
-        color: validColors.includes(color) ? color : "green",
-        displayOrder: Number(displayOrder) || 0,
+        title,
+        subtitle: subtitle || null,
+        ctaText: ctaText || null,
+        ctaLink: ctaLink || null,
+        color,
+        displayOrder,
       },
     });
     return NextResponse.json(banner, { status: 201 });

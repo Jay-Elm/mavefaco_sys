@@ -3,18 +3,11 @@
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { LogIn, Leaf } from 'lucide-react'
-
-const loginSchema = z.object({
-  email: z.string().email('Enter a valid email'),
-  password: z.string().min(1, 'Password is required'),
-})
-
-type LoginForm = z.infer<typeof loginSchema>
+import { loginSchema, type LoginInput as LoginForm } from '@/validators/auth'
 
 function roleDest(role?: string) {
   if (role === 'admin' || role === 'manager') return '/dashboard'
