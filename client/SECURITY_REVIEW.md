@@ -216,7 +216,7 @@ Chose [Brevo](https://www.brevo.com) as the email provider: 300 free emails/day 
 
 **Verified end-to-end**, including a real send: a direct test call to Brevo's API succeeded (`201`, real `messageId`) sending to the configured sender address. Through the actual routes: registered vs. unregistered emails get byte-identical responses; a full reset cycle (request → manually-paired raw/hashed token, since the real raw token only ever exists in the email itself and in-memory during the request → reset → old password rejected, new password works → replaying the same token fails) all behaved correctly; both rate limiters fire at their configured thresholds. TypeScript, ESLint (21 pre-existing problems, unchanged), and a full production build (`next build`) all pass, with `/forgot-password` and `/reset-password` both prerendering as static (`○`) as intended.
 
-**Action needed in production:** add `BREVO_API_KEY` to Vercel's environment variables (it's in this local `.env` but that never leaves this machine). The app won't crash without it — `sendEmail()` fails soft and the route still returns its generic success message — but no reset email will actually go out until the key is set there.
+**Update 2026-09-08:** `BREVO_API_KEY` added to Vercel and the full flow confirmed working in production end-to-end by a real human — requested a reset for a real inbox, received the actual email, clicked the actual link, set a new password, logged in with it. This item is fully done and verified, not just code-complete.
 
 ### Item 14 — shared zod validators (2026-09-08)
 
