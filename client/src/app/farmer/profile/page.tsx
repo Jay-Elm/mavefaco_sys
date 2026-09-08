@@ -1,13 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, CheckCircle, ShieldCheck, ShieldAlert, ExternalLink, KeyRound } from 'lucide-react'
-import { isSafeUrl } from '@/lib/url'
+import { Loader2, CheckCircle, ShieldCheck, ShieldAlert, X, KeyRound } from 'lucide-react'
 
 interface ProfileData {
-  idImageUrl: string | null
+  hasIdImage: boolean
   verified: boolean
 }
 
@@ -20,8 +19,8 @@ export default function FarmerProfilePage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
-  const [profileData, setProfileData] = useState<ProfileData>({ idImageUrl: null, verified: false })
-  const [idUrl, setIdUrl] = useState('')
+  const [profileData, setProfileData] = useState<ProfileData>({ hasIdImage: false, verified: false })
+  const idFileRef = useRef<HTMLInputElement>(null)
   const [savingId, setSavingId] = useState(false)
   const [idSuccess, setIdSuccess] = useState(false)
   const [idError, setIdError] = useState('')
@@ -38,9 +37,8 @@ export default function FarmerProfilePage() {
     fetch('/api/users/me', { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(data => {
-        if (data.idImageUrl !== undefined) {
-          setProfileData({ idImageUrl: data.idImageUrl, verified: data.verified })
-          setIdUrl(data.idImageUrl ?? '')
+        if (data.hasIdImage !== undefined) {
+          setProfileData({ hasIdImage: data.hasIdImage, verified: data.verified })
         }
       })
   }, [token])
@@ -59,7 +57,7 @@ export default function FarmerProfilePage() {
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error ?? 'Failed to update profile'); return }
-      login(token, { ...user!, name: data.name, email: data.email })
+      login({ ...user!, name: data.name, email: data.email })
       setSuccess(true)
     } catch {
       setError('Request failed')
@@ -68,22 +66,45 @@ export default function FarmerProfilePage() {
     }
   }
 
-  async function handleSaveId(e: React.FormEvent) {
-    e.preventDefault()
+  async function handleUploadId(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file || !token) return
+    setIdError('')
+    setIdSuccess(false)
+    setSavingId(true)
+    try {
+      const body = new FormData()
+      body.append('file', file)
+      const res = await fetch('/api/users/me/id-image', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body,
+      })
+      const data = await res.json()
+      if (!res.ok) { setIdError(data.error ?? 'Upload failed'); return }
+      setProfileData({ hasIdImage: true, verified: false })
+      setIdSuccess(true)
+    } catch {
+      setIdError('Request failed')
+    } finally {
+      setSavingId(false)
+      if (idFileRef.current) idFileRef.current.value = ''
+    }
+  }
+
+  async function handleRemoveId() {
     if (!token) return
     setIdError('')
     setIdSuccess(false)
     setSavingId(true)
     try {
-      const res = await fetch('/api/users/me', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ idImageUrl: idUrl.trim() || null }),
+      const res = await fetch('/api/users/me/id-image', {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
       })
       const data = await res.json()
-      if (!res.ok) { setIdError(data.error ?? 'Failed to save'); return }
-      setProfileData(prev => ({ ...prev, idImageUrl: data.idImageUrl, verified: false }))
-      setIdSuccess(true)
+      if (!res.ok) { setIdError(data.error ?? 'Failed to remove'); return }
+      setProfileData({ hasIdImage: false, verified: false })
     } catch {
       setIdError('Request failed')
     } finally {
@@ -184,12 +205,12 @@ export default function FarmerProfilePage() {
             </span>
           ) : (
             <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
-              <ShieldAlert size={12} /> {profileData.idImageUrl ? 'Pending review' : 'Not submitted'}
+              <ShieldAlert size={12} /> {profileData.hasIdImage ? 'Pending review' : 'Not submitted'}
             </span>
           )}
         </div>
         <p className="text-sm text-gray-500 mb-4">
-          Submit a URL to your valid government-issued ID. An admin will review and verify your account.
+          Upload a photo of your valid government-issued ID. It&apos;s stored privately — only an admin reviewing your account can view it. An admin will review and verify your account.
         </p>
 
         {idError && <div className="mb-3 text-red-600 text-sm">{idError}</div>}
@@ -199,34 +220,39 @@ export default function FarmerProfilePage() {
           </div>
         )}
 
-        {profileData.idImageUrl && (
+        {profileData.hasIdImage && (
           <div className="mb-3 flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-lg px-3 py-2">
-            <span className="truncate flex-1">{profileData.idImageUrl}</span>
-            {isSafeUrl(profileData.idImageUrl) && (
-              <a href={profileData.idImageUrl} target="_blank" rel="noopener noreferrer"
-                className="text-green-700 hover:text-green-900 flex-shrink-0">
-                <ExternalLink size={14} />
-              </a>
-            )}
+            <span className="flex-1">ID on file, awaiting admin review</span>
           </div>
         )}
 
-        <form onSubmit={handleSaveId} className="flex gap-2">
-          <input
-            type="url"
-            value={idUrl}
-            onChange={(e) => setIdUrl(e.target.value)}
-            placeholder="https://drive.google.com/... or image URL"
-            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
+        <input
+          ref={idFileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleUploadId}
+        />
+        <div className="flex items-center gap-3">
           <button
-            type="submit" disabled={savingId}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors disabled:opacity-60 flex-shrink-0"
+            type="button"
+            onClick={() => idFileRef.current?.click()}
+            disabled={savingId}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors disabled:opacity-60"
           >
             {savingId && <Loader2 size={14} className="animate-spin" />}
-            {savingId ? 'Saving…' : 'Submit ID'}
+            {savingId ? 'Uploading…' : profileData.hasIdImage ? 'Replace ID photo' : 'Upload ID photo'}
           </button>
-        </form>
+          {profileData.hasIdImage && !savingId && (
+            <button
+              type="button"
+              onClick={handleRemoveId}
+              className="text-sm text-red-500 hover:text-red-700 flex items-center gap-1 transition-colors"
+            >
+              <X size={13} /> Remove
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Change Password */}

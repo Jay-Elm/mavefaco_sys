@@ -59,9 +59,8 @@ export async function POST(req: Request) {
       },
     );
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: "Login successful",
-      token,
       user: {
         id: user.id,
         name: user.name,
@@ -69,6 +68,19 @@ export async function POST(req: Request) {
         role: user.role,
       },
     });
+
+    // httpOnly so client-side JS (and any XSS) can never read the token;
+    // SameSite=Lax blocks it from being sent on cross-site requests (CSRF)
+    // while still allowing normal top-level navigation to the site.
+    response.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    return response;
   } catch (error) {
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }

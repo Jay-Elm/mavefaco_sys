@@ -171,13 +171,47 @@ Verified with `tsc --noEmit`, `eslint`, and a live smoke test against the local 
 **Build pipeline change:** `package.json`'s `build` script now runs `prisma migrate deploy` before `prisma generate`/`next build`, so the `tokenVersion` migration (and any future migration) applies to the production database automatically on every Vercel deploy, instead of requiring a manual step. This was a deliberate, confirmed change — flagged separately because shipping the `tokenVersion` code without it would have broken every authenticated request in production until the column existed.
 
 ### Phase 2 — Medium-term (this quarter)
-| # | Finding | Action | Effort |
-|---|---|---|---|
-| 10 | 1.3 ID image handling | Move ID "upload" from free-text URL to real file upload into a private bucket + signed URLs; define retention/deletion policy | Large |
-| 11 | 1.1 Token storage | Migrate JWT from `localStorage` to `httpOnly` cookie-based sessions | Large |
-| 12 | 4.2 No centralized auth layer | Introduce a `withAuth`/middleware wrapper so route protection is structural, not per-file discipline | Medium |
-| 13 | 4.4 Account recovery / MFA | Build token-based forgot-password flow; add optional TOTP for admin/manager | Medium |
-| 14 | 4.6 Validation consolidation | Move ad-hoc route validation into shared `zod` schemas used both client and server side | Medium |
+| # | Finding | Action | Effort | Status |
+|---|---|---|---|---|
+| 10 | 1.3 ID image handling | Move ID "upload" from free-text URL to real file upload into a private bucket + signed URLs; define retention/deletion policy | Large | Done, **unverified** — see note below |
+| 11 | 1.1 Token storage | Migrate JWT from `localStorage` to `httpOnly` cookie-based sessions | Large | Done, verified |
+| 12 | 4.2 No centralized auth layer | Introduce a `withAuth`/middleware wrapper so route protection is structural, not per-file discipline | Medium | Done, verified |
+| 13 | 4.4 Account recovery / MFA | Build token-based forgot-password flow; add optional TOTP for admin/manager | Medium | **Skipped** — no email provider configured (would need Resend/SendGrid/etc. + an API key); revisit once one exists |
+| 14 | 4.6 Validation consolidation | Move ad-hoc route validation into shared `zod` schemas used both client and server side | Medium | Not started |
+
+#### Item 11 — cookie-based sessions (2026-09-08)
+
+The JWT is no longer stored in `localStorage` or read from it. Login (`api/auth/login`) sets it as an `httpOnly`, `SameSite=Lax` cookie (`Secure` in production); `getAuthUser`/`getActiveAuthUser` read the cookie first, falling back to an `Authorization` header only for compatibility. `AuthContext` no longer persists a token client-side at all — on mount it calls `GET /api/users/me` (cookie sent automatically) to rehydrate the session, and `login()`/`logout()` work off that same cookie. `token` in the context is now a non-secret truthy sentinel (`'session'`), kept specifically so the ~29 existing call sites that still do `Authorization: Bearer ${token}` keep compiling and working — the header they send is inert now (the cookie is what actually authenticates), which is deliberate: touching all 29 files was the exact blast radius this was scoped to avoid. `SameSite=Lax` (not `Strict`) matches Next's own documented pattern and blocks the cookie on cross-site state-changing requests (the CSRF vector) while still allowing normal top-level navigation.
+
+Verified end-to-end against the local dev server with a cookie jar: register → login (cookie set, `httpOnly`, no `Secure` in dev as expected) → `/api/users/me` authenticates from the cookie alone → logout clears the cookie and the same request then 401s.
+
+**Framework note:** this Next.js version (16.2.6) renamed Middleware to **Proxy** (`src/proxy.ts`, not `middleware.ts`) and it now runs on the **Node.js runtime**, not Edge — confirmed by reading `node_modules/next/dist/docs` directly rather than assuming, per `AGENTS.md`'s warning that this version has breaking changes from training-data Next.js.
+
+#### Item 12 — structural admin route guard (2026-09-08)
+
+`src/proxy.ts` runs on every `/api/admin/*` request and rejects (401/403) before the route handler executes if there's no validly-signed session cookie carrying an `admin`/`manager` role. This is an *optimistic* check only (JWT signature + role, no DB call) per Next's own guidance for Proxy — it runs on every matching request, so a DB round trip there would be wasteful. Every route under `/api/admin/*` still does its own full `getActiveAuthUser` + `authorize()` check (suspension, revoked tokens, fine-grained per-route role rules like "managers can't touch admins") — Proxy is a backstop in front of that, not a replacement for it.
+
+Verified: a request with no session cookie gets 401 from Proxy; a valid non-admin (customer) session gets 403; a crafted valid admin session (signed with the local dev `JWT_SECRET`, since resetting the seeded admin's real password wasn't warranted) reaches the route and gets real data back.
+
+#### Item 10 — private ID-image storage (2026-09-08)
+
+Replaced the free-text "paste a URL to your ID" field with a real file upload:
+- New `POST/DELETE /api/users/me/id-image` — farmer-facing, uploads into a **private** Supabase bucket (`id-verification`), magic-byte-sniffed and rate-limited the same way as `/api/upload` (shared logic factored into `src/lib/imageSniff.ts`). Submitting a new ID always resets `verified` to `false` server-side — the old code only did this optimistically in client state, so a previously-verified farmer replacing their ID photo was still showing as "Verified" in the database despite the new document never having been reviewed. That was a real (if minor) correctness gap in the code being replaced here, not something newly introduced.
+- New `GET /api/admin/users/[id]/id-image` — admin/manager-only, mints a 5-minute signed URL on demand rather than ever exposing a permanent public link. Covered by the Proxy guard from item 12 since it's under `/api/admin/*`.
+- `User.idImageUrl` renamed to `idImagePath` (migration `20260908000000_rename_id_image_url_to_path`) — it now holds an internal storage path, never a URL. `GET /api/users/me` and `GET /api/admin/users` expose only a `hasIdImage` boolean, never the path.
+- Deleting a user account (`DELETE /api/admin/users/[id]`) now also deletes their stored ID image, best-effort — the retention policy is: **an ID image is removed the moment the account that submitted it is removed, or when the farmer withdraws/replaces their submission.** There's no time-based auto-purge (e.g. "delete N days after verification") — that would need a scheduled job (Vercel Cron), which doesn't exist in this project yet; flagged here as a deliberate scope cut, not an oversight.
+- Old pre-migration `idImageUrl` values (external links like Google Drive URLs some farmers may have already submitted) are left in the renamed column as-is rather than wiped, but are now meaningless — the signed-URL endpoint looks them up as storage paths and will 404. Any farmer with a pending (unverified) submission from before this change will need to re-submit through the new upload flow; anyone already `verified: true` is unaffected, since that's a completed decision already recorded independent of the stale path value.
+
+**What's verified vs. not:** everything that doesn't touch actual Supabase Storage was tested end-to-end against the local dev server — auth gating, rate limiting, the `hasIdImage` boolean never leaking a raw path, the signed-URL route's 404 when nothing's submitted, Proxy blocking non-admins from it. **The actual upload-to-bucket and sign-URL calls were never exercised** — this local `.env` only has `DATABASE_URL`/`JWT_SECRET`, not `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` (Vercel-only secrets I don't have access to), so those two Supabase REST calls are implemented against the documented API but unverified. Confirmed with you and proceeding on that basis.
+
+**Action needed before this works in production:** the `id-verification` bucket doesn't exist yet and must be created as **private** (`public: false`) — the app will return "Storage not configured"/upload failures until it does. Run once, with the same service role key Vercel already has configured for `/api/upload`:
+```bash
+curl -X POST "$SUPABASE_URL/storage/v1/bucket" \
+  -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"id-verification","public":false}'
+```
+After that, click through the flow once in a real browser (submit an ID as a farmer, view it as an admin) before trusting it fully.
 
 ### Ongoing / process
 | # | Finding | Action |

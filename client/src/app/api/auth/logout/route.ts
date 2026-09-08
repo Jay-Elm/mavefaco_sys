@@ -18,7 +18,9 @@ export async function POST(req: NextRequest) {
       where: { id: actor.id },
       data: { tokenVersion: { increment: 1 } },
     });
-    return NextResponse.json({ message: "Logged out" });
+    const response = NextResponse.json({ message: "Logged out" });
+    response.cookies.delete("token");
+    return response;
   } catch {
     return NextResponse.json({ error: "Logout failed" }, { status: 500 });
   }

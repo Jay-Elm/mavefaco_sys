@@ -3,7 +3,7 @@
  * Rejects javascript:, data:, vbscript:, and protocol-relative ("//host")
  * URLs — anything a browser would execute or that escapes the site.
  * Use for any user- or admin-supplied string that gets rendered as a
- * clickable href (idImageUrl, banner ctaLink, site-content facebook_url, ...).
+ * clickable href (banner ctaLink, site-content facebook_url, ...).
  */
 export function isSafeUrl(value: string): boolean {
   const trimmed = value.trim();

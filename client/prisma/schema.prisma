@@ -14,7 +14,11 @@ model User {
   password    String
   role        String      @default("customer")
   suspended   Boolean     @default(false)
-  idImageUrl  String?
+  // Path inside the private "id-verification" Supabase Storage bucket, not
+  // a public URL — access is only via short-lived signed URLs (see
+  // /api/admin/users/[id]/id-image). Renamed from idImageUrl when ID
+  // verification moved off a farmer-supplied free-text link.
+  idImagePath String?
   verified    Boolean     @default(false)
   tokenVersion Int        @default(0)
   createdAt   DateTime    @default(now())

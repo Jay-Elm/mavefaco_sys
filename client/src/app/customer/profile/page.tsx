@@ -43,7 +43,7 @@ export default function CustomerProfilePage() {
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error ?? 'Failed to update profile'); return }
-      login(token, { ...user!, name: data.name, email: data.email })
+      login({ ...user!, name: data.name, email: data.email })
       setSuccess(true)
     } catch {
       setError('Request failed')

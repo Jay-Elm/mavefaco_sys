@@ -8,7 +8,6 @@ import {
   ExternalLink, KeyRound, X, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download,
 } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
-import { isSafeUrl } from '@/lib/url'
 
 interface UserRow {
   id: number
@@ -16,7 +15,7 @@ interface UserRow {
   email: string
   role: string
   suspended: boolean
-  idImageUrl: string | null
+  hasIdImage: boolean
   verified: boolean
   createdAt: string
   _count: { products: number; orders: number }
@@ -117,6 +116,27 @@ export default function UsersPage() {
       const data = await res.json()
       if (!res.ok) { setActionError({ id: u.id, msg: data.error }); return }
       setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, suspended: next } : x)))
+    } catch {
+      setActionError({ id: u.id, msg: 'Request failed' })
+    } finally { setActionId(null) }
+  }
+
+  async function handleViewId(u: UserRow) {
+    if (!token) return
+    setActionId(u.id); setActionError(null)
+    try {
+      const res = await fetch(`/api/admin/users/${u.id}/id-image`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const data = await res.json()
+      if (!res.ok) { setActionError({ id: u.id, msg: data.error ?? 'Failed to load ID' }); return }
+      // A new tab opened directly from the click handler (not after an
+      // await) can get blocked as a pop-up by some browsers, but the
+      // signed URL is short-lived — better a rare pop-up block, caught by
+      // the empty-window fallback below, than eagerly fetching every row's
+      // link up front.
+      const win = window.open(data.url, '_blank', 'noopener,noreferrer')
+      if (!win) setActionError({ id: u.id, msg: 'Pop-up blocked — allow pop-ups to view the ID' })
     } catch {
       setActionError({ id: u.id, msg: 'Request failed' })
     } finally { setActionId(null) }
@@ -354,15 +374,18 @@ export default function UsersPage() {
                           <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
                             <ShieldCheck size={11} /> Verified
                           </span>
-                        ) : u.idImageUrl ? (
+                        ) : u.hasIdImage ? (
                           <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
                             Pending
-                            {isSafeUrl(u.idImageUrl) && (
-                              <a href={u.idImageUrl} target="_blank" rel="noopener noreferrer"
-                                className="hover:text-amber-900 ml-0.5" title="View submitted ID">
-                                <ExternalLink size={10} />
-                              </a>
-                            )}
+                            <button
+                              type="button"
+                              onClick={() => handleViewId(u)}
+                              disabled={actionId === u.id}
+                              className="hover:text-amber-900 ml-0.5 disabled:opacity-50"
+                              title="View submitted ID"
+                            >
+                              <ExternalLink size={10} />
+                            </button>
                           </span>
                         ) : (
                           <span className="text-xs text-gray-400">No ID</span>
@@ -395,7 +418,7 @@ export default function UsersPage() {
                         )}
 
                         {/* Verify / Unverify (farmer with submitted ID) */}
-                        {u.role === 'farmer' && u.idImageUrl && (
+                        {u.role === 'farmer' && u.hasIdImage && (
                           <button
                             onClick={() => handleVerify(u)}
                             disabled={actionId === u.id}

@@ -127,7 +127,7 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   role: 'role',
   suspended: 'suspended',
-  idImageUrl: 'idImageUrl',
+  idImagePath: 'idImagePath',
   verified: 'verified',
   tokenVersion: 'tokenVersion',
   createdAt: 'createdAt',

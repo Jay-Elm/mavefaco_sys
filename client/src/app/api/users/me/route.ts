@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
-import { isSafeUrl } from "@/lib/url";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 
@@ -11,12 +10,15 @@ export async function GET(req: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { id: actor.id },
-      select: { id: true, name: true, email: true, role: true, idImageUrl: true, verified: true, createdAt: true },
+      select: { id: true, name: true, email: true, role: true, idImagePath: true, verified: true, createdAt: true },
     });
 
     if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-    return NextResponse.json(user);
+    // The storage path is an internal detail — the client only needs to
+    // know whether an ID has been submitted, never the raw path itself.
+    const { idImagePath, ...rest } = user;
+    return NextResponse.json({ ...rest, hasIdImage: idImagePath !== null });
   } catch {
     return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
   }
@@ -28,15 +30,12 @@ export async function PATCH(req: NextRequest) {
     if (!actor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await req.json();
-    const { name, email, idImageUrl, currentPassword, newPassword } = body;
+    const { name, email, currentPassword, newPassword } = body;
 
     const hasPasswordChange = typeof currentPassword === "string" && typeof newPassword === "string";
 
-    if (!name && !email && idImageUrl === undefined && !hasPasswordChange)
+    if (!name && !email && !hasPasswordChange)
       return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
-
-    if (idImageUrl && !isSafeUrl(idImageUrl))
-      return NextResponse.json({ error: "ID link must be a valid http(s) URL" }, { status: 400 });
 
     if (email) {
       const existing = await prisma.user.findUnique({ where: { email } });
@@ -60,10 +59,9 @@ export async function PATCH(req: NextRequest) {
       data: {
         ...(name && { name: name.trim() }),
         ...(email && { email: email.trim().toLowerCase() }),
-        ...(idImageUrl !== undefined && { idImageUrl: idImageUrl || null }),
         ...(hashedPassword && { password: hashedPassword, tokenVersion: { increment: 1 } }),
       },
-      select: { id: true, name: true, email: true, role: true, idImageUrl: true, verified: true },
+      select: { id: true, name: true, email: true, role: true, verified: true },
     });
 
     return NextResponse.json(updated);

@@ -1,18 +1,16 @@
 import { NextRequest } from "next/server";
-import { verifyToken, JwtPayload } from "./auth";
+import { JwtPayload } from "./auth";
+import { getAuthUser } from "./getAuthUser";
 import { prisma } from "./prisma";
 
 /**
- * Like getAuthUser but also checks the database for suspension.
- * Returns null if the token is invalid, the user doesn't exist, or the user is suspended.
+ * Like getAuthUser but also checks the database for suspension and for a
+ * revoked (stale tokenVersion) session.
+ * Returns null if the token is invalid, the user doesn't exist, is
+ * suspended, or the token has been revoked since it was issued.
  */
 export async function getActiveAuthUser(req: NextRequest): Promise<JwtPayload | null> {
-  const authHeader = req.headers.get("authorization");
-  if (!authHeader) return null;
-  const token = authHeader.split(" ")[1];
-  if (!token) return null;
-
-  const payload = verifyToken(token);
+  const payload = getAuthUser(req);
   if (!payload) return null;
 
   const dbUser = await prisma.user.findUnique({

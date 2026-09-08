@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
         email: true,
         role: true,
         suspended: true,
-        idImageUrl: true,
+        idImagePath: true,
         verified: true,
         createdAt: true,
         _count: { select: { products: true, orders: true } },
@@ -26,7 +26,15 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(users);
+    // The storage path is an internal detail — the list view only needs to
+    // know whether an ID was submitted; viewing it goes through the
+    // separate signed-URL endpoint, scoped to one user at a time.
+    const withHasIdImage = users.map(({ idImagePath, ...rest }) => ({
+      ...rest,
+      hasIdImage: idImagePath !== null,
+    }));
+
+    return NextResponse.json(withHasIdImage);
   } catch {
     return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
   }

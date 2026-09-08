@@ -141,6 +141,23 @@ export async function DELETE(
       prisma.user.delete({ where: { id: target.id } }),
     ]);
 
+    // Retention policy: a submitted ID has no reason to outlive the account
+    // it verifies. Best-effort — never blocks the response on a storage hiccup.
+    if (target.idImagePath) {
+      const supabaseUrl = process.env.SUPABASE_URL;
+      const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      if (supabaseUrl && serviceKey) {
+        fetch(`${supabaseUrl}/storage/v1/object/id-verification`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${serviceKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ prefixes: [target.idImagePath] }),
+        }).catch((err) => console.error("id-image: failed to delete on account removal", err));
+      }
+    }
+
     return NextResponse.json({ message: "User deleted successfully" });
   } catch {
     return NextResponse.json({ error: "Failed to delete user" }, { status: 500 });

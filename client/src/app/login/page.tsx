@@ -52,7 +52,7 @@ export default function LoginPage() {
         return
       }
 
-      login(json.token, json.user)
+      login(json.user)
       // useEffect handles redirect once isAuthenticated updates
     } catch {
       setServerError('Network error. Please try again.')
