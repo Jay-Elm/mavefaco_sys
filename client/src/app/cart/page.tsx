@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Trash2, Plus, Minus, ShoppingCart, Package, ArrowLeft, Loader2, Wallet, MapPin, AlertTriangle } from 'lucide-react'
+import { Trash2, Plus, Minus, ShoppingCart, Package, ArrowLeft, Loader2, Wallet, MapPin, AlertTriangle, LogIn, UserPlus } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
 
@@ -80,6 +80,42 @@ export default function CartPage() {
     } finally {
       setPlacing(false)
     }
+  }
+
+  // Guests have no persistent cart (see CartContext) — items is always []
+  // for them, so this is the only place to nudge them toward an account
+  // rather than let it look identical to "you have a cart, it's just empty."
+  if (!isAuthenticated) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-20 text-center">
+        <ShoppingCart size={56} className="text-gray-300 mx-auto mb-4" />
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">Log in to see your cart</h1>
+        <p className="text-gray-500 mb-6">Your cart is tied to your account, so you&apos;ll need to sign in to add items and check out.</p>
+        <div className="flex items-center justify-center gap-3 flex-wrap">
+          <Link
+            href="/login"
+            className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
+          >
+            <LogIn size={16} />
+            Log In
+          </Link>
+          <Link
+            href="/register"
+            className="inline-flex items-center gap-2 border border-gray-300 hover:border-green-600 text-gray-700 hover:text-green-700 font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
+          >
+            <UserPlus size={16} />
+            Sign Up
+          </Link>
+        </div>
+        <Link
+          href="/products"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-green-700 transition-colors mt-6"
+        >
+          <ArrowLeft size={14} />
+          Or keep browsing products
+        </Link>
+      </div>
+    )
   }
 
   if (items.length === 0) {

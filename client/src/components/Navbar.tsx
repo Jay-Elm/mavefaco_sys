@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
+import LogoutConfirmModal from '@/components/LogoutConfirmModal'
 import {
   ShoppingBag, LogIn, LogOut, UserPlus, User, Leaf,
   LayoutDashboard, ShoppingCart, ClipboardList, UserCircle,
@@ -18,17 +19,41 @@ export default function Navbar() {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+
+  // The farmer/admin/manager dashboards have their own persistent chrome
+  // (sidebar, mobile top bar) — hiding this bar on scroll there would fight
+  // with that layout instead of freeing up view space.
+  const isDashboardStyle = pathname.startsWith('/dashboard') || pathname.startsWith('/farmer')
+  const [navHidden, setNavHidden] = useState(false)
+  const lastScrollY = useRef(0)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8)
+    if (isDashboardStyle) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setNavHidden(false)
+      return
+    }
+    lastScrollY.current = window.scrollY
+    function onScroll() {
+      const y = window.scrollY
+      setScrolled(y > 8)
+      // Don't hide the bar for the open mobile menu — it anchors to this
+      // nav's height, so pulling the nav away mid-interaction looks broken.
+      if (!mobileOpen) {
+        setNavHidden(y > lastScrollY.current && y > 80)
+      }
+      lastScrollY.current = y
+    }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [isDashboardStyle, mobileOpen])
 
   // Close mobile menu on route change
   useEffect(() => { setMobileOpen(false) }, [pathname])
 
   function handleLogout() {
+    setShowLogoutConfirm(false)
     logout()
     router.push('/')
     router.refresh()
@@ -40,9 +65,9 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`sticky top-0 z-50 h-16 flex items-center bg-[#1B3A2D] text-white transition-shadow duration-200 ${
+        className={`sticky top-0 z-50 h-16 flex items-center bg-[#1B3A2D] text-white transition-[transform,box-shadow] duration-300 ${
           scrolled ? 'shadow-lg shadow-black/20' : ''
-        }`}
+        } ${navHidden ? '-translate-y-full' : 'translate-y-0'}`}
       >
         <div className="max-w-7xl mx-auto px-4 w-full flex items-center justify-between">
 
@@ -90,7 +115,7 @@ export default function Navbar() {
                   <User size={14} />
                   <span className="max-w-[100px] truncate">{user?.name}</span>
                 </div>
-                <button onClick={handleLogout} className={`ml-0.5 ${linkCls}`}>
+                <button onClick={() => setShowLogoutConfirm(true)} className={`ml-0.5 ${linkCls}`}>
                   <LogOut size={15} /><span>Logout</span>
                 </button>
               </>
@@ -153,7 +178,7 @@ export default function Navbar() {
                   <User size={16} />
                   <span className="truncate">{user?.name}</span>
                 </div>
-                <button onClick={handleLogout} className={`${mobileLinkCls} text-red-300`}>
+                <button onClick={() => setShowLogoutConfirm(true)} className={`${mobileLinkCls} text-red-300`}>
                   <LogOut size={18} />Logout
                 </button>
               </>
@@ -168,6 +193,14 @@ export default function Navbar() {
             )}
           </div>
         </div>
+      )}
+
+      {showLogoutConfirm && (
+        <LogoutConfirmModal
+          role={user?.role}
+          onConfirm={handleLogout}
+          onCancel={() => setShowLogoutConfirm(false)}
+        />
       )}
     </>
   )

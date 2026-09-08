@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import LogoutConfirmModal from '@/components/LogoutConfirmModal'
 import { Loader2, LayoutDashboard, Package, ShoppingCart, User, Leaf, Sprout, MessageCircle, Menu } from 'lucide-react'
 
 const NAV = [
@@ -20,6 +21,7 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
   const router = useRouter()
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
   // Close sidebar on route change (mobile)
   useEffect(() => { setSidebarOpen(false) }, [pathname])
@@ -84,7 +86,7 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
         <div className="px-4 py-3 border-t border-gray-700">
           <p className="text-xs text-gray-400 truncate">{user.name}</p>
           <button
-            onClick={() => { logout(); router.push('/') }}
+            onClick={() => setShowLogoutConfirm(true)}
             className="mt-1 text-xs text-gray-400 hover:text-white transition-colors"
           >
             Logout
@@ -108,6 +110,14 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
 
         {children}
       </main>
+
+      {showLogoutConfirm && (
+        <LogoutConfirmModal
+          role={user.role}
+          onConfirm={() => { setShowLogoutConfirm(false); logout(); router.push('/') }}
+          onCancel={() => setShowLogoutConfirm(false)}
+        />
+      )}
     </div>
   )
 }
