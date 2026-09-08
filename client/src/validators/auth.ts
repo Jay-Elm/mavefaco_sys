@@ -29,3 +29,16 @@ export const loginSchema = z.object({
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
+
+export const forgotPasswordSchema = z.object({
+  email: requiredString(z.string().trim().toLowerCase().email("Enter a valid email address")),
+});
+
+export type ForgotPasswordInput = z.input<typeof forgotPasswordSchema>;
+
+export const resetPasswordSchema = z.object({
+  token: requiredString(z.string().min(1, "Reset link is invalid")),
+  newPassword: requiredString(z.string().min(12, "Password must be at least 12 characters")),
+});
+
+export type ResetPasswordInput = z.input<typeof resetPasswordSchema>;

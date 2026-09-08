@@ -24,13 +24,27 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  products         Product[]
-  orders           Order[]
-  auditLogs        AuditLog[]
-  announcements    Announcement[]
-  reviews          Review[]
-  sentMessages     Message[]      @relation("SentMessages")
-  receivedMessages Message[]      @relation("ReceivedMessages")
+  products            Product[]
+  orders              Order[]
+  auditLogs           AuditLog[]
+  announcements       Announcement[]
+  reviews             Review[]
+  sentMessages        Message[]            @relation("SentMessages")
+  receivedMessages    Message[]            @relation("ReceivedMessages")
+  passwordResetTokens PasswordResetToken[]
+}
+
+model PasswordResetToken {
+  id        Int       @id @default(autoincrement())
+  // SHA-256 hash of the token, never the raw value — same principle as
+  // passwords, so a DB read alone can't be used to reset someone's account.
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }
 
 model Category {

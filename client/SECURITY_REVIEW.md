@@ -176,7 +176,7 @@ Verified with `tsc --noEmit`, `eslint`, and a live smoke test against the local 
 | 10 | 1.3 ID image handling | Move ID "upload" from free-text URL to real file upload into a private bucket + signed URLs; define retention/deletion policy | Large | Done — bucket created and full flow confirmed working live (2026-09-08) |
 | 11 | 1.1 Token storage | Migrate JWT from `localStorage` to `httpOnly` cookie-based sessions | Large | Done, verified |
 | 12 | 4.2 No centralized auth layer | Introduce a `withAuth`/middleware wrapper so route protection is structural, not per-file discipline | Medium | Done, verified |
-| 13 | 4.4 Account recovery / MFA | Build token-based forgot-password flow; add optional TOTP for admin/manager | Medium | **Skipped** — no email provider configured (would need Resend/SendGrid/etc. + an API key); revisit once one exists |
+| 13 | 4.4 Account recovery / MFA | Build token-based forgot-password flow; add optional TOTP for admin/manager | Medium | Password reset: **Done, verified**. TOTP MFA: still not built — separate feature-scope decision, not part of this pass |
 | 14 | 4.6 Validation consolidation | Move ad-hoc route validation into shared `zod` schemas used both client and server side | Medium | Done — see note below for scope |
 
 #### Item 11 — cookie-based sessions (2026-09-08)
@@ -203,6 +203,20 @@ Replaced the free-text "paste a URL to your ID" field with a real file upload:
 - Old pre-migration `idImageUrl` values (external links like Google Drive URLs some farmers may have already submitted) are left in the renamed column as-is rather than wiped, but are now meaningless — the signed-URL endpoint looks them up as storage paths and will 404. Any farmer with a pending (unverified) submission from before this change will need to re-submit through the new upload flow; anyone already `verified: true` is unaffected, since that's a completed decision already recorded independent of the stale path value.
 
 **Update 2026-09-08:** the private `id-verification` bucket was created (via the Supabase Dashboard) and the full flow was confirmed working in production — farmer ID upload, admin view via signed URL, everything. The Supabase Storage REST calls that couldn't be tested locally (no service-role credentials in this environment) turned out correct as implemented. This item is fully done and verified.
+
+### Item 13 — password reset via Brevo (2026-09-08)
+
+Chose [Brevo](https://www.brevo.com) as the email provider: 300 free emails/day forever, and — unlike Resend, which was the initial preference — it doesn't require a verified custom domain to send to arbitrary recipients, which matters since this project runs on the default `*.vercel.app` domain with no custom domain owned.
+
+- New `PasswordResetToken` model (migration `20260908103158_add_password_reset_token`) stores only a **SHA-256 hash** of the token, never the raw value — same principle as passwords: a DB read alone can't be used to reset an account. A high-entropy random token doesn't need bcrypt's slow hashing (that defends low-entropy secrets against brute force); SHA-256 lets the lookup happen by direct indexed equality.
+- `POST /api/auth/forgot-password`: rate-limited (5/hour/IP), always returns the identical generic message regardless of whether the email is registered — deliberate anti-enumeration, since this is exactly the kind of endpoint where leaking "which emails have accounts" is a real risk. Deletes any earlier unused token for the account before issuing a new one, so only the most recent reset link works. Token expires in 30 minutes.
+- `POST /api/auth/reset-password`: rate-limited (10/hour/IP), validates the token by re-hashing and looking up, rejects if missing/expired/already-used, bumps `tokenVersion` on success (same as every other password-change path in this app — invalidates all existing sessions), and marks the token used (single-use, can't be replayed).
+- New pages `/forgot-password` and `/reset-password` (the latter split into a server `page.tsx` + client `ResetPasswordForm.tsx` behind a `Suspense` boundary — required by this Next.js version for any Client Component using `useSearchParams`, or the production build fails outright, not just a warning; confirmed by reading the actual docs rather than assuming). "Forgot password?" link added to the login page.
+- `src/lib/email.ts` wraps Brevo's transactional API and fails soft (returns `false`, logs server-side) rather than throwing — so a broken email provider can never become a side-channel for account enumeration via error-response differences.
+
+**Verified end-to-end**, including a real send: a direct test call to Brevo's API succeeded (`201`, real `messageId`) sending to the configured sender address. Through the actual routes: registered vs. unregistered emails get byte-identical responses; a full reset cycle (request → manually-paired raw/hashed token, since the real raw token only ever exists in the email itself and in-memory during the request → reset → old password rejected, new password works → replaying the same token fails) all behaved correctly; both rate limiters fire at their configured thresholds. TypeScript, ESLint (21 pre-existing problems, unchanged), and a full production build (`next build`) all pass, with `/forgot-password` and `/reset-password` both prerendering as static (`○`) as intended.
+
+**Action needed in production:** add `BREVO_API_KEY` to Vercel's environment variables (it's in this local `.env` but that never leaves this machine). The app won't crash without it — `sendEmail()` fails soft and the route still returns its generic success message — but no reset email will actually go out until the key is set there.
 
 ### Item 14 — shared zod validators (2026-09-08)
 
