@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { NextRequest, NextResponse } from "next/server";
+import { cropUpdateSchema } from "@/validators/crop";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getActiveAuthUser(req);
@@ -34,8 +35,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 }
 
-const VALID_STAGES = ["seedling", "vegetative", "flowering", "fruiting", "harvest-ready", "harvested"];
-
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getActiveAuthUser(req);
   if (!actor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -49,7 +48,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   try {
-    const body = await req.json();
+    const parsed = cropUpdateSchema.safeParse(await req.json());
+    if (!parsed.success)
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    const body = parsed.data;
+
     const updated = await prisma.product.update({
       where: { id: productId },
       data: {
@@ -60,10 +63,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
           expectedHarvestDate: body.expectedHarvestDate ? new Date(body.expectedHarvestDate) : null,
         }),
         ...(body.growthStage !== undefined && {
-          growthStage: VALID_STAGES.includes(body.growthStage) ? body.growthStage : null,
+          growthStage: body.growthStage,
         }),
         ...(body.readyForHarvest !== undefined && {
-          readyForHarvest: Boolean(body.readyForHarvest),
+          readyForHarvest: body.readyForHarvest,
         }),
       },
       select: {

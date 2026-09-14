@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { NextRequest, NextResponse } from "next/server";
+import { messageCreateSchema } from "@/validators/message";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
   const actor = await getActiveAuthUser(req);
@@ -49,11 +50,12 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ use
   if (!receiver) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   try {
-    const { content } = await req.json();
-    if (!content?.trim()) return NextResponse.json({ error: "Message cannot be empty" }, { status: 400 });
+    const parsed = messageCreateSchema.safeParse(await req.json());
+    if (!parsed.success)
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
 
     const message = await prisma.message.create({
-      data: { senderId: actor.id, receiverId, content: content.trim() },
+      data: { senderId: actor.id, receiverId, content: parsed.data.content },
       include: { sender: { select: { id: true, name: true } } },
     });
 

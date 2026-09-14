@@ -1,8 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { NextRequest, NextResponse } from "next/server";
-
-const VALID_TYPES = ["weather_impact", "pest_disease", "damage", "note"];
+import { cropLogCreateSchema } from "@/validators/crop";
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const actor = await getActiveAuthUser(req);
@@ -17,12 +16,13 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (!product) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   try {
-    const { type, note } = await req.json();
-    if (!VALID_TYPES.includes(type)) return NextResponse.json({ error: "Invalid type" }, { status: 400 });
-    if (!note?.trim()) return NextResponse.json({ error: "Note is required" }, { status: 400 });
+    const parsed = cropLogCreateSchema.safeParse(await req.json());
+    if (!parsed.success)
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    const { type, note } = parsed.data;
 
     const log = await prisma.cropLog.create({
-      data: { productId, type, note: note.trim() },
+      data: { productId, type, note },
     });
     return NextResponse.json(log, { status: 201 });
   } catch {

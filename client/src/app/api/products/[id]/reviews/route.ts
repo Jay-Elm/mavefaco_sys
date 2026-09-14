@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { NextRequest, NextResponse } from "next/server";
+import { reviewCreateSchema } from "@/validators/review";
 
 export async function GET(
   _req: NextRequest,
@@ -57,9 +58,10 @@ export async function POST(
     if (existing)
       return NextResponse.json({ error: "You have already reviewed this product" }, { status: 409 });
 
-    const { rating, comment } = await req.json();
-    if (!Number.isInteger(rating) || rating < 1 || rating > 5)
-      return NextResponse.json({ error: "Rating must be 1–5" }, { status: 400 });
+    const parsed = reviewCreateSchema.safeParse(await req.json());
+    if (!parsed.success)
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    const { rating, comment } = parsed.data;
 
     const review = await prisma.review.create({
       data: {

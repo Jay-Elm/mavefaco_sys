@@ -3,6 +3,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
+import { adminProductUpdateSchema } from "@/validators/product";
 
 export async function PATCH(
   req: NextRequest,
@@ -21,13 +22,15 @@ export async function PATCH(
     const product = await prisma.product.findUnique({ where: { id: productId } });
     if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
 
-    const body = await req.json();
-    const { approved, name, description, price, stock, categoryId, imageUrl } = body;
+    const parsed = adminProductUpdateSchema.safeParse(await req.json());
+    if (!parsed.success)
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    const { approved, name, description, price, stock, categoryId, imageUrl } = parsed.data;
 
     const updated = await prisma.product.update({
       where: { id: productId },
       data: {
-        ...(typeof approved === "boolean" && { approved }),
+        ...(approved !== undefined && { approved }),
         ...(name !== undefined && { name }),
         ...(description !== undefined && { description }),
         ...(price !== undefined && { price }),

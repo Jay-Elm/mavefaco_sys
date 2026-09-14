@@ -3,6 +3,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
+import { faqCreateSchema } from "@/validators/faq";
 
 export async function GET(req: NextRequest) {
   try {
@@ -25,17 +26,11 @@ export async function POST(req: NextRequest) {
     if (!authorize(actor, [ROLES.ADMIN]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    const { question, answer, displayOrder } = await req.json();
-    if (!question?.trim()) return NextResponse.json({ error: "Question is required" }, { status: 400 });
-    if (!answer?.trim()) return NextResponse.json({ error: "Answer is required" }, { status: 400 });
+    const parsed = faqCreateSchema.safeParse(await req.json());
+    if (!parsed.success)
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
 
-    const faq = await prisma.faq.create({
-      data: {
-        question: question.trim(),
-        answer: answer.trim(),
-        displayOrder: Number(displayOrder) || 0,
-      },
-    });
+    const faq = await prisma.faq.create({ data: parsed.data });
     return NextResponse.json(faq, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Failed to create FAQ" }, { status: 500 });

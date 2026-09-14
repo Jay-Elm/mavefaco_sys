@@ -3,6 +3,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
+import { announcementCreateSchema } from "@/validators/announcement";
 
 export async function GET() {
   try {
@@ -23,15 +24,13 @@ export async function POST(req: NextRequest) {
     if (!authorize(actor, [ROLES.ADMIN, ROLES.MANAGER]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    const { title, body, type } = await req.json();
-    if (!title?.trim()) return NextResponse.json({ error: "Title is required" }, { status: 400 });
-    if (!body?.trim())  return NextResponse.json({ error: "Body is required" }, { status: 400 });
-
-    const validTypes = ["info", "alert", "advisory"];
-    const announcementType = validTypes.includes(type) ? type : "info";
+    const parsed = announcementCreateSchema.safeParse(await req.json());
+    if (!parsed.success)
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    const { title, body, type } = parsed.data;
 
     const announcement = await prisma.announcement.create({
-      data: { title: title.trim(), body: body.trim(), type: announcementType, authorId: actor.id },
+      data: { title, body, type, authorId: actor.id },
       include: { author: { select: { name: true, role: true } } },
     });
 

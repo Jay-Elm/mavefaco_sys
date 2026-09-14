@@ -3,6 +3,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
+import { productCreateSchema } from "@/validators/product";
 
 export async function POST(req: NextRequest) {
   try {
@@ -18,9 +19,10 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Your account must be verified before listing products. Please submit your ID for verification." }, { status: 403 });
     }
 
-    const body = await req.json();
-
-    const { name, description, price, stock, unit, categoryId, imageUrl } = body;
+    const parsed = productCreateSchema.safeParse(await req.json());
+    if (!parsed.success)
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    const { name, description, price, stock, unit, categoryId, imageUrl } = parsed.data;
 
     const product = await prisma.product.create({
       data: {
@@ -28,9 +30,9 @@ export async function POST(req: NextRequest) {
         description,
         price,
         stock,
-        unit: unit || 'piece',
+        unit,
         categoryId,
-        imageUrl,
+        imageUrl: imageUrl || null,
         farmerId: actor.id,
         approved: false,
       },

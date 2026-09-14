@@ -3,6 +3,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
+import { categoryCreateSchema } from "@/validators/category";
 
 export async function GET() {
   try {
@@ -23,11 +24,11 @@ export async function POST(req: NextRequest) {
     if (!authorize(user, [ROLES.ADMIN, ROLES.MANAGER]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    const { name } = await req.json();
-    if (!name?.trim())
-      return NextResponse.json({ error: "Name is required" }, { status: 400 });
+    const parsed = categoryCreateSchema.safeParse(await req.json());
+    if (!parsed.success)
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
 
-    const category = await prisma.category.create({ data: { name: name.trim() } });
+    const category = await prisma.category.create({ data: { name: parsed.data.name } });
 
     return NextResponse.json(category, { status: 201 });
   } catch (err: unknown) {

@@ -3,6 +3,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
+import { productUpdateSchema } from "@/validators/product";
 
 export async function GET(
   req: NextRequest,
@@ -58,8 +59,10 @@ export async function PATCH(
     if (user.role === ROLES.FARMER && product.farmerId !== user.id)
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    const body = await req.json();
-    const { name, description, price, stock, unit, imageUrl, categoryId } = body;
+    const parsed = productUpdateSchema.safeParse(await req.json());
+    if (!parsed.success)
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    const { name, description, price, stock, unit, imageUrl, categoryId } = parsed.data;
 
     // If a farmer edits any content field that actually changed, revoke approval for re-review
     const contentChanged =
@@ -68,9 +71,9 @@ export async function PATCH(
       (
         (name !== undefined && name !== product.name) ||
         (description !== undefined && description !== product.description) ||
-        (price !== undefined && Number(price) !== Number(product.price)) ||
+        (price !== undefined && price !== Number(product.price)) ||
         (unit !== undefined && unit !== product.unit) ||
-        (categoryId !== undefined && Number(categoryId) !== product.categoryId) ||
+        (categoryId !== undefined && categoryId !== product.categoryId) ||
         (imageUrl !== undefined && (imageUrl || null) !== product.imageUrl)
       );
 
@@ -79,11 +82,11 @@ export async function PATCH(
       data: {
         ...(name !== undefined && { name }),
         ...(description !== undefined && { description }),
-        ...(price !== undefined && { price: Number(price) }),
-        ...(stock !== undefined && { stock: Number(stock) }),
+        ...(price !== undefined && { price }),
+        ...(stock !== undefined && { stock }),
         ...(unit !== undefined && { unit }),
-        ...(imageUrl !== undefined && { imageUrl }),
-        ...(categoryId !== undefined && { categoryId: Number(categoryId) }),
+        ...(imageUrl !== undefined && { imageUrl: imageUrl || null }),
+        ...(categoryId !== undefined && { categoryId }),
         ...(contentChanged && { approved: false }),
       },
       include: { category: true, farmer: { select: { id: true, name: true, email: true } } },
