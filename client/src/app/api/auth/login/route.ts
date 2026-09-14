@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { loginSchema } from "@/validators/auth";
+import { getJwtSecret } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
@@ -63,7 +64,7 @@ export async function POST(req: Request) {
         role: user.role,
         tokenVersion: user.tokenVersion,
       },
-      process.env.JWT_SECRET!,
+      getJwtSecret(),
       {
         expiresIn: "7d",
       },
