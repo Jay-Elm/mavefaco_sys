@@ -5,6 +5,18 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    ignore:
+      # v13 is a ground-up rewrite (functional/plugin-based API) that the
+      # TOTP code in src/lib/totp.ts is not written against — pinned to
+      # v12's stable `authenticator` API deliberately, not stale tracking.
+      - dependency-name: "otplib"
+        update-types: ["version-update:semver-major"]
+      # eslint-config-next@16.3.5's bundled eslint-plugin-react crashes
+      # outright on ESLint 10 (confirmed: "contextOrFilename.getFilename is
+      # not a function" while linting next.config.ts). Revisit once
+      # eslint-config-next ships a version that supports ESLint 10.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
