@@ -1,0 +1,33 @@
+name: Dependency Audit
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  schedule:
+    # Catch newly-disclosed CVEs in already-installed packages, not just
+    # ones introduced by a dependency change in this repo.
+    - cron: "0 6 * * 1"
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - run: npm ci
+
+      - name: Report full audit (always visible, never blocks)
+        if: always()
+        run: npm audit || true
+
+      - name: Fail on critical vulnerabilities
+        run: npm audit --audit-level=critical
