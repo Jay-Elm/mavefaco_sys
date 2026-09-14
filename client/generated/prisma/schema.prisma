@@ -29,6 +29,13 @@ model User {
   // gets locked out.
   emailVerifiedAt DateTime?
   tokenVersion    Int       @default(0)
+  // AES-256-GCM ciphertext of the TOTP secret (never stored in the clear),
+  // keyed off JWT_SECRET — see src/lib/totpCrypto.ts. Present as soon as an
+  // admin/manager starts enrollment; `totpEnabled` is what actually gates
+  // login, so a secret alone (enrollment started but never confirmed)
+  // grants nothing.
+  totpSecret      String?
+  totpEnabled     Boolean   @default(false)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
@@ -41,6 +48,7 @@ model User {
   receivedMessages        Message[]                @relation("ReceivedMessages")
   passwordResetTokens     PasswordResetToken[]
   emailVerificationTokens EmailVerificationToken[]
+  totpBackupCodes         TotpBackupCode[]
 }
 
 model EmailVerificationToken {
@@ -67,6 +75,22 @@ model PasswordResetToken {
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
+}
+
+model TotpBackupCode {
+  id        Int       @id @default(autoincrement())
+  // bcrypt hash, not SHA-256 — unlike PasswordResetToken these are
+  // low-entropy, human-typed codes, so they need a slow hash to resist
+  // offline brute force if the table ever leaks (same reasoning as
+  // User.password).
+  codeHash  String
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model Category {

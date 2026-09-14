@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { LogIn, Leaf, Mail } from 'lucide-react'
 import { loginSchema, type LoginInput as LoginForm } from '@/validators/auth'
+import MfaGate from '@/components/MfaGate'
 
 function roleDest(role?: string) {
   if (role === 'admin' || role === 'manager') return '/dashboard'
@@ -22,6 +23,7 @@ export default function LoginPage() {
   const [needsVerification, setNeedsVerification] = useState(false)
   const [resending, setResending] = useState(false)
   const [resent, setResent] = useState(false)
+  const [mfaMode, setMfaMode] = useState<'setup' | 'verify' | null>(null)
 
   useEffect(() => {
     if (!loading && isAuthenticated) router.replace(roleDest(user?.role))
@@ -51,6 +53,9 @@ export default function LoginPage() {
         if (json.code === 'EMAIL_NOT_VERIFIED') setNeedsVerification(true)
         return
       }
+
+      if (json.mfaSetupRequired) { setMfaMode('setup'); return }
+      if (json.mfaRequired) { setMfaMode('verify'); return }
 
       login(json.user)
       // useEffect handles redirect once isAuthenticated updates
@@ -90,6 +95,9 @@ export default function LoginPage() {
           <p className="text-gray-500 text-sm mt-1">Sign in to your CoopMarket account</p>
         </div>
 
+        {mfaMode ? (
+          <MfaGate mode={mfaMode} onComplete={login} />
+        ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">
           {serverError && (
             <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-lg border border-red-200 space-y-2">
@@ -161,13 +169,16 @@ export default function LoginPage() {
             {isSubmitting ? 'Signing in…' : 'Sign In'}
           </button>
         </form>
+        )}
 
-        <p className="text-center text-sm text-gray-500 mt-4">
-          Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-green-700 font-medium hover:underline">
-            Register
-          </Link>
-        </p>
+        {!mfaMode && (
+          <p className="text-center text-sm text-gray-500 mt-4">
+            Don&apos;t have an account?{' '}
+            <Link href="/register" className="text-green-700 font-medium hover:underline">
+              Register
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   )

@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { loginSchema } from "@/validators/auth";
-import { getJwtSecret } from "@/lib/auth";
+import { ROLES } from "@/lib/roles";
+import { signMfaPendingToken, MFA_PENDING_COOKIE, mfaPendingCookieOptions } from "@/lib/mfaToken";
+import { issueSessionResponse } from "@/lib/session";
 
 export async function POST(req: Request) {
   try {
@@ -57,20 +58,20 @@ export async function POST(req: Request) {
       );
     }
 
-    const token = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        tokenVersion: user.tokenVersion,
-      },
-      getJwtSecret(),
-      {
-        expiresIn: "7d",
-      },
-    );
+    // Admin/manager accounts require TOTP — password alone doesn't complete
+    // login. Issue a short-lived, purpose-scoped pending token instead of
+    // the real session cookie; the client is routed to either confirm a
+    // fresh enrollment (never set up TOTP yet) or verify an existing one.
+    if (user.role === ROLES.ADMIN || user.role === ROLES.MANAGER) {
+      const pendingToken = signMfaPendingToken(user.id, user.totpEnabled ? "verify" : "setup");
+      const response = NextResponse.json(
+        user.totpEnabled ? { mfaRequired: true } : { mfaSetupRequired: true },
+      );
+      response.cookies.set(MFA_PENDING_COOKIE, pendingToken, mfaPendingCookieOptions);
+      return response;
+    }
 
-    const response = NextResponse.json({
+    return issueSessionResponse(user, {
       message: "Login successful",
       user: {
         id: user.id,
@@ -79,19 +80,6 @@ export async function POST(req: Request) {
         role: user.role,
       },
     });
-
-    // httpOnly so client-side JS (and any XSS) can never read the token;
-    // SameSite=Lax blocks it from being sent on cross-site requests (CSRF)
-    // while still allowing normal top-level navigation to the site.
-    response.cookies.set("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60,
-    });
-
-    return response;
   } catch (error) {
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }

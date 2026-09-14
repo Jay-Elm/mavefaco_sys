@@ -46,10 +46,15 @@ export async function PATCH(
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
-    const { suspended, verified, newPassword } = parsed.data;
+    const { suspended, verified, newPassword, resetMfa } = parsed.data;
 
     if (newPassword !== undefined && actor.role !== ROLES.ADMIN)
       return NextResponse.json({ error: "Only admins can reset passwords" }, { status: 403 });
+
+    if (resetMfa && actor.role !== ROLES.ADMIN)
+      return NextResponse.json({ error: "Only admins can reset two-factor authentication" }, { status: 403 });
+    if (resetMfa && target.role !== ROLES.ADMIN && target.role !== ROLES.MANAGER)
+      return NextResponse.json({ error: "This account doesn't use two-factor authentication" }, { status: 400 });
 
     const hashed = newPassword !== undefined ? await bcrypt.hash(newPassword, 10) : undefined;
 
@@ -59,15 +64,23 @@ export async function PATCH(
         ...(typeof suspended === "boolean" && { suspended }),
         ...(typeof verified === "boolean" && { verified }),
         ...(hashed && { password: hashed, tokenVersion: { increment: 1 } }),
+        // Forces a full re-enrollment (new QR code, new backup codes) at
+        // next login rather than just disabling the check — an old secret
+        // sitting disabled-but-intact would be a silent way back in.
+        ...(resetMfa && { totpEnabled: false, totpSecret: null, tokenVersion: { increment: 1 } }),
       },
-      select: { id: true, name: true, email: true, role: true, suspended: true, verified: true },
+      select: { id: true, name: true, email: true, role: true, suspended: true, verified: true, totpEnabled: true },
     });
 
-    const action = typeof newPassword === "string"
-      ? "RESET_PASSWORD"
-      : typeof verified === "boolean"
-        ? (verified ? "VERIFY_USER" : "UNVERIFY_USER")
-        : (suspended ? "SUSPEND_USER" : "UNSUSPEND_USER");
+    if (resetMfa) await prisma.totpBackupCode.deleteMany({ where: { userId: target.id } });
+
+    const action = resetMfa
+      ? "RESET_MFA"
+      : typeof newPassword === "string"
+        ? "RESET_PASSWORD"
+        : typeof verified === "boolean"
+          ? (verified ? "VERIFY_USER" : "UNVERIFY_USER")
+          : (suspended ? "SUSPEND_USER" : "UNSUSPEND_USER");
 
     await prisma.auditLog.create({
       data: {

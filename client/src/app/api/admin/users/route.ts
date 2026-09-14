@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
         suspended: true,
         idImagePath: true,
         verified: true,
+        totpEnabled: true,
         createdAt: true,
         _count: { select: { products: true, orders: true } },
       },

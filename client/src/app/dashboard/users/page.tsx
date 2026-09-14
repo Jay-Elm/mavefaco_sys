@@ -6,6 +6,7 @@ import {
   Loader2, Shield, User, Leaf, ShoppingBag,
   Ban, CheckCircle, Trash2, AlertTriangle, ShieldCheck,
   ExternalLink, KeyRound, X, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download,
+  ShieldAlert, ShieldOff,
 } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
 
@@ -17,6 +18,7 @@ interface UserRow {
   suspended: boolean
   hasIdImage: boolean
   verified: boolean
+  totpEnabled: boolean
   createdAt: string
   _count: { products: number; orders: number }
 }
@@ -179,6 +181,24 @@ export default function UsersPage() {
     } finally { setActionId(null) }
   }
 
+  async function handleResetMfa(u: UserRow) {
+    if (!token) return
+    if (!confirm(`Reset two-factor authentication for ${u.name}? They will need to set it up again from scratch on their next login.`)) return
+    setActionId(u.id); setActionError(null)
+    try {
+      const res = await fetch(`/api/admin/users/${u.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ resetMfa: true }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setActionError({ id: u.id, msg: data.error }); return }
+      setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, totpEnabled: false } : x)))
+    } catch {
+      setActionError({ id: u.id, msg: 'Request failed' })
+    } finally { setActionId(null) }
+  }
+
   async function handleDelete(u: UserRow) {
     if (!token) return
     if (!confirm(`Permanently delete "${u.name}"?\n\nThis removes their account, products, and order history. Blocked only if they have active orders.`)) return
@@ -200,6 +220,9 @@ export default function UsersPage() {
   const canSuspend = (u: UserRow) => !isSelf(u) && u.role !== 'admin'
   const canDelete  = (u: UserRow) => currentUser?.role === 'admin' && !isSelf(u) && u.role !== 'admin'
   const canResetPw = (u: UserRow) => currentUser?.role === 'admin' && !isSelf(u)
+  // Admins can't manage other admins at all (see the PATCH route's own
+  // guard) — resetting MFA only ever works on a manager target.
+  const canResetMfa = (u: UserRow) => currentUser?.role === 'admin' && !isSelf(u) && u.role === 'manager' && u.totpEnabled
 
   if (loading) {
     return (
@@ -365,6 +388,14 @@ export default function UsersPage() {
                         {ROLE_ICONS[u.role]}
                         {u.role}
                       </span>
+                      {(u.role === 'admin' || u.role === 'manager') && (
+                        <span
+                          title={u.totpEnabled ? '2FA enabled' : '2FA not set up yet'}
+                          className={`ml-1 inline-flex items-center ${u.totpEnabled ? 'text-green-600' : 'text-gray-300'}`}
+                        >
+                          {u.totpEnabled ? <ShieldCheck size={12} /> : <ShieldAlert size={12} />}
+                        </span>
+                      )}
                     </td>
 
                     {/* Verification (farmers only) */}
@@ -458,6 +489,18 @@ export default function UsersPage() {
                             className="p-1.5 rounded-lg bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition-colors disabled:opacity-40"
                           >
                             <KeyRound size={14} />
+                          </button>
+                        )}
+
+                        {/* Reset MFA */}
+                        {canResetMfa(u) && (
+                          <button
+                            onClick={() => handleResetMfa(u)}
+                            disabled={actionId === u.id}
+                            title="Reset two-factor authentication"
+                            className="p-1.5 rounded-lg bg-orange-100 text-orange-700 hover:bg-orange-200 transition-colors disabled:opacity-40"
+                          >
+                            <ShieldOff size={14} />
                           </button>
                         )}
 

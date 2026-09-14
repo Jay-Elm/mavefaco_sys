@@ -29,6 +29,11 @@ export type EmailVerificationToken = $Result.DefaultSelection<Prisma.$EmailVerif
  */
 export type PasswordResetToken = $Result.DefaultSelection<Prisma.$PasswordResetTokenPayload>
 /**
+ * Model TotpBackupCode
+ * 
+ */
+export type TotpBackupCode = $Result.DefaultSelection<Prisma.$TotpBackupCodePayload>
+/**
  * Model Category
  * 
  */
@@ -239,6 +244,16 @@ export class PrismaClient<
     * ```
     */
   get passwordResetToken(): Prisma.PasswordResetTokenDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.totpBackupCode`: Exposes CRUD operations for the **TotpBackupCode** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TotpBackupCodes
+    * const totpBackupCodes = await prisma.totpBackupCode.findMany()
+    * ```
+    */
+  get totpBackupCode(): Prisma.TotpBackupCodeDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.category`: Exposes CRUD operations for the **Category** model.
@@ -796,6 +811,7 @@ export namespace Prisma {
     User: 'User',
     EmailVerificationToken: 'EmailVerificationToken',
     PasswordResetToken: 'PasswordResetToken',
+    TotpBackupCode: 'TotpBackupCode',
     Category: 'Category',
     Product: 'Product',
     CropLog: 'CropLog',
@@ -823,7 +839,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "category" | "product" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "auditLog"
+      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "totpBackupCode" | "category" | "product" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "auditLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1046,6 +1062,80 @@ export namespace Prisma {
           count: {
             args: Prisma.PasswordResetTokenCountArgs<ExtArgs>
             result: $Utils.Optional<PasswordResetTokenCountAggregateOutputType> | number
+          }
+        }
+      }
+      TotpBackupCode: {
+        payload: Prisma.$TotpBackupCodePayload<ExtArgs>
+        fields: Prisma.TotpBackupCodeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TotpBackupCodeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TotpBackupCodePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TotpBackupCodeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TotpBackupCodePayload>
+          }
+          findFirst: {
+            args: Prisma.TotpBackupCodeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TotpBackupCodePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TotpBackupCodeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TotpBackupCodePayload>
+          }
+          findMany: {
+            args: Prisma.TotpBackupCodeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TotpBackupCodePayload>[]
+          }
+          create: {
+            args: Prisma.TotpBackupCodeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TotpBackupCodePayload>
+          }
+          createMany: {
+            args: Prisma.TotpBackupCodeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TotpBackupCodeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TotpBackupCodePayload>[]
+          }
+          delete: {
+            args: Prisma.TotpBackupCodeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TotpBackupCodePayload>
+          }
+          update: {
+            args: Prisma.TotpBackupCodeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TotpBackupCodePayload>
+          }
+          deleteMany: {
+            args: Prisma.TotpBackupCodeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TotpBackupCodeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TotpBackupCodeUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TotpBackupCodePayload>[]
+          }
+          upsert: {
+            args: Prisma.TotpBackupCodeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TotpBackupCodePayload>
+          }
+          aggregate: {
+            args: Prisma.TotpBackupCodeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTotpBackupCode>
+          }
+          groupBy: {
+            args: Prisma.TotpBackupCodeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TotpBackupCodeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TotpBackupCodeCountArgs<ExtArgs>
+            result: $Utils.Optional<TotpBackupCodeCountAggregateOutputType> | number
           }
         }
       }
@@ -2048,6 +2138,7 @@ export namespace Prisma {
     user?: UserOmit
     emailVerificationToken?: EmailVerificationTokenOmit
     passwordResetToken?: PasswordResetTokenOmit
+    totpBackupCode?: TotpBackupCodeOmit
     category?: CategoryOmit
     product?: ProductOmit
     cropLog?: CropLogOmit
@@ -2149,6 +2240,7 @@ export namespace Prisma {
     receivedMessages: number
     passwordResetTokens: number
     emailVerificationTokens: number
+    totpBackupCodes: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2161,6 +2253,7 @@ export namespace Prisma {
     receivedMessages?: boolean | UserCountOutputTypeCountReceivedMessagesArgs
     passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
     emailVerificationTokens?: boolean | UserCountOutputTypeCountEmailVerificationTokensArgs
+    totpBackupCodes?: boolean | UserCountOutputTypeCountTotpBackupCodesArgs
   }
 
   // Custom InputTypes
@@ -2235,6 +2328,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountEmailVerificationTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: EmailVerificationTokenWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountTotpBackupCodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TotpBackupCodeWhereInput
   }
 
 
@@ -2386,6 +2486,8 @@ export namespace Prisma {
     verified: boolean | null
     emailVerifiedAt: Date | null
     tokenVersion: number | null
+    totpSecret: string | null
+    totpEnabled: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2401,6 +2503,8 @@ export namespace Prisma {
     verified: boolean | null
     emailVerifiedAt: Date | null
     tokenVersion: number | null
+    totpSecret: string | null
+    totpEnabled: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2416,6 +2520,8 @@ export namespace Prisma {
     verified: number
     emailVerifiedAt: number
     tokenVersion: number
+    totpSecret: number
+    totpEnabled: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2443,6 +2549,8 @@ export namespace Prisma {
     verified?: true
     emailVerifiedAt?: true
     tokenVersion?: true
+    totpSecret?: true
+    totpEnabled?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2458,6 +2566,8 @@ export namespace Prisma {
     verified?: true
     emailVerifiedAt?: true
     tokenVersion?: true
+    totpSecret?: true
+    totpEnabled?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2473,6 +2583,8 @@ export namespace Prisma {
     verified?: true
     emailVerifiedAt?: true
     tokenVersion?: true
+    totpSecret?: true
+    totpEnabled?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2575,6 +2687,8 @@ export namespace Prisma {
     verified: boolean
     emailVerifiedAt: Date | null
     tokenVersion: number
+    totpSecret: string | null
+    totpEnabled: boolean
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -2609,6 +2723,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
+    totpSecret?: boolean
+    totpEnabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     products?: boolean | User$productsArgs<ExtArgs>
@@ -2620,6 +2736,7 @@ export namespace Prisma {
     receivedMessages?: boolean | User$receivedMessagesArgs<ExtArgs>
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
     emailVerificationTokens?: boolean | User$emailVerificationTokensArgs<ExtArgs>
+    totpBackupCodes?: boolean | User$totpBackupCodesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2634,6 +2751,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
+    totpSecret?: boolean
+    totpEnabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2649,6 +2768,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
+    totpSecret?: boolean
+    totpEnabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2664,11 +2785,13 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
+    totpSecret?: boolean
+    totpEnabled?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "idImagePath" | "verified" | "emailVerifiedAt" | "tokenVersion" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "idImagePath" | "verified" | "emailVerifiedAt" | "tokenVersion" | "totpSecret" | "totpEnabled" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | User$productsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -2679,6 +2802,7 @@ export namespace Prisma {
     receivedMessages?: boolean | User$receivedMessagesArgs<ExtArgs>
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
     emailVerificationTokens?: boolean | User$emailVerificationTokensArgs<ExtArgs>
+    totpBackupCodes?: boolean | User$totpBackupCodesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2696,6 +2820,7 @@ export namespace Prisma {
       receivedMessages: Prisma.$MessagePayload<ExtArgs>[]
       passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
       emailVerificationTokens: Prisma.$EmailVerificationTokenPayload<ExtArgs>[]
+      totpBackupCodes: Prisma.$TotpBackupCodePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -2708,6 +2833,8 @@ export namespace Prisma {
       verified: boolean
       emailVerifiedAt: Date | null
       tokenVersion: number
+      totpSecret: string | null
+      totpEnabled: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -3113,6 +3240,7 @@ export namespace Prisma {
     receivedMessages<T extends User$receivedMessagesArgs<ExtArgs> = {}>(args?: Subset<T, User$receivedMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     passwordResetTokens<T extends User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     emailVerificationTokens<T extends User$emailVerificationTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$emailVerificationTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    totpBackupCodes<T extends User$totpBackupCodesArgs<ExtArgs> = {}>(args?: Subset<T, User$totpBackupCodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3152,6 +3280,8 @@ export namespace Prisma {
     readonly verified: FieldRef<"User", 'Boolean'>
     readonly emailVerifiedAt: FieldRef<"User", 'DateTime'>
     readonly tokenVersion: FieldRef<"User", 'Int'>
+    readonly totpSecret: FieldRef<"User", 'String'>
+    readonly totpEnabled: FieldRef<"User", 'Boolean'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -3760,6 +3890,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: EmailVerificationTokenScalarFieldEnum | EmailVerificationTokenScalarFieldEnum[]
+  }
+
+  /**
+   * User.totpBackupCodes
+   */
+  export type User$totpBackupCodesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeInclude<ExtArgs> | null
+    where?: TotpBackupCodeWhereInput
+    orderBy?: TotpBackupCodeOrderByWithRelationInput | TotpBackupCodeOrderByWithRelationInput[]
+    cursor?: TotpBackupCodeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TotpBackupCodeScalarFieldEnum | TotpBackupCodeScalarFieldEnum[]
   }
 
   /**
@@ -6006,6 +6160,1107 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: PasswordResetTokenInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TotpBackupCode
+   */
+
+  export type AggregateTotpBackupCode = {
+    _count: TotpBackupCodeCountAggregateOutputType | null
+    _avg: TotpBackupCodeAvgAggregateOutputType | null
+    _sum: TotpBackupCodeSumAggregateOutputType | null
+    _min: TotpBackupCodeMinAggregateOutputType | null
+    _max: TotpBackupCodeMaxAggregateOutputType | null
+  }
+
+  export type TotpBackupCodeAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type TotpBackupCodeSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type TotpBackupCodeMinAggregateOutputType = {
+    id: number | null
+    codeHash: string | null
+    usedAt: Date | null
+    createdAt: Date | null
+    userId: number | null
+  }
+
+  export type TotpBackupCodeMaxAggregateOutputType = {
+    id: number | null
+    codeHash: string | null
+    usedAt: Date | null
+    createdAt: Date | null
+    userId: number | null
+  }
+
+  export type TotpBackupCodeCountAggregateOutputType = {
+    id: number
+    codeHash: number
+    usedAt: number
+    createdAt: number
+    userId: number
+    _all: number
+  }
+
+
+  export type TotpBackupCodeAvgAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type TotpBackupCodeSumAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type TotpBackupCodeMinAggregateInputType = {
+    id?: true
+    codeHash?: true
+    usedAt?: true
+    createdAt?: true
+    userId?: true
+  }
+
+  export type TotpBackupCodeMaxAggregateInputType = {
+    id?: true
+    codeHash?: true
+    usedAt?: true
+    createdAt?: true
+    userId?: true
+  }
+
+  export type TotpBackupCodeCountAggregateInputType = {
+    id?: true
+    codeHash?: true
+    usedAt?: true
+    createdAt?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type TotpBackupCodeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TotpBackupCode to aggregate.
+     */
+    where?: TotpBackupCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TotpBackupCodes to fetch.
+     */
+    orderBy?: TotpBackupCodeOrderByWithRelationInput | TotpBackupCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TotpBackupCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TotpBackupCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TotpBackupCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TotpBackupCodes
+    **/
+    _count?: true | TotpBackupCodeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TotpBackupCodeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TotpBackupCodeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TotpBackupCodeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TotpBackupCodeMaxAggregateInputType
+  }
+
+  export type GetTotpBackupCodeAggregateType<T extends TotpBackupCodeAggregateArgs> = {
+        [P in keyof T & keyof AggregateTotpBackupCode]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTotpBackupCode[P]>
+      : GetScalarType<T[P], AggregateTotpBackupCode[P]>
+  }
+
+
+
+
+  export type TotpBackupCodeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TotpBackupCodeWhereInput
+    orderBy?: TotpBackupCodeOrderByWithAggregationInput | TotpBackupCodeOrderByWithAggregationInput[]
+    by: TotpBackupCodeScalarFieldEnum[] | TotpBackupCodeScalarFieldEnum
+    having?: TotpBackupCodeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TotpBackupCodeCountAggregateInputType | true
+    _avg?: TotpBackupCodeAvgAggregateInputType
+    _sum?: TotpBackupCodeSumAggregateInputType
+    _min?: TotpBackupCodeMinAggregateInputType
+    _max?: TotpBackupCodeMaxAggregateInputType
+  }
+
+  export type TotpBackupCodeGroupByOutputType = {
+    id: number
+    codeHash: string
+    usedAt: Date | null
+    createdAt: Date
+    userId: number
+    _count: TotpBackupCodeCountAggregateOutputType | null
+    _avg: TotpBackupCodeAvgAggregateOutputType | null
+    _sum: TotpBackupCodeSumAggregateOutputType | null
+    _min: TotpBackupCodeMinAggregateOutputType | null
+    _max: TotpBackupCodeMaxAggregateOutputType | null
+  }
+
+  type GetTotpBackupCodeGroupByPayload<T extends TotpBackupCodeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TotpBackupCodeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TotpBackupCodeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TotpBackupCodeGroupByOutputType[P]>
+            : GetScalarType<T[P], TotpBackupCodeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TotpBackupCodeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    codeHash?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["totpBackupCode"]>
+
+  export type TotpBackupCodeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    codeHash?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["totpBackupCode"]>
+
+  export type TotpBackupCodeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    codeHash?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["totpBackupCode"]>
+
+  export type TotpBackupCodeSelectScalar = {
+    id?: boolean
+    codeHash?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+  }
+
+  export type TotpBackupCodeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "codeHash" | "usedAt" | "createdAt" | "userId", ExtArgs["result"]["totpBackupCode"]>
+  export type TotpBackupCodeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TotpBackupCodeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type TotpBackupCodeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $TotpBackupCodePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TotpBackupCode"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      codeHash: string
+      usedAt: Date | null
+      createdAt: Date
+      userId: number
+    }, ExtArgs["result"]["totpBackupCode"]>
+    composites: {}
+  }
+
+  type TotpBackupCodeGetPayload<S extends boolean | null | undefined | TotpBackupCodeDefaultArgs> = $Result.GetResult<Prisma.$TotpBackupCodePayload, S>
+
+  type TotpBackupCodeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TotpBackupCodeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TotpBackupCodeCountAggregateInputType | true
+    }
+
+  export interface TotpBackupCodeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TotpBackupCode'], meta: { name: 'TotpBackupCode' } }
+    /**
+     * Find zero or one TotpBackupCode that matches the filter.
+     * @param {TotpBackupCodeFindUniqueArgs} args - Arguments to find a TotpBackupCode
+     * @example
+     * // Get one TotpBackupCode
+     * const totpBackupCode = await prisma.totpBackupCode.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TotpBackupCodeFindUniqueArgs>(args: SelectSubset<T, TotpBackupCodeFindUniqueArgs<ExtArgs>>): Prisma__TotpBackupCodeClient<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TotpBackupCode that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TotpBackupCodeFindUniqueOrThrowArgs} args - Arguments to find a TotpBackupCode
+     * @example
+     * // Get one TotpBackupCode
+     * const totpBackupCode = await prisma.totpBackupCode.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TotpBackupCodeFindUniqueOrThrowArgs>(args: SelectSubset<T, TotpBackupCodeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TotpBackupCodeClient<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TotpBackupCode that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TotpBackupCodeFindFirstArgs} args - Arguments to find a TotpBackupCode
+     * @example
+     * // Get one TotpBackupCode
+     * const totpBackupCode = await prisma.totpBackupCode.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TotpBackupCodeFindFirstArgs>(args?: SelectSubset<T, TotpBackupCodeFindFirstArgs<ExtArgs>>): Prisma__TotpBackupCodeClient<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TotpBackupCode that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TotpBackupCodeFindFirstOrThrowArgs} args - Arguments to find a TotpBackupCode
+     * @example
+     * // Get one TotpBackupCode
+     * const totpBackupCode = await prisma.totpBackupCode.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TotpBackupCodeFindFirstOrThrowArgs>(args?: SelectSubset<T, TotpBackupCodeFindFirstOrThrowArgs<ExtArgs>>): Prisma__TotpBackupCodeClient<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TotpBackupCodes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TotpBackupCodeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TotpBackupCodes
+     * const totpBackupCodes = await prisma.totpBackupCode.findMany()
+     * 
+     * // Get first 10 TotpBackupCodes
+     * const totpBackupCodes = await prisma.totpBackupCode.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const totpBackupCodeWithIdOnly = await prisma.totpBackupCode.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TotpBackupCodeFindManyArgs>(args?: SelectSubset<T, TotpBackupCodeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TotpBackupCode.
+     * @param {TotpBackupCodeCreateArgs} args - Arguments to create a TotpBackupCode.
+     * @example
+     * // Create one TotpBackupCode
+     * const TotpBackupCode = await prisma.totpBackupCode.create({
+     *   data: {
+     *     // ... data to create a TotpBackupCode
+     *   }
+     * })
+     * 
+     */
+    create<T extends TotpBackupCodeCreateArgs>(args: SelectSubset<T, TotpBackupCodeCreateArgs<ExtArgs>>): Prisma__TotpBackupCodeClient<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TotpBackupCodes.
+     * @param {TotpBackupCodeCreateManyArgs} args - Arguments to create many TotpBackupCodes.
+     * @example
+     * // Create many TotpBackupCodes
+     * const totpBackupCode = await prisma.totpBackupCode.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TotpBackupCodeCreateManyArgs>(args?: SelectSubset<T, TotpBackupCodeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TotpBackupCodes and returns the data saved in the database.
+     * @param {TotpBackupCodeCreateManyAndReturnArgs} args - Arguments to create many TotpBackupCodes.
+     * @example
+     * // Create many TotpBackupCodes
+     * const totpBackupCode = await prisma.totpBackupCode.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TotpBackupCodes and only return the `id`
+     * const totpBackupCodeWithIdOnly = await prisma.totpBackupCode.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TotpBackupCodeCreateManyAndReturnArgs>(args?: SelectSubset<T, TotpBackupCodeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TotpBackupCode.
+     * @param {TotpBackupCodeDeleteArgs} args - Arguments to delete one TotpBackupCode.
+     * @example
+     * // Delete one TotpBackupCode
+     * const TotpBackupCode = await prisma.totpBackupCode.delete({
+     *   where: {
+     *     // ... filter to delete one TotpBackupCode
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TotpBackupCodeDeleteArgs>(args: SelectSubset<T, TotpBackupCodeDeleteArgs<ExtArgs>>): Prisma__TotpBackupCodeClient<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TotpBackupCode.
+     * @param {TotpBackupCodeUpdateArgs} args - Arguments to update one TotpBackupCode.
+     * @example
+     * // Update one TotpBackupCode
+     * const totpBackupCode = await prisma.totpBackupCode.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TotpBackupCodeUpdateArgs>(args: SelectSubset<T, TotpBackupCodeUpdateArgs<ExtArgs>>): Prisma__TotpBackupCodeClient<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TotpBackupCodes.
+     * @param {TotpBackupCodeDeleteManyArgs} args - Arguments to filter TotpBackupCodes to delete.
+     * @example
+     * // Delete a few TotpBackupCodes
+     * const { count } = await prisma.totpBackupCode.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TotpBackupCodeDeleteManyArgs>(args?: SelectSubset<T, TotpBackupCodeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TotpBackupCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TotpBackupCodeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TotpBackupCodes
+     * const totpBackupCode = await prisma.totpBackupCode.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TotpBackupCodeUpdateManyArgs>(args: SelectSubset<T, TotpBackupCodeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TotpBackupCodes and returns the data updated in the database.
+     * @param {TotpBackupCodeUpdateManyAndReturnArgs} args - Arguments to update many TotpBackupCodes.
+     * @example
+     * // Update many TotpBackupCodes
+     * const totpBackupCode = await prisma.totpBackupCode.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TotpBackupCodes and only return the `id`
+     * const totpBackupCodeWithIdOnly = await prisma.totpBackupCode.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TotpBackupCodeUpdateManyAndReturnArgs>(args: SelectSubset<T, TotpBackupCodeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TotpBackupCode.
+     * @param {TotpBackupCodeUpsertArgs} args - Arguments to update or create a TotpBackupCode.
+     * @example
+     * // Update or create a TotpBackupCode
+     * const totpBackupCode = await prisma.totpBackupCode.upsert({
+     *   create: {
+     *     // ... data to create a TotpBackupCode
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TotpBackupCode we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TotpBackupCodeUpsertArgs>(args: SelectSubset<T, TotpBackupCodeUpsertArgs<ExtArgs>>): Prisma__TotpBackupCodeClient<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TotpBackupCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TotpBackupCodeCountArgs} args - Arguments to filter TotpBackupCodes to count.
+     * @example
+     * // Count the number of TotpBackupCodes
+     * const count = await prisma.totpBackupCode.count({
+     *   where: {
+     *     // ... the filter for the TotpBackupCodes we want to count
+     *   }
+     * })
+    **/
+    count<T extends TotpBackupCodeCountArgs>(
+      args?: Subset<T, TotpBackupCodeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TotpBackupCodeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TotpBackupCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TotpBackupCodeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TotpBackupCodeAggregateArgs>(args: Subset<T, TotpBackupCodeAggregateArgs>): Prisma.PrismaPromise<GetTotpBackupCodeAggregateType<T>>
+
+    /**
+     * Group by TotpBackupCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TotpBackupCodeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TotpBackupCodeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TotpBackupCodeGroupByArgs['orderBy'] }
+        : { orderBy?: TotpBackupCodeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TotpBackupCodeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTotpBackupCodeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TotpBackupCode model
+   */
+  readonly fields: TotpBackupCodeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TotpBackupCode.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TotpBackupCodeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TotpBackupCode model
+   */
+  interface TotpBackupCodeFieldRefs {
+    readonly id: FieldRef<"TotpBackupCode", 'Int'>
+    readonly codeHash: FieldRef<"TotpBackupCode", 'String'>
+    readonly usedAt: FieldRef<"TotpBackupCode", 'DateTime'>
+    readonly createdAt: FieldRef<"TotpBackupCode", 'DateTime'>
+    readonly userId: FieldRef<"TotpBackupCode", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TotpBackupCode findUnique
+   */
+  export type TotpBackupCodeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which TotpBackupCode to fetch.
+     */
+    where: TotpBackupCodeWhereUniqueInput
+  }
+
+  /**
+   * TotpBackupCode findUniqueOrThrow
+   */
+  export type TotpBackupCodeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which TotpBackupCode to fetch.
+     */
+    where: TotpBackupCodeWhereUniqueInput
+  }
+
+  /**
+   * TotpBackupCode findFirst
+   */
+  export type TotpBackupCodeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which TotpBackupCode to fetch.
+     */
+    where?: TotpBackupCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TotpBackupCodes to fetch.
+     */
+    orderBy?: TotpBackupCodeOrderByWithRelationInput | TotpBackupCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TotpBackupCodes.
+     */
+    cursor?: TotpBackupCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TotpBackupCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TotpBackupCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TotpBackupCodes.
+     */
+    distinct?: TotpBackupCodeScalarFieldEnum | TotpBackupCodeScalarFieldEnum[]
+  }
+
+  /**
+   * TotpBackupCode findFirstOrThrow
+   */
+  export type TotpBackupCodeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which TotpBackupCode to fetch.
+     */
+    where?: TotpBackupCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TotpBackupCodes to fetch.
+     */
+    orderBy?: TotpBackupCodeOrderByWithRelationInput | TotpBackupCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TotpBackupCodes.
+     */
+    cursor?: TotpBackupCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TotpBackupCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TotpBackupCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TotpBackupCodes.
+     */
+    distinct?: TotpBackupCodeScalarFieldEnum | TotpBackupCodeScalarFieldEnum[]
+  }
+
+  /**
+   * TotpBackupCode findMany
+   */
+  export type TotpBackupCodeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeInclude<ExtArgs> | null
+    /**
+     * Filter, which TotpBackupCodes to fetch.
+     */
+    where?: TotpBackupCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TotpBackupCodes to fetch.
+     */
+    orderBy?: TotpBackupCodeOrderByWithRelationInput | TotpBackupCodeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TotpBackupCodes.
+     */
+    cursor?: TotpBackupCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TotpBackupCodes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TotpBackupCodes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TotpBackupCodes.
+     */
+    distinct?: TotpBackupCodeScalarFieldEnum | TotpBackupCodeScalarFieldEnum[]
+  }
+
+  /**
+   * TotpBackupCode create
+   */
+  export type TotpBackupCodeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TotpBackupCode.
+     */
+    data: XOR<TotpBackupCodeCreateInput, TotpBackupCodeUncheckedCreateInput>
+  }
+
+  /**
+   * TotpBackupCode createMany
+   */
+  export type TotpBackupCodeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TotpBackupCodes.
+     */
+    data: TotpBackupCodeCreateManyInput | TotpBackupCodeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TotpBackupCode createManyAndReturn
+   */
+  export type TotpBackupCodeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * The data used to create many TotpBackupCodes.
+     */
+    data: TotpBackupCodeCreateManyInput | TotpBackupCodeCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TotpBackupCode update
+   */
+  export type TotpBackupCodeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TotpBackupCode.
+     */
+    data: XOR<TotpBackupCodeUpdateInput, TotpBackupCodeUncheckedUpdateInput>
+    /**
+     * Choose, which TotpBackupCode to update.
+     */
+    where: TotpBackupCodeWhereUniqueInput
+  }
+
+  /**
+   * TotpBackupCode updateMany
+   */
+  export type TotpBackupCodeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TotpBackupCodes.
+     */
+    data: XOR<TotpBackupCodeUpdateManyMutationInput, TotpBackupCodeUncheckedUpdateManyInput>
+    /**
+     * Filter which TotpBackupCodes to update
+     */
+    where?: TotpBackupCodeWhereInput
+    /**
+     * Limit how many TotpBackupCodes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TotpBackupCode updateManyAndReturn
+   */
+  export type TotpBackupCodeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * The data used to update TotpBackupCodes.
+     */
+    data: XOR<TotpBackupCodeUpdateManyMutationInput, TotpBackupCodeUncheckedUpdateManyInput>
+    /**
+     * Filter which TotpBackupCodes to update
+     */
+    where?: TotpBackupCodeWhereInput
+    /**
+     * Limit how many TotpBackupCodes to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TotpBackupCode upsert
+   */
+  export type TotpBackupCodeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TotpBackupCode to update in case it exists.
+     */
+    where: TotpBackupCodeWhereUniqueInput
+    /**
+     * In case the TotpBackupCode found by the `where` argument doesn't exist, create a new TotpBackupCode with this data.
+     */
+    create: XOR<TotpBackupCodeCreateInput, TotpBackupCodeUncheckedCreateInput>
+    /**
+     * In case the TotpBackupCode was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TotpBackupCodeUpdateInput, TotpBackupCodeUncheckedUpdateInput>
+  }
+
+  /**
+   * TotpBackupCode delete
+   */
+  export type TotpBackupCodeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeInclude<ExtArgs> | null
+    /**
+     * Filter which TotpBackupCode to delete.
+     */
+    where: TotpBackupCodeWhereUniqueInput
+  }
+
+  /**
+   * TotpBackupCode deleteMany
+   */
+  export type TotpBackupCodeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TotpBackupCodes to delete
+     */
+    where?: TotpBackupCodeWhereInput
+    /**
+     * Limit how many TotpBackupCodes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TotpBackupCode without action
+   */
+  export type TotpBackupCodeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TotpBackupCode
+     */
+    select?: TotpBackupCodeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TotpBackupCode
+     */
+    omit?: TotpBackupCodeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TotpBackupCodeInclude<ExtArgs> | null
   }
 
 
@@ -19427,6 +20682,8 @@ export namespace Prisma {
     verified: 'verified',
     emailVerifiedAt: 'emailVerifiedAt',
     tokenVersion: 'tokenVersion',
+    totpSecret: 'totpSecret',
+    totpEnabled: 'totpEnabled',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -19456,6 +20713,17 @@ export namespace Prisma {
   };
 
   export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
+
+
+  export const TotpBackupCodeScalarFieldEnum: {
+    id: 'id',
+    codeHash: 'codeHash',
+    usedAt: 'usedAt',
+    createdAt: 'createdAt',
+    userId: 'userId'
+  };
+
+  export type TotpBackupCodeScalarFieldEnum = (typeof TotpBackupCodeScalarFieldEnum)[keyof typeof TotpBackupCodeScalarFieldEnum]
 
 
   export const CategoryScalarFieldEnum: {
@@ -19729,6 +20997,8 @@ export namespace Prisma {
     verified?: BoolFilter<"User"> | boolean
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     tokenVersion?: IntFilter<"User"> | number
+    totpSecret?: StringNullableFilter<"User"> | string | null
+    totpEnabled?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     products?: ProductListRelationFilter
@@ -19740,6 +21010,7 @@ export namespace Prisma {
     receivedMessages?: MessageListRelationFilter
     passwordResetTokens?: PasswordResetTokenListRelationFilter
     emailVerificationTokens?: EmailVerificationTokenListRelationFilter
+    totpBackupCodes?: TotpBackupCodeListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -19753,6 +21024,8 @@ export namespace Prisma {
     verified?: SortOrder
     emailVerifiedAt?: SortOrderInput | SortOrder
     tokenVersion?: SortOrder
+    totpSecret?: SortOrderInput | SortOrder
+    totpEnabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     products?: ProductOrderByRelationAggregateInput
@@ -19764,6 +21037,7 @@ export namespace Prisma {
     receivedMessages?: MessageOrderByRelationAggregateInput
     passwordResetTokens?: PasswordResetTokenOrderByRelationAggregateInput
     emailVerificationTokens?: EmailVerificationTokenOrderByRelationAggregateInput
+    totpBackupCodes?: TotpBackupCodeOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -19780,6 +21054,8 @@ export namespace Prisma {
     verified?: BoolFilter<"User"> | boolean
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     tokenVersion?: IntFilter<"User"> | number
+    totpSecret?: StringNullableFilter<"User"> | string | null
+    totpEnabled?: BoolFilter<"User"> | boolean
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     products?: ProductListRelationFilter
@@ -19791,6 +21067,7 @@ export namespace Prisma {
     receivedMessages?: MessageListRelationFilter
     passwordResetTokens?: PasswordResetTokenListRelationFilter
     emailVerificationTokens?: EmailVerificationTokenListRelationFilter
+    totpBackupCodes?: TotpBackupCodeListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -19804,6 +21081,8 @@ export namespace Prisma {
     verified?: SortOrder
     emailVerifiedAt?: SortOrderInput | SortOrder
     tokenVersion?: SortOrder
+    totpSecret?: SortOrderInput | SortOrder
+    totpEnabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -19827,6 +21106,8 @@ export namespace Prisma {
     verified?: BoolWithAggregatesFilter<"User"> | boolean
     emailVerifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     tokenVersion?: IntWithAggregatesFilter<"User"> | number
+    totpSecret?: StringNullableWithAggregatesFilter<"User"> | string | null
+    totpEnabled?: BoolWithAggregatesFilter<"User"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -19953,6 +21234,63 @@ export namespace Prisma {
     usedAt?: DateTimeNullableWithAggregatesFilter<"PasswordResetToken"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"PasswordResetToken"> | Date | string
     userId?: IntWithAggregatesFilter<"PasswordResetToken"> | number
+  }
+
+  export type TotpBackupCodeWhereInput = {
+    AND?: TotpBackupCodeWhereInput | TotpBackupCodeWhereInput[]
+    OR?: TotpBackupCodeWhereInput[]
+    NOT?: TotpBackupCodeWhereInput | TotpBackupCodeWhereInput[]
+    id?: IntFilter<"TotpBackupCode"> | number
+    codeHash?: StringFilter<"TotpBackupCode"> | string
+    usedAt?: DateTimeNullableFilter<"TotpBackupCode"> | Date | string | null
+    createdAt?: DateTimeFilter<"TotpBackupCode"> | Date | string
+    userId?: IntFilter<"TotpBackupCode"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type TotpBackupCodeOrderByWithRelationInput = {
+    id?: SortOrder
+    codeHash?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type TotpBackupCodeWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: TotpBackupCodeWhereInput | TotpBackupCodeWhereInput[]
+    OR?: TotpBackupCodeWhereInput[]
+    NOT?: TotpBackupCodeWhereInput | TotpBackupCodeWhereInput[]
+    codeHash?: StringFilter<"TotpBackupCode"> | string
+    usedAt?: DateTimeNullableFilter<"TotpBackupCode"> | Date | string | null
+    createdAt?: DateTimeFilter<"TotpBackupCode"> | Date | string
+    userId?: IntFilter<"TotpBackupCode"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type TotpBackupCodeOrderByWithAggregationInput = {
+    id?: SortOrder
+    codeHash?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    _count?: TotpBackupCodeCountOrderByAggregateInput
+    _avg?: TotpBackupCodeAvgOrderByAggregateInput
+    _max?: TotpBackupCodeMaxOrderByAggregateInput
+    _min?: TotpBackupCodeMinOrderByAggregateInput
+    _sum?: TotpBackupCodeSumOrderByAggregateInput
+  }
+
+  export type TotpBackupCodeScalarWhereWithAggregatesInput = {
+    AND?: TotpBackupCodeScalarWhereWithAggregatesInput | TotpBackupCodeScalarWhereWithAggregatesInput[]
+    OR?: TotpBackupCodeScalarWhereWithAggregatesInput[]
+    NOT?: TotpBackupCodeScalarWhereWithAggregatesInput | TotpBackupCodeScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TotpBackupCode"> | number
+    codeHash?: StringWithAggregatesFilter<"TotpBackupCode"> | string
+    usedAt?: DateTimeNullableWithAggregatesFilter<"TotpBackupCode"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TotpBackupCode"> | Date | string
+    userId?: IntWithAggregatesFilter<"TotpBackupCode"> | number
   }
 
   export type CategoryWhereInput = {
@@ -20743,6 +22081,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -20754,6 +22094,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -20767,6 +22108,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -20778,6 +22121,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -20790,6 +22134,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -20801,6 +22147,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -20814,6 +22161,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -20825,6 +22174,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -20838,6 +22188,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20852,6 +22204,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20867,6 +22221,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20984,6 +22340,58 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     tokenHash?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type TotpBackupCodeCreateInput = {
+    codeHash: string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutTotpBackupCodesInput
+  }
+
+  export type TotpBackupCodeUncheckedCreateInput = {
+    id?: number
+    codeHash: string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+    userId: number
+  }
+
+  export type TotpBackupCodeUpdateInput = {
+    codeHash?: StringFieldUpdateOperationsInput | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutTotpBackupCodesNestedInput
+  }
+
+  export type TotpBackupCodeUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    codeHash?: StringFieldUpdateOperationsInput | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type TotpBackupCodeCreateManyInput = {
+    id?: number
+    codeHash: string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+    userId: number
+  }
+
+  export type TotpBackupCodeUpdateManyMutationInput = {
+    codeHash?: StringFieldUpdateOperationsInput | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TotpBackupCodeUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    codeHash?: StringFieldUpdateOperationsInput | string
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: IntFieldUpdateOperationsInput | number
@@ -21864,6 +23272,12 @@ export namespace Prisma {
     none?: EmailVerificationTokenWhereInput
   }
 
+  export type TotpBackupCodeListRelationFilter = {
+    every?: TotpBackupCodeWhereInput
+    some?: TotpBackupCodeWhereInput
+    none?: TotpBackupCodeWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -21901,6 +23315,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type TotpBackupCodeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -21912,6 +23330,8 @@ export namespace Prisma {
     verified?: SortOrder
     emailVerifiedAt?: SortOrder
     tokenVersion?: SortOrder
+    totpSecret?: SortOrder
+    totpEnabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21932,6 +23352,8 @@ export namespace Prisma {
     verified?: SortOrder
     emailVerifiedAt?: SortOrder
     tokenVersion?: SortOrder
+    totpSecret?: SortOrder
+    totpEnabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -21947,6 +23369,8 @@ export namespace Prisma {
     verified?: SortOrder
     emailVerifiedAt?: SortOrder
     tokenVersion?: SortOrder
+    totpSecret?: SortOrder
+    totpEnabled?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -22119,6 +23543,40 @@ export namespace Prisma {
   }
 
   export type PasswordResetTokenSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type TotpBackupCodeCountOrderByAggregateInput = {
+    id?: SortOrder
+    codeHash?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type TotpBackupCodeAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type TotpBackupCodeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    codeHash?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type TotpBackupCodeMinOrderByAggregateInput = {
+    id?: SortOrder
+    codeHash?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type TotpBackupCodeSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
   }
@@ -22746,6 +24204,13 @@ export namespace Prisma {
     connect?: EmailVerificationTokenWhereUniqueInput | EmailVerificationTokenWhereUniqueInput[]
   }
 
+  export type TotpBackupCodeCreateNestedManyWithoutUserInput = {
+    create?: XOR<TotpBackupCodeCreateWithoutUserInput, TotpBackupCodeUncheckedCreateWithoutUserInput> | TotpBackupCodeCreateWithoutUserInput[] | TotpBackupCodeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TotpBackupCodeCreateOrConnectWithoutUserInput | TotpBackupCodeCreateOrConnectWithoutUserInput[]
+    createMany?: TotpBackupCodeCreateManyUserInputEnvelope
+    connect?: TotpBackupCodeWhereUniqueInput | TotpBackupCodeWhereUniqueInput[]
+  }
+
   export type ProductUncheckedCreateNestedManyWithoutFarmerInput = {
     create?: XOR<ProductCreateWithoutFarmerInput, ProductUncheckedCreateWithoutFarmerInput> | ProductCreateWithoutFarmerInput[] | ProductUncheckedCreateWithoutFarmerInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutFarmerInput | ProductCreateOrConnectWithoutFarmerInput[]
@@ -22807,6 +24272,13 @@ export namespace Prisma {
     connectOrCreate?: EmailVerificationTokenCreateOrConnectWithoutUserInput | EmailVerificationTokenCreateOrConnectWithoutUserInput[]
     createMany?: EmailVerificationTokenCreateManyUserInputEnvelope
     connect?: EmailVerificationTokenWhereUniqueInput | EmailVerificationTokenWhereUniqueInput[]
+  }
+
+  export type TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<TotpBackupCodeCreateWithoutUserInput, TotpBackupCodeUncheckedCreateWithoutUserInput> | TotpBackupCodeCreateWithoutUserInput[] | TotpBackupCodeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TotpBackupCodeCreateOrConnectWithoutUserInput | TotpBackupCodeCreateOrConnectWithoutUserInput[]
+    createMany?: TotpBackupCodeCreateManyUserInputEnvelope
+    connect?: TotpBackupCodeWhereUniqueInput | TotpBackupCodeWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -22963,6 +24435,20 @@ export namespace Prisma {
     deleteMany?: EmailVerificationTokenScalarWhereInput | EmailVerificationTokenScalarWhereInput[]
   }
 
+  export type TotpBackupCodeUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TotpBackupCodeCreateWithoutUserInput, TotpBackupCodeUncheckedCreateWithoutUserInput> | TotpBackupCodeCreateWithoutUserInput[] | TotpBackupCodeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TotpBackupCodeCreateOrConnectWithoutUserInput | TotpBackupCodeCreateOrConnectWithoutUserInput[]
+    upsert?: TotpBackupCodeUpsertWithWhereUniqueWithoutUserInput | TotpBackupCodeUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TotpBackupCodeCreateManyUserInputEnvelope
+    set?: TotpBackupCodeWhereUniqueInput | TotpBackupCodeWhereUniqueInput[]
+    disconnect?: TotpBackupCodeWhereUniqueInput | TotpBackupCodeWhereUniqueInput[]
+    delete?: TotpBackupCodeWhereUniqueInput | TotpBackupCodeWhereUniqueInput[]
+    connect?: TotpBackupCodeWhereUniqueInput | TotpBackupCodeWhereUniqueInput[]
+    update?: TotpBackupCodeUpdateWithWhereUniqueWithoutUserInput | TotpBackupCodeUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TotpBackupCodeUpdateManyWithWhereWithoutUserInput | TotpBackupCodeUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TotpBackupCodeScalarWhereInput | TotpBackupCodeScalarWhereInput[]
+  }
+
   export type ProductUncheckedUpdateManyWithoutFarmerNestedInput = {
     create?: XOR<ProductCreateWithoutFarmerInput, ProductUncheckedCreateWithoutFarmerInput> | ProductCreateWithoutFarmerInput[] | ProductUncheckedCreateWithoutFarmerInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutFarmerInput | ProductCreateOrConnectWithoutFarmerInput[]
@@ -23089,6 +24575,20 @@ export namespace Prisma {
     deleteMany?: EmailVerificationTokenScalarWhereInput | EmailVerificationTokenScalarWhereInput[]
   }
 
+  export type TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<TotpBackupCodeCreateWithoutUserInput, TotpBackupCodeUncheckedCreateWithoutUserInput> | TotpBackupCodeCreateWithoutUserInput[] | TotpBackupCodeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: TotpBackupCodeCreateOrConnectWithoutUserInput | TotpBackupCodeCreateOrConnectWithoutUserInput[]
+    upsert?: TotpBackupCodeUpsertWithWhereUniqueWithoutUserInput | TotpBackupCodeUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: TotpBackupCodeCreateManyUserInputEnvelope
+    set?: TotpBackupCodeWhereUniqueInput | TotpBackupCodeWhereUniqueInput[]
+    disconnect?: TotpBackupCodeWhereUniqueInput | TotpBackupCodeWhereUniqueInput[]
+    delete?: TotpBackupCodeWhereUniqueInput | TotpBackupCodeWhereUniqueInput[]
+    connect?: TotpBackupCodeWhereUniqueInput | TotpBackupCodeWhereUniqueInput[]
+    update?: TotpBackupCodeUpdateWithWhereUniqueWithoutUserInput | TotpBackupCodeUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: TotpBackupCodeUpdateManyWithWhereWithoutUserInput | TotpBackupCodeUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: TotpBackupCodeScalarWhereInput | TotpBackupCodeScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutEmailVerificationTokensInput = {
     create?: XOR<UserCreateWithoutEmailVerificationTokensInput, UserUncheckedCreateWithoutEmailVerificationTokensInput>
     connectOrCreate?: UserCreateOrConnectWithoutEmailVerificationTokensInput
@@ -23115,6 +24615,20 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutPasswordResetTokensInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPasswordResetTokensInput, UserUpdateWithoutPasswordResetTokensInput>, UserUncheckedUpdateWithoutPasswordResetTokensInput>
+  }
+
+  export type UserCreateNestedOneWithoutTotpBackupCodesInput = {
+    create?: XOR<UserCreateWithoutTotpBackupCodesInput, UserUncheckedCreateWithoutTotpBackupCodesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTotpBackupCodesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutTotpBackupCodesNestedInput = {
+    create?: XOR<UserCreateWithoutTotpBackupCodesInput, UserUncheckedCreateWithoutTotpBackupCodesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutTotpBackupCodesInput
+    upsert?: UserUpsertWithoutTotpBackupCodesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutTotpBackupCodesInput, UserUpdateWithoutTotpBackupCodesInput>, UserUncheckedUpdateWithoutTotpBackupCodesInput>
   }
 
   export type ProductCreateNestedManyWithoutCategoryInput = {
@@ -23983,6 +25497,29 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TotpBackupCodeCreateWithoutUserInput = {
+    codeHash: string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type TotpBackupCodeUncheckedCreateWithoutUserInput = {
+    id?: number
+    codeHash: string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type TotpBackupCodeCreateOrConnectWithoutUserInput = {
+    where: TotpBackupCodeWhereUniqueInput
+    create: XOR<TotpBackupCodeCreateWithoutUserInput, TotpBackupCodeUncheckedCreateWithoutUserInput>
+  }
+
+  export type TotpBackupCodeCreateManyUserInputEnvelope = {
+    data: TotpBackupCodeCreateManyUserInput | TotpBackupCodeCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProductUpsertWithWhereUniqueWithoutFarmerInput = {
     where: ProductWhereUniqueInput
     update: XOR<ProductUpdateWithoutFarmerInput, ProductUncheckedUpdateWithoutFarmerInput>
@@ -24234,6 +25771,33 @@ export namespace Prisma {
     userId?: IntFilter<"EmailVerificationToken"> | number
   }
 
+  export type TotpBackupCodeUpsertWithWhereUniqueWithoutUserInput = {
+    where: TotpBackupCodeWhereUniqueInput
+    update: XOR<TotpBackupCodeUpdateWithoutUserInput, TotpBackupCodeUncheckedUpdateWithoutUserInput>
+    create: XOR<TotpBackupCodeCreateWithoutUserInput, TotpBackupCodeUncheckedCreateWithoutUserInput>
+  }
+
+  export type TotpBackupCodeUpdateWithWhereUniqueWithoutUserInput = {
+    where: TotpBackupCodeWhereUniqueInput
+    data: XOR<TotpBackupCodeUpdateWithoutUserInput, TotpBackupCodeUncheckedUpdateWithoutUserInput>
+  }
+
+  export type TotpBackupCodeUpdateManyWithWhereWithoutUserInput = {
+    where: TotpBackupCodeScalarWhereInput
+    data: XOR<TotpBackupCodeUpdateManyMutationInput, TotpBackupCodeUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type TotpBackupCodeScalarWhereInput = {
+    AND?: TotpBackupCodeScalarWhereInput | TotpBackupCodeScalarWhereInput[]
+    OR?: TotpBackupCodeScalarWhereInput[]
+    NOT?: TotpBackupCodeScalarWhereInput | TotpBackupCodeScalarWhereInput[]
+    id?: IntFilter<"TotpBackupCode"> | number
+    codeHash?: StringFilter<"TotpBackupCode"> | string
+    usedAt?: DateTimeNullableFilter<"TotpBackupCode"> | Date | string | null
+    createdAt?: DateTimeFilter<"TotpBackupCode"> | Date | string
+    userId?: IntFilter<"TotpBackupCode"> | number
+  }
+
   export type UserCreateWithoutEmailVerificationTokensInput = {
     name: string
     email: string
@@ -24244,6 +25808,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -24254,6 +25820,7 @@ export namespace Prisma {
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEmailVerificationTokensInput = {
@@ -24267,6 +25834,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -24277,6 +25846,7 @@ export namespace Prisma {
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEmailVerificationTokensInput = {
@@ -24305,6 +25875,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -24315,6 +25887,7 @@ export namespace Prisma {
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailVerificationTokensInput = {
@@ -24328,6 +25901,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -24338,6 +25913,7 @@ export namespace Prisma {
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutPasswordResetTokensInput = {
@@ -24350,6 +25926,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -24360,6 +25938,7 @@ export namespace Prisma {
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -24373,6 +25952,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -24383,6 +25964,7 @@ export namespace Prisma {
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -24411,6 +25993,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -24421,6 +26005,7 @@ export namespace Prisma {
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -24434,6 +26019,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -24443,6 +26030,125 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutTotpBackupCodesInput = {
+    name: string
+    email: string
+    password: string
+    role?: string
+    suspended?: boolean
+    idImagePath?: string | null
+    verified?: boolean
+    emailVerifiedAt?: Date | string | null
+    tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductCreateNestedManyWithoutFarmerInput
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    announcements?: AnnouncementCreateNestedManyWithoutAuthorInput
+    reviews?: ReviewCreateNestedManyWithoutCustomerInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutTotpBackupCodesInput = {
+    id?: number
+    name: string
+    email: string
+    password: string
+    role?: string
+    suspended?: boolean
+    idImagePath?: string | null
+    verified?: boolean
+    emailVerifiedAt?: Date | string | null
+    tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    announcements?: AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutTotpBackupCodesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutTotpBackupCodesInput, UserUncheckedCreateWithoutTotpBackupCodesInput>
+  }
+
+  export type UserUpsertWithoutTotpBackupCodesInput = {
+    update: XOR<UserUpdateWithoutTotpBackupCodesInput, UserUncheckedUpdateWithoutTotpBackupCodesInput>
+    create: XOR<UserCreateWithoutTotpBackupCodesInput, UserUncheckedCreateWithoutTotpBackupCodesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutTotpBackupCodesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutTotpBackupCodesInput, UserUncheckedUpdateWithoutTotpBackupCodesInput>
+  }
+
+  export type UserUpdateWithoutTotpBackupCodesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUpdateManyWithoutFarmerNestedInput
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    announcements?: AnnouncementUpdateManyWithoutAuthorNestedInput
+    reviews?: ReviewUpdateManyWithoutCustomerNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutTotpBackupCodesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    announcements?: AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -24523,6 +26229,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
@@ -24533,6 +26241,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProductsInput = {
@@ -24546,6 +26255,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -24556,6 +26267,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProductsInput = {
@@ -24671,6 +26383,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
@@ -24681,6 +26395,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProductsInput = {
@@ -24694,6 +26409,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -24704,6 +26421,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CategoryUpsertWithoutProductsInput = {
@@ -24906,6 +26624,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -24916,6 +26636,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -24929,6 +26650,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -24939,6 +26662,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -24990,6 +26714,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -25000,6 +26726,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -25013,6 +26740,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -25023,6 +26752,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -25203,6 +26933,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -25213,6 +26945,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAnnouncementsInput = {
@@ -25226,6 +26959,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -25236,6 +26971,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAnnouncementsInput = {
@@ -25264,6 +27000,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -25274,6 +27012,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAnnouncementsInput = {
@@ -25287,6 +27026,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -25297,6 +27038,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutReviewsInput = {
@@ -25309,6 +27051,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -25319,6 +27063,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -25332,6 +27077,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -25342,6 +27089,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -25416,6 +27164,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -25426,6 +27176,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -25439,6 +27190,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -25449,6 +27202,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductUpsertWithoutReviewsInput = {
@@ -25513,6 +27267,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -25523,6 +27279,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -25536,6 +27293,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -25546,6 +27305,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -25563,6 +27323,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -25573,6 +27335,7 @@ export namespace Prisma {
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReceivedMessagesInput = {
@@ -25586,6 +27349,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -25596,6 +27361,7 @@ export namespace Prisma {
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReceivedMessagesInput = {
@@ -25624,6 +27390,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -25634,6 +27402,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -25647,6 +27416,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -25657,6 +27428,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutReceivedMessagesInput = {
@@ -25680,6 +27452,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -25690,6 +27464,7 @@ export namespace Prisma {
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
@@ -25703,6 +27478,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -25713,6 +27490,7 @@ export namespace Prisma {
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -25725,6 +27503,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -25735,6 +27515,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -25748,6 +27529,8 @@ export namespace Prisma {
     verified?: boolean
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    totpSecret?: string | null
+    totpEnabled?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -25758,6 +27541,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -25786,6 +27570,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -25796,6 +27582,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -25809,6 +27596,8 @@ export namespace Prisma {
     verified?: BoolFieldUpdateOperationsInput | boolean
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -25819,6 +27608,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductCreateManyFarmerInput = {
@@ -25900,6 +27690,13 @@ export namespace Prisma {
     id?: number
     tokenHash: string
     expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type TotpBackupCodeCreateManyUserInput = {
+    id?: number
+    codeHash: string
     usedAt?: Date | string | null
     createdAt?: Date | string
   }
@@ -26148,6 +27945,26 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     tokenHash?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TotpBackupCodeUpdateWithoutUserInput = {
+    codeHash?: StringFieldUpdateOperationsInput | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TotpBackupCodeUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    codeHash?: StringFieldUpdateOperationsInput | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TotpBackupCodeUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    codeHash?: StringFieldUpdateOperationsInput | string
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
