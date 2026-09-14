@@ -29,7 +29,7 @@ export async function GET(
         return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    return NextResponse.json(product);
+    return NextResponse.json({ ...product, price: Number(product.price) });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
@@ -68,7 +68,7 @@ export async function PATCH(
       (
         (name !== undefined && name !== product.name) ||
         (description !== undefined && description !== product.description) ||
-        (price !== undefined && Number(price) !== product.price) ||
+        (price !== undefined && Number(price) !== Number(product.price)) ||
         (unit !== undefined && unit !== product.unit) ||
         (categoryId !== undefined && Number(categoryId) !== product.categoryId) ||
         (imageUrl !== undefined && (imageUrl || null) !== product.imageUrl)
@@ -89,7 +89,7 @@ export async function PATCH(
       include: { category: true, farmer: { select: { id: true, name: true, email: true } } },
     });
 
-    return NextResponse.json(updated);
+    return NextResponse.json({ ...updated, price: Number(updated.price) });
   } catch {
     return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
   }

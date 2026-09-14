@@ -30,8 +30,8 @@ export async function GET(req: NextRequest) {
       approvedProductCount,
       pendingProductCount,
       orderCount,
-      totalRevenue: revenueAgg._sum.totalAmount ?? 0,
-      recentOrders,
+      totalRevenue: Number(revenueAgg._sum.totalAmount ?? 0),
+      recentOrders: recentOrders.map((o) => ({ ...o, totalAmount: Number(o.totalAmount) })),
     });
   } catch {
     return NextResponse.json({ error: "Failed to fetch stats" }, { status: 500 });

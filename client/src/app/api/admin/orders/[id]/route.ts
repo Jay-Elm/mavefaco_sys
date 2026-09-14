@@ -62,7 +62,7 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json(order);
+    return NextResponse.json({ ...order, totalAmount: Number(order.totalAmount) });
   } catch {
     return NextResponse.json({ error: "Failed to update order" }, { status: 500 });
   }

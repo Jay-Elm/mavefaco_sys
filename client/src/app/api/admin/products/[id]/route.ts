@@ -45,7 +45,7 @@ export async function PATCH(
       data: { action, entityType: "PRODUCT", entityId: productId, userId: actor.id },
     });
 
-    return NextResponse.json(updated);
+    return NextResponse.json({ ...updated, price: Number(updated.price) });
   } catch {
     return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
   }

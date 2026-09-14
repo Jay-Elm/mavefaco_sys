@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
           sum +
           p.orderItems
             .filter((oi) => oi.order.status === "delivered")
-            .reduce((s, oi) => s + oi.price * oi.quantity, 0),
+            .reduce((s, oi) => s + Number(oi.price) * oi.quantity, 0),
         0,
       );
 

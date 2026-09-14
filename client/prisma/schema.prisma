@@ -81,7 +81,7 @@ model Product {
   id            Int         @id @default(autoincrement())
   name          String
   description   String
-  price         Float
+  price         Decimal     @db.Decimal(10, 2)
   stock         Float
   unit          String      @default("piece")
   imageUrl             String?
@@ -117,7 +117,7 @@ model CropLog {
 
 model Order {
   id              Int          @id @default(autoincrement())
-  totalAmount     Float
+  totalAmount     Decimal      @db.Decimal(10, 2)
   status          String       @default("pending")
   paymentMethod   String       @default("cod")
   deliveryMethod  String       @default("pickup")
@@ -133,7 +133,7 @@ model OrderItem {
   id            Int        @id @default(autoincrement())
 
   quantity      Float
-  price         Float
+  price         Decimal    @db.Decimal(10, 2)
 
   orderId       Int
   order         Order      @relation(fields: [orderId], references: [id])

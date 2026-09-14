@@ -57,7 +57,7 @@ export default async function ProductsPage({
           <p className="text-sm mt-1">Try adjusting your search or filters.</p>
         </div>
       ) : (
-        <ProductGrid products={products} />
+        <ProductGrid products={products.map((p) => ({ ...p, price: Number(p.price) }))} />
       )}
     </div>
   )

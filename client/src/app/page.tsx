@@ -8,7 +8,7 @@ import { ShoppingBag, Leaf, ArrowRight, Info, AlertTriangle, Package, Users, Che
 import { isSafeUrl } from "@/lib/url";
 
 async function getFeaturedProducts() {
-  return prisma.product.findMany({
+  const products = await prisma.product.findMany({
     take: 6,
     where: { approved: true },
     orderBy: { createdAt: "desc" },
@@ -17,6 +17,7 @@ async function getFeaturedProducts() {
       farmer: { select: { id: true, name: true, email: true } },
     },
   });
+  return products.map((p) => ({ ...p, price: Number(p.price) }));
 }
 
 async function getBanners() {

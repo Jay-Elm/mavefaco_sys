@@ -26,6 +26,8 @@ export default async function ProductDetailPage({
 
   if (!product || !product.approved) notFound()
 
+  const price = Number(product.price)
+
   const postedDate = new Intl.DateTimeFormat('en-PH', {
     year: 'numeric',
     month: 'long',
@@ -74,7 +76,7 @@ export default async function ProductDetailPage({
 
             <div className="mb-6">
               <span className="text-3xl font-bold text-green-700">
-                ₱{product.price.toFixed(2)}
+                ₱{price.toFixed(2)}
               </span>
               <span className="text-sm text-gray-400 ml-2">/ {product.unit}</span>
             </div>
@@ -114,7 +116,7 @@ export default async function ProductDetailPage({
                 product={{
                   id: product.id,
                   name: product.name,
-                  price: product.price,
+                  price,
                   imageUrl: product.imageUrl,
                   stock: product.stock,
                   unit: product.unit,

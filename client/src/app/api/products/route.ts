@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         message: "Product created successfully",
-        product,
+        product: { ...product, price: Number(product.price) },
       },
       { status: 201 },
     );
@@ -90,7 +90,7 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(products);
+    return NextResponse.json(products.map((p) => ({ ...p, price: Number(p.price) })));
   } catch (error) {
     console.error(error);
 

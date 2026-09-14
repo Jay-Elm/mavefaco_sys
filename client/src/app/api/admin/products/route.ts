@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" },
     });
 
-    return NextResponse.json(products);
+    return NextResponse.json(products.map((p) => ({ ...p, price: Number(p.price) })));
   } catch {
     return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
   }

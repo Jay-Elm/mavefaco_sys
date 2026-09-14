@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     if (!authorize(actor, [ROLES.ADMIN, ROLES.MANAGER]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    const [orders, orderItems, users, products] = await Promise.all([
+    const [rawOrders, rawOrderItems, users, products] = await Promise.all([
       prisma.order.findMany({
         select: { id: true, totalAmount: true, status: true, createdAt: true },
       }),
@@ -38,6 +38,11 @@ export async function GET(req: NextRequest) {
         select: { id: true, approved: true, farmerId: true },
       }),
     ]);
+
+    // Convert money fields from Prisma's Decimal to plain numbers once, at
+    // the source, so every aggregation below can use ordinary arithmetic.
+    const orders = rawOrders.map((o) => ({ ...o, totalAmount: Number(o.totalAmount) }));
+    const orderItems = rawOrderItems.map((i) => ({ ...i, price: Number(i.price) }));
 
     // Summary
     const deliveredRevenue = orders

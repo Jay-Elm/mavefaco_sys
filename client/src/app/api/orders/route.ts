@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
       const totalAmount = items.reduce((sum, item) => {
         const product = products.find(p => p.id === item.productId)!
-        return sum + product.price * item.quantity
+        return sum + Number(product.price) * item.quantity
       }, 0)
 
       const created = await tx.order.create({
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
       return created
     })
 
-    return NextResponse.json(order, { status: 201 })
+    return NextResponse.json({ ...order, totalAmount: Number(order.totalAmount) }, { status: 201 })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Failed to place order'
     return NextResponse.json({ error: message }, { status: 400 })
