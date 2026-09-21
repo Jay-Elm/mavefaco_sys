@@ -14,7 +14,23 @@
       "PowerShell(cd \"C:\\\\Users\\\\Hi\\\\Documents\\\\CAPSTONE PROJECT\\\\proj\\\\client\"; powershell -ExecutionPolicy Bypass -Command \"npx next build 2>&1\" | Select-Object -Last 10)",
       "PowerShell(cd \"C:\\\\Users\\\\Hi\\\\Documents\\\\CAPSTONE PROJECT\\\\proj\\\\client\"; powershell -ExecutionPolicy Bypass -Command \"npx next build 2>&1\" | Select-Object -Last 12)",
       "Bash(git -C \"C:\\\\Users\\\\Hi\\\\Documents\\\\CAPSTONE PROJECT\\\\proj\" show HEAD:DEVELOPMENT_STATUS.md)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(node -e \"const icons = require\\('lucide-react'\\); const names = Object.keys\\(icons\\).filter\\(k => /link|share|globe|external|network|web/i.test\\(k\\)\\); console.log\\(names.join\\('\\\\n'\\)\\)\")",
+      "Bash(node -e \"const icons = require\\('lucide-react'\\); console.log\\(Object.keys\\(icons\\).filter\\(k => !k.startsWith\\('Lucide'\\) && !k.endsWith\\('Icon'\\)\\).join\\('\\\\n'\\)\\)\")",
+      "Bash(sed -n '15,25p' src/app/dashboard/layout.tsx)",
+      "Bash(sed -n '5,20p' src/app/dashboard/site/page.tsx)",
+      "Bash(sed -n '6,20p' src/app/dashboard/users/page.tsx)",
+      "Bash(sed -n '7,20p' src/app/farmer/crops/[id]/page.tsx)",
+      "Bash(sed -n '8,25p' src/components/Navbar.tsx)",
+      "Bash(grep -E \"\\\\.md$|\\\\.env\")",
+      "WebFetch(domain:mavefaco-sys.vercel.app)",
+      "Bash(xargs grep -l \"verified\\\\|verification\")",
+      "Bash(xargs grep -l \"/sellers/\\\\[\")",
+      "Bash(grep -r \"fetch\\('\\\\/api\\\\/\" --include=\"*.tsx\" --include=\"*.ts\")",
+      "Bash(grep -r \"fetch\\('\\\\/api\\\\/\" --include=\"*.tsx\")",
+      "Bash(xargs grep -l \"banner\\\\|announcement\\\\|faq\")",
+      "Bash(cat .node-version)",
+      "Bash(cat .nvmrc)"
     ]
   }
 }
