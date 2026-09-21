@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/purge-id-images",
+      "schedule": "0 3 * * *"
+    }
+  ]
+}

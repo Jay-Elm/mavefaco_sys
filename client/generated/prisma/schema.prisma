@@ -22,6 +22,12 @@ model User {
   // Farmer ID-document verification (admin-reviewed) — unrelated to
   // whether the account's email address has been confirmed.
   verified        Boolean   @default(false)
+  // When `verified` last flipped true. Drives the auto-purge retention
+  // clock for idImagePath (see /api/cron/purge-id-images) — cleared back
+  // to null on unverify so a re-review has to restart the clock. Not the
+  // same as "when the ID was submitted": a stale, never-reviewed
+  // submission is deliberately never auto-purged.
+  verifiedAt      DateTime?
   // Null until the address is confirmed via the emailed link. Existing
   // accounts are backfilled to non-null at migration time (see
   // 20260908120000_add_email_verification) so this gate only applies to

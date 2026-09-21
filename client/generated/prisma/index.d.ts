@@ -2512,6 +2512,7 @@ export namespace Prisma {
     suspended: boolean | null
     idImagePath: string | null
     verified: boolean | null
+    verifiedAt: Date | null
     emailVerifiedAt: Date | null
     tokenVersion: number | null
     totpSecret: string | null
@@ -2529,6 +2530,7 @@ export namespace Prisma {
     suspended: boolean | null
     idImagePath: string | null
     verified: boolean | null
+    verifiedAt: Date | null
     emailVerifiedAt: Date | null
     tokenVersion: number | null
     totpSecret: string | null
@@ -2546,6 +2548,7 @@ export namespace Prisma {
     suspended: number
     idImagePath: number
     verified: number
+    verifiedAt: number
     emailVerifiedAt: number
     tokenVersion: number
     totpSecret: number
@@ -2575,6 +2578,7 @@ export namespace Prisma {
     suspended?: true
     idImagePath?: true
     verified?: true
+    verifiedAt?: true
     emailVerifiedAt?: true
     tokenVersion?: true
     totpSecret?: true
@@ -2592,6 +2596,7 @@ export namespace Prisma {
     suspended?: true
     idImagePath?: true
     verified?: true
+    verifiedAt?: true
     emailVerifiedAt?: true
     tokenVersion?: true
     totpSecret?: true
@@ -2609,6 +2614,7 @@ export namespace Prisma {
     suspended?: true
     idImagePath?: true
     verified?: true
+    verifiedAt?: true
     emailVerifiedAt?: true
     tokenVersion?: true
     totpSecret?: true
@@ -2713,6 +2719,7 @@ export namespace Prisma {
     suspended: boolean
     idImagePath: string | null
     verified: boolean
+    verifiedAt: Date | null
     emailVerifiedAt: Date | null
     tokenVersion: number
     totpSecret: string | null
@@ -2749,6 +2756,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: boolean
     verified?: boolean
+    verifiedAt?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
     totpSecret?: boolean
@@ -2777,6 +2785,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: boolean
     verified?: boolean
+    verifiedAt?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
     totpSecret?: boolean
@@ -2794,6 +2803,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: boolean
     verified?: boolean
+    verifiedAt?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
     totpSecret?: boolean
@@ -2811,6 +2821,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: boolean
     verified?: boolean
+    verifiedAt?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
     totpSecret?: boolean
@@ -2819,7 +2830,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "idImagePath" | "verified" | "emailVerifiedAt" | "tokenVersion" | "totpSecret" | "totpEnabled" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "idImagePath" | "verified" | "verifiedAt" | "emailVerifiedAt" | "tokenVersion" | "totpSecret" | "totpEnabled" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | User$productsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -2859,6 +2870,7 @@ export namespace Prisma {
       suspended: boolean
       idImagePath: string | null
       verified: boolean
+      verifiedAt: Date | null
       emailVerifiedAt: Date | null
       tokenVersion: number
       totpSecret: string | null
@@ -3306,6 +3318,7 @@ export namespace Prisma {
     readonly suspended: FieldRef<"User", 'Boolean'>
     readonly idImagePath: FieldRef<"User", 'String'>
     readonly verified: FieldRef<"User", 'Boolean'>
+    readonly verifiedAt: FieldRef<"User", 'DateTime'>
     readonly emailVerifiedAt: FieldRef<"User", 'DateTime'>
     readonly tokenVersion: FieldRef<"User", 'Int'>
     readonly totpSecret: FieldRef<"User", 'String'>
@@ -20708,6 +20721,7 @@ export namespace Prisma {
     suspended: 'suspended',
     idImagePath: 'idImagePath',
     verified: 'verified',
+    verifiedAt: 'verifiedAt',
     emailVerifiedAt: 'emailVerifiedAt',
     tokenVersion: 'tokenVersion',
     totpSecret: 'totpSecret',
@@ -21023,6 +21037,7 @@ export namespace Prisma {
     suspended?: BoolFilter<"User"> | boolean
     idImagePath?: StringNullableFilter<"User"> | string | null
     verified?: BoolFilter<"User"> | boolean
+    verifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     tokenVersion?: IntFilter<"User"> | number
     totpSecret?: StringNullableFilter<"User"> | string | null
@@ -21050,6 +21065,7 @@ export namespace Prisma {
     suspended?: SortOrder
     idImagePath?: SortOrderInput | SortOrder
     verified?: SortOrder
+    verifiedAt?: SortOrderInput | SortOrder
     emailVerifiedAt?: SortOrderInput | SortOrder
     tokenVersion?: SortOrder
     totpSecret?: SortOrderInput | SortOrder
@@ -21080,6 +21096,7 @@ export namespace Prisma {
     suspended?: BoolFilter<"User"> | boolean
     idImagePath?: StringNullableFilter<"User"> | string | null
     verified?: BoolFilter<"User"> | boolean
+    verifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     tokenVersion?: IntFilter<"User"> | number
     totpSecret?: StringNullableFilter<"User"> | string | null
@@ -21107,6 +21124,7 @@ export namespace Prisma {
     suspended?: SortOrder
     idImagePath?: SortOrderInput | SortOrder
     verified?: SortOrder
+    verifiedAt?: SortOrderInput | SortOrder
     emailVerifiedAt?: SortOrderInput | SortOrder
     tokenVersion?: SortOrder
     totpSecret?: SortOrderInput | SortOrder
@@ -21132,6 +21150,7 @@ export namespace Prisma {
     suspended?: BoolWithAggregatesFilter<"User"> | boolean
     idImagePath?: StringNullableWithAggregatesFilter<"User"> | string | null
     verified?: BoolWithAggregatesFilter<"User"> | boolean
+    verifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     emailVerifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     tokenVersion?: IntWithAggregatesFilter<"User"> | number
     totpSecret?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -22107,6 +22126,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -22134,6 +22154,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -22160,6 +22181,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22187,6 +22209,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22214,6 +22237,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -22230,6 +22254,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22247,6 +22272,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23356,6 +23382,7 @@ export namespace Prisma {
     suspended?: SortOrder
     idImagePath?: SortOrder
     verified?: SortOrder
+    verifiedAt?: SortOrder
     emailVerifiedAt?: SortOrder
     tokenVersion?: SortOrder
     totpSecret?: SortOrder
@@ -23378,6 +23405,7 @@ export namespace Prisma {
     suspended?: SortOrder
     idImagePath?: SortOrder
     verified?: SortOrder
+    verifiedAt?: SortOrder
     emailVerifiedAt?: SortOrder
     tokenVersion?: SortOrder
     totpSecret?: SortOrder
@@ -23395,6 +23423,7 @@ export namespace Prisma {
     suspended?: SortOrder
     idImagePath?: SortOrder
     verified?: SortOrder
+    verifiedAt?: SortOrder
     emailVerifiedAt?: SortOrder
     tokenVersion?: SortOrder
     totpSecret?: SortOrder
@@ -25834,6 +25863,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -25860,6 +25890,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -25901,6 +25932,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25927,6 +25959,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25952,6 +25985,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -25978,6 +26012,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -26019,6 +26054,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26045,6 +26081,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26070,6 +26107,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -26096,6 +26134,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -26137,6 +26176,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26163,6 +26203,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26255,6 +26296,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -26281,6 +26323,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -26409,6 +26452,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26435,6 +26479,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26650,6 +26695,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -26676,6 +26722,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -26740,6 +26787,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26766,6 +26814,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26959,6 +27008,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -26985,6 +27035,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -27026,6 +27077,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27052,6 +27104,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27077,6 +27130,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -27103,6 +27157,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -27190,6 +27245,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27216,6 +27272,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27293,6 +27350,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -27319,6 +27377,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -27349,6 +27408,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -27375,6 +27435,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -27416,6 +27477,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27442,6 +27504,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27478,6 +27541,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27504,6 +27568,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27529,6 +27594,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -27555,6 +27621,7 @@ export namespace Prisma {
     suspended?: boolean
     idImagePath?: string | null
     verified?: boolean
+    verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     totpSecret?: string | null
@@ -27596,6 +27663,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27622,6 +27690,7 @@ export namespace Prisma {
     suspended?: BoolFieldUpdateOperationsInput | boolean
     idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null

@@ -62,7 +62,7 @@ export async function PATCH(
       where: { id: target.id },
       data: {
         ...(typeof suspended === "boolean" && { suspended }),
-        ...(typeof verified === "boolean" && { verified }),
+        ...(typeof verified === "boolean" && { verified, verifiedAt: verified ? new Date() : null }),
         ...(hashed && { password: hashed, tokenVersion: { increment: 1 } }),
         // Forces a full re-enrollment (new QR code, new backup codes) at
         // next login rather than just disabling the check — an old secret
