@@ -70,7 +70,7 @@ export default async function ProductDetailPage({
               </span>
             </div>
 
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">{product.name}</h1>
+            <h1 className="font-serif text-2xl font-bold text-gray-900 mb-2">{product.name}</h1>
 
             <p className="text-gray-600 text-sm leading-relaxed mb-6">{product.description}</p>
 
@@ -124,12 +124,6 @@ export default async function ProductDetailPage({
                   farmerName: product.farmer.name,
                 }}
               />
-              <Link
-                href="/products"
-                className="block w-full text-center border border-gray-300 text-gray-600 hover:border-green-500 hover:text-green-700 font-medium py-3 rounded-xl text-sm transition-colors"
-              >
-                Continue Shopping
-              </Link>
             </div>
           </div>
         </div>

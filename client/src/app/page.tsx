@@ -125,8 +125,7 @@ export default async function HomePage() {
 
         {/* Left: text panel */}
         <div
-          className="flex flex-col justify-center px-8 sm:px-14 lg:px-16 py-16 lg:py-0 lg:w-[56%]"
-          style={{ backgroundColor: "#1B3A2D" }}
+          className="flex flex-col justify-center px-8 sm:px-14 lg:px-16 py-16 lg:py-0 lg:w-[56%] bg-forest"
         >
           <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight hero-line-1">
             Buy fresh<br />
@@ -182,7 +181,7 @@ export default async function HomePage() {
 
       {/* ── BANNERS ───────────────────────────────────────── */}
       {banners.length > 0 && (
-        <section className="py-8 px-6 bg-[#F3F7F4]">
+        <section className="py-8 px-6 bg-tint">
           <div className="max-w-5xl mx-auto space-y-4">
             {banners.map((b) => (
               <div key={b.id} className={`rounded-xl overflow-hidden text-white ${BANNER_BG[b.color] ?? BANNER_BG.green}`}>
@@ -244,26 +243,26 @@ export default async function HomePage() {
             {[
               {
                 n: "1",
-                icon: <Users size={20} className="text-[#1B3A2D]" />,
+                icon: <Users size={20} className="text-forest" />,
                 title: "Farmers list products",
                 desc: "Verified Albay farmers post their harvest directly — what was picked this morning can be on sale by noon.",
               },
               {
                 n: "2",
-                icon: <ShoppingBag size={20} className="text-[#1B3A2D]" />,
+                icon: <ShoppingBag size={20} className="text-forest" />,
                 title: "Customers order directly",
                 desc: "Browse by category, read what the farmer wrote about their produce, and place an order in minutes.",
               },
               {
                 n: "3",
-                icon: <CheckCircle size={20} className="text-[#1B3A2D]" />,
+                icon: <CheckCircle size={20} className="text-forest" />,
                 title: "Fresh, fair, and local",
                 desc: "Shorter supply chains mean better prices for both sides — and you always know exactly where your food came from.",
               },
             ].map((step) => (
               <div key={step.n} className="relative flex flex-col items-start sm:items-center sm:text-center">
-                <div className="w-12 h-12 rounded-full border-2 border-[#1B3A2D] bg-white flex items-center justify-center mb-5 relative z-10">
-                  <span className="font-serif text-lg font-bold text-[#1B3A2D]">{step.n}</span>
+                <div className="w-12 h-12 rounded-full border-2 border-forest bg-white flex items-center justify-center mb-5 relative z-10">
+                  <span className="font-serif text-lg font-bold text-forest">{step.n}</span>
                 </div>
                 <h3 className="font-serif font-semibold text-gray-900 text-lg mb-2">{step.title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed max-w-[240px]">{step.desc}</p>
@@ -275,7 +274,7 @@ export default async function HomePage() {
 
       {/* ── CATEGORIES ────────────────────────────────────── */}
       {categories.length > 0 && (
-        <section className="py-16 px-6 bg-[#F3F7F4]">
+        <section className="py-16 px-6 bg-tint">
           <div className="max-w-5xl mx-auto">
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-gray-900 mb-8">
               Shop by category
@@ -305,19 +304,19 @@ export default async function HomePage() {
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-gray-900">
               Latest products
             </h2>
-            <Link href="/products" className="hidden sm:inline-flex items-center gap-1.5 text-[#1B3A2D] hover:underline text-sm font-medium">
+            <Link href="/products" className="hidden sm:inline-flex items-center gap-1.5 text-forest hover:underline text-sm font-medium">
               View all <ArrowRight size={15} />
             </Link>
           </div>
 
           {featuredProducts.length === 0 ? (
-            <div className="text-center py-20 bg-[#F3F7F4] rounded-2xl border border-dashed border-green-200">
+            <div className="text-center py-20 bg-tint rounded-2xl border border-dashed border-green-200">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Package size={28} className="text-green-400" />
               </div>
               <p className="text-gray-600 font-medium mb-1">No products yet</p>
               <p className="text-gray-400 text-sm mb-6">Be the first farmer to list fresh produce.</p>
-              <Link href="/register" className="inline-flex items-center gap-2 bg-[#1B3A2D] hover:bg-[#2E6649] text-white font-medium px-5 py-2.5 rounded-lg transition-colors text-sm">
+              <Link href="/register" className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid text-white font-medium px-5 py-2.5 rounded-lg transition-colors text-sm">
                 Register as a farmer <ArrowRight size={15} />
               </Link>
             </div>
@@ -329,7 +328,7 @@ export default async function HomePage() {
                 ))}
               </div>
               <div className="sm:hidden text-center mt-8">
-                <Link href="/products" className="inline-flex items-center gap-2 text-[#1B3A2D] font-medium hover:underline text-sm">
+                <Link href="/products" className="inline-flex items-center gap-2 text-forest font-medium hover:underline text-sm">
                   View all products <ArrowRight size={15} />
                 </Link>
               </div>
@@ -339,7 +338,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── TESTIMONIALS — asymmetric layout ──────────────── */}
-      <section className="py-20 px-6 bg-[#F3F7F4]">
+      <section className="py-20 px-6 bg-tint">
         <div className="max-w-5xl mx-auto">
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-gray-900 mb-10">
             What farmers and customers say
@@ -359,7 +358,7 @@ export default async function HomePage() {
                 </p>
               </div>
               <div className="flex items-center gap-3 mt-8 pt-6 border-t border-gray-100">
-                <div className="w-10 h-10 rounded-full bg-[#1B3A2D] text-white flex items-center justify-center text-sm font-bold shrink-0">
+                <div className="w-10 h-10 rounded-full bg-forest text-white flex items-center justify-center text-sm font-bold shrink-0">
                   {TESTIMONIALS[0].initials}
                 </div>
                 <div>
@@ -382,7 +381,7 @@ export default async function HomePage() {
                     &ldquo;{t.quote}&rdquo;
                   </p>
                   <div className="flex items-center gap-2.5 mt-5">
-                    <div className="w-8 h-8 rounded-full bg-[#2E6649] text-white flex items-center justify-center text-xs font-bold shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-forest-mid text-white flex items-center justify-center text-xs font-bold shrink-0">
                       {t.initials}
                     </div>
                     <div>

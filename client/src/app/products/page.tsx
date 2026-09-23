@@ -42,7 +42,7 @@ export default async function ProductsPage({
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Products</h1>
+        <h1 className="font-serif text-3xl font-bold text-gray-900">Products</h1>
         <p className="text-gray-500 mt-1">Browse fresh products from local farmers</p>
       </div>
 

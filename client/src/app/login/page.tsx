@@ -83,15 +83,15 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-12">
+    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-12 bg-tint">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-3">
             <div className="bg-green-100 p-3 rounded-full">
-              <Leaf size={28} className="text-green-700" />
+              <Leaf size={28} className="text-forest" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
+          <h1 className="font-serif text-2xl font-bold text-gray-900">Welcome back</h1>
           <p className="text-gray-500 text-sm mt-1">Sign in to your CoopMarket account</p>
         </div>
 
@@ -143,7 +143,7 @@ export default function LoginPage() {
               <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                 Password
               </label>
-              <Link href="/forgot-password" className="text-xs text-green-700 hover:underline">
+              <Link href="/forgot-password" className="text-xs text-forest hover:underline">
                 Forgot password?
               </Link>
             </div>
@@ -163,7 +163,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+            className="w-full flex items-center justify-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
           >
             <LogIn size={16} />
             {isSubmitting ? 'Signing in…' : 'Sign In'}
@@ -174,7 +174,7 @@ export default function LoginPage() {
         {!mfaMode && (
           <p className="text-center text-sm text-gray-500 mt-4">
             Don&apos;t have an account?{' '}
-            <Link href="/register" className="text-green-700 font-medium hover:underline">
+            <Link href="/register" className="text-forest font-medium hover:underline">
               Register
             </Link>
           </p>

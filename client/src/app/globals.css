@@ -11,6 +11,16 @@
   --font-sans: var(--font-plus-jakarta);
   --font-mono: var(--font-geist-mono);
   --font-serif: var(--font-fraunces);
+
+  /* Brand tokens — the identity already used on the homepage/navbar,
+     formalized so the rest of the app can share it instead of
+     re-typing the hex values or falling back to generic Tailwind
+     greens. Semantic/status colors (stock badges, errors, price)
+     intentionally stay on the default Tailwind palette. */
+  --color-forest: #1B3A2D;
+  --color-forest-mid: #2E6649;
+  --color-tint: #F3F7F4;
+  --color-harvest: #F97316;
 }
 
 body {

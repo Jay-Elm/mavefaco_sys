@@ -57,15 +57,15 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-12">
+    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-12 bg-tint">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-3">
             <div className="bg-green-100 p-3 rounded-full">
-              <Leaf size={28} className="text-green-700" />
+              <Leaf size={28} className="text-forest" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Create an account</h1>
+          <h1 className="font-serif text-2xl font-bold text-gray-900">Create an account</h1>
           <p className="text-gray-500 text-sm mt-1">Join the CoopMarket community</p>
         </div>
 
@@ -75,7 +75,7 @@ export default function RegisterPage() {
             <p className="text-sm text-gray-700">
               Account created! Check your email for a verification link — you&apos;ll need to click it before you can sign in.
             </p>
-            <Link href="/login" className="inline-flex items-center gap-1 text-sm text-green-700 font-medium hover:underline">
+            <Link href="/login" className="inline-flex items-center gap-1 text-sm text-forest font-medium hover:underline">
               <CheckCircle size={14} /> Go to sign in
             </Link>
           </div>
@@ -96,7 +96,7 @@ export default function RegisterPage() {
                 onClick={() => setValue('role', 'customer')}
                 className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-lg border-2 text-sm font-medium transition-colors ${
                   selectedRole === 'customer'
-                    ? 'border-green-600 bg-green-50 text-green-800'
+                    ? 'border-forest bg-tint text-forest'
                     : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
                 }`}
               >
@@ -108,7 +108,7 @@ export default function RegisterPage() {
                 onClick={() => setValue('role', 'farmer')}
                 className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-lg border-2 text-sm font-medium transition-colors ${
                   selectedRole === 'farmer'
-                    ? 'border-green-600 bg-green-50 text-green-800'
+                    ? 'border-forest bg-tint text-forest'
                     : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
                 }`}
               >
@@ -177,7 +177,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+            className="w-full flex items-center justify-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
           >
             <UserPlus size={16} />
             {isSubmitting ? 'Creating account…' : 'Create Account'}
@@ -187,7 +187,7 @@ export default function RegisterPage() {
 
         <p className="text-center text-sm text-gray-500 mt-4">
           Already have an account?{' '}
-          <Link href="/login" className="text-green-700 font-medium hover:underline">
+          <Link href="/login" className="text-forest font-medium hover:underline">
             Sign in
           </Link>
         </p>

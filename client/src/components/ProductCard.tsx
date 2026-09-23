@@ -16,28 +16,54 @@ export interface Product {
 
 export type ProductCardSize = 'small' | 'medium' | 'large'
 
-// 'large' matches the card's original styling exactly, so every call site
-// that doesn't pass `size` (homepage, sellers page, etc.) renders unchanged.
+const NAME_TEXT: Record<ProductCardSize, string> = {
+  small: 'text-xs',
+  medium: 'text-xs sm:text-sm',
+  large: 'text-sm sm:text-base',
+}
+
+const PRICE_TEXT: Record<ProductCardSize, string> = {
+  small: 'text-sm',
+  medium: 'text-sm sm:text-base',
+  large: 'text-base sm:text-xl',
+}
+
+const OVERLAY_PAD: Record<ProductCardSize, string> = {
+  small: 'p-2',
+  medium: 'p-2 sm:p-3',
+  large: 'p-2.5 sm:p-4',
+}
+
+const FOOTER_PAD: Record<ProductCardSize, string> = {
+  small: '',
+  medium: 'px-2 py-1.5 sm:px-3 sm:py-2',
+  large: 'px-2.5 py-2 sm:px-4 sm:py-2.5',
+}
+
+// 'large' is the default so call sites that don't pass `size` (homepage,
+// sellers page, etc.) render at full size.
 export default function ProductCard({ product, size = 'large' }: { product: Product; size?: ProductCardSize }) {
-  const showDescription = size !== 'small'
   const showSeller = size !== 'small'
+  const hasImage = !!product.imageUrl
 
   return (
-    <div className="group bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+    <div className="group bg-tint rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
       <Link href={`/products/${product.id}`} className="block">
 
-        {/* Image */}
-        <div className="aspect-[4/3] relative overflow-hidden">
-          {product.imageUrl ? (
+        {/* Photo — fills the card; name + price sit directly on it, market-stall-label style. */}
+        <div className="aspect-[4/5] relative overflow-hidden bg-gradient-to-br from-green-50 to-emerald-100">
+          {hasImage && (
             <Image
-              src={product.imageUrl}
+              src={product.imageUrl as string}
               alt={product.name}
               fill
               unoptimized
               className="object-cover group-hover:scale-105 transition-transform duration-500"
             />
-          ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 text-green-300 gap-2">
+          )}
+
+          {!hasImage && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-green-300 gap-2">
               <Leaf size={size === 'small' ? 24 : 40} strokeWidth={1.5} />
               {size !== 'small' && <span className="text-xs text-green-400 font-medium">No photo yet</span>}
             </div>
@@ -62,52 +88,44 @@ export default function ProductCard({ product, size = 'large' }: { product: Prod
               Low Stock
             </span>
           )}
-        </div>
 
-        {/* Info */}
-        <div className={size === 'small' ? 'p-2' : size === 'medium' ? 'p-2 pb-1.5 sm:p-3 sm:pb-2' : 'p-2.5 pb-2 sm:p-4 sm:pb-3'}>
-          <h3 className={`font-semibold text-gray-900 group-hover:text-green-700 transition-colors line-clamp-1 ${
-            size === 'small' ? 'text-xs' : size === 'medium' ? 'text-xs sm:text-sm' : 'text-sm sm:text-base'
-          }`}>
-            {product.name}
-          </h3>
-          {showDescription && (
-            <p className={`text-gray-400 mt-1 leading-relaxed ${
-              size === 'medium' ? 'text-xs line-clamp-1' : 'text-xs sm:text-sm line-clamp-1 sm:line-clamp-2'
-            }`}>
-              {product.description}
-            </p>
+          {/* Name + price — overlaid on a scrim when there's a real photo behind
+              them; dark text with no scrim over the plain placeholder tint,
+              since white text there wouldn't have enough contrast. */}
+          {hasImage && (
+            <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/75 via-black/25 to-transparent pointer-events-none" />
           )}
-          <div className={`flex flex-col items-start gap-1 sm:flex-row sm:items-center sm:justify-between ${
-            size === 'small' ? 'mt-1.5' : size === 'medium' ? 'mt-1.5 sm:mt-2' : 'mt-2 sm:mt-4'
-          }`}>
-            <div>
-              <span className={`font-bold text-green-700 ${
-                size === 'small' ? 'text-sm' : size === 'medium' ? 'text-sm sm:text-base' : 'text-base sm:text-xl'
-              }`}>
+          <div className={`absolute inset-x-0 bottom-0 ${OVERLAY_PAD[size]}`}>
+            <h3 className={`font-semibold line-clamp-1 ${NAME_TEXT[size]} ${hasImage ? 'text-white' : 'text-gray-900'}`}>
+              {product.name}
+            </h3>
+            <div className="flex items-baseline gap-1 mt-0.5">
+              <span className={`font-bold ${PRICE_TEXT[size]} ${hasImage ? 'text-white' : 'text-forest'}`}>
                 ₱{product.price.toFixed(2)}
               </span>
-              {size !== 'small' && <span className="text-xs text-gray-400 ml-1">/ {product.unit}</span>}
+              {size !== 'small' && (
+                <span className={hasImage ? 'text-white/70 text-xs' : 'text-gray-500 text-xs'}>
+                  / {product.unit}
+                </span>
+              )}
             </div>
-            {size === 'large' && (
-              <span className="text-[10px] sm:text-xs text-gray-400 bg-gray-50 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-lg">
-                {parseFloat(product.stock.toFixed(2))} {product.unit} left
-              </span>
-            )}
           </div>
         </div>
       </Link>
 
       {showSeller && (
-        <div className={size === 'medium' ? 'px-2 pb-2 sm:px-3 sm:pb-3' : 'px-2.5 pb-2.5 sm:px-4 sm:pb-4'}>
-          <div className={size === 'medium' ? 'pt-1.5 sm:pt-2 border-t border-gray-50' : 'pt-2 sm:pt-3 border-t border-gray-50'}>
-            <Link
-              href={`/sellers/${product.farmer.id}`}
-              className="text-[10px] sm:text-xs text-green-600 hover:text-green-800 font-medium hover:underline transition-colors"
-            >
-              by {product.farmer.name}
-            </Link>
-          </div>
+        <div className={`bg-tint flex items-center justify-between gap-2 border-t border-white/60 ${FOOTER_PAD[size]}`}>
+          <Link
+            href={`/sellers/${product.farmer.id}`}
+            className="text-[10px] sm:text-xs text-forest-mid hover:text-forest font-medium hover:underline transition-colors truncate"
+          >
+            by {product.farmer.name}
+          </Link>
+          {size === 'large' && (
+            <span className="shrink-0 text-[10px] sm:text-xs text-gray-500">
+              {parseFloat(product.stock.toFixed(2))} {product.unit} left
+            </span>
+          )}
         </div>
       )}
     </div>

@@ -113,7 +113,7 @@ export default function MfaGate({ mode, onComplete }: Props) {
         <button
           type="button"
           onClick={() => onComplete(pendingUser)}
-          className="w-full bg-green-700 hover:bg-green-800 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+          className="w-full bg-forest hover:bg-forest-mid text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
         >
           I&apos;ve saved these — continue
         </button>
@@ -174,7 +174,7 @@ export default function MfaGate({ mode, onComplete }: Props) {
         <button
           type="submit"
           disabled={submitting || !code.trim()}
-          className="w-full flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+          className="w-full flex items-center justify-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
         >
           {submitting ? <Loader2 size={16} className="animate-spin" /> : <ShieldCheck size={16} />}
           {submitting ? 'Verifying…' : 'Verify'}

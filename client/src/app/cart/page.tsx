@@ -89,7 +89,7 @@ export default function CartPage() {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center">
         <ShoppingCart size={56} className="text-gray-300 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Log in to see your cart</h1>
+        <h1 className="font-serif text-2xl font-bold text-gray-800 mb-2">Log in to see your cart</h1>
         <p className="text-gray-500 mb-6">Your cart is tied to your account, so you&apos;ll need to sign in to add items and check out.</p>
         <div className="flex items-center justify-center gap-3 flex-wrap">
           <Link
@@ -122,7 +122,7 @@ export default function CartPage() {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center">
         <ShoppingCart size={56} className="text-gray-300 mx-auto mb-4" />
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Your cart is empty</h1>
+        <h1 className="font-serif text-2xl font-bold text-gray-800 mb-2">Your cart is empty</h1>
         <p className="text-gray-500 mb-6">Browse our products and add something you like.</p>
         <Link
           href="/products"
@@ -138,7 +138,7 @@ export default function CartPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+        <h1 className="font-serif text-2xl font-bold text-gray-900 flex items-center gap-2">
           <ShoppingCart size={24} />
           Your Cart
         </h1>
@@ -231,7 +231,7 @@ export default function CartPage() {
         {/* Order summary */}
         <div className="lg:col-span-1">
           <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-sm sticky top-6 space-y-5">
-            <h2 className="text-lg font-bold text-gray-900">Order Summary</h2>
+            <h2 className="font-serif text-lg font-bold text-gray-900">Order Summary</h2>
 
             <div className="space-y-2 text-sm text-gray-600">
               {items.map(item => (

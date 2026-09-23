@@ -62,7 +62,7 @@ export default async function SellerPage({
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-2xl font-bold text-gray-900">{farmer.name}</h1>
+              <h1 className="font-serif text-2xl font-bold text-gray-900">{farmer.name}</h1>
               {farmer.verified ? (
                 <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2.5 py-0.5 rounded-full">
                   <ShieldCheck size={11} /> Verified Farmer

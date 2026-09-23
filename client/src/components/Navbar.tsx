@@ -65,7 +65,7 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`sticky top-0 z-50 h-16 flex items-center bg-[#1B3A2D] text-white transition-[transform,box-shadow] duration-300 ${
+        className={`sticky top-0 z-50 h-16 flex items-center bg-forest text-white transition-[transform,box-shadow] duration-300 ${
           scrolled ? 'shadow-lg shadow-black/20' : ''
         } ${navHidden ? '-translate-y-full' : 'translate-y-0'}`}
       >
@@ -152,7 +152,7 @@ export default function Navbar() {
 
       {/* Mobile menu overlay */}
       {mobileOpen && (
-        <div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 bg-[#1B3A2D] z-40 overflow-y-auto">
+        <div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 bg-forest z-40 overflow-y-auto">
           <div className="px-4 py-4 space-y-1">
             <Link href="/products" className={mobileLinkCls}><ShoppingBag size={18} />Products</Link>
             <Link href="/about" className={mobileLinkCls}><Info size={18} />About</Link>

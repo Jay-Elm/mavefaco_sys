@@ -33,12 +33,12 @@ export default async function AboutPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-green-700 to-green-900 text-white py-16 px-4">
+      <section className="bg-forest text-white py-16 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <div className="flex justify-center mb-4">
             <Leaf size={44} className="text-green-300" />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3">{name}</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl font-bold mb-3">{name}</h1>
           <p className="text-green-200 text-lg max-w-xl mx-auto">{about}</p>
         </div>
       </section>
@@ -69,7 +69,7 @@ export default async function AboutPage() {
         {/* FAQs */}
         {faqs.length > 0 && (
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
+            <h2 className="font-serif text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
               <HelpCircle size={20} className="text-green-600" />
               Frequently Asked Questions
             </h2>
@@ -95,7 +95,7 @@ export default async function AboutPage() {
         {/* Contact */}
         {(email || phone || address || fbUrl) && (
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-5">Contact Us</h2>
+            <h2 className="font-serif text-xl font-bold text-gray-900 mb-5">Contact Us</h2>
             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
               {email && (
                 <div className="flex items-center gap-3 text-sm text-gray-700">

@@ -124,7 +124,7 @@ export default function AddToCartButton({ product }: Props) {
         </button>
         <button
           onClick={handleMessageFarmer}
-          className="w-full flex items-center justify-center gap-2 border border-gray-200 text-gray-600 hover:border-green-500 hover:text-green-700 font-medium py-3 rounded-xl text-sm transition-colors"
+          className="w-full flex items-center justify-center gap-2 text-gray-600 hover:text-forest font-medium py-2 text-sm transition-colors"
         >
           <MessageCircle size={16} />
           Message Farmer
@@ -141,8 +141,8 @@ export default function AddToCartButton({ product }: Props) {
             onClick={() => openModal('cart')}
             className={`flex-1 font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors ${
               cartFlash
-                ? 'bg-green-100 text-green-700 border border-green-300'
-                : 'bg-green-700 hover:bg-green-800 text-white'
+                ? 'bg-tint text-forest border border-forest-mid'
+                : 'bg-forest hover:bg-forest-mid text-white'
             }`}
           >
             <ShoppingCart size={16} />
@@ -150,7 +150,7 @@ export default function AddToCartButton({ product }: Props) {
           </button>
           <button
             onClick={() => openModal('buy')}
-            className="flex-1 font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors bg-orange-500 hover:bg-orange-600 text-white"
+            className="flex-1 font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors border-2 border-harvest text-harvest hover:bg-harvest hover:text-white"
           >
             <Zap size={16} />
             Buy Now
@@ -159,7 +159,7 @@ export default function AddToCartButton({ product }: Props) {
 
         <button
           onClick={handleMessageFarmer}
-          className="w-full flex items-center justify-center gap-2 border border-gray-200 text-gray-600 hover:border-green-500 hover:text-green-700 font-medium py-3 rounded-xl text-sm transition-colors"
+          className="w-full flex items-center justify-center gap-2 text-gray-600 hover:text-forest font-medium py-2 text-sm transition-colors"
         >
           <MessageCircle size={16} />
           Message Farmer
@@ -251,14 +251,14 @@ export default function AddToCartButton({ product }: Props) {
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleConfirm('cart')}
-                    className="flex-1 flex items-center justify-center gap-1.5 bg-green-700 hover:bg-green-800 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+                    className="flex-1 flex items-center justify-center gap-1.5 bg-forest hover:bg-forest-mid text-white font-semibold py-3 rounded-xl text-sm transition-colors"
                   >
                     <ShoppingCart size={15} />
                     Add to Cart
                   </button>
                   <button
                     onClick={() => handleConfirm('buy')}
-                    className="flex-1 flex items-center justify-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+                    className="flex-1 flex items-center justify-center gap-1.5 border-2 border-harvest text-harvest hover:bg-harvest hover:text-white font-semibold py-3 rounded-xl text-sm transition-colors"
                   >
                     <Zap size={15} />
                     Buy Now

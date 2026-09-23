@@ -90,7 +90,7 @@ export default function ProductFilters({ categories }: Props) {
         </div>
         <button
           type="submit"
-          className="px-4 py-2.5 bg-green-700 text-white text-sm font-medium rounded-xl hover:bg-green-800 transition-colors"
+          className="px-4 py-2.5 bg-forest text-white text-sm font-medium rounded-xl hover:bg-forest-mid transition-colors"
         >
           Search
         </button>
@@ -98,14 +98,14 @@ export default function ProductFilters({ categories }: Props) {
 
       {/* Category + price row */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-nowrap overflow-x-auto sm:flex-wrap sm:overflow-visible -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <SlidersHorizontal size={15} className="text-gray-400 shrink-0" />
           <button
             onClick={() => setCategory(null)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
               !activeCategoryId
-                ? 'bg-green-700 text-white'
-                : 'bg-white text-gray-600 border border-gray-300 hover:border-green-500 hover:text-green-700'
+                ? 'bg-forest text-white'
+                : 'bg-white text-gray-600 border border-gray-300 hover:border-forest hover:text-forest'
             }`}
           >
             All
@@ -114,10 +114,10 @@ export default function ProductFilters({ categories }: Props) {
             <button
               key={cat.id}
               onClick={() => setCategory(String(cat.id))}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 activeCategoryId === String(cat.id)
-                  ? 'bg-green-700 text-white'
-                  : 'bg-white text-gray-600 border border-gray-300 hover:border-green-500 hover:text-green-700'
+                  ? 'bg-forest text-white'
+                  : 'bg-white text-gray-600 border border-gray-300 hover:border-forest hover:text-forest'
               }`}
             >
               {cat.name}
