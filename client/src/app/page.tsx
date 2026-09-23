@@ -7,6 +7,12 @@ import HomeBottomCTAButtons from "@/components/HomeBottomCTAButtons";
 import { ShoppingBag, Leaf, ArrowRight, Info, AlertTriangle, Package, Users, CheckCircle, Star } from "lucide-react";
 import { isSafeUrl } from "@/lib/url";
 
+// No dynamic APIs on this page, so Next pre-renders it once at build time
+// and would otherwise serve that frozen HTML forever — newly approved
+// products, banners, and announcements would never show up here without a
+// full redeploy. Revalidate periodically instead.
+export const revalidate = 60;
+
 async function getFeaturedProducts() {
   const products = await prisma.product.findMany({
     take: 6,

@@ -2,6 +2,13 @@ import { prisma } from "@/lib/prisma";
 import { Leaf, Mail, Phone, MapPin, Globe, HelpCircle, Target, Eye } from "lucide-react";
 import { isSafeUrl } from "@/lib/url";
 
+// This page has no dynamic APIs (no cookies/params/searchParams), so Next
+// pre-renders it once at build time and would otherwise serve that frozen
+// HTML forever — cooperative info and FAQs edited in the admin CMS would
+// never show up here without a full redeploy. Revalidate periodically
+// instead.
+export const revalidate = 60;
+
 async function getSiteData() {
   const [rows, faqs] = await Promise.all([
     prisma.siteContent.findMany(),
