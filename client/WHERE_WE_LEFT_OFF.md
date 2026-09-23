@@ -17,7 +17,6 @@ Everything above is merged to `master` and deployed to production. Nothing is mi
 ## What's realistically left (not required for submission, but real gaps)
 
 - **No test coverage for API routes or anything touching Prisma/the DB** — the new Vitest suite deliberately only covers pure logic (validators, JWT/role/URL helpers) to avoid the bigger decision of a test-DB strategy or mocking `@prisma/client`. Natural next step if more testing is wanted.
-- **Dead legacy route** `src/app/api/admin/route.ts` — predates the cookie-based auth model (reads a bearer `Authorization` header instead of the session cookie), unreferenced anywhere in the app. Safe to delete, just never has been.
 - **~30 simpler CRUD routes** (announcements, FAQs, categories, crop logs, reviews, messages, products) still validate inline rather than through `src/validators/` — deliberate scope cut, revisit only if their validation logic grows.
 - Everything in `DEVELOPMENT_STATUS.md`'s "Not Yet Built / Out of Scope" list — real-time chat, push notifications, AI pest advisory, market price API, language toggle, print receipts, DB backup/restore — none required for capstone scope.
 
@@ -109,7 +108,6 @@ src/app/
     admin/faqs/route.ts                 ← GET + POST
     admin/faqs/[id]/route.ts            ← DELETE
     admin/banners/route.ts              ← GET (all, for admin)
-    admin/route.ts                      ← dead/legacy, unreferenced — see Known Technical Debt
     banners/route.ts                    ← GET (active only, public)
     banners/[id]/route.ts               ← PUT + DELETE
     site-content/route.ts               ← GET (public: SiteContent + FAQs)

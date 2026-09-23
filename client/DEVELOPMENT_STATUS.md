@@ -215,8 +215,6 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | POST | `/api/upload` | authenticated | shared image-upload endpoint (magic-byte sniffed, rate-limited) |
 | GET | `/api/cron/purge-id-images` | `CRON_SECRET` header | daily Vercel Cron job; purges ID images 30 days post-verification |
 
-**Note:** `src/app/api/admin/route.ts` is legacy/unused — it predates the cookie-based auth model and reads a bearer `Authorization` header directly instead of going through `getActiveAuthUser`. Nothing in the app calls it. Worth deleting in a future cleanup pass rather than leaving as dead code that looks like a real guarded route.
-
 ---
 
 ## Key Implementation Details
@@ -264,7 +262,6 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 | Issue | Severity | Notes |
 |-------|----------|-------|
 | No test coverage for API routes or Prisma-backed logic | Medium | Vitest suite (see above) only covers pure validator/lib logic so far; nothing exercises an actual route handler or hits the DB |
-| Dead legacy route `src/app/api/admin/route.ts` | Low | Predates the cookie-based auth model, uses a bearer-token pattern nothing else in the app uses; unreferenced, safe to delete |
 | ~30 simpler CRUD routes on inline validation | Low | announcements, faqs, categories, crop logs, reviews, messages, products not migrated to `src/validators/` — no client/server duplication to drift, so not urgent |
 | No image upload for site banners/site-content | Low | Some fields still URL-only |
 | Messaging is polling, not WebSocket | Low | 8s interval; acceptable for capstone |
