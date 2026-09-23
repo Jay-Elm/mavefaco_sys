@@ -44,7 +44,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
 
     const secret = decryptTotpSecret(user.totpSecret);
-    let ok = verifyTotpCode(parsed.data.code, secret);
+    const matchedStep = verifyTotpCode(parsed.data.code, secret);
+    // Reject a code whose step has already been spent — otherwise a code
+    // captured in transit (or from a log) stays valid for anyone to
+    // replay for the rest of its ~30-90s window.
+    let ok =
+      matchedStep !== null && (user.totpLastStep === null || matchedStep > user.totpLastStep);
+    if (ok) {
+      await prisma.user.update({ where: { id: user.id }, data: { totpLastStep: matchedStep } });
+    }
 
     if (!ok) {
       const candidate = normalizeBackupCode(parsed.data.code);

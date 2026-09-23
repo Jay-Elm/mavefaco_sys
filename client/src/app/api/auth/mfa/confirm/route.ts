@@ -8,6 +8,7 @@ import { generateBackupCodes } from "@/lib/backupCodes";
 import { issueSessionResponse } from "@/lib/session";
 import { mfaConfirmSchema } from "@/validators/mfa";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
+import { sendEmail } from "@/lib/email";
 
 /**
  * POST /api/auth/mfa/confirm — completes first-time TOTP enrollment.
@@ -43,18 +44,36 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
 
     const secret = decryptTotpSecret(user.totpSecret);
-    if (!verifyTotpCode(parsed.data.code, secret))
+    const matchedStep = verifyTotpCode(parsed.data.code, secret);
+    // matchedStep is always fresh here in practice (totpLastStep was just
+    // reset by /setup), but the same "can't replay a step already spent"
+    // rule applies for consistency with /verify.
+    if (matchedStep === null || (user.totpLastStep !== null && matchedStep <= user.totpLastStep))
       return NextResponse.json({ error: "Invalid code. Please try again." }, { status: 401 });
 
     const backupCodes = await generateBackupCodes();
 
     await prisma.$transaction([
-      prisma.user.update({ where: { id: user.id }, data: { totpEnabled: true } }),
+      prisma.user.update({
+        where: { id: user.id },
+        data: { totpEnabled: true, totpLastStep: matchedStep },
+      }),
       prisma.totpBackupCode.deleteMany({ where: { userId: user.id } }),
       prisma.totpBackupCode.createMany({
         data: backupCodes.map(({ hash }) => ({ userId: user.id, codeHash: hash })),
       }),
     ]);
+
+    const notified = await sendEmail({
+      to: user.email,
+      subject: "Two-factor authentication enabled on your MaVeFaCo account",
+      html: `
+        <p>Hi ${user.name},</p>
+        <p>Two-factor authentication was just turned on for your MaVeFaCo account (${user.email}).</p>
+        <p>If this was you, no action is needed. If you didn't do this, your password may be compromised — contact another administrator immediately and change your password.</p>
+      `,
+    });
+    if (!notified) console.error(`Failed to send MFA-enabled notification to user ${user.id}`);
 
     const response = issueSessionResponse(user, {
       message: "Two-factor authentication enabled",

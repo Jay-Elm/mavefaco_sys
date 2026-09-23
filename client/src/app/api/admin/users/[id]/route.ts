@@ -6,6 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { adminUserPatchSchema } from "@/validators/adminUser";
 import { deleteUserAccount } from "@/lib/deleteAccount";
+import { sendEmail } from "@/lib/email";
 
 async function resolveTarget(id: string) {
   const userId = Number(id);
@@ -67,12 +68,29 @@ export async function PATCH(
         // Forces a full re-enrollment (new QR code, new backup codes) at
         // next login rather than just disabling the check — an old secret
         // sitting disabled-but-intact would be a silent way back in.
-        ...(resetMfa && { totpEnabled: false, totpSecret: null, tokenVersion: { increment: 1 } }),
+        ...(resetMfa && {
+          totpEnabled: false,
+          totpSecret: null,
+          totpLastStep: null,
+          tokenVersion: { increment: 1 },
+        }),
       },
       select: { id: true, name: true, email: true, role: true, suspended: true, verified: true, totpEnabled: true },
     });
 
-    if (resetMfa) await prisma.totpBackupCode.deleteMany({ where: { userId: target.id } });
+    if (resetMfa) {
+      await prisma.totpBackupCode.deleteMany({ where: { userId: target.id } });
+      const notified = await sendEmail({
+        to: target.email,
+        subject: "Two-factor authentication reset on your MaVeFaCo account",
+        html: `
+          <p>Hi ${target.name},</p>
+          <p>An administrator just reset two-factor authentication on your MaVeFaCo account (${target.email}). Your old authenticator and backup codes no longer work — you'll be asked to set up two-factor authentication again the next time you log in.</p>
+          <p>If you didn't expect this, contact another administrator immediately.</p>
+        `,
+      });
+      if (!notified) console.error(`Failed to send MFA-reset notification to user ${target.id}`);
+    }
 
     const action = resetMfa
       ? "RESET_MFA"

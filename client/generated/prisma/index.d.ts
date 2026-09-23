@@ -2496,11 +2496,13 @@ export namespace Prisma {
   export type UserAvgAggregateOutputType = {
     id: number | null
     tokenVersion: number | null
+    totpLastStep: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: number | null
     tokenVersion: number | null
+    totpLastStep: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -2517,6 +2519,7 @@ export namespace Prisma {
     tokenVersion: number | null
     totpSecret: string | null
     totpEnabled: boolean | null
+    totpLastStep: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2535,6 +2538,7 @@ export namespace Prisma {
     tokenVersion: number | null
     totpSecret: string | null
     totpEnabled: boolean | null
+    totpLastStep: number | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -2553,6 +2557,7 @@ export namespace Prisma {
     tokenVersion: number
     totpSecret: number
     totpEnabled: number
+    totpLastStep: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2562,11 +2567,13 @@ export namespace Prisma {
   export type UserAvgAggregateInputType = {
     id?: true
     tokenVersion?: true
+    totpLastStep?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
     tokenVersion?: true
+    totpLastStep?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -2583,6 +2590,7 @@ export namespace Prisma {
     tokenVersion?: true
     totpSecret?: true
     totpEnabled?: true
+    totpLastStep?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2601,6 +2609,7 @@ export namespace Prisma {
     tokenVersion?: true
     totpSecret?: true
     totpEnabled?: true
+    totpLastStep?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -2619,6 +2628,7 @@ export namespace Prisma {
     tokenVersion?: true
     totpSecret?: true
     totpEnabled?: true
+    totpLastStep?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2724,6 +2734,7 @@ export namespace Prisma {
     tokenVersion: number
     totpSecret: string | null
     totpEnabled: boolean
+    totpLastStep: number | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -2761,6 +2772,7 @@ export namespace Prisma {
     tokenVersion?: boolean
     totpSecret?: boolean
     totpEnabled?: boolean
+    totpLastStep?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     products?: boolean | User$productsArgs<ExtArgs>
@@ -2790,6 +2802,7 @@ export namespace Prisma {
     tokenVersion?: boolean
     totpSecret?: boolean
     totpEnabled?: boolean
+    totpLastStep?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2808,6 +2821,7 @@ export namespace Prisma {
     tokenVersion?: boolean
     totpSecret?: boolean
     totpEnabled?: boolean
+    totpLastStep?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -2826,11 +2840,12 @@ export namespace Prisma {
     tokenVersion?: boolean
     totpSecret?: boolean
     totpEnabled?: boolean
+    totpLastStep?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "idImagePath" | "verified" | "verifiedAt" | "emailVerifiedAt" | "tokenVersion" | "totpSecret" | "totpEnabled" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "idImagePath" | "verified" | "verifiedAt" | "emailVerifiedAt" | "tokenVersion" | "totpSecret" | "totpEnabled" | "totpLastStep" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | User$productsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -2875,6 +2890,7 @@ export namespace Prisma {
       tokenVersion: number
       totpSecret: string | null
       totpEnabled: boolean
+      totpLastStep: number | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -3323,6 +3339,7 @@ export namespace Prisma {
     readonly tokenVersion: FieldRef<"User", 'Int'>
     readonly totpSecret: FieldRef<"User", 'String'>
     readonly totpEnabled: FieldRef<"User", 'Boolean'>
+    readonly totpLastStep: FieldRef<"User", 'Int'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -20726,6 +20743,7 @@ export namespace Prisma {
     tokenVersion: 'tokenVersion',
     totpSecret: 'totpSecret',
     totpEnabled: 'totpEnabled',
+    totpLastStep: 'totpLastStep',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -21042,6 +21060,7 @@ export namespace Prisma {
     tokenVersion?: IntFilter<"User"> | number
     totpSecret?: StringNullableFilter<"User"> | string | null
     totpEnabled?: BoolFilter<"User"> | boolean
+    totpLastStep?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     products?: ProductListRelationFilter
@@ -21070,6 +21089,7 @@ export namespace Prisma {
     tokenVersion?: SortOrder
     totpSecret?: SortOrderInput | SortOrder
     totpEnabled?: SortOrder
+    totpLastStep?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     products?: ProductOrderByRelationAggregateInput
@@ -21101,6 +21121,7 @@ export namespace Prisma {
     tokenVersion?: IntFilter<"User"> | number
     totpSecret?: StringNullableFilter<"User"> | string | null
     totpEnabled?: BoolFilter<"User"> | boolean
+    totpLastStep?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     products?: ProductListRelationFilter
@@ -21129,6 +21150,7 @@ export namespace Prisma {
     tokenVersion?: SortOrder
     totpSecret?: SortOrderInput | SortOrder
     totpEnabled?: SortOrder
+    totpLastStep?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -21155,6 +21177,7 @@ export namespace Prisma {
     tokenVersion?: IntWithAggregatesFilter<"User"> | number
     totpSecret?: StringNullableWithAggregatesFilter<"User"> | string | null
     totpEnabled?: BoolWithAggregatesFilter<"User"> | boolean
+    totpLastStep?: IntNullableWithAggregatesFilter<"User"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -22131,6 +22154,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -22159,6 +22183,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -22186,6 +22211,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -22214,6 +22240,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -22242,6 +22269,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22259,6 +22287,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22277,6 +22306,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23267,6 +23297,17 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -23387,6 +23428,7 @@ export namespace Prisma {
     tokenVersion?: SortOrder
     totpSecret?: SortOrder
     totpEnabled?: SortOrder
+    totpLastStep?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23394,6 +23436,7 @@ export namespace Prisma {
   export type UserAvgOrderByAggregateInput = {
     id?: SortOrder
     tokenVersion?: SortOrder
+    totpLastStep?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -23410,6 +23453,7 @@ export namespace Prisma {
     tokenVersion?: SortOrder
     totpSecret?: SortOrder
     totpEnabled?: SortOrder
+    totpLastStep?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23428,6 +23472,7 @@ export namespace Prisma {
     tokenVersion?: SortOrder
     totpSecret?: SortOrder
     totpEnabled?: SortOrder
+    totpLastStep?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23435,6 +23480,7 @@ export namespace Prisma {
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
     tokenVersion?: SortOrder
+    totpLastStep?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -23509,6 +23555,22 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -24362,6 +24424,14 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -25137,6 +25207,17 @@ export namespace Prisma {
     not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -25217,17 +25298,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -25240,6 +25310,33 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -25868,6 +25965,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -25895,6 +25993,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -25937,6 +26036,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -25964,6 +26064,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -25990,6 +26091,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -26017,6 +26119,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -26059,6 +26162,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -26086,6 +26190,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -26112,6 +26217,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -26139,6 +26245,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -26181,6 +26288,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -26208,6 +26316,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -26301,6 +26410,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
@@ -26328,6 +26438,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -26457,6 +26568,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
@@ -26484,6 +26596,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -26700,6 +26813,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -26727,6 +26841,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -26792,6 +26907,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -26819,6 +26935,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -27013,6 +27130,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -27040,6 +27158,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -27082,6 +27201,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -27109,6 +27229,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -27135,6 +27256,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -27162,6 +27284,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -27250,6 +27373,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -27277,6 +27401,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -27355,6 +27480,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -27382,6 +27508,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -27413,6 +27540,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -27440,6 +27568,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -27482,6 +27611,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -27509,6 +27639,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -27546,6 +27677,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -27573,6 +27705,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -27599,6 +27732,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -27626,6 +27760,7 @@ export namespace Prisma {
     tokenVersion?: number
     totpSecret?: string | null
     totpEnabled?: boolean
+    totpLastStep?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -27668,6 +27803,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -27695,6 +27831,7 @@ export namespace Prisma {
     tokenVersion?: IntFieldUpdateOperationsInput | number
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput

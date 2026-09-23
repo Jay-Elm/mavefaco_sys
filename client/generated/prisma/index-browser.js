@@ -134,6 +134,7 @@ exports.Prisma.UserScalarFieldEnum = {
   tokenVersion: 'tokenVersion',
   totpSecret: 'totpSecret',
   totpEnabled: 'totpEnabled',
+  totpLastStep: 'totpLastStep',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

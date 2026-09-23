@@ -7,18 +7,27 @@ import QRCode from "qrcode";
 authenticator.options = { window: 1 };
 
 const ISSUER = "CoopMarket";
+const TOTP_STEP_SECONDS = 30; // matches otplib's default; not overridden above
 
 export function generateTotpSecret(): string {
   return authenticator.generateSecret();
 }
 
-export function verifyTotpCode(code: string, secret: string): boolean {
+/**
+ * Returns the absolute time-step the code matched (for anti-replay
+ * tracking against User.totpLastStep), or null if the code is wrong.
+ * Checking the delta (rather than just check()'s boolean) is what lets a
+ * caller tell *which* step within the window actually matched.
+ */
+export function verifyTotpCode(code: string, secret: string): number | null {
   try {
-    return authenticator.check(code, secret);
+    const delta = authenticator.checkDelta(code, secret);
+    if (delta === null) return null;
+    return Math.floor(Date.now() / 1000 / TOTP_STEP_SECONDS) + delta;
   } catch {
     // Throws on a malformed (non-numeric/wrong-length) token instead of
-    // just returning false — treat that the same as an incorrect code.
-    return false;
+    // just returning null — treat that the same as an incorrect code.
+    return null;
   }
 }
 

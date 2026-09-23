@@ -35,7 +35,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Two-factor authentication is already set up." }, { status: 400 });
 
     const secret = generateTotpSecret();
-    await prisma.user.update({ where: { id: user.id }, data: { totpSecret: encryptTotpSecret(secret) } });
+    // totpLastStep is reset here too — a step number from a previous
+    // (never-confirmed) secret has no meaning against this new one.
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { totpSecret: encryptTotpSecret(secret), totpLastStep: null },
+    });
 
     const qrCodeDataUrl = await totpQrCodeDataUrl(user.email, secret);
 

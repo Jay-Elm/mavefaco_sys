@@ -42,6 +42,12 @@ model User {
   // grants nothing.
   totpSecret  String?
   totpEnabled Boolean     @default(false)
+  // The TOTP time-step (30s counter) of the last code this account
+  // successfully authenticated with — rejects a replay of that same code
+  // within its still-valid window. Cleared to null whenever the secret is
+  // (re)generated (setup, admin reset), since a step number only makes
+  // sense relative to the secret it was verified against.
+  totpLastStep Int?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
