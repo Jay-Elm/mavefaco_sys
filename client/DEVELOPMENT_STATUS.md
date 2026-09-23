@@ -1,6 +1,6 @@
 # Development Status — CoopMarket Capstone
 
-_Last updated: 2026-05-18 (session 4)_
+_Last updated: 2026-09-23_
 
 ---
 
@@ -8,11 +8,14 @@ _Last updated: 2026-05-18 (session 4)_
 
 | Layer | Technology |
 |-------|-----------|
-| Framework | Next.js 16.2.6 (App Router) |
-| UI | React 19.2.4, Tailwind CSS v4 |
+| Framework | Next.js 16.3.5 (App Router) |
+| UI | React 19.3.0, Tailwind CSS v4 |
 | Forms | React Hook Form + Zod v4 |
-| Database | PostgreSQL via Prisma 7.8.0 |
-| Auth | JWT (jsonwebtoken) + bcrypt, stored in localStorage |
+| Database | PostgreSQL via Prisma 7.10.0 (`@prisma/client` + `@prisma/adapter-pg`, kept version-locked) |
+| Auth | JWT (jsonwebtoken) + bcrypt, in an `httpOnly` cookie — **not** localStorage; mandatory TOTP MFA for admin/manager |
+| File storage | Supabase Storage (private bucket, signed URLs) for ID verification images |
+| Email | Brevo transactional API (password reset, email verification) |
+| Testing | Vitest (`npm test`) — validators + security-critical `lib/` helpers |
 | Icons | lucide-react |
 | Weather | Open-Meteo API (free, no key required) |
 
@@ -24,21 +27,35 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 **Roles:** `admin` → `manager` → `farmer` → `customer`
 
-**Auth flow:** Login → JWT stored in localStorage → `AuthContext` provides `user`, `token`, `loading` → API routes extract token via `getActiveAuthUser()` (async, checks DB for `suspended` flag) → `authorize(user, roles[])` enforces role access.
+**Auth flow:**
+- Login → JWT signed and set as an `httpOnly`, `SameSite=Lax` cookie (`Secure` in production) → `AuthContext` rehydrates the user via `GET /api/users/me` on mount (never reads the token itself — it can't, it's httpOnly).
+- Every API route resolves the caller via `getActiveAuthUser()`, which verifies the JWT, then checks the DB that the account isn't `suspended` and that `tokenVersion` still matches (revokes all outstanding sessions the moment it's bumped — on logout, password change, or email change).
+- `src/proxy.ts` (Next 16 renamed Middleware → **Proxy**, runs on the Node.js runtime) guards every `/api/admin/*` request as a structural backstop — optimistic JWT+role check only, no DB call — in front of each route's own full `getActiveAuthUser` + `authorize()` check.
+- **Admin/manager accounts require TOTP.** A correct password alone doesn't issue the real session cookie for those roles — `POST /api/auth/login` instead sets a short-lived, purpose-scoped "MFA pending" cookie and returns `mfaRequired` (has TOTP already) or `mfaSetupRequired` (first login, must enroll). `POST /api/auth/mfa/setup` issues a QR/secret, `POST /api/auth/mfa/confirm` verifies the first code and turns MFA on, `POST /api/auth/mfa/verify` completes login on subsequent visits. Ten single-use bcrypt-hashed backup codes are issued at enrollment. The TOTP secret itself is stored AES-256-GCM encrypted (`totpSecret`), keyed off `JWT_SECRET` — never in the clear.
+- Registration requires clicking an emailed verification link (`EmailVerificationToken`, Brevo) before login is allowed; existing pre-feature accounts were backfilled so nobody already-registered got locked out.
+- Password reset (`PasswordResetToken`) follows the same anti-enumeration pattern as registration: identical response whether or not the email is registered.
+- ID verification is a real file upload (`POST /api/users/me/id-image`) into a **private** Supabase bucket, served to admins only via 5-minute signed URLs (`GET /api/admin/users/[id]/id-image`) — never a public link or pasted URL.
+- `GET /api/cron/purge-id-images` (Vercel Cron, daily, `CRON_SECRET`-gated) auto-deletes a verified user's stored ID image 30 days after `verifiedAt`; pending/unreviewed submissions are never touched.
 
-**Cart:** Scoped per user via `cart_${user.id}` in localStorage. Guests see an empty cart. Switching users loads the correct cart automatically. Multi-farmer carts blocked at both client (conflict dialog) and server (400 on checkout).
+**Cart:** Scoped per user via `cart_${user.id}` in localStorage (cart contents themselves are fine client-side — only the auth token isn't). Guests see an empty cart. Switching users loads the correct cart automatically. Multi-farmer carts blocked at both client (conflict dialog) and server (400 on checkout).
 
 **Post-login redirects:** admin/manager → `/dashboard`, farmer → `/farmer`, customer → `/products`.
+
+**Validation:** shared Zod schemas in `src/validators/` for auth, profile, admin-user, order, banner, site-content, product, review, message, faq, category, crop, and MFA input — used by both the client form (`zodResolver`) and the server route so the two can't drift. The remaining simpler CRUD routes (announcements, some product/category edge cases) still use inline checks; not worth the mechanical sweep unless their validation grows more complex.
 
 ---
 
 ## Database Schema (Prisma)
 
-- `User` — id, name, email, password, role, suspended, verified, idImageUrl, createdAt, updatedAt
+16 models. `generated/prisma` is a custom client output path — **always run `npx prisma generate` after `npx prisma migrate dev`**, it does not auto-update. Use the Bash tool (not PowerShell) for Prisma CLI commands.
+
+- `User` — id, name, email, password, role, suspended, `idImagePath` (private storage path, not a URL), `verified`, `verifiedAt` (drives ID-image auto-purge), `emailVerifiedAt`, `tokenVersion`, `totpSecret` (encrypted), `totpEnabled`, createdAt, updatedAt
+- `EmailVerificationToken` / `PasswordResetToken` — id, `tokenHash` (SHA-256, never the raw token), expiresAt, usedAt, userId
+- `TotpBackupCode` — id, `codeHash` (bcrypt — low-entropy human-typed codes need the slow hash), usedAt, userId
 - `Category` — id, name (unique), createdAt
-- `Product` — id, name, description, price (Float), stock, imageUrl, farmerId, categoryId, approved, **plantingDate**, **expectedHarvestDate**, **growthStage**, **readyForHarvest**
-- `Order` — id, totalAmount, status, paymentMethod, deliveryMethod, createdAt, customerId
-- `OrderItem` — id, quantity, price, orderId, productId
+- `Product` — id, name, description, **price (`Decimal(10,2)`)**, stock (Float), unit, imageUrl, farmerId, categoryId, approved, plantingDate, expectedHarvestDate, growthStage, readyForHarvest
+- `Order` — id, **totalAmount (`Decimal(10,2)`)**, status, paymentMethod, deliveryMethod, createdAt, customerId
+- `OrderItem` — id, quantity (Float), **price (`Decimal(10,2)`)**, orderId, productId
 - `AuditLog` — id, action, entityType, entityId, timestamp, userId
 - `Announcement` — id, title, body, type (info/alert/advisory), createdAt, authorId
 - `Banner` — id, title, subtitle, ctaText, ctaLink, color, active, displayOrder, createdAt
@@ -48,16 +65,9 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `CropLog` — id, type (weather_impact/pest_disease/damage/note), note, createdAt, productId
 - `Message` — id, content, read, createdAt, senderId, receiverId
 
-**Migrations applied (in order):**
-- `20260511155826_add_user_suspended`
-- `20260512105820_add_product_approval`
-- `20260518052947_add_announcements`
-- `20260518063921_add_site_content`
-- `20260518075152_add_reviews`
-- `20260518075751_add_crop_monitoring`
-- `20260518080321_add_messages`
+**Migrations applied (19, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at`.
 
-> **IMPORTANT:** Always run `npx prisma generate` after `npx prisma migrate dev`. The custom output path (`generated/prisma`) means the client does NOT auto-update. Use Bash tool (not PowerShell) for Prisma CLI commands.
+**Infra note:** `DIRECT_URL` cannot use Supabase's true direct-connection endpoint (`db.<ref>.supabase.co:5432`) — neither locally nor from Vercel's build infra can reach it (`P1001`), almost certainly Supabase's IPv6-only requirement for that endpoint. Fixed by pointing `DIRECT_URL` at the **Session pooler** instead (distinct from the Transaction pooler `DATABASE_URL` uses) — still holds `prisma migrate deploy`'s advisory lock, and is IPv4-compatible.
 
 ---
 
@@ -69,15 +79,16 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `/products/[id]` — Product detail; 404 if not approved; Add to Cart; farmer name links to seller page; Reviews section
 - `/sellers/[id]` — Public seller profile: name, verified badge, member since, avg rating, all approved products; "Message Farmer" button
 - `/about` — Cooperative info page: name, about, mission/vision, FAQ accordion, contact details (all editable by admin)
-- `/login` — role-based redirect after login; suspension error on 403
-- `/register` — role selector (Customer / Farmer)
+- `/login` — role-based redirect after login; suspension error on 403; branches into MFA setup/verify for admin/manager
+- `/register` — role selector (Customer / Farmer); registration blocked until email is verified
+- `/verify-email`, `/forgot-password`, `/reset-password` — self-service email verification and password reset flows
 
 ### Product Purchase Flow (Customer)
 - Add to Cart → quantity modal → cart badge count in navbar
 - Multi-farmer conflict dialog (clear or keep cart)
 - `/cart` — item list, qty controls, payment/delivery method, Place Order
 - `/customer/orders` — order history, expandable items; **Cancel** (pending → cancelled, stock restored); **Confirm Received** (shipped → delivered)
-- `/customer/profile` — edit name/email; change password
+- `/customer/profile` — edit name/email (email change requires re-entering current password, kills the session); change password; self-service account deletion (password-gated, blocked while an active order exists)
 - `/customer/messages` — conversation inbox; `/customer/messages/[farmerId]` — message thread with farmer (polls every 8s)
 
 ### Ratings & Reviews
@@ -89,7 +100,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 ### Admin Dashboard (`/dashboard/`) — admin + manager roles
 - `layout.tsx` — dark sidebar, auth guard, isolated scroll
 - `page.tsx` — stat cards: Users, Products, Orders, Revenue; Manager: Farmer Performance table
-- `users/` — suspend/verify/reset password/delete; inline modals
+- `users/` — suspend/verify (via signed-URL ID image view)/reset password/delete; inline modals
 - `categories/` — list with product count; inline add/delete
 - `products/` — all products; Approve/Revoke/Edit/Delete; sorting + filtering + CSV export
 - `orders/` — all orders; expandable; status management; CSV export
@@ -111,11 +122,11 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `crops/` — Crop Monitor list: all products with growth stage, planting date, harvest date (red if overdue), log count, ready badge
 - `crops/[id]/` — Crop detail: update planting/harvest dates, growth stage dropdown, ready-for-harvest toggle; crop log with type buttons (weather/pest/damage/note) + timestamped entries
 - `messages/` — conversation inbox with unread counts; `/farmer/messages/[userId]` — message thread
-- `profile/` — edit name/email; ID image URL for verification; change password
+- `profile/` — edit name/email; real ID-image file upload for verification; change password
 
 ### Customer Pages
 - `/customer/orders` — full order lifecycle (cancel pending, confirm received)
-- `/customer/profile` — edit name/email; change password
+- `/customer/profile` — edit name/email; change password; self-delete
 - `/customer/messages` — inbox; `/customer/messages/[userId]` — thread with farmer
 
 ### Product Approval System
@@ -124,9 +135,10 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - Farmer content edits reset `approved: false`; stock-only changes do not
 
 ### User Verification System
-- Farmers submit ID image URL via profile page
-- Admin verifies via dashboard users page (ShieldCheck button)
+- Farmers submit a real ID image file (uploaded to a private Supabase bucket) via the profile page
+- Admin verifies via dashboard users page, viewing the image through a short-lived signed URL
 - Verified status required before farmer can list products
+- Verified images are auto-purged 30 days after verification (`/api/cron/purge-id-images`)
 
 ---
 
@@ -134,8 +146,16 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 | Method | Route | Auth | Notes |
 |--------|-------|------|-------|
-| POST | `/api/auth/register` | public | role: farmer or customer only |
-| POST | `/api/auth/login` | public | checks suspended |
+| POST | `/api/auth/register` | public | role: farmer or customer only; identical response for a duplicate email (anti-enumeration), sends verification email to that address |
+| POST | `/api/auth/login` | public | checks suspended + email-verified; admin/manager branches into MFA (sets pending cookie, returns `mfaRequired`/`mfaSetupRequired`) instead of issuing the session cookie |
+| POST | `/api/auth/logout` | authenticated | clears the session cookie, bumps `tokenVersion` |
+| POST | `/api/auth/mfa/setup` | pending-MFA cookie | issues a TOTP secret + QR for first-time enrollment |
+| POST | `/api/auth/mfa/confirm` | pending-MFA cookie | verifies the first code, enables TOTP, issues backup codes, completes login |
+| POST | `/api/auth/mfa/verify` | pending-MFA cookie | verifies a TOTP code or backup code on subsequent logins, completes login |
+| POST | `/api/auth/forgot-password` | public | rate-limited; identical generic response regardless of whether the email exists |
+| POST | `/api/auth/reset-password` | public | validates hashed single-use token, bumps `tokenVersion` |
+| GET | `/api/auth/verify-email` | public (token) | confirms `emailVerifiedAt` |
+| POST | `/api/auth/resend-verification` | public | anti-enumeration, same pattern as forgot-password |
 | GET | `/api/products` | public | `?categoryId=` `?farmerId=` `?search=` `?minPrice=` `?maxPrice=`; approved:true unless farmerId |
 | POST | `/api/products` | farmer/admin/manager | farmer must be verified |
 | GET | `/api/products/[id]` | public | unapproved: owner + admin/manager only |
@@ -150,7 +170,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/admin/stats` | admin/manager | |
 | GET | `/api/admin/users` | admin/manager | |
 | PATCH | `/api/admin/users/[id]` | admin/manager | suspend/verify/reset password |
-| DELETE | `/api/admin/users/[id]` | admin only | blocked if active orders |
+| DELETE | `/api/admin/users/[id]` | admin only | blocked if active orders; also deletes their stored ID image |
+| GET | `/api/admin/users/[id]/id-image` | admin/manager | mints a 5-minute signed URL for the private ID image |
 | GET | `/api/admin/orders` | admin/manager | all orders |
 | PATCH | `/api/admin/orders/[id]` | admin/manager | manager: state machine; admin: free override |
 | GET | `/api/admin/products` | admin/manager | all products, no approval filter |
@@ -172,7 +193,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/announcements` | public | all announcements with author |
 | POST | `/api/announcements` | admin/manager | create announcement |
 | DELETE | `/api/announcements/[id]` | admin/manager | |
-| POST | `/api/orders` | authenticated | validates stock, approved, same-farmer; $transaction |
+| POST | `/api/orders` | authenticated | validates stock, approved, same-farmer; `$transaction` |
 | GET | `/api/customer/orders` | authenticated | caller's own orders |
 | PATCH | `/api/customer/orders/[id]` | authenticated | pending→cancelled (stock restore); shipped→delivered |
 | GET | `/api/farmer/orders` | farmer | orders with farmer's products |
@@ -187,17 +208,27 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/messages/[userId]` | authenticated | message thread; marks received as read |
 | POST | `/api/messages/[userId]` | authenticated | send message |
 | GET | `/api/users/me` | authenticated | |
-| PATCH | `/api/users/me` | authenticated | name/email/idImageUrl/password change |
+| PATCH | `/api/users/me` | authenticated | name/email/password change; email change requires current password + kills session |
+| DELETE | `/api/users/me` | authenticated (customer/farmer only) | self-service account deletion, password-gated, blocked while an active order exists |
+| POST | `/api/users/me/id-image` | farmer | uploads ID image into private bucket; resets `verified` to false |
+| DELETE | `/api/users/me/id-image` | farmer | removes the submitted ID image |
+| POST | `/api/upload` | authenticated | shared image-upload endpoint (magic-byte sniffed, rate-limited) |
+| GET | `/api/cron/purge-id-images` | `CRON_SECRET` header | daily Vercel Cron job; purges ID images 30 days post-verification |
+
+**Note:** `src/app/api/admin/route.ts` is legacy/unused — it predates the cookie-based auth model and reads a bearer `Authorization` header directly instead of going through `getActiveAuthUser`. Nothing in the app calls it. Worth deleting in a future cleanup pass rather than leaving as dead code that looks like a real guarded route.
 
 ---
 
 ## Key Implementation Details
 
 ### `getActiveAuthUser` (async, `/lib/getActiveAuthUser.ts`)
-Verifies JWT then checks DB for `suspended: true`. Returns `null` if suspended or not found. Used in ALL API routes.
+Verifies the JWT (from the `httpOnly` cookie, via `getAuthUser`) then checks the DB for `suspended: true` and a stale `tokenVersion`. Returns `null` if suspended, revoked, or not found. Used in essentially every authenticated API route.
 
 ### Revenue counting
 Only `status: 'delivered'` orders count as revenue — in stats API, farmer-stats API, and farmer overview page.
+
+### Money as Decimal
+`Product.price`, `Order.totalAmount`, and `OrderItem.price` are all `Decimal(10,2)` in Postgres (migrated from `Float` on 2026-09-14) — no floating-point rounding risk on money math.
 
 ### Stock management
 - Decremented atomically in `POST /api/orders` transaction
@@ -223,18 +254,23 @@ After every `prisma migrate dev`, run `prisma generate` separately. The generate
 - Root layout: `body` is `h-full flex flex-col`; `main` is `flex-1 min-h-0 overflow-y-auto`
 - Dashboard + Farmer layouts: `flex h-full overflow-hidden` — sidebar and content scroll independently
 
+### Automated tests
+Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/order/helpers schemas) and the security-critical parts of `src/lib/` (`getJwtSecret`/`verifyToken`, `authorize`, `isSafeUrl`). No DB- or route-handler-level tests yet — see Known Technical Debt.
+
 ---
 
 ## Known Technical Debt
 
 | Issue | Severity | Notes |
 |-------|----------|-------|
-| `Float` used for money fields | Medium | Should be `Decimal`; rounding errors possible |
-| No input validation on some API routes | Medium | `products/[id] PATCH` trusts client-supplied types |
-| Weak JWT secret likely in `.env` | High | Not committed but should be rotated before production |
-| No image upload | Low | URL-only for product images and ID verification |
+| No test coverage for API routes or Prisma-backed logic | Medium | Vitest suite (see above) only covers pure validator/lib logic so far; nothing exercises an actual route handler or hits the DB |
+| Dead legacy route `src/app/api/admin/route.ts` | Low | Predates the cookie-based auth model, uses a bearer-token pattern nothing else in the app uses; unreferenced, safe to delete |
+| ~30 simpler CRUD routes on inline validation | Low | announcements, faqs, categories, crop logs, reviews, messages, products not migrated to `src/validators/` — no client/server duplication to drift, so not urgent |
+| No image upload for site banners/site-content | Low | Some fields still URL-only |
 | Messaging is polling, not WebSocket | Low | 8s interval; acceptable for capstone |
 | No push notifications | Low | All alerts are in-app only |
+
+All items from the original review — weak/unrotated `JWT_SECRET`, `Float` money fields, missing route validation, pasted-URL ID verification, no MFA, no dependency hygiene process, no ID-image retention policy, email enumeration on registration — have been fixed; see `SECURITY_REVIEW.md` (Phase 1–3, through 2026-09-08) for the original findings and fixes, cross-checked against the more recent 10-item gap-list pass for anything after that date.
 
 ---
 
@@ -247,5 +283,4 @@ After every `prisma migrate dev`, run `prisma generate` separately. The generate
 - Coming-soon listings with harvest date countdown
 - Language toggle (EN/TL)
 - Print receipts
-- Image file upload (URL-only currently)
 - Admin: backup/restore database
