@@ -42,7 +42,10 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function DashboardOverviewPage() {
   const { token, user } = useAuth()
-  const isManager = user?.role === 'manager'
+  // The endpoint (/api/admin/farmer-stats) already allows both admin and
+  // manager — admin should see everything manager can, so this isn't
+  // manager-exclusive.
+  const canSeeFarmerStats = user?.role === 'admin' || user?.role === 'manager'
 
   const [stats, setStats] = useState<Stats | null>(null)
   const [farmerStats, setFarmerStats] = useState<FarmerStat[]>([])
@@ -57,12 +60,12 @@ export default function DashboardOverviewPage() {
   }, [token])
 
   useEffect(() => {
-    if (!token || !isManager) return
+    if (!token || !canSeeFarmerStats) return
     fetch('/api/admin/farmer-stats', { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => r.json())
       .then((data) => { if (!data.error) setFarmerStats(data) })
       .catch(() => {})
-  }, [token, isManager])
+  }, [token, canSeeFarmerStats])
 
   if (error) return <div className="p-8 text-red-600">{error}</div>
 
@@ -124,8 +127,8 @@ export default function DashboardOverviewPage() {
         </div>
       </div>
 
-      {/* Manager: Farmer Performance Table */}
-      {isManager && (
+      {/* Farmer Performance Table (admin + manager) */}
+      {canSeeFarmerStats && (
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
           <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
             <Leaf size={18} className="text-green-600" />

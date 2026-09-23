@@ -99,7 +99,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 ### Admin Dashboard (`/dashboard/`) — admin + manager roles
 - `layout.tsx` — dark sidebar, auth guard, isolated scroll
-- `page.tsx` — stat cards: Users, Products, Orders, Revenue; Manager: Farmer Performance table
+- `page.tsx` — stat cards: Users, Products, Orders, Revenue; Farmer Performance table (admin + manager)
 - `users/` — suspend/verify (via signed-URL ID image view)/reset password/delete; inline modals
 - `categories/` — list with product count; inline add/delete
 - `products/` — all products; Approve/Revoke/Edit/Delete; sorting + filtering + CSV export
