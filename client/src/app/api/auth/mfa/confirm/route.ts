@@ -43,7 +43,14 @@ export async function POST(req: NextRequest) {
     if (!parsed.success)
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
 
-    const secret = decryptTotpSecret(user.totpSecret);
+    let secret: string;
+    try {
+      ({ secret } = decryptTotpSecret(user.totpSecret));
+    } catch {
+      // Encrypted under a key that's no longer configured — a fresh
+      // /setup will store a new secret under the current key.
+      return NextResponse.json({ error: "Start setup again by scanning a new QR code." }, { status: 400 });
+    }
     const matchedStep = verifyTotpCode(parsed.data.code, secret);
     // matchedStep is always fresh here in practice (totpLastStep was just
     // reset by /setup), but the same "can't replay a step already spent"

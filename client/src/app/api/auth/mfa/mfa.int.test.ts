@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/email", () => ({ sendEmail: vi.fn(async () => true) }));
 
@@ -15,7 +15,7 @@ import { getJwtSecret, verifyToken } from "@/lib/auth";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { MFA_PENDING_COOKIE, signMfaPendingToken, type MfaPurpose } from "@/lib/mfaToken";
 import { generateTotpSecret } from "@/lib/totp";
-import { encryptTotpSecret } from "@/lib/totpCrypto";
+import { decryptTotpSecret, encryptTotpSecret } from "@/lib/totpCrypto";
 import { generateBackupCodes } from "@/lib/backupCodes";
 import { createUser, freshIp, request, withRowLocked } from "@/test-utils/integration/helpers";
 
@@ -172,6 +172,37 @@ describe("POST /api/auth/mfa/verify", () => {
 
     expect((await call(verify, "verify", pending, { code: authenticator.generate(secret) }, ip)).status).toBe(429);
   }, 30_000); // each wrong code is also bcrypt-compared against all 10 backup codes
+});
+
+describe("encryption key changes", () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it("still accepts backup codes when the TOTP secret can't be decrypted", async () => {
+    const { user, secret, backupCodes } = await enrolledAdmin();
+    // Simulate the key the secret was stored under being gone.
+    vi.stubEnv("TOTP_ENCRYPTION_KEY", "k".repeat(40));
+    vi.stubEnv("JWT_SECRET", "rotated-jwt-secret-".repeat(3));
+    const pending = pendingFor(user.id, "verify");
+
+    expect((await call(verify, "verify", pending, { code: authenticator.generate(secret) })).status).toBe(401);
+    expect((await call(verify, "verify", pending, { code: backupCodes[0] })).status).toBe(200);
+  });
+
+  it("moves a legacy secret to TOTP_ENCRYPTION_KEY at login, after which JWT_SECRET can rotate safely", async () => {
+    const { user, secret } = await enrolledAdmin(); // encrypted under the legacy JWT-derived key
+    vi.stubEnv("TOTP_ENCRYPTION_KEY", "k".repeat(40));
+    const before = (await prisma.user.findUniqueOrThrow({ where: { id: user.id } })).totpSecret!;
+
+    const res = await call(verify, "verify", pendingFor(user.id, "verify"), { code: authenticator.generate(secret) });
+
+    expect(res.status).toBe(200);
+    const after = (await prisma.user.findUniqueOrThrow({ where: { id: user.id } })).totpSecret!;
+    expect(after).not.toBe(before);
+    expect(decryptTotpSecret(after)).toEqual({ secret, stale: false });
+
+    vi.stubEnv("JWT_SECRET", "rotated-jwt-secret-".repeat(3));
+    expect(decryptTotpSecret(after)).toEqual({ secret, stale: false });
+  });
 });
 
 describe("the MFA-pending token", () => {

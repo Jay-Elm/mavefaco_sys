@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { ROLES } from "@/lib/roles";
 import { MFA_PENDING_COOKIE, verifyMfaPendingToken } from "@/lib/mfaToken";
 import { verifyTotpCode } from "@/lib/totp";
-import { decryptTotpSecret } from "@/lib/totpCrypto";
+import { decryptTotpSecret, encryptTotpSecret } from "@/lib/totpCrypto";
 import { normalizeBackupCode } from "@/lib/backupCodes";
 import { issueSessionResponse } from "@/lib/session";
 import { mfaVerifySchema } from "@/validators/mfa";
@@ -43,18 +43,31 @@ export async function POST(req: NextRequest) {
     if (!parsed.success)
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
 
-    const secret = decryptTotpSecret(user.totpSecret);
-    const matchedStep = verifyTotpCode(parsed.data.code, secret);
+    // An undecryptable secret (encryption key lost or misconfigured) must not
+    // also disable backup codes — they're bcrypt hashes that don't depend on
+    // the key, and they're the way back in when exactly this goes wrong.
+    let decrypted: { secret: string; stale: boolean } | null = null;
+    try {
+      decrypted = decryptTotpSecret(user.totpSecret);
+    } catch (err) {
+      console.error(`MFA: TOTP secret for user ${user.id} could not be decrypted; only backup codes will work`, err);
+    }
+    const matchedStep = decrypted ? verifyTotpCode(parsed.data.code, decrypted.secret) : null;
     // Reject a code whose step has already been spent — otherwise a code
     // captured in transit (or from a log) stays valid for anyone to
     // replay for the rest of its ~30-90s window. The check and the claim
     // are one conditional update, so two simultaneous requests carrying
     // the same code can't both pass.
     let ok = false;
-    if (matchedStep !== null) {
+    if (decrypted && matchedStep !== null) {
       const { count } = await prisma.user.updateMany({
         where: { id: user.id, OR: [{ totpLastStep: null }, { totpLastStep: { lt: matchedStep } }] },
-        data: { totpLastStep: matchedStep },
+        data: {
+          totpLastStep: matchedStep,
+          // Encrypted under an older key: move it to the current one now
+          // that we hold the plaintext.
+          ...(decrypted.stale && { totpSecret: encryptTotpSecret(decrypted.secret) }),
+        },
       });
       ok = count === 1;
     }
