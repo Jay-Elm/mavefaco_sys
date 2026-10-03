@@ -21,7 +21,7 @@ export default async function SellerPage({
       verified: true,
       createdAt: true,
       products: {
-        where: { approved: true },
+        where: { approved: true, archivedAt: null },
         include: {
           category: true,
           farmer: { select: { id: true, name: true, email: true } },

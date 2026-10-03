@@ -16,7 +16,7 @@ export const revalidate = 60;
 async function getFeaturedProducts() {
   const products = await prisma.product.findMany({
     take: 6,
-    where: { approved: true },
+    where: { approved: true, archivedAt: null },
     orderBy: { createdAt: "desc" },
     include: {
       category: true,
@@ -43,7 +43,7 @@ async function getAnnouncements() {
 async function getStats() {
   const [farmers, products, orders] = await Promise.all([
     prisma.user.count({ where: { role: "farmer", verified: true } }),
-    prisma.product.count({ where: { approved: true } }),
+    prisma.product.count({ where: { approved: true, archivedAt: null } }),
     prisma.order.count({ where: { status: "delivered" } }),
   ]);
   return { farmers, products, orders };
@@ -52,7 +52,7 @@ async function getStats() {
 async function getCategories() {
   return prisma.category.findMany({
     orderBy: { name: "asc" },
-    include: { _count: { select: { products: { where: { approved: true } } } } },
+    include: { _count: { select: { products: { where: { approved: true, archivedAt: null } } } } },
   });
 }
 

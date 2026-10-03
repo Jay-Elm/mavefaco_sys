@@ -122,6 +122,11 @@ model Product {
   unit          String      @default("piece")
   imageUrl             String?
   approved             Boolean     @default(false)
+  // Set instead of deleting once a product has history (orders, reviews,
+  // crop logs) that still references it. Archived products are hidden
+  // everywhere a live product appears (shop, farmer and staff lists,
+  // checkout) but stay in order history and revenue reports.
+  archivedAt           DateTime?
   createdAt            DateTime    @default(now())
   updatedAt            DateTime    @updatedAt
 

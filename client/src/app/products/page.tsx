@@ -19,6 +19,7 @@ export default async function ProductsPage({
     prisma.product.findMany({
       where: {
         approved: true,
+        archivedAt: null,
         ...(activeCategoryId ? { categoryId: activeCategoryId } : {}),
         ...(search ? { name: { contains: search, mode: 'insensitive' } } : {}),
         ...(minPriceNum !== null || maxPriceNum !== null

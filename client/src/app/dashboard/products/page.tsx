@@ -108,7 +108,7 @@ export default function DashboardProductsPage() {
   }
 
   async function handleDelete(id: number, name: string) {
-    if (!confirm(`Permanently delete "${name}"?\n\nThis cannot be undone.`)) return
+    if (!confirm(`Remove "${name}"?\n\nIt will disappear from the shop. If it has past orders or reviews it is archived so order history stays intact; otherwise it is deleted. This cannot be undone.`)) return
     if (!token) return
     setActingId(id)
     setActionError(null)

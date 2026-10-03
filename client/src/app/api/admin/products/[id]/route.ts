@@ -19,7 +19,7 @@ export async function PATCH(
     const productId = Number(id);
     if (isNaN(productId)) return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
 
-    const product = await prisma.product.findUnique({ where: { id: productId } });
+    const product = await prisma.product.findUnique({ where: { id: productId, archivedAt: null } });
     if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
 
     const parsed = adminProductUpdateSchema.safeParse(await req.json());

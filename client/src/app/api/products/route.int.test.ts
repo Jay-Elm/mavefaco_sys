@@ -85,16 +85,20 @@ describe("GET /api/products", () => {
     expect((await list(`?farmerId=${farmer.id}`, farmer)).map((p) => p.id)).toContain(pending.id);
   });
 
-  // KNOWN BUG: ?farmerId drops the approved filter for every caller, not
-  // just that farmer — anyone can list another farmer's pending or
-  // rejected products, which GET /api/products/[id] deliberately hides.
-  // Flip to `it` once the route checks who's asking.
-  it.fails("doesn't show anyone else a farmer's unapproved products via ?farmerId", async () => {
+  it("doesn't show anyone else a farmer's unapproved products via ?farmerId", async () => {
     const farmer = await createUser({ role: "farmer" });
     await createProduct(farmer.id, { approved: false });
     const stranger = await createUser();
 
     expect(await list(`?farmerId=${farmer.id}`)).toEqual([]);
     expect(await list(`?farmerId=${farmer.id}`, stranger)).toEqual([]);
+    expect(await list(`?farmerId=${farmer.id}`, await createUser({ role: "farmer" }))).toEqual([]);
+  });
+
+  it("shows staff a farmer's unapproved products via ?farmerId", async () => {
+    const farmer = await createUser({ role: "farmer" });
+    const pending = await createProduct(farmer.id, { approved: false });
+
+    expect((await list(`?farmerId=${farmer.id}`, await createUser({ role: "manager" }))).map((p) => p.id)).toEqual([pending.id]);
   });
 });

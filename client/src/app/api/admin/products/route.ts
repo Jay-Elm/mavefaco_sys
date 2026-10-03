@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     const products = await prisma.product.findMany({
+      where: { archivedAt: null },
       include: {
         category: true,
         farmer: { select: { id: true, name: true, email: true } },

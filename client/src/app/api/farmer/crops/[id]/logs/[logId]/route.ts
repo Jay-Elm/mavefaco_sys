@@ -21,7 +21,7 @@ export async function DELETE(
     return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   // verify farmer owns this product
-  const product = await prisma.product.findUnique({ where: { id: productId, farmerId: actor.id } });
+  const product = await prisma.product.findUnique({ where: { id: productId, farmerId: actor.id, archivedAt: null } });
   if (!product) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   await prisma.cropLog.delete({ where: { id: logIdNum } });

@@ -64,10 +64,7 @@ describe("POST /api/products/[id]/reviews", () => {
     expect(results.filter((r) => r.status === 201)).toHaveLength(1);
   });
 
-  // KNOWN BUG (minor): the losing insert hits the unique constraint and the
-  // route returns a generic 500 instead of the 409 a sequential duplicate
-  // gets. Data is correct either way. Flip to `it` once P2002 maps to 409.
-  it.fails("answers the losing duplicate with 409, not 500", async () => {
+  it("answers the losing duplicate with 409, not 500", async () => {
     expect((await doubleSubmit()).map((r) => r.status).sort()).toEqual([201, 409]);
   });
 

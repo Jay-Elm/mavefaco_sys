@@ -74,7 +74,11 @@ export async function POST(
     });
 
     return NextResponse.json(review, { status: 201 });
-  } catch {
+  } catch (err) {
+    // A simultaneous duplicate passes the "already reviewed" check above and
+    // then hits the (customerId, productId) unique constraint.
+    if (typeof err === "object" && err !== null && "code" in err && (err as { code: string }).code === "P2002")
+      return NextResponse.json({ error: "You have already reviewed this product" }, { status: 409 });
     return NextResponse.json({ error: "Failed to submit review" }, { status: 500 });
   }
 }

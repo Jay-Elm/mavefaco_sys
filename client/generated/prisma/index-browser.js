@@ -180,6 +180,7 @@ exports.Prisma.ProductScalarFieldEnum = {
   unit: 'unit',
   imageUrl: 'imageUrl',
   approved: 'approved',
+  archivedAt: 'archivedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   plantingDate: 'plantingDate',

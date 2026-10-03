@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { DELETE, GET, PATCH } from "./route";
 import { PATCH as adminPATCH } from "@/app/api/admin/products/[id]/route";
 import { GET as adminList } from "@/app/api/admin/products/route";
+import { GET as list } from "@/app/api/products/route";
 import { prisma } from "@/lib/prisma";
 import { createProduct, createUser, params, request, type SessionUser } from "@/test-utils/integration/helpers";
 import { placedOrder } from "@/test-utils/integration/orders";
@@ -96,22 +97,44 @@ describe("DELETE /api/products/[id]", () => {
     expect(await prisma.product.count()).toBe(1);
   });
 
-  // KNOWN BUG: OrderItem, Review and CropLog reference Product with no
-  // onDelete rule, so once a product has *any* history the delete hits a
-  // foreign-key error and returns a bare 500 — despite the 409 above
-  // telling the farmer to "wait for them to complete first". Flip to `it`
-  // once the route handles it (archive, or a clear 4xx).
-  it.fails.each(["delivered", "cancelled"])("handles a product whose only orders are %s without a 500", async (status) => {
-    const { farmer, product } = await placedOrder({ status });
+  it.each(["delivered", "cancelled"])("archives instead of deleting once its orders are %s, keeping the history", async (status) => {
+    const { farmer, order, product } = await placedOrder({ status });
 
-    expect((await del(product.id, farmer)).status).toBeLessThan(500);
+    const res = await del(product.id, farmer);
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ archived: true });
+    expect((await prisma.product.findUniqueOrThrow({ where: { id: product.id } })).archivedAt).not.toBeNull();
+    expect(await prisma.orderItem.count({ where: { orderId: order.id, productId: product.id } })).toBe(1);
+    expect(await prisma.auditLog.count({ where: { action: "ARCHIVE_PRODUCT", entityId: product.id } })).toBe(1);
   });
 
-  it.fails("handles a product with reviews without a 500", async () => {
+  it("archives a product that only has reviews or crop logs, keeping them", async () => {
     const { farmer, customer, product } = await placedOrder({ status: "delivered" });
+    await prisma.orderItem.deleteMany(); // leave reviews as the only history
     await prisma.review.create({ data: { customerId: customer.id, productId: product.id, rating: 5 } });
+    const crop = await createProduct(farmer.id);
+    await prisma.cropLog.create({ data: { productId: crop.id, type: "note", note: "Planted" } });
 
-    expect((await del(product.id, farmer)).status).toBeLessThan(500);
+    expect(await (await del(product.id, farmer)).json()).toMatchObject({ archived: true });
+    expect(await (await del(crop.id, farmer)).json()).toMatchObject({ archived: true });
+    expect(await prisma.review.count()).toBe(1);
+    expect(await prisma.cropLog.count()).toBe(1);
+  });
+
+  it("makes an archived product disappear everywhere live, even for its farmer and staff", async () => {
+    const { farmer, product } = await placedOrder({ status: "delivered" });
+    const manager = await createUser({ role: "manager" });
+    await del(product.id, farmer);
+
+    expect((await get(product.id, farmer)).status).toBe(404);
+    expect((await get(product.id, manager)).status).toBe(404);
+    expect((await patch(product.id, farmer, { stock: 99 })).status).toBe(404);
+    expect((await del(product.id, farmer)).status).toBe(404);
+
+    expect(await (await list(request("/api/products"))).json()).toEqual([]);
+    expect(await (await list(request(`/api/products?farmerId=${farmer.id}`, { as: farmer }))).json()).toEqual([]);
+    expect(await (await adminList(request("/api/admin/products", { as: manager }))).json()).toEqual([]);
   });
 });
 

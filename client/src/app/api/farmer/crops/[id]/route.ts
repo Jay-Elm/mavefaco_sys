@@ -14,7 +14,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
   try {
     const product = await prisma.product.findUnique({
-      where: { id: productId, farmerId: actor.id },
+      where: { id: productId, farmerId: actor.id, archivedAt: null },
       select: {
         id: true,
         name: true,
@@ -44,7 +44,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const productId = Number(id);
   if (isNaN(productId)) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
-  const existing = await prisma.product.findUnique({ where: { id: productId, farmerId: actor.id } });
+  const existing = await prisma.product.findUnique({ where: { id: productId, farmerId: actor.id, archivedAt: null } });
   if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   try {

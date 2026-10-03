@@ -24,7 +24,7 @@ export default async function ProductDetailPage({
     },
   })
 
-  if (!product || !product.approved) notFound()
+  if (!product || !product.approved || product.archivedAt) notFound()
 
   const price = Number(product.price)
 

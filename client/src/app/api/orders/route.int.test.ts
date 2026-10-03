@@ -80,6 +80,19 @@ describe("POST /api/orders (checkout)", () => {
     expect((await res.json()).error).toMatch(/"Unreviewed" is no longer available/);
   });
 
+  it("rejects a product archived after it was added to the cart", async () => {
+    const farmer = await createUser({ role: "farmer" });
+    const customer = await createUser();
+    const gone = await createProduct(farmer.id, { name: "Old stock" });
+    await prisma.product.update({ where: { id: gone.id }, data: { archivedAt: new Date() } });
+
+    const res = await checkout(customer, [{ productId: gone.id, quantity: 1 }]);
+
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toMatch(/"Old stock" is no longer available/);
+    expect(await prisma.order.count()).toBe(0);
+  });
+
   it("rejects a cart mixing products from different farmers", async () => {
     const customer = await createUser();
     const a = await createProduct((await createUser({ role: "farmer" })).id);

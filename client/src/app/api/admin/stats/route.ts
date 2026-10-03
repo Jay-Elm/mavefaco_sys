@@ -14,8 +14,8 @@ export async function GET(req: NextRequest) {
     const [userCount, approvedProductCount, pendingProductCount, orderCount, revenueAgg, recentOrders] =
       await Promise.all([
         prisma.user.count(),
-        prisma.product.count({ where: { approved: true } }),
-        prisma.product.count({ where: { approved: false } }),
+        prisma.product.count({ where: { approved: true, archivedAt: null } }),
+        prisma.product.count({ where: { approved: false, archivedAt: null } }),
         prisma.order.count(),
         prisma.order.aggregate({ _sum: { totalAmount: true }, where: { status: 'delivered' } }),
         prisma.order.findMany({

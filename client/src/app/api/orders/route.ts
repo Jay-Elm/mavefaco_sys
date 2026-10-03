@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       for (const item of items) {
         const product = products.find(p => p.id === item.productId)
         if (!product) throw new Error(`Product ${item.productId} not found`)
-        if (!product.approved) throw new Error(`"${product.name}" is no longer available`)
+        if (!product.approved || product.archivedAt) throw new Error(`"${product.name}" is no longer available`)
         if (product.stock < item.quantity) {
           throw new Error(`Insufficient stock for "${product.name}" (only ${product.stock} left)`)
         }

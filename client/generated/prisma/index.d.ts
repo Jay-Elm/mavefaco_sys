@@ -8442,6 +8442,7 @@ export namespace Prisma {
     unit: string | null
     imageUrl: string | null
     approved: boolean | null
+    archivedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
     plantingDate: Date | null
@@ -8461,6 +8462,7 @@ export namespace Prisma {
     unit: string | null
     imageUrl: string | null
     approved: boolean | null
+    archivedAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
     plantingDate: Date | null
@@ -8480,6 +8482,7 @@ export namespace Prisma {
     unit: number
     imageUrl: number
     approved: number
+    archivedAt: number
     createdAt: number
     updatedAt: number
     plantingDate: number
@@ -8517,6 +8520,7 @@ export namespace Prisma {
     unit?: true
     imageUrl?: true
     approved?: true
+    archivedAt?: true
     createdAt?: true
     updatedAt?: true
     plantingDate?: true
@@ -8536,6 +8540,7 @@ export namespace Prisma {
     unit?: true
     imageUrl?: true
     approved?: true
+    archivedAt?: true
     createdAt?: true
     updatedAt?: true
     plantingDate?: true
@@ -8555,6 +8560,7 @@ export namespace Prisma {
     unit?: true
     imageUrl?: true
     approved?: true
+    archivedAt?: true
     createdAt?: true
     updatedAt?: true
     plantingDate?: true
@@ -8661,6 +8667,7 @@ export namespace Prisma {
     unit: string
     imageUrl: string | null
     approved: boolean
+    archivedAt: Date | null
     createdAt: Date
     updatedAt: Date
     plantingDate: Date | null
@@ -8699,6 +8706,7 @@ export namespace Prisma {
     unit?: boolean
     imageUrl?: boolean
     approved?: boolean
+    archivedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     plantingDate?: boolean
@@ -8724,6 +8732,7 @@ export namespace Prisma {
     unit?: boolean
     imageUrl?: boolean
     approved?: boolean
+    archivedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     plantingDate?: boolean
@@ -8745,6 +8754,7 @@ export namespace Prisma {
     unit?: boolean
     imageUrl?: boolean
     approved?: boolean
+    archivedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     plantingDate?: boolean
@@ -8766,6 +8776,7 @@ export namespace Prisma {
     unit?: boolean
     imageUrl?: boolean
     approved?: boolean
+    archivedAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     plantingDate?: boolean
@@ -8776,7 +8787,7 @@ export namespace Prisma {
     categoryId?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "stock" | "unit" | "imageUrl" | "approved" | "createdAt" | "updatedAt" | "plantingDate" | "expectedHarvestDate" | "growthStage" | "readyForHarvest" | "farmerId" | "categoryId", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "stock" | "unit" | "imageUrl" | "approved" | "archivedAt" | "createdAt" | "updatedAt" | "plantingDate" | "expectedHarvestDate" | "growthStage" | "readyForHarvest" | "farmerId" | "categoryId", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     farmer?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -8812,6 +8823,7 @@ export namespace Prisma {
       unit: string
       imageUrl: string | null
       approved: boolean
+      archivedAt: Date | null
       createdAt: Date
       updatedAt: Date
       plantingDate: Date | null
@@ -9256,6 +9268,7 @@ export namespace Prisma {
     readonly unit: FieldRef<"Product", 'String'>
     readonly imageUrl: FieldRef<"Product", 'String'>
     readonly approved: FieldRef<"Product", 'Boolean'>
+    readonly archivedAt: FieldRef<"Product", 'DateTime'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
     readonly plantingDate: FieldRef<"Product", 'DateTime'>
@@ -20804,6 +20817,7 @@ export namespace Prisma {
     unit: 'unit',
     imageUrl: 'imageUrl',
     approved: 'approved',
+    archivedAt: 'archivedAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     plantingDate: 'plantingDate',
@@ -21422,6 +21436,7 @@ export namespace Prisma {
     unit?: StringFilter<"Product"> | string
     imageUrl?: StringNullableFilter<"Product"> | string | null
     approved?: BoolFilter<"Product"> | boolean
+    archivedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     plantingDate?: DateTimeNullableFilter<"Product"> | Date | string | null
@@ -21446,6 +21461,7 @@ export namespace Prisma {
     unit?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     approved?: SortOrder
+    archivedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     plantingDate?: SortOrderInput | SortOrder
@@ -21473,6 +21489,7 @@ export namespace Prisma {
     unit?: StringFilter<"Product"> | string
     imageUrl?: StringNullableFilter<"Product"> | string | null
     approved?: BoolFilter<"Product"> | boolean
+    archivedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     plantingDate?: DateTimeNullableFilter<"Product"> | Date | string | null
@@ -21497,6 +21514,7 @@ export namespace Prisma {
     unit?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     approved?: SortOrder
+    archivedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     plantingDate?: SortOrderInput | SortOrder
@@ -21524,6 +21542,7 @@ export namespace Prisma {
     unit?: StringWithAggregatesFilter<"Product"> | string
     imageUrl?: StringNullableWithAggregatesFilter<"Product"> | string | null
     approved?: BoolWithAggregatesFilter<"Product"> | boolean
+    archivedAt?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     plantingDate?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
@@ -22532,6 +22551,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -22554,6 +22574,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -22575,6 +22596,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22597,6 +22619,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22619,6 +22642,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -22637,6 +22661,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -22654,6 +22679,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -23782,6 +23808,7 @@ export namespace Prisma {
     unit?: SortOrder
     imageUrl?: SortOrder
     approved?: SortOrder
+    archivedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     plantingDate?: SortOrder
@@ -23809,6 +23836,7 @@ export namespace Prisma {
     unit?: SortOrder
     imageUrl?: SortOrder
     approved?: SortOrder
+    archivedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     plantingDate?: SortOrder
@@ -23828,6 +23856,7 @@ export namespace Prisma {
     unit?: SortOrder
     imageUrl?: SortOrder
     approved?: SortOrder
+    archivedAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     plantingDate?: SortOrder
@@ -25404,6 +25433,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -25425,6 +25455,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -25702,6 +25733,7 @@ export namespace Prisma {
     unit?: StringFilter<"Product"> | string
     imageUrl?: StringNullableFilter<"Product"> | string | null
     approved?: BoolFilter<"Product"> | boolean
+    archivedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     plantingDate?: DateTimeNullableFilter<"Product"> | Date | string | null
@@ -26338,6 +26370,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -26359,6 +26392,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -26710,6 +26744,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -26731,6 +26766,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -26767,6 +26803,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -26788,6 +26825,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -26997,6 +27035,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -27018,6 +27057,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -27084,6 +27124,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27105,6 +27146,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27311,6 +27353,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -27332,6 +27375,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -27434,6 +27478,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27455,6 +27500,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27854,6 +27900,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -27943,6 +27990,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27964,6 +28012,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27985,6 +28034,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28212,6 +28262,7 @@ export namespace Prisma {
     unit?: string
     imageUrl?: string | null
     approved?: boolean
+    archivedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -28229,6 +28280,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28250,6 +28302,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28271,6 +28324,7 @@ export namespace Prisma {
     unit?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

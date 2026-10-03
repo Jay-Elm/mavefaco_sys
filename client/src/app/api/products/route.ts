@@ -71,11 +71,21 @@ export async function GET(req: NextRequest) {
     const categoryId = searchParams.get("categoryId");
     const farmerId = searchParams.get("farmerId");
 
+    // Unapproved (pending/rejected) listings are only for the farmer who
+    // owns them and staff — the farmer portal lists its own via ?farmerId.
+    let includeUnapproved = false;
+    if (farmerId) {
+      const actor = await getActiveAuthUser(req);
+      includeUnapproved =
+        !!actor && (actor.id === Number(farmerId) || authorize(actor, [ROLES.ADMIN, ROLES.MANAGER]));
+    }
+
     const products = await prisma.product.findMany({
       where: {
+        archivedAt: null,
         ...(categoryId && { categoryId: Number(categoryId) }),
         ...(farmerId && { farmerId: Number(farmerId) }),
-        ...(!farmerId && { approved: true }),
+        ...(!includeUnapproved && { approved: true }),
       },
       include: {
         category: true,

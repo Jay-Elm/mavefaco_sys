@@ -19,7 +19,7 @@ export async function GET(
       },
     });
 
-    if (!product)
+    if (!product || product.archivedAt)
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
 
     if (!product.approved) {
@@ -52,7 +52,7 @@ export async function PATCH(
     if (isNaN(productId))
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
-    const product = await prisma.product.findUnique({ where: { id: productId } });
+    const product = await prisma.product.findUnique({ where: { id: productId, archivedAt: null } });
     if (!product)
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
 
@@ -113,7 +113,10 @@ export async function DELETE(
     if (isNaN(productId))
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
-    const product = await prisma.product.findUnique({ where: { id: productId } });
+    const product = await prisma.product.findUnique({
+      where: { id: productId, archivedAt: null },
+      include: { _count: { select: { orderItems: true, reviews: true, cropLogs: true } } },
+    });
     if (!product)
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
 
@@ -133,18 +136,28 @@ export async function DELETE(
         { status: 409 },
       );
 
-    await prisma.product.delete({ where: { id: productId } });
+    // Past orders, reviews and crop logs still point at this product, so it
+    // can't be removed without rewriting history — archive it instead. It
+    // disappears from every live listing but stays in order history.
+    const { orderItems, reviews, cropLogs } = product._count;
+    const archive = orderItems + reviews + cropLogs > 0;
+
+    if (archive) {
+      await prisma.product.update({ where: { id: productId }, data: { archivedAt: new Date() } });
+    } else {
+      await prisma.product.delete({ where: { id: productId } });
+    }
 
     await prisma.auditLog.create({
       data: {
-        action: "DELETE_PRODUCT",
+        action: archive ? "ARCHIVE_PRODUCT" : "DELETE_PRODUCT",
         entityType: "PRODUCT",
         entityId: productId,
         userId: user.id,
       },
     });
 
-    return NextResponse.json({ message: "Product deleted" });
+    return NextResponse.json({ message: archive ? "Product archived" : "Product deleted", archived: archive });
   } catch {
     return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
   }

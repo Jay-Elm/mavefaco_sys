@@ -12,7 +12,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const productId = Number(id);
   if (isNaN(productId)) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
-  const product = await prisma.product.findUnique({ where: { id: productId, farmerId: actor.id } });
+  const product = await prisma.product.findUnique({ where: { id: productId, farmerId: actor.id, archivedAt: null } });
   if (!product) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   try {
