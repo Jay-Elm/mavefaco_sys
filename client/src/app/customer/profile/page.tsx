@@ -33,10 +33,18 @@ export default function CustomerProfilePage() {
 
   useEffect(() => {
     if (loading) return
-    if (!isAuthenticated) { router.replace('/login'); return }
-    setName(user?.name ?? '')
-    setNewEmail(user?.email ?? '')
-  }, [loading, isAuthenticated, user, router])
+    if (!isAuthenticated) router.replace('/login')
+  }, [loading, isAuthenticated, router])
+
+  // Refill the form whenever the user object changes (initial load, or after
+  // a save calls login() with the updated user). Adjusted during render
+  // rather than in an effect to avoid an extra render with empty fields.
+  const [formUser, setFormUser] = useState<typeof user>(null)
+  if (user && user !== formUser) {
+    setFormUser(user)
+    setName(user.name ?? '')
+    setNewEmail(user.email ?? '')
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

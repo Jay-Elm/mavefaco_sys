@@ -23,8 +23,13 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
-  // Close sidebar on route change (mobile)
-  useEffect(() => { setSidebarOpen(false) }, [pathname])
+  // Close sidebar on route change (mobile). Adjusted during render rather
+  // than in an effect so the old open state never paints on the new page.
+  const [prevPathname, setPrevPathname] = useState(pathname)
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname)
+    setSidebarOpen(false)
+  }
 
   useEffect(() => {
     if (loading) return

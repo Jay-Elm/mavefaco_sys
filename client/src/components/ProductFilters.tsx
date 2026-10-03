@@ -158,7 +158,7 @@ export default function ProductFilters({ categories }: Props) {
       {hasActiveFilters && (
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <span>Filtering by:</span>
-          {activeSearch && <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs font-medium">"{activeSearch}"</span>}
+          {activeSearch && <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs font-medium">&ldquo;{activeSearch}&rdquo;</span>}
           {activeCategoryId && <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs font-medium">{categories.find(c => String(c.id) === activeCategoryId)?.name ?? 'Category'}</span>}
           {(activeMin || activeMax) && (
             <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs font-medium">

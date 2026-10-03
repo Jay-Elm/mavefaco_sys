@@ -49,8 +49,13 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [isDashboardStyle, mobileOpen])
 
-  // Close mobile menu on route change
-  useEffect(() => { setMobileOpen(false) }, [pathname])
+  // Close mobile menu on route change. Adjusted during render rather
+  // than in an effect so the old open state never paints on the new page.
+  const [prevPathname, setPrevPathname] = useState(pathname)
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname)
+    setMobileOpen(false)
+  }
 
   function handleLogout() {
     setShowLogoutConfirm(false)

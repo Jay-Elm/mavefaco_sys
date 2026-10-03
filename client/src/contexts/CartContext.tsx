@@ -34,6 +34,16 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | null>(null)
 
+function readStoredCart(cartKey: string | null): CartItem[] {
+  if (!cartKey) return []
+  try {
+    const stored = localStorage.getItem(cartKey)
+    return stored ? JSON.parse(stored) : []
+  } catch {
+    return []
+  }
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth()
 
@@ -41,27 +51,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const cartKey = user ? `cart_${user.id}` : null
 
   const [items, setItems] = useState<CartItem[]>([])
-  const [loaded, setLoaded] = useState(false)
+  // The cart key `items` was loaded for; undefined until the first load.
+  const [loadedKey, setLoadedKey] = useState<string | null | undefined>(undefined)
 
   // Load the correct cart whenever the authenticated user changes.
   // Wait for auth to finish hydrating first (authLoading) to avoid a
-  // guest-cart flash before we know who is logged in.
-  useEffect(() => {
-    if (authLoading) return
-    setLoaded(false)
-    if (!cartKey) {
-      setItems([])
-      setLoaded(true)
-      return
-    }
-    try {
-      const stored = localStorage.getItem(cartKey)
-      setItems(stored ? JSON.parse(stored) : [])
-    } catch {
-      setItems([])
-    }
-    setLoaded(true)
-  }, [cartKey, authLoading])
+  // guest-cart flash before we know who is logged in. Adjusted during
+  // render rather than in an effect, so no render ever pairs one user's
+  // key with another user's items. authLoading is true for the server
+  // render, so localStorage is only read in the browser.
+  if (!authLoading && loadedKey !== cartKey) {
+    setLoadedKey(cartKey)
+    setItems(readStoredCart(cartKey))
+  }
+  const loaded = !authLoading && loadedKey === cartKey
 
   // Persist cart changes for logged-in users only.
   useEffect(() => {

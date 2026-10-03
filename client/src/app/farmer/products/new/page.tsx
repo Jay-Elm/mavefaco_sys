@@ -3,8 +3,9 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Sparkles } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import ImageUploader from '@/components/ImageUploader'
+import SuggestionBanner from '@/components/SuggestionBanner'
 import { suggestCategory, suggestUnit } from '@/lib/productSuggestions'
 
 interface Category { id: number; name: string }
@@ -88,15 +89,6 @@ export default function NewProductPage() {
 
   const showSuggestion = suggestion !== null && !suggestionDismissed
   const showUnitSuggestion = unitSuggestion !== null && !unitSuggestionDismissed && unitSuggestion !== form.unit
-
-  const SuggestionBanner = ({ label, onApply, onDismiss }: { label: string; onApply: () => void; onDismiss: () => void }) => (
-    <div className="mb-2 flex items-center gap-2 bg-tint border border-forest/20 rounded-lg px-3 py-2">
-      <Sparkles size={13} className="text-forest-mid shrink-0" />
-      <span className="text-xs text-forest flex-1">Suggested: <strong>{label}</strong></span>
-      <button type="button" onClick={onApply} className="text-xs font-semibold text-forest hover:text-forest-mid border border-forest/30 rounded px-2 py-0.5 transition-colors">Apply</button>
-      <button type="button" onClick={onDismiss} className="text-xs text-forest-mid/70 hover:text-forest transition-colors" aria-label="Dismiss">✕</button>
-    </div>
-  )
 
   return (
     <div className="p-4 sm:p-8 max-w-xl">
