@@ -153,10 +153,25 @@ UPDATE "User" SET role = 'admin' WHERE email = 'your@email.com';
 
 ## Environment Variables Reference
 
-| Variable | Description | Example |
+| Variable | Required | Description |
 |---|---|---|
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://postgres:pass@db.xyz.supabase.co:5432/postgres` |
-| `JWT_SECRET` | Secret for signing JWTs — must be long and random | `a3f8d2...` (64 hex chars) |
+| `DATABASE_URL` | Yes | Runtime connection — Supabase **Transaction** pooler (port 6543) |
+| `DIRECT_URL` | Yes | Migration connection — Supabase **Session** pooler (port 5432 on the pooler host; the true direct endpoint is IPv6-only and unreachable from Vercel) |
+| `JWT_SECRET` | Yes | Signs session tokens; at least 32 random characters |
+| `TOTP_ENCRYPTION_KEY` | Strongly recommended | Encrypts staff MFA secrets; at least 32 random characters. Without it the MFA key is derived from `JWT_SECRET`, so rotating `JWT_SECRET` would break every enrolled authenticator |
+| `TOTP_ENCRYPTION_KEY_PREVIOUS` | Only while rotating | The old `TOTP_ENCRYPTION_KEY` value, so existing secrets keep decrypting until each user's next login re-encrypts them |
+| `BREVO_API_KEY` | Yes | Transactional email (verification, password reset, security notices) |
+| `SUPABASE_URL` | Yes | Supabase project URL, for product images and ID storage |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Server-side Storage access; never expose to the browser |
+| `CRON_SECRET` | Yes | Authenticates Vercel Cron calls to `/api/cron/purge-id-images` |
+
+Generate random values with `node -e "console.log(require('crypto').randomBytes(48).toString('base64'))"`.
+
+**Rotating secrets.**
+- `JWT_SECRET`: logs everyone out (expected). Safe for MFA only once `TOTP_ENCRYPTION_KEY` is set *and* every admin/manager has logged in at least once since — each login moves that account's MFA secret onto the new key. Staff who haven't yet can still sign in with a backup code, or an admin can reset their MFA.
+- `TOTP_ENCRYPTION_KEY`: set the new value, move the old one to `TOTP_ENCRYPTION_KEY_PREVIOUS`, and remove `_PREVIOUS` once all staff have logged in.
+
+**Preview deployments.** `npm run build` skips `prisma migrate deploy` when `VERCEL_ENV=preview` (see `scripts/migrate.mjs`), so pushing a branch never migrates a shared database. Preview still connects to whatever `DATABASE_URL` is scoped to Preview in Vercel; point it at a separate database so previews don't read and write production data.
 
 > Never commit `.env` to git. Keep these values only in Vercel's environment variable settings.
 
