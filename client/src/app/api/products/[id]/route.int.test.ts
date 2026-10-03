@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { DELETE, GET, PATCH } from "./route";
 import { PATCH as adminPATCH } from "@/app/api/admin/products/[id]/route";
+import { POST as restoreRoute } from "@/app/api/admin/products/[id]/restore/route";
 import { GET as adminList } from "@/app/api/admin/products/route";
 import { GET as list } from "@/app/api/products/route";
 import { prisma } from "@/lib/prisma";
@@ -12,6 +13,8 @@ const patch = (id: number, as: SessionUser, body: unknown) =>
   PATCH(request(`/api/products/${id}`, { method: "PATCH", as, body }), params({ id: String(id) }));
 const del = (id: number, as: SessionUser) =>
   DELETE(request(`/api/products/${id}`, { method: "DELETE", as }), params({ id: String(id) }));
+const approveRoute = (id: number, as: SessionUser, approved: boolean) =>
+  adminPATCH(request(`/api/admin/products/${id}`, { method: "PATCH", as, body: { approved } }), params({ id: String(id) }));
 const approval = async (id: number) => (await prisma.product.findUniqueOrThrow({ where: { id } })).approved;
 
 describe("GET /api/products/[id]", () => {
@@ -131,6 +134,7 @@ describe("DELETE /api/products/[id]", () => {
     expect((await get(product.id, manager)).status).toBe(404);
     expect((await patch(product.id, farmer, { stock: 99 })).status).toBe(404);
     expect((await del(product.id, farmer)).status).toBe(404);
+    expect((await approveRoute(product.id, manager, true)).status).toBe(404);
 
     expect(await (await list(request("/api/products"))).json()).toEqual([]);
     expect(await (await list(request(`/api/products?farmerId=${farmer.id}`, { as: farmer }))).json()).toEqual([]);
@@ -138,9 +142,75 @@ describe("DELETE /api/products/[id]", () => {
   });
 });
 
+describe("restoring an archived product", () => {
+  const restore = (id: number, as: SessionUser) =>
+    restoreRoute(request(`/api/admin/products/${id}/restore`, { method: "POST", as }), params({ id: String(id) }));
+  const archivedList = async (as: SessionUser) =>
+    (await adminList(request("/api/admin/products?archived=1", { as }))).json() as Promise<{ id: number }[]>;
+
+  async function archivedProduct({ approved = true } = {}) {
+    const ctx = await placedOrder({ status: "delivered" });
+    if (!approved) await prisma.product.update({ where: { id: ctx.product.id }, data: { approved: false } });
+    await del(ctx.product.id, ctx.farmer);
+    return ctx;
+  }
+
+  it("lists archived products to staff, most recently archived first", async () => {
+    const first = await archivedProduct();
+    const second = await archivedProduct();
+    const manager = await createUser({ role: "manager" });
+
+    expect((await archivedList(manager)).map((p) => p.id)).toEqual([second.product.id, first.product.id]);
+    expect((await adminList(request("/api/admin/products?archived=1", { as: first.farmer }))).status).toBe(403);
+  });
+
+  it("puts an approved product straight back in the shop, with an audit entry", async () => {
+    const { product } = await archivedProduct();
+    const manager = await createUser({ role: "manager" });
+
+    const res = await restore(product.id, manager);
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toMatchObject({ id: product.id, archivedAt: null, approved: true });
+    expect((await get(product.id)).status).toBe(200);
+    expect((await (await list(request("/api/products"))).json()).map((p: { id: number }) => p.id)).toEqual([product.id]);
+    expect(await archivedList(manager)).toEqual([]);
+    expect(await prisma.auditLog.count({ where: { action: "RESTORE_PRODUCT", entityId: product.id, userId: manager.id } })).toBe(1);
+  });
+
+  it("returns a product that was pending when archived to pending, not straight to the shop", async () => {
+    const { farmer, product } = await archivedProduct({ approved: false });
+
+    await restore(product.id, await createUser({ role: "admin" }));
+
+    expect((await get(product.id)).status).toBe(404); // public: still unapproved
+    expect((await get(product.id, farmer)).status).toBe(200); // back in the farmer's list
+  });
+
+  it("is staff-only", async () => {
+    const { farmer, product } = await archivedProduct();
+
+    expect((await restore(product.id, farmer)).status).toBe(403);
+    expect((await restore(product.id, await createUser())).status).toBe(403);
+    expect((await prisma.product.findUniqueOrThrow({ where: { id: product.id } })).archivedAt).not.toBeNull();
+  });
+
+  it("404s for a product that isn't archived, and only logs one restore on a double-click", async () => {
+    const live = await createProduct((await createUser({ role: "farmer" })).id);
+    const { product } = await archivedProduct();
+    const admin = await createUser({ role: "admin" });
+
+    expect((await restore(live.id, admin)).status).toBe(404);
+    expect((await restore(99999, admin)).status).toBe(404);
+
+    const results = await Promise.all([restore(product.id, admin), restore(product.id, admin)]);
+    expect(results.map((r) => r.status).sort()).toEqual([200, 404]);
+    expect(await prisma.auditLog.count({ where: { action: "RESTORE_PRODUCT" } })).toBe(1);
+  });
+});
+
 describe("admin product approval", () => {
-  const approve = (id: number, as: SessionUser, approved: boolean) =>
-    adminPATCH(request(`/api/admin/products/${id}`, { method: "PATCH", as, body: { approved } }), params({ id: String(id) }));
+  const approve = approveRoute;
 
   it("lets a manager approve and reject, with an audit trail", async () => {
     const manager = await createUser({ role: "manager" });

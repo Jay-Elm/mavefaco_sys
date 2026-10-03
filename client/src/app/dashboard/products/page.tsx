@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, Trash2, AlertTriangle, CheckCircle, XCircle, Pencil, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download } from 'lucide-react'
+import { Loader2, Package, Trash2, AlertTriangle, CheckCircle, XCircle, Pencil, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download, ArchiveRestore } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
 
 interface ProductRow {
@@ -13,6 +13,7 @@ interface ProductRow {
   stock: number
   approved: boolean
   createdAt: string
+  archivedAt: string | null
   category: { name: string }
   farmer: { name: string; email: string }
   _count: { orderItems: number }
@@ -38,7 +39,15 @@ export default function DashboardProductsPage() {
 
   const [search, setSearch]           = useState('')
   const [filterCategory, setFilterCategory] = useState('')
-  const [filterStatus, setFilterStatus]     = useState<'all' | 'approved' | 'pending'>('all')
+  const [filterStatus, setFilterStatus]     = useState<'all' | 'approved' | 'pending' | 'archived'>('all')
+  // Archived products come from a separate request, loaded the first time
+  // the "Archived" filter is picked.
+  const [archivedProducts, setArchivedProducts] = useState<ProductRow[] | null>(null)
+  const showingArchived = filterStatus === 'archived'
+  const source = useMemo(
+    () => (showingArchived ? (archivedProducts ?? []) : products),
+    [showingArchived, archivedProducts, products],
+  )
   const [sortKey, setSortKey]         = useState<SortKey>('createdAt')
   const [sortDir, setSortDir]         = useState<SortDir>('desc')
 
@@ -51,13 +60,21 @@ export default function DashboardProductsPage() {
       .finally(() => setLoading(false))
   }, [token])
 
+  useEffect(() => {
+    if (!token || !showingArchived || archivedProducts !== null) return
+    fetch('/api/admin/products?archived=1', { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => r.json())
+      .then((data) => (data.error ? setError(data.error) : setArchivedProducts(data)))
+      .catch(() => setError('Failed to load archived products'))
+  }, [token, showingArchived, archivedProducts])
+
   const categories = useMemo(() => {
-    const names = [...new Set(products.map((p) => p.category.name))].sort()
+    const names = [...new Set(source.map((p) => p.category.name))].sort()
     return names
-  }, [products])
+  }, [source])
 
   const displayed = useMemo(() => {
-    let list = [...products]
+    let list = [...source]
 
     if (search.trim()) {
       const q = search.trim().toLowerCase()
@@ -80,7 +97,7 @@ export default function DashboardProductsPage() {
     })
 
     return list
-  }, [products, search, filterCategory, filterStatus, sortKey, sortDir])
+  }, [source, search, filterCategory, filterStatus, sortKey, sortDir])
 
   function toggleSort(key: SortKey) {
     if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
@@ -107,6 +124,26 @@ export default function DashboardProductsPage() {
     }
   }
 
+  async function handleRestore(id: number) {
+    if (!token) return
+    setActingId(id)
+    setActionError(null)
+    try {
+      const res = await fetch(`/api/admin/products/${id}/restore`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const data = await res.json()
+      if (!res.ok) { setActionError({ id, msg: data.error }); return }
+      setArchivedProducts((prev) => (prev ?? []).filter((p) => p.id !== id))
+      setProducts((prev) => [data, ...prev])
+    } catch {
+      setActionError({ id, msg: 'Request failed' })
+    } finally {
+      setActingId(null)
+    }
+  }
+
   async function handleDelete(id: number, name: string) {
     if (!confirm(`Remove "${name}"?\n\nIt will disappear from the shop. If it has past orders or reviews it is archived so order history stays intact; otherwise it is deleted. This cannot be undone.`)) return
     if (!token) return
@@ -120,6 +157,7 @@ export default function DashboardProductsPage() {
       const data = await res.json()
       if (!res.ok) { setActionError({ id, msg: data.error }); return }
       setProducts((prev) => prev.filter((p) => p.id !== id))
+      if (data.archived) setArchivedProducts(null)
     } catch {
       setActionError({ id, msg: 'Request failed' })
     } finally {
@@ -176,12 +214,13 @@ export default function DashboardProductsPage() {
 
         <select
           value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value as 'all' | 'approved' | 'pending')}
+          onChange={(e) => setFilterStatus(e.target.value as 'all' | 'approved' | 'pending' | 'archived')}
           className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
         >
           <option value="all">All statuses</option>
           <option value="approved">Approved</option>
           <option value="pending">Pending</option>
+          <option value="archived">Archived</option>
         </select>
 
         {(search || filterCategory || filterStatus !== 'all') && (
@@ -194,7 +233,7 @@ export default function DashboardProductsPage() {
         )}
 
         <span className="ml-auto text-xs text-gray-400">
-          {displayed.length} of {products.length} products
+          {displayed.length} of {source.length} {showingArchived ? 'archived ' : ''}products
         </span>
         <button
           onClick={() => downloadCSV(
@@ -203,7 +242,7 @@ export default function DashboardProductsPage() {
             displayed.map((p) => [
               p.name, p.category.name, p.farmer.name, p.farmer.email,
               p.price.toFixed(2), p.stock, p._count.orderItems,
-              p.approved ? 'Approved' : 'Pending',
+              p.archivedAt ? 'Archived' : p.approved ? 'Approved' : 'Pending',
               new Date(p.createdAt).toLocaleDateString('en-PH'),
             ])
           )}
@@ -255,7 +294,11 @@ export default function DashboardProductsPage() {
               <tr>
                 <td colSpan={8} className="text-center py-12 text-gray-400">
                   <Package size={32} className="mx-auto mb-2" />
-                  {products.length === 0 ? 'No products yet' : 'No products match your filters'}
+                  {showingArchived && archivedProducts === null
+                    ? 'Loading archived products…'
+                    : source.length === 0
+                      ? (showingArchived ? 'No archived products' : 'No products yet')
+                      : 'No products match your filters'}
                 </td>
               </tr>
             ) : (
@@ -286,7 +329,14 @@ export default function DashboardProductsPage() {
                       {p._count.orderItems}
                     </td>
                     <td className="px-5 py-3 text-center">
-                      {p.approved ? (
+                      {p.archivedAt ? (
+                        <span
+                          title={`Archived ${new Date(p.archivedAt).toLocaleDateString('en-PH')}${p.approved ? ' (was approved)' : ' (was pending)'}`}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full"
+                        >
+                          Archived
+                        </span>
+                      ) : p.approved ? (
                         <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
                           <CheckCircle size={11} /> Approved
                         </span>
@@ -301,6 +351,17 @@ export default function DashboardProductsPage() {
                         {actingId === p.id && (
                           <Loader2 size={14} className="animate-spin text-gray-400" />
                         )}
+                        {p.archivedAt ? (
+                          <button
+                            onClick={() => handleRestore(p.id)}
+                            disabled={actingId === p.id}
+                            title={p.approved ? 'Restore — goes straight back into the shop' : 'Restore — returns to pending review'}
+                            className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-tint text-forest hover:bg-forest/10 transition-colors disabled:opacity-40"
+                          >
+                            <ArchiveRestore size={12} />
+                            Restore
+                          </button>
+                        ) : (<>
                         {!p.approved ? (
                           <button
                             onClick={() => handleApprove(p.id, true)}
@@ -335,6 +396,7 @@ export default function DashboardProductsPage() {
                           <Trash2 size={12} />
                           Delete
                         </button>
+                        </>)}
                       </div>
                     </td>
                   </tr>
