@@ -16,7 +16,7 @@ Everything above is merged to `master` and deployed to production. Nothing is mi
 
 ## What's realistically left (not required for submission, but real gaps)
 
-- **No test coverage for API routes or anything touching Prisma/the DB** — the new Vitest suite deliberately only covers pure logic (validators, JWT/role/URL helpers) to avoid the bigger decision of a test-DB strategy or mocking `@prisma/client`. Natural next step if more testing is wanted.
+- **Integration tests only cover orders so far** (added 2026-10-03, `npm run test:integration`, real Postgres test DB rather than mocking Prisma). They surfaced two order-stock bugs, both pinned with `it.fails` until fixed: the farmer order route restocks on every re-cancel, and the admin/manager route never restocks on cancel.
 - **~30 simpler CRUD routes** (announcements, FAQs, categories, crop logs, reviews, messages, products) still validate inline rather than through `src/validators/` — deliberate scope cut, revisit only if their validation logic grows.
 - Everything in `DEVELOPMENT_STATUS.md`'s "Not Yet Built / Out of Scope" list — real-time chat, push notifications, AI pest advisory, market price API, language toggle, print receipts, DB backup/restore — none required for capstone scope.
 

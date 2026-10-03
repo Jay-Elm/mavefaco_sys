@@ -1,0 +1,45 @@
+name: Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # Throwaway CI container — not a real credential. globalSetup creates
+      # the database and runs migrations against it.
+      TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/capstone_test
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "lts/*"
+
+      - run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Integration tests (route handlers against Postgres)
+        run: npm run test:integration
