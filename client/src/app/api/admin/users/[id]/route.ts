@@ -17,7 +17,7 @@ async function resolveTarget(id: string) {
   });
 }
 
-/** PATCH /api/admin/users/[id]  — suspend or unsuspend */
+/** PATCH /api/admin/users/[id] — suspend/unsuspend, verify, reset password, reset MFA */
 export async function PATCH(
   req: NextRequest,
   context: { params: Promise<{ id: string }> },
@@ -33,21 +33,29 @@ export async function PATCH(
     if (!target) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
     if (target.id === actor.id)
-      return NextResponse.json({ error: "You cannot suspend yourself" }, { status: 400 });
+      return NextResponse.json({ error: "You cannot change your own account here" }, { status: 400 });
 
-    // Managers cannot suspend admins or other managers
+    // Managers cannot change admins or other managers
     if (actor.role === ROLES.MANAGER && [ROLES.ADMIN, ROLES.MANAGER].includes(target.role as never))
-      return NextResponse.json({ error: "Managers can only suspend farmers and customers" }, { status: 403 });
-
-    // Admins cannot suspend other admins
-    if (actor.role === ROLES.ADMIN && target.role === ROLES.ADMIN)
-      return NextResponse.json({ error: "Cannot suspend another admin" }, { status: 403 });
+      return NextResponse.json({ error: "Managers can only change farmers and customers" }, { status: 403 });
 
     const parsed = adminUserPatchSchema.safeParse(await req.json());
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
     const { suspended, verified, newPassword, resetMfa } = parsed.data;
+
+    // The only thing one admin can do to another is reset their two-factor
+    // authentication, so a peer can recover an admin who lost their
+    // authenticator. That alone can't take the account over: the target
+    // keeps their password, is emailed, and re-enrolls at next login.
+    // Suspending, verifying or resetting another admin's password stays
+    // blocked; password plus MFA reset together would be a full takeover.
+    if (target.role === ROLES.ADMIN && (suspended !== undefined || verified !== undefined || newPassword !== undefined))
+      return NextResponse.json(
+        { error: "Admins can only reset another admin's two-factor authentication" },
+        { status: 403 },
+      );
 
     if (newPassword !== undefined && actor.role !== ROLES.ADMIN)
       return NextResponse.json({ error: "Only admins can reset passwords" }, { status: 403 });

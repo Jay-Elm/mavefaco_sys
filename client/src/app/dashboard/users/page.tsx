@@ -219,10 +219,11 @@ export default function UsersPage() {
   const isSelf     = (u: UserRow) => u.id === currentUser?.id
   const canSuspend = (u: UserRow) => !isSelf(u) && u.role !== 'admin'
   const canDelete  = (u: UserRow) => currentUser?.role === 'admin' && !isSelf(u) && u.role !== 'admin'
-  const canResetPw = (u: UserRow) => currentUser?.role === 'admin' && !isSelf(u)
-  // Admins can't manage other admins at all (see the PATCH route's own
-  // guard) — resetting MFA only ever works on a manager target.
-  const canResetMfa = (u: UserRow) => currentUser?.role === 'admin' && !isSelf(u) && u.role === 'manager' && u.totpEnabled
+  // Another admin's password can't be reset here (see the PATCH route's
+  // guard) — they use forgot-password. Their 2FA can, for lost-device recovery.
+  const canResetPw = (u: UserRow) => currentUser?.role === 'admin' && !isSelf(u) && u.role !== 'admin'
+  const canResetMfa = (u: UserRow) =>
+    currentUser?.role === 'admin' && !isSelf(u) && (u.role === 'manager' || u.role === 'admin') && u.totpEnabled
 
   if (loading) {
     return (
