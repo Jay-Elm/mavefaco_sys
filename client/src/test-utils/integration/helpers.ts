@@ -69,3 +69,33 @@ export function request(
 export function params<T extends Record<string, string>>(p: T) {
   return { params: Promise.resolve(p) };
 }
+
+/**
+ * Forces a true overlap between concurrent requests: holds a row lock on
+ * `table`/`id` (from a separate connection) while `run` fires the requests,
+ * waits until `waiters` of them are blocked on that lock — i.e. they've all
+ * done their reads and are about to write — then releases it.
+ */
+export async function withRowLocked<T>(table: string, id: number, waiters: number, run: () => Promise<T>): Promise<T> {
+  const { Client } = await import("pg");
+  const holder = new Client({ connectionString: process.env.DATABASE_URL });
+  await holder.connect();
+  try {
+    await holder.query("BEGIN");
+    await holder.query(`SELECT 1 FROM "${table}" WHERE id = $1 FOR UPDATE`, [id]);
+    const pending = run();
+    for (let i = 0; i < 200; i++) {
+      // Stats views are snapshotted per transaction; refresh before each look.
+      await holder.query("SELECT pg_stat_clear_snapshot()");
+      const { rows } = await holder.query(
+        "SELECT count(*)::int AS n FROM pg_stat_activity WHERE datname = current_database() AND wait_event_type = 'Lock'",
+      );
+      if (rows[0].n >= waiters) break;
+      await new Promise((r) => setTimeout(r, 25));
+    }
+    await holder.query("COMMIT");
+    return await pending;
+  } finally {
+    await holder.end();
+  }
+}

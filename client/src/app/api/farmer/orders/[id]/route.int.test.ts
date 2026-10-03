@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { PATCH } from "./route";
+import { PATCH as customerPATCH } from "@/app/api/customer/orders/[id]/route";
 import { prisma } from "@/lib/prisma";
-import { createUser, params, request, type SessionUser } from "@/test-utils/integration/helpers";
+import { createUser, params, request, withRowLocked, type SessionUser } from "@/test-utils/integration/helpers";
 import { placedOrder } from "@/test-utils/integration/orders";
 
 const setStatus = (as: SessionUser | undefined, orderId: number, status: string) =>
@@ -44,18 +45,45 @@ describe("PATCH /api/farmer/orders/[id]", () => {
     expect((await setStatus(farmer, order.id, "teleported")).status).toBe(400);
   });
 
-  // KNOWN BUG: this route accepts any status from any status, and every
-  // move to "cancelled" restocks. Cancelling an already-cancelled order
-  // (or one the customer cancelled first) inflates stock past what exists.
-  // `it.fails` passes while the bug is present — once the route enforces
-  // transitions, this starts failing: change it to a plain `it`.
-  it.fails("does not restock a second time when an already-cancelled order is cancelled again", async () => {
+  it("does not restock a second time when an already-cancelled order is cancelled again", async () => {
     const { farmer, order, stockNow } = await placedOrder({ stock: 10, quantity: 3 });
 
     await setStatus(farmer, order.id, "cancelled");
     const again = await setStatus(farmer, order.id, "cancelled");
 
     expect(again.status).toBe(400);
+    expect(await stockNow()).toBe(10);
+  });
+
+  it.each([
+    ["pending", "shipped"], // skipping a step
+    ["shipped", "cancelled"], // already on its way
+    ["delivered", "cancelled"],
+    ["delivered", "pending"],
+    ["cancelled", "confirmed"],
+  ])("refuses %s → %s and leaves stock alone", async (from, to) => {
+    const { farmer, order, stockNow } = await placedOrder({ status: from, stock: 10, quantity: 3 });
+
+    expect((await setStatus(farmer, order.id, to)).status).toBe(400);
+    expect((await prisma.order.findUniqueOrThrow({ where: { id: order.id } })).status).toBe(from);
+    expect(await stockNow()).toBe(7);
+  });
+
+  it("restocks only once when the farmer and the customer cancel at the same moment", async () => {
+    const { farmer, customer, order, stockNow } = await placedOrder({ stock: 10, quantity: 3 });
+
+    // Both requests see "pending", then queue on the order row before writing.
+    const results = await withRowLocked("Order", order.id, 2, () =>
+      Promise.all([
+        setStatus(farmer, order.id, "cancelled"),
+        customerPATCH(
+          request(`/api/customer/orders/${order.id}`, { method: "PATCH", as: customer, body: { status: "cancelled" } }),
+          params({ id: String(order.id) }),
+        ),
+      ]),
+    );
+
+    expect(results.filter((r) => r.status === 200)).toHaveLength(1);
     expect(await stockNow()).toBe(10);
   });
 });

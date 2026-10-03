@@ -16,7 +16,7 @@ Everything above is merged to `master` and deployed to production. Nothing is mi
 
 ## What's realistically left (not required for submission, but real gaps)
 
-- **Integration tests only cover orders so far** (added 2026-10-03, `npm run test:integration`, real Postgres test DB rather than mocking Prisma). They surfaced two order-stock bugs, both pinned with `it.fails` until fixed: the farmer order route restocks on every re-cancel, and the admin/manager route never restocks on cancel.
+- **Integration tests only cover orders so far** (added 2026-10-03, `npm run test:integration`, real Postgres test DB rather than mocking Prisma). They surfaced two order-stock bugs, both fixed the same day: the farmer order route restocked on every re-cancel (now enforces forward-only transitions), and the admin/manager route never restocked on cancel (now restocks, and re-reserves stock when an admin reopens a cancelled order). All three order-status routes now use a conditional update so concurrent changes can't double-apply.
 - **~30 simpler CRUD routes** (announcements, FAQs, categories, crop logs, reviews, messages, products) still validate inline rather than through `src/validators/` — deliberate scope cut, revisit only if their validation logic grows.
 - Everything in `DEVELOPMENT_STATUS.md`'s "Not Yet Built / Out of Scope" list — real-time chat, push notifications, AI pest advisory, market price API, language toggle, print receipts, DB backup/restore — none required for capstone scope.
 

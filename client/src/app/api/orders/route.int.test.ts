@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { POST } from "./route";
 import { prisma } from "@/lib/prisma";
-import { createProduct, createUser, request, type SessionUser } from "@/test-utils/integration/helpers";
+import { createProduct, createUser, request, withRowLocked, type SessionUser } from "@/test-utils/integration/helpers";
 
 const checkout = (as: SessionUser | undefined, items: { productId: number; quantity: number }[]) =>
   POST(request("/api/orders", { method: "POST", as, body: { items, paymentMethod: "cod", deliveryMethod: "pickup" } }));
@@ -56,10 +56,13 @@ describe("POST /api/orders (checkout)", () => {
     const [alice, bob] = [await createUser(), await createUser()];
     const last = await createProduct(farmer.id, { stock: 1 });
 
-    const results = await Promise.all([
-      checkout(alice, [{ productId: last.id, quantity: 1 }]),
-      checkout(bob, [{ productId: last.id, quantity: 1 }]),
-    ]);
+    // Both checkouts read stock = 1, then queue on the product row before decrementing.
+    const results = await withRowLocked("Product", last.id, 2, () =>
+      Promise.all([
+        checkout(alice, [{ productId: last.id, quantity: 1 }]),
+        checkout(bob, [{ productId: last.id, quantity: 1 }]),
+      ]),
+    );
 
     expect(results.map((r) => r.status).sort()).toEqual([201, 400]);
     expect(await prisma.order.count()).toBe(1);

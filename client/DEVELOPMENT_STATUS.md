@@ -253,7 +253,7 @@ After every `prisma migrate dev`, run `prisma generate` separately. The generate
 - Dashboard + Farmer layouts: `flex h-full overflow-hidden` — sidebar and content scroll independently
 
 ### Automated tests
-Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/order/helpers schemas) and the security-critical parts of `src/lib/` (`getJwtSecret`/`verifyToken`, `authorize`, `isSafeUrl`). `npm run test:integration` (`vitest.integration.config.mts`) calls route handlers directly against a real Postgres database — `<DATABASE_URL db name>_test` on localhost by default, or `TEST_DATABASE_URL`. It refuses any database that isn't on localhost with a name ending in `_test`, creates the database and runs `prisma migrate deploy` on first run, and truncates every table before each test. Test files are `*.int.test.ts` next to the route; helpers (users, products, signed session cookies) are in `src/test-utils/integration/`. Coverage so far: checkout (`POST /api/orders`, including a concurrent last-unit race) and the three order-status routes (customer, farmer, admin/manager). Two known bugs are pinned with `it.fails` — see Known Technical Debt.
+Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/order/helpers schemas) and the security-critical parts of `src/lib/` (`getJwtSecret`/`verifyToken`, `authorize`, `isSafeUrl`). `npm run test:integration` (`vitest.integration.config.mts`) calls route handlers directly against a real Postgres database — `<DATABASE_URL db name>_test` on localhost by default, or `TEST_DATABASE_URL`. It refuses any database that isn't on localhost with a name ending in `_test`, creates the database and runs `prisma migrate deploy` on first run, and truncates every table before each test. Test files are `*.int.test.ts` next to the route; helpers (users, products, signed session cookies) are in `src/test-utils/integration/`. Coverage so far: checkout (`POST /api/orders`) and the three order-status routes (customer, farmer, admin/manager). Race tests use `withRowLocked()` to force two requests to genuinely overlap rather than hoping they do.
 
 ---
 
@@ -262,8 +262,6 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 | Issue | Severity | Notes |
 |-------|----------|-------|
 | Integration tests cover orders only | Low | Checkout and order-status routes are tested against a real DB; auth/MFA, products, reviews, messages and admin user management routes aren't yet |
-| Farmer order route allows any status transition | Medium | `PATCH /api/farmer/orders/[id]` restocks on every move to `cancelled`, so re-cancelling an order inflates stock. Pinned by an `it.fails` test |
-| Admin/manager cancel never restocks | Medium | `PATCH /api/admin/orders/[id]` doesn't return stock on cancel, unlike the customer and farmer routes. Pinned by an `it.fails` test |
 | ~30 simpler CRUD routes on inline validation | Low | announcements, faqs, categories, crop logs, reviews, messages, products not migrated to `src/validators/` — no client/server duplication to drift, so not urgent |
 | No image upload for site banners/site-content | Low | Some fields still URL-only |
 | Messaging is polling, not WebSocket | Low | 8s interval; acceptable for capstone |

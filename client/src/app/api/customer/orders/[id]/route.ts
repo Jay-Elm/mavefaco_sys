@@ -43,11 +43,14 @@ export async function PATCH(
   }
 
   const updated = await prisma.$transaction(async (tx) => {
-    const result = await tx.order.update({
-      where: { id: orderId },
+    // Conditional on the status we validated against, so a concurrent
+    // cancel (e.g. the farmer rejecting at the same moment) can't also apply
+    // and restock a second time.
+    const { count } = await tx.order.updateMany({
+      where: { id: orderId, status: order.status },
       data: { status },
-      select: { id: true, status: true },
     })
+    if (count === 0) return null
 
     if (status === 'cancelled') {
       const items = await tx.orderItem.findMany({ where: { orderId } })
@@ -68,8 +71,10 @@ export async function PATCH(
       },
     })
 
-    return result
+    return { id: orderId, status }
   })
 
+  if (!updated)
+    return NextResponse.json({ error: 'Order status changed, please refresh' }, { status: 409 })
   return NextResponse.json(updated)
 }

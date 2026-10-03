@@ -6,6 +6,18 @@ import { NextRequest, NextResponse } from "next/server";
 
 const VALID_STATUSES = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
 
+// Forward-only, matching the actions the farmer Orders page offers. Without
+// this, re-cancelling an order restocked it a second time.
+const FARMER_TRANSITIONS: Record<string, string[]> = {
+  pending:   ["confirmed", "cancelled"],
+  confirmed: ["shipped",   "cancelled"],
+  shipped:   ["delivered"],
+  delivered: [],
+  cancelled: [],
+};
+
+class StaleStatusError extends Error {}
+
 /** PATCH /api/farmer/orders/[id] — farmer updates status on their own orders */
 export async function PATCH(
   req: NextRequest,
@@ -39,12 +51,20 @@ export async function PATCH(
         { status: 400 },
       );
 
+    if (!(FARMER_TRANSITIONS[order.status] ?? []).includes(status))
+      return NextResponse.json(
+        { error: `Cannot move order from "${order.status}" to "${status}"` },
+        { status: 400 },
+      );
+
     const updated = await prisma.$transaction(async (tx) => {
-      const result = await tx.order.update({
-        where: { id: orderId },
+      // Conditional on the status we validated against, so two concurrent
+      // requests can't both apply (and both restock).
+      const { count } = await tx.order.updateMany({
+        where: { id: orderId, status: order.status },
         data: { status },
-        select: { id: true, status: true },
       });
+      if (count === 0) throw new StaleStatusError();
 
       if (status === "cancelled") {
         const items = await tx.orderItem.findMany({ where: { orderId } });
@@ -65,11 +85,13 @@ export async function PATCH(
         },
       });
 
-      return result;
+      return { id: orderId, status };
     });
 
     return NextResponse.json(updated);
-  } catch {
+  } catch (err) {
+    if (err instanceof StaleStatusError)
+      return NextResponse.json({ error: "Order status changed, please refresh" }, { status: 409 });
     return NextResponse.json({ error: "Failed to update order" }, { status: 500 });
   }
 }
