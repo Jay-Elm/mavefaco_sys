@@ -98,7 +98,7 @@ export default function AnnouncementsPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Announcements</h1>
+        <h1 className="font-serif text-2xl font-bold text-gray-900">Announcements</h1>
         <span className="text-sm text-gray-500">{items.length} posted</span>
       </div>
 
@@ -144,7 +144,7 @@ export default function AnnouncementsPage() {
             <button
               type="submit"
               disabled={posting || !title.trim() || !body.trim()}
-              className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
             >
               {posting ? <Loader2 size={14} className="animate-spin" /> : <Megaphone size={14} />}
               Post

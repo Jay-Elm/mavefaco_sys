@@ -208,7 +208,7 @@ export default function FarmerProfilePage() {
   return (
     <div className="p-8 max-w-lg space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Profile</h1>
+        <h1 className="font-serif text-2xl font-bold text-gray-900 mb-6">Profile</h1>
 
         {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
         {success && (
@@ -238,7 +238,7 @@ export default function FarmerProfilePage() {
           <div className="pt-2">
             <button
               type="submit" disabled={submitting}
-              className="inline-flex items-center gap-2 px-5 py-2 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors disabled:opacity-60"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
             >
               {submitting && <Loader2 size={14} className="animate-spin" />}
               {submitting ? 'Saving…' : 'Save Name'}
@@ -288,7 +288,7 @@ export default function FarmerProfilePage() {
           <div className="pt-1">
             <button
               type="submit" disabled={emailSubmitting}
-              className="inline-flex items-center gap-2 px-5 py-2 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors disabled:opacity-60"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
             >
               {emailSubmitting && <Loader2 size={14} className="animate-spin" />}
               {emailSubmitting ? 'Saving…' : 'Change Email'}
@@ -340,7 +340,7 @@ export default function FarmerProfilePage() {
             type="button"
             onClick={() => idFileRef.current?.click()}
             disabled={savingId}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors disabled:opacity-60"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
           >
             {savingId && <Loader2 size={14} className="animate-spin" />}
             {savingId ? 'Uploading…' : profileData.hasIdImage ? 'Replace ID photo' : 'Upload ID photo'}

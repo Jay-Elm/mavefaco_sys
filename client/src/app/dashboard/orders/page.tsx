@@ -144,7 +144,7 @@ export default function OrdersPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
+        <h1 className="font-serif text-2xl font-bold text-gray-900">Orders</h1>
         <span className="text-sm text-gray-500">{orders.length} total</span>
       </div>
 

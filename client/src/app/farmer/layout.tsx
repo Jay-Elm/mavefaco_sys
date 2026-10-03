@@ -41,7 +41,7 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
   }
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-gray-50">
+    <div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-tint">
 
       {/* Mobile backdrop */}
       {sidebarOpen && (
@@ -55,14 +55,14 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
       <aside
         className={`
           fixed lg:static inset-y-0 left-0 z-30
-          w-56 bg-gray-900 text-white flex flex-col overflow-y-auto shrink-0
+          w-56 bg-forest text-white flex flex-col overflow-y-auto shrink-0
           transition-transform duration-200
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
-        <div className="px-5 py-4 flex items-center gap-2 border-b border-gray-700">
-          <Leaf size={18} className="text-green-400" />
-          <span className="font-semibold text-sm">Farmer Portal</span>
+        <div className="px-5 py-4 flex items-center gap-2 border-b border-white/10">
+          <Leaf size={18} className="text-white/80" />
+          <span className="font-serif font-semibold">Farmer Portal</span>
         </div>
 
         <nav className="flex-1 py-4 space-y-0.5 px-2">
@@ -73,7 +73,7 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
                 key={href}
                 href={href}
                 className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${
-                  active ? 'bg-green-700 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                  active ? 'bg-forest-mid text-white' : 'text-white/75 hover:bg-white/10 hover:text-white'
                 }`}
               >
                 <Icon size={16} />
@@ -83,11 +83,11 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
           })}
         </nav>
 
-        <div className="px-4 py-3 border-t border-gray-700">
-          <p className="text-xs text-gray-400 truncate">{user.name}</p>
+        <div className="px-4 py-3 border-t border-white/10">
+          <p className="text-xs text-white/60 truncate">{user.name}</p>
           <button
             onClick={() => setShowLogoutConfirm(true)}
-            className="mt-1 text-xs text-gray-400 hover:text-white transition-colors"
+            className="mt-1 text-xs text-white/60 hover:text-white transition-colors"
           >
             Logout
           </button>

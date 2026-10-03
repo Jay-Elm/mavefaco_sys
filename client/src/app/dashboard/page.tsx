@@ -79,7 +79,7 @@ export default function DashboardOverviewPage() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Overview</h1>
+      <h1 className="font-serif text-2xl font-bold text-gray-900 mb-6">Overview</h1>
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
@@ -131,7 +131,7 @@ export default function DashboardOverviewPage() {
       {canSeeFarmerStats && (
         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
           <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
-            <Leaf size={18} className="text-green-600" />
+            <Leaf size={18} className="text-forest" />
             <h2 className="font-semibold text-gray-900">Farmer Performance</h2>
           </div>
           {farmerStats.length === 0 ? (

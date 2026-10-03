@@ -62,8 +62,8 @@ export default function SitePage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center gap-3 mb-6">
-        <Globe size={22} className="text-green-700" />
-        <h1 className="text-2xl font-bold text-gray-900">Site Content</h1>
+        <Globe size={22} className="text-forest" />
+        <h1 className="font-serif text-2xl font-bold text-gray-900">Site Content</h1>
       </div>
 
       {/* Tabs */}
@@ -79,7 +79,7 @@ export default function SitePage() {
               onClick={() => setTab(key)}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
                 tab === key
-                  ? 'border-green-600 text-green-700'
+                  ? 'border-forest text-forest'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -212,7 +212,7 @@ function BannersTab({ token }: { token: string | null }) {
               <button
                 type="submit"
                 disabled={posting || !title.trim()}
-                className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
               >
                 {posting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
                 Add
@@ -244,7 +244,7 @@ function BannersTab({ token }: { token: string | null }) {
                   <button
                     onClick={() => toggleActive(b)}
                     disabled={togglingId === b.id}
-                    className="text-xs px-3 py-1 rounded-full border transition-colors disabled:opacity-40 border-gray-300 hover:border-green-500 hover:text-green-700"
+                    className="text-xs px-3 py-1 rounded-full border transition-colors disabled:opacity-40 border-gray-300 hover:border-forest hover:text-forest"
                   >
                     {togglingId === b.id ? <Loader2 size={12} className="animate-spin inline" /> : b.active ? 'Hide' : 'Show'}
                   </button>
@@ -342,7 +342,7 @@ function InfoTab({ token }: { token: string | null }) {
       <button
         type="submit"
         disabled={saving}
-        className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors"
+        className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors"
       >
         {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
         Save Changes
@@ -430,7 +430,7 @@ function FaqsTab({ token }: { token: string | null }) {
             <button
               type="submit"
               disabled={posting || !question.trim() || !answer.trim()}
-              className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
             >
               {posting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
               Add

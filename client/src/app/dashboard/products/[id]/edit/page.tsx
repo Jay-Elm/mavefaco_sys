@@ -83,7 +83,7 @@ export default function AdminEditProductPage() {
 
   return (
     <div className="p-8 max-w-xl">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Edit Product</h1>
+      <h1 className="font-serif text-2xl font-bold text-gray-900 mb-6">Edit Product</h1>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
@@ -145,7 +145,7 @@ export default function AdminEditProductPage() {
         <div className="flex gap-3 pt-2">
           <button
             type="submit" disabled={submitting}
-            className="inline-flex items-center gap-2 px-5 py-2 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors disabled:opacity-60"
+            className="inline-flex items-center gap-2 px-5 py-2 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
           >
             {submitting && <Loader2 size={14} className="animate-spin" />}
             {submitting ? 'Saving…' : 'Save Changes'}

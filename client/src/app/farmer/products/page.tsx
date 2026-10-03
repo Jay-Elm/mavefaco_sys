@@ -82,7 +82,7 @@ export default function FarmerProductsPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">My Products</h1>
+        <h1 className="font-serif text-2xl font-bold text-gray-900">My Products</h1>
         <div className="flex items-center gap-2">
           <button
             onClick={() => downloadCSV(
@@ -101,7 +101,7 @@ export default function FarmerProductsPage() {
           </button>
           <Link
             href="/farmer/products/new"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors"
           >
             <Plus size={16} />
             Add Product

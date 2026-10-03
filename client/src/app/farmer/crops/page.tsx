@@ -54,8 +54,8 @@ export default function CropsPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center gap-3 mb-6">
-        <Sprout size={22} className="text-green-600" />
-        <h1 className="text-2xl font-bold text-gray-900">Crop Monitor</h1>
+        <Sprout size={22} className="text-forest" />
+        <h1 className="font-serif text-2xl font-bold text-gray-900">Crop Monitor</h1>
         <span className="text-sm text-gray-400 ml-auto">{crops.length} crops</span>
       </div>
 
@@ -65,7 +65,7 @@ export default function CropsPage() {
         <div className="text-center py-16 text-gray-400">
           <Sprout size={40} className="mx-auto mb-3" />
           <p>No products yet. Add products to start monitoring.</p>
-          <Link href="/farmer/products/new" className="mt-3 inline-block text-green-700 text-sm font-medium hover:underline">
+          <Link href="/farmer/products/new" className="mt-3 inline-block text-forest text-sm font-medium hover:underline">
             Add Product →
           </Link>
         </div>
@@ -131,7 +131,7 @@ export default function CropsPage() {
                     <td className="px-5 py-3 text-right">
                       <Link
                         href={`/farmer/crops/${c.id}`}
-                        className="inline-flex items-center gap-1 text-xs font-medium text-green-700 hover:text-green-900"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-forest hover:text-forest-mid"
                       >
                         Monitor <ChevronRight size={13} />
                       </Link>

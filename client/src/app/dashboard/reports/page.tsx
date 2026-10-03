@@ -219,11 +219,11 @@ export default function ReportsPage() {
     <div className="p-4 sm:p-8">
       {/* Header */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mr-auto">Reports</h1>
+        <h1 className="font-serif text-2xl font-bold text-gray-900 mr-auto">Reports</h1>
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => downloadFullReport(data)}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-green-700 hover:bg-green-800 text-white rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-forest hover:bg-forest-mid text-white rounded-lg transition-colors"
           >
             <Download size={14} />
             Export Full Report

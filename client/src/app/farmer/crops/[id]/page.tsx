@@ -159,14 +159,14 @@ export default function CropDetailPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl">
-      <Link href="/farmer/crops" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-green-700 mb-6">
+      <Link href="/farmer/crops" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-forest mb-6">
         <ArrowLeft size={15} /> Back to Crop Monitor
       </Link>
 
       <div className="flex flex-wrap items-center gap-3 mb-6">
-        <Sprout size={20} className="text-green-600 shrink-0" />
+        <Sprout size={20} className="text-forest shrink-0" />
         <div className="min-w-0">
-          <h1 className="text-2xl font-bold text-gray-900 truncate">{crop.name}</h1>
+          <h1 className="font-serif text-2xl font-bold text-gray-900 truncate">{crop.name}</h1>
           <p className="text-sm text-gray-400">{crop.category.name} · {crop.stock} units in stock</p>
         </div>
         {crop.readyForHarvest && (
@@ -206,7 +206,7 @@ export default function CropDetailPage() {
               type="checkbox"
               checked={readyForHarvest}
               onChange={(e) => setReadyForHarvest(e.target.checked)}
-              className="w-4 h-4 accent-green-600"
+              className="w-4 h-4 accent-forest"
             />
             <span className="text-sm font-medium text-gray-700">Mark as Ready for Harvest</span>
           </label>
@@ -220,7 +220,7 @@ export default function CropDetailPage() {
           <button
             type="submit"
             disabled={saving}
-            className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
           >
             {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
             Save Changes
@@ -242,11 +242,11 @@ export default function CropDetailPage() {
                 onClick={() => setLogType(value)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
                   logType === value
-                    ? 'border-green-600 bg-green-50 text-green-700'
+                    ? 'border-forest bg-tint text-forest'
                     : 'border-gray-200 text-gray-500 hover:border-gray-400'
                 }`}
               >
-                <Icon size={13} className={logType === value ? 'text-green-600' : cls} />
+                <Icon size={13} className={logType === value ? 'text-forest' : cls} />
                 {label}
               </button>
             ))}

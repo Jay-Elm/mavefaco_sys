@@ -73,13 +73,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside
         className={`
           fixed lg:static inset-y-0 left-0 z-30
-          w-56 shrink-0 bg-gray-900 text-gray-300 flex flex-col overflow-y-auto
+          w-56 shrink-0 bg-forest text-white/75 flex flex-col overflow-y-auto
           transition-transform duration-200
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
-        <div className="px-4 py-5 border-b border-gray-700">
-          <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+        <div className="px-4 py-5 border-b border-white/10">
+          <p className="text-xs font-semibold uppercase tracking-wider text-white/50">
             {user.role === 'admin' ? 'Admin' : 'Manager'} Panel
           </p>
           <p className="text-sm font-medium text-white mt-0.5 truncate">{user.name}</p>
@@ -93,7 +93,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={href}
                 href={href}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  active ? 'bg-green-700 text-white' : 'hover:bg-gray-800 hover:text-white'
+                  active ? 'bg-forest-mid text-white' : 'hover:bg-white/10 hover:text-white'
                 }`}
               >
                 <Icon size={16} />
@@ -103,13 +103,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           })}
         </nav>
 
-        <div className="px-4 py-4 border-t border-gray-700 text-xs text-gray-500">
+        <div className="px-4 py-4 border-t border-white/10 text-xs text-white/40">
           CoopMarket v0.1
         </div>
       </aside>
 
       {/* Main content */}
-      <div className="flex-1 bg-gray-50 overflow-y-auto min-w-0">
+      <div className="flex-1 bg-tint overflow-y-auto min-w-0">
         {/* Mobile top bar */}
         <div className="lg:hidden flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-200 sticky top-0 z-10">
           <button

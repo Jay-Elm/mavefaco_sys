@@ -141,7 +141,7 @@ export default function DashboardProductsPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-y-3 mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Products</h1>
+        <h1 className="font-serif text-2xl font-bold text-gray-900">Products</h1>
         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
           {pending > 0 && (
             <span className="bg-yellow-100 text-yellow-800 font-semibold px-2.5 py-1 rounded-full">
