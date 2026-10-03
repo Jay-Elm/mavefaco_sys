@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
@@ -6,18 +7,20 @@ import type { Role } from "@/lib/roles";
 
 let seq = 0;
 
-export async function createUser(overrides: { role?: Role; suspended?: boolean; name?: string } = {}) {
+export async function createUser(
+  overrides: { role?: Role; suspended?: boolean; name?: string; password?: string; emailVerified?: boolean } = {},
+) {
   seq++;
   return prisma.user.create({
     data: {
       name: overrides.name ?? `Test User ${seq}`,
       email: `user${seq}-${Date.now()}@test.local`,
-      // Not a real bcrypt hash — route handlers under test authenticate via
-      // the session cookie, never the password.
-      password: "not-a-real-hash",
+      // Real hash only when a test logs in with a password (cost 4 keeps it
+      // fast); everything else authenticates via the session cookie.
+      password: overrides.password ? await bcrypt.hash(overrides.password, 4) : "not-a-real-hash",
       role: overrides.role ?? "customer",
       suspended: overrides.suspended ?? false,
-      emailVerifiedAt: new Date(),
+      emailVerifiedAt: overrides.emailVerified === false ? null : new Date(),
     },
   });
 }
@@ -43,21 +46,49 @@ export async function createProduct(
 
 export type SessionUser = { id: number; email: string; role: string; tokenVersion: number };
 
+/** A session JWT signed the same way as issueSessionResponse. */
+export function sessionToken(as: SessionUser) {
+  return jwt.sign(
+    { id: as.id, email: as.email, role: as.role, tokenVersion: as.tokenVersion },
+    getJwtSecret(),
+    { expiresIn: "1h" },
+  );
+}
+
+let ipSeq = 0;
+/**
+ * A fresh client IP per call. The in-memory rate limiter keys on IP and
+ * lives for the whole test file, so tests that don't vary it would start
+ * hitting each other's limits.
+ */
+export function freshIp() {
+  ipSeq++;
+  return { "x-forwarded-for": `10.0.${Math.floor(ipSeq / 250)}.${ipSeq % 250}` };
+}
+
 /** Builds a request carrying a session cookie signed the same way as issueSessionResponse. */
 export function request(
   path: string,
-  { method = "GET", body, as }: { method?: string; body?: unknown; as?: SessionUser } = {},
+  {
+    method = "GET",
+    body,
+    as,
+    cookies = {},
+    headers: extraHeaders = {},
+  }: {
+    method?: string;
+    body?: unknown;
+    as?: SessionUser;
+    cookies?: Record<string, string>;
+    headers?: Record<string, string>;
+  } = {},
 ) {
-  const headers = new Headers();
+  const headers = new Headers(extraHeaders);
   if (body !== undefined) headers.set("content-type", "application/json");
-  if (as) {
-    const token = jwt.sign(
-      { id: as.id, email: as.email, role: as.role, tokenVersion: as.tokenVersion },
-      getJwtSecret(),
-      { expiresIn: "1h" },
-    );
-    headers.set("cookie", `token=${token}`);
-  }
+  const jar = { ...cookies };
+  if (as) jar.token = sessionToken(as);
+  const cookieHeader = Object.entries(jar).map(([k, v]) => `${k}=${v}`).join("; ");
+  if (cookieHeader) headers.set("cookie", cookieHeader);
   return new NextRequest(new URL(path, "http://localhost:3000"), {
     method,
     headers,
