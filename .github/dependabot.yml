@@ -17,6 +17,29 @@ updates:
       # eslint-config-next ships a version that supports ESLint 10.
       - dependency-name: "eslint"
         update-types: ["version-update:semver-major"]
+      # TypeScript 7 compiles and builds this project fine, but ESLint
+      # crashes on it: "typescript-eslint does not support TS 7.0" (checked
+      # 2026-10-04, typescript-eslint supports <6.1.0). Revisit once
+      # typescript-eslint ships TS 7 support.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      # Node's type definitions should match the Node major the app runs
+      # on (24, locally and on Vercel), not the newest Node release. Bump
+      # this by hand when the runtime moves to a new major.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+    # Packages that must move in lockstep get one PR together. Dependabot
+    # bumping one half alone has caused mismatched pairs three times
+    # (prisma CLI vs. client, react vs. react-dom, @types/react-dom alone).
+    groups:
+      prisma:
+        patterns: ["prisma", "@prisma/*"]
+      react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom"]
+      next:
+        patterns: ["next", "eslint-config-next"]
+      tailwind:
+        patterns: ["tailwindcss", "@tailwindcss/*"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
