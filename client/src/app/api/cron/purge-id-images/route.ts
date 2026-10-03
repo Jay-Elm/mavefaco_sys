@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-
-const BUCKET = 'id-verification'
+import { deleteIdImage, storageConfig } from '@/lib/idImageStorage'
 
 // Government ID scans are regulated PII (RA 10173) collected only to
 // verify an account — once an admin has approved it, there's no
@@ -10,22 +9,6 @@ const BUCKET = 'id-verification'
 // is gone.
 const RETENTION_DAYS = 30
 
-/** Best-effort delete — never blocks the run on a storage hiccup. */
-async function deleteObject(supabaseUrl: string, serviceKey: string, path: string) {
-  try {
-    await fetch(`${supabaseUrl}/storage/v1/object/${BUCKET}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${serviceKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ prefixes: [path] }),
-    })
-  } catch (err) {
-    console.error('purge-id-images: failed to delete object', err)
-  }
-}
-
 /**
  * Vercel Cron target (see vercel.json) — purges the stored ID image for
  * any account that was verified more than RETENTION_DAYS ago. `verified`
@@ -33,6 +16,10 @@ async function deleteObject(supabaseUrl: string, serviceKey: string, path: strin
  * only the image and its path are cleared. Submissions that are still
  * pending review (verified === false) are never touched here — an admin
  * still needs that image to act on it, no matter how old it is.
+ *
+ * The path is cleared only after storage confirms the delete. A failed
+ * delete keeps it, so the next daily run retries, and the run answers 500
+ * so the failure shows up in Vercel's cron logs.
  */
 export async function GET(req: NextRequest) {
   const expected = process.env.CRON_SECRET
@@ -44,9 +31,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const supabaseUrl = process.env.SUPABASE_URL
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
-  if (!supabaseUrl || !serviceKey) {
+  if (!storageConfig()) {
     console.error('purge-id-images: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY not set')
     return NextResponse.json({ error: 'Storage not configured' }, { status: 500 })
   }
@@ -57,14 +42,24 @@ export async function GET(req: NextRequest) {
     select: { id: true, idImagePath: true },
   })
 
+  let purged = 0
+  const failed: number[] = []
   for (const target of targets) {
     if (!target.idImagePath) continue
-    await deleteObject(supabaseUrl, serviceKey, target.idImagePath)
+    if (!(await deleteIdImage(target.idImagePath))) {
+      failed.push(target.id)
+      continue
+    }
     await prisma.user.update({ where: { id: target.id }, data: { idImagePath: null } })
     await prisma.auditLog.create({
       data: { action: 'AUTO_PURGE_ID_IMAGE', entityType: 'USER', entityId: target.id, userId: target.id },
     })
+    purged++
   }
 
-  return NextResponse.json({ purged: targets.length })
+  if (failed.length > 0) {
+    console.error(`purge-id-images: ${failed.length} image(s) not deleted, will retry next run; users:`, failed)
+    return NextResponse.json({ purged, failed: failed.length }, { status: 500 })
+  }
+  return NextResponse.json({ purged, failed: 0 })
 }

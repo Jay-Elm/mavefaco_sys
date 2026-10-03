@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { deleteIdImage } from "@/lib/idImageStorage";
 
 const ACTIVE_STATUSES = ["pending", "confirmed", "shipped"];
 
@@ -39,6 +40,18 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
   }
 
   const target = await prisma.user.findUnique({ where: { id: userId }, select: { idImagePath: true } });
+
+  // Remove the stored government ID before the account row that points at
+  // it: once the user is deleted nothing would reference the file, so a
+  // failed delete would leave it in storage for good.
+  if (target?.idImagePath && !(await deleteIdImage(target.idImagePath))) {
+    return {
+      ok: false,
+      status: 502,
+      error: "Couldn't remove the stored ID image. Please try again in a moment.",
+    };
+  }
+
   const ownProducts = await prisma.product.findMany({ where: { farmerId: userId }, select: { id: true } });
   const ownProductIds = ownProducts.map((p) => p.id);
 
@@ -62,18 +75,6 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
     prisma.totpBackupCode.deleteMany({ where: { userId } }),
     prisma.user.delete({ where: { id: userId } }),
   ]);
-
-  if (target?.idImagePath) {
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (supabaseUrl && serviceKey) {
-      fetch(`${supabaseUrl}/storage/v1/object/id-verification`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${serviceKey}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ prefixes: [target.idImagePath] }),
-      }).catch((err) => console.error("id-image: failed to delete on account removal", err));
-    }
-  }
 
   return { ok: true };
 }
