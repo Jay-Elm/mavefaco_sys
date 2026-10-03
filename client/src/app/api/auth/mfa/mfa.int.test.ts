@@ -200,13 +200,8 @@ describe("the MFA-pending token", () => {
   });
 });
 
-// KNOWN BUG: /verify checks "unused" (totpLastStep, backup-code usedAt) and
-// then writes it in a separate statement, so two requests carrying the same
-// code at the same moment both pass. `it.fails` passes while the bug is
-// present; once /verify claims the code with a conditional update, change
-// these to plain `it`.
 describe("concurrent use of a single code", () => {
-  it.fails("lets only one of two simultaneous requests with the same TOTP code through", async () => {
+  it("lets only one of two simultaneous requests with the same TOTP code through", async () => {
     const { user, secret } = await enrolledAdmin();
     const code = authenticator.generate(secret);
     const pending = pendingFor(user.id, "verify");
@@ -219,7 +214,7 @@ describe("concurrent use of a single code", () => {
     expect(results.map((r) => r.status).sort()).toEqual([200, 401]);
   });
 
-  it.fails("lets only one of two simultaneous requests with the same backup code through", async () => {
+  it("lets only one of two simultaneous requests with the same backup code through", async () => {
     const { user, backupCodes } = await enrolledAdmin();
     const pending = pendingFor(user.id, "verify");
     const first = (await prisma.totpBackupCode.findMany({ where: { userId: user.id }, orderBy: { id: "asc" } }))[0];
@@ -233,5 +228,23 @@ describe("concurrent use of a single code", () => {
     );
 
     expect(results.map((r) => r.status).sort()).toEqual([200, 401]);
+  });
+
+  it("enrolls only once when the first confirmation is sent twice at the same moment", async () => {
+    const admin = await createUser({ role: "admin" });
+    const pending = pendingFor(admin.id, "setup");
+    const { secret } = await (await call(setup, "setup", pending)).json();
+    const code = authenticator.generate(secret);
+
+    // Both requests pass the "not enrolled yet" check, then queue on the user row.
+    const results = await withRowLocked("User", admin.id, 2, () =>
+      Promise.all([call(confirm, "confirm", pending, { code }), call(confirm, "confirm", pending, { code })]),
+    );
+
+    expect(results.map((r) => r.status).sort()).toEqual([200, 400]);
+    // The backup codes in the winning response are the ones stored.
+    const shown: string[] = (await results.find((r) => r.status === 200)!.json()).backupCodes;
+    expect(await prisma.totpBackupCode.count({ where: { userId: admin.id } })).toBe(10);
+    expect((await call(verify, "verify", pendingFor(admin.id, "verify"), { code: shown[0] })).status).toBe(200);
   });
 });

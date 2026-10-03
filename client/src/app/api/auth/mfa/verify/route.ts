@@ -47,11 +47,16 @@ export async function POST(req: NextRequest) {
     const matchedStep = verifyTotpCode(parsed.data.code, secret);
     // Reject a code whose step has already been spent — otherwise a code
     // captured in transit (or from a log) stays valid for anyone to
-    // replay for the rest of its ~30-90s window.
-    let ok =
-      matchedStep !== null && (user.totpLastStep === null || matchedStep > user.totpLastStep);
-    if (ok) {
-      await prisma.user.update({ where: { id: user.id }, data: { totpLastStep: matchedStep } });
+    // replay for the rest of its ~30-90s window. The check and the claim
+    // are one conditional update, so two simultaneous requests carrying
+    // the same code can't both pass.
+    let ok = false;
+    if (matchedStep !== null) {
+      const { count } = await prisma.user.updateMany({
+        where: { id: user.id, OR: [{ totpLastStep: null }, { totpLastStep: { lt: matchedStep } }] },
+        data: { totpLastStep: matchedStep },
+      });
+      ok = count === 1;
     }
 
     if (!ok) {
@@ -61,11 +66,13 @@ export async function POST(req: NextRequest) {
       });
       for (const backupCode of unusedCodes) {
         if (await bcrypt.compare(candidate, backupCode.codeHash)) {
-          await prisma.totpBackupCode.update({
-            where: { id: backupCode.id },
+          // Claim it only if still unused: a concurrent request may have
+          // spent this same code since the findMany above.
+          const { count } = await prisma.totpBackupCode.updateMany({
+            where: { id: backupCode.id, usedAt: null },
             data: { usedAt: new Date() },
           });
-          ok = true;
+          ok = count === 1;
           break;
         }
       }

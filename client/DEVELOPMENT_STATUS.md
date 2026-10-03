@@ -263,7 +263,6 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 | Issue | Severity | Notes |
 |-------|----------|-------|
 | Integration tests don't cover products, reviews or messages | Low | Orders, admin user management, login and MFA are tested against a real DB |
-| Same MFA code accepted twice if sent simultaneously | Low | `/api/auth/mfa/verify` checks a TOTP step or backup code is unused, then marks it used in a separate write, so two requests with the same code at the same moment both log in. Needs the password (pending token) plus a captured code. Pinned by two `it.fails` tests in `mfa.int.test.ts` |
 | ~30 simpler CRUD routes on inline validation | Low | announcements, faqs, categories, crop logs, reviews, messages, products not migrated to `src/validators/` — no client/server duplication to drift, so not urgent |
 | No image upload for site banners/site-content | Low | Some fields still URL-only |
 | Messaging is polling, not WebSocket | Low | 8s interval; acceptable for capstone |

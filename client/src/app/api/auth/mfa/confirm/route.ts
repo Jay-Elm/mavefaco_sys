@@ -53,16 +53,23 @@ export async function POST(req: NextRequest) {
 
     const backupCodes = await generateBackupCodes();
 
-    await prisma.$transaction([
-      prisma.user.update({
-        where: { id: user.id },
+    // Conditional on still being unenrolled, so two simultaneous confirms
+    // can't both succeed — the second would replace the backup codes the
+    // first just showed the user.
+    const enrolled = await prisma.$transaction(async (tx) => {
+      const { count } = await tx.user.updateMany({
+        where: { id: user.id, totpEnabled: false },
         data: { totpEnabled: true, totpLastStep: matchedStep },
-      }),
-      prisma.totpBackupCode.deleteMany({ where: { userId: user.id } }),
-      prisma.totpBackupCode.createMany({
+      });
+      if (count === 0) return false;
+      await tx.totpBackupCode.deleteMany({ where: { userId: user.id } });
+      await tx.totpBackupCode.createMany({
         data: backupCodes.map(({ hash }) => ({ userId: user.id, codeHash: hash })),
-      }),
-    ]);
+      });
+      return true;
+    });
+    if (!enrolled)
+      return NextResponse.json({ error: "Two-factor authentication is already set up." }, { status: 400 });
 
     const notified = await sendEmail({
       to: user.email,
