@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import {
   LayoutDashboard, Users, Tag, Package, ShoppingCart,
-  ScrollText, BarChart2, Megaphone, Globe, Loader2, Menu, X,
+  ScrollText, BarChart2, Megaphone, Globe, Loader2, Menu,
 } from 'lucide-react'
 
 const ADMIN_NAV = [

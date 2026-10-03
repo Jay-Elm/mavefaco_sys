@@ -41,7 +41,8 @@ export default function CartPage() {
       if (adjusted.length > 0) parts.push(`Quantities for ${adjusted.join(', ')} were reduced to match available stock.`)
       if (parts.length > 0) setStockWarning(parts.join(' '))
     }).finally(() => setCheckingStock(false))
-  }, [cartReady, items.length])
+    // refreshStock changes identity every render; stockChecked keeps this to one run.
+  }, [cartReady, items.length, refreshStock])
 
   async function handleCheckout() {
     if (!isAuthenticated) {

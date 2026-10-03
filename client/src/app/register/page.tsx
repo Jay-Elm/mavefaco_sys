@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -28,12 +28,13 @@ export default function RegisterPage() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<RegisterForm>({ resolver: zodResolver(registerSchema), defaultValues: { role: 'customer' } })
 
-  const selectedRole = watch('role')
+  // useWatch rather than watch(): the React Compiler can't safely memoize watch().
+  const selectedRole = useWatch({ control, name: 'role' })
 
   async function onSubmit(data: RegisterForm) {
     setServerError('')

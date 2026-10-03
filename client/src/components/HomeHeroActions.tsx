@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { ShoppingBag, ArrowRight, ClipboardList } from 'lucide-react'
+import { ShoppingBag, ArrowRight } from 'lucide-react'
 
 export default function HomeHeroActions() {
   const { isAuthenticated, user, loading } = useAuth()
