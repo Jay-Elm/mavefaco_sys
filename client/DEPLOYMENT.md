@@ -171,7 +171,7 @@ Generate random values with `node -e "console.log(require('crypto').randomBytes(
 - `JWT_SECRET`: logs everyone out (expected). Safe for MFA only once `TOTP_ENCRYPTION_KEY` is set *and* every admin/manager has logged in at least once since — each login moves that account's MFA secret onto the new key. Staff who haven't yet can still sign in with a backup code, or an admin can reset their MFA.
 - `TOTP_ENCRYPTION_KEY`: set the new value, move the old one to `TOTP_ENCRYPTION_KEY_PREVIOUS`, and remove `_PREVIOUS` once all staff have logged in.
 
-**Preview deployments.** `npm run build` skips `prisma migrate deploy` when `VERCEL_ENV=preview` (see `scripts/migrate.mjs`), so pushing a branch never migrates a shared database. Preview still connects to whatever `DATABASE_URL` is scoped to Preview in Vercel; point it at a separate database so previews don't read and write production data.
+**Preview deployments.** Preview must not share Production's database or signing keys. Give Preview its own Supabase project and its own `DATABASE_URL`, `DIRECT_URL`, `JWT_SECRET` and `TOTP_ENCRYPTION_KEY` (each a separate Vercel variable scoped to Preview only), then set `PREVIEW_DATABASE_ISOLATED=true` for Preview. `npm run build` (`scripts/migrate.mjs`) skips `prisma migrate deploy` on Preview builds until that flag is set, so a shared database is never migrated from a branch; never set the flag while Preview still shares Production's database. A shared `JWT_SECRET` with separate databases is unsafe: a token issued on Preview would be accepted by Production as whichever production user has the same ID.
 
 > Never commit `.env` to git. Keep these values only in Vercel's environment variable settings.
 
