@@ -21,7 +21,7 @@ async function getSiteData() {
 export default async function AboutPage() {
   const { content, faqs } = await getSiteData();
 
-  const name    = content.cooperative_name || "CoopMarket Farmers Cooperative";
+  const name    = content.cooperative_name || "Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo)";
   const about   = content.about_text || "We connect local farmers with customers — fresh produce, fair prices, and a stronger community.";
   const mission = content.mission || "";
   const vision  = content.vision || "";

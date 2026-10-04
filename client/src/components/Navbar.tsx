@@ -81,7 +81,7 @@ export default function Navbar() {
             <div className="w-7 h-7 bg-white/10 rounded-md flex items-center justify-center">
               <Leaf size={16} className="text-green-300" />
             </div>
-            <span className="font-serif text-xl font-bold tracking-tight">CoopMarket</span>
+            <span className="font-serif text-xl font-bold tracking-tight">MaVeFaCo</span>
           </Link>
 
           {/* Desktop nav */}

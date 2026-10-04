@@ -6,7 +6,7 @@ import QRCode from "qrcode";
 // forgery window much.
 authenticator.options = { window: 1 };
 
-const ISSUER = "CoopMarket";
+const ISSUER = "MaVeFaCo";
 const TOTP_STEP_SECONDS = 30; // matches otplib's default; not overridden above
 
 export function generateTotpSecret(): string {

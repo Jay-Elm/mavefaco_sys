@@ -60,7 +60,7 @@ function downloadFullReport(data: ReportData) {
   const deliveryRate = data.summary.totalOrders > 0
     ? (deliveredCount / data.summary.totalOrders) * 100 : 0
 
-  lines.push(row('CoopMarket Full Report', `Generated: ${new Date().toLocaleDateString('en-PH')}`))
+  lines.push(row('Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo) — Full Report', `Generated: ${new Date().toLocaleDateString('en-PH')}`))
   lines.push('')
 
   lines.push(e('SALES SUMMARY'))
@@ -107,7 +107,7 @@ function downloadFullReport(data: ReportData) {
   for (const f of data.farmerPerformance)
     lines.push(row(f.name, f.email, f.productCount, f.unitsSold, f.revenue.toFixed(2)))
 
-  triggerDownload(`coopmarket-report-${new Date().toISOString().slice(0, 10)}.csv`, lines.join('\n'))
+  triggerDownload(`mavefaco-report-${new Date().toISOString().slice(0, 10)}.csv`, lines.join('\n'))
 }
 
 // ─── Bar row component ────────────────────────────────────────────────────────

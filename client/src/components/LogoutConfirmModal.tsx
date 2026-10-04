@@ -9,7 +9,7 @@ const ROLE_COPY: Record<string, string> = {
   admin: 'Log out of the Admin Panel?',
   manager: 'Log out of the Manager Panel?',
   farmer: 'Log out of your Farmer Portal account?',
-  customer: 'Log out of your CoopMarket account?',
+  customer: 'Log out of your MaVeFaCo account?',
 }
 
 export default function LogoutConfirmModal({

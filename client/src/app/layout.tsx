@@ -22,8 +22,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CoopMarket — Fresh from the Farm",
-  description: "A cooperative marketplace connecting local farmers with customers. Buy fresh, support local, and grow together.",
+  title: "MaVeFaCo — Mayon Vegetable Farmers Agriculture Cooperative",
+  description: "The Mayon Vegetable Farmers Agriculture Cooperative marketplace: fresh produce straight from member farmers in Albay. Buy fresh, support local, and grow together.",
 };
 
 export default function RootLayout({

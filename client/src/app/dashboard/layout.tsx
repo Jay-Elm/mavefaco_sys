@@ -109,7 +109,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </nav>
 
         <div className="px-4 py-4 border-t border-white/10 text-xs text-white/40">
-          CoopMarket v0.1
+          MaVeFaCo v0.1
         </div>
       </aside>
 

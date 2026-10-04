@@ -1,4 +1,4 @@
-# Deployment Guide — CoopMarket Capstone
+# Deployment Guide — MaVeFaCo Marketplace
 
 Target: Vercel (frontend + API routes) + Supabase (PostgreSQL)
 

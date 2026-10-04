@@ -1,4 +1,4 @@
-# Development Status — CoopMarket Capstone
+# Development Status — MaVeFaCo Marketplace
 
 _Last updated: 2026-09-23_
 

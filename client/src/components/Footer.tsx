@@ -9,10 +9,10 @@ export default function Footer() {
         <div>
           <div className="flex items-center gap-2 mb-4">
             <Leaf size={18} className="text-green-400" />
-            <span className="font-serif text-lg font-bold">CoopMarket</span>
+            <span className="font-serif text-lg font-bold">MaVeFaCo</span>
           </div>
           <p className="text-green-300 text-sm leading-relaxed">
-            Connecting local farmers with customers for a fresher, fairer food system — built for Filipino communities.
+            Mayon Vegetable Farmers Agriculture Cooperative — connecting local farmers with customers for a fresher, fairer food system.
           </p>
           <div className="mt-5 flex items-center gap-2 text-green-400 text-sm">
             <MapPin size={13} />
@@ -49,7 +49,7 @@ export default function Footer() {
             </li>
             <li className="flex items-center gap-2">
               <Mail size={13} className="shrink-0 text-green-500" />
-              <a href="mailto:info@coopmarket.ph" className="hover:text-white transition-colors">info@coopmarket.ph</a>
+              <a href="mailto:mavefaco@gmail.com" className="hover:text-white transition-colors">mavefaco@gmail.com</a>
             </li>
             <li className="flex items-center gap-2">
               <Phone size={13} className="shrink-0 text-green-500" />
@@ -61,7 +61,7 @@ export default function Footer() {
 
       <div className="border-t border-green-900">
         <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-green-600">
-          <span>© 2026 CoopMarket — Connecting farmers and communities.</span>
+          <span>© 2026 Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo)</span>
           <span>Built with care for Filipino farmers.</span>
         </div>
       </div>

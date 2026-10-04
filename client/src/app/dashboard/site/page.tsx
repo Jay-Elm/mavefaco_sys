@@ -268,11 +268,11 @@ function BannersTab({ token }: { token: string | null }) {
 // ── Info Tab ──────────────────────────────────────────────────────────────────
 
 const INFO_FIELDS = [
-  { key: 'cooperative_name', label: 'Cooperative Name', placeholder: 'e.g. CoopMarket Farmers Cooperative' },
+  { key: 'cooperative_name', label: 'Cooperative Name', placeholder: 'e.g. Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo)' },
   { key: 'about_text',       label: 'About',            placeholder: 'Describe the cooperative…', multiline: true },
   { key: 'mission',          label: 'Mission',          placeholder: 'Our mission…', multiline: true },
   { key: 'vision',           label: 'Vision',           placeholder: 'Our vision…', multiline: true },
-  { key: 'contact_email',    label: 'Contact Email',    placeholder: 'info@coopmarket.ph' },
+  { key: 'contact_email',    label: 'Contact Email',    placeholder: 'mavefaco@gmail.com' },
   { key: 'contact_phone',    label: 'Contact Phone',    placeholder: '+63 912 345 6789' },
   { key: 'contact_address',  label: 'Address',          placeholder: 'Barangay…, Albay, Philippines' },
   { key: 'facebook_url',     label: 'Facebook URL',     placeholder: 'https://facebook.com/…' },

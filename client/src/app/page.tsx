@@ -134,7 +134,7 @@ export default async function HomePage() {
           </h1>
 
           <p className="mt-6 text-green-200 text-lg leading-relaxed max-w-md hero-line-2">
-            CoopMarket cuts out the middlemen. Order directly from verified local farmers and get produce harvested within the day.
+            MaVeFaCo cuts out the middlemen. Order directly from verified local farmers and get produce harvested within the day.
           </p>
 
           <HomeHeroActions />
@@ -411,7 +411,7 @@ export default async function HomePage() {
             Ready to grow together?
           </h2>
           <p className="text-green-200 text-lg mb-9 leading-relaxed">
-            Whether you grow food or buy it — CoopMarket is your direct line to Albay&apos;s farming community.
+            Whether you grow food or buy it — MaVeFaCo is your direct line to Albay&apos;s farming community.
           </p>
           <HomeBottomCTAButtons />
         </div>

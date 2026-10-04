@@ -67,7 +67,7 @@ export default function RegisterPage() {
             </div>
           </div>
           <h1 className="font-serif text-2xl font-bold text-gray-900">Create an account</h1>
-          <p className="text-gray-500 text-sm mt-1">Join the CoopMarket community</p>
+          <p className="text-gray-500 text-sm mt-1">Join the MaVeFaCo community</p>
         </div>
 
         {success ? (
