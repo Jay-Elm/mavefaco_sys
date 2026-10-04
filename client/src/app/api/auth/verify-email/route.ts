@@ -32,16 +32,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await prisma.$transaction([
-      prisma.user.update({
-        where: { id: record.userId },
-        data: { emailVerifiedAt: new Date() },
-      }),
-      prisma.emailVerificationToken.update({
-        where: { id: record.id },
+    const applied = await prisma.$transaction(async (tx) => {
+      // Claim the link first, conditionally, so it's single-use even when
+      // opened twice at the same moment.
+      const { count } = await tx.emailVerificationToken.updateMany({
+        where: { id: record.id, usedAt: null },
         data: { usedAt: new Date() },
-      }),
-    ]);
+      });
+      if (count === 0) return false;
+      await tx.user.update({ where: { id: record.userId }, data: { emailVerifiedAt: new Date() } });
+      return true;
+    });
+    if (!applied) {
+      return NextResponse.json(
+        { error: "This verification link is invalid or has expired. Please request a new one." },
+        { status: 400 },
+      );
+    }
 
     return NextResponse.json({ message: "Email verified. You can now log in." });
   } catch (error) {

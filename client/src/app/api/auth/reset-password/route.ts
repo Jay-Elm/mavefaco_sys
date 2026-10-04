@@ -36,8 +36,15 @@ export async function POST(req: NextRequest) {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    await prisma.$transaction([
-      prisma.user.update({
+    const applied = await prisma.$transaction(async (tx) => {
+      // Claim the link first, conditionally, so two simultaneous requests
+      // with the same link can't both set a password.
+      const { count } = await tx.passwordResetToken.updateMany({
+        where: { id: record.id, usedAt: null },
+        data: { usedAt: new Date() },
+      });
+      if (count === 0) return false;
+      await tx.user.update({
         where: { id: record.userId },
         data: {
           password: hashedPassword,
@@ -47,12 +54,15 @@ export async function POST(req: NextRequest) {
           // would — don't make someone verify twice.
           ...(record.user.emailVerifiedAt === null && { emailVerifiedAt: new Date() }),
         },
-      }),
-      prisma.passwordResetToken.update({
-        where: { id: record.id },
-        data: { usedAt: new Date() },
-      }),
-    ]);
+      });
+      return true;
+    });
+    if (!applied) {
+      return NextResponse.json(
+        { error: "This reset link is invalid or has expired. Please request a new one." },
+        { status: 400 },
+      );
+    }
 
     return NextResponse.json({ message: "Password reset successfully. You can now log in." });
   } catch (error) {
