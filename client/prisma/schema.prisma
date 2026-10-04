@@ -80,6 +80,8 @@ model EmailVerificationToken {
 
   userId    Int
   user      User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model PasswordResetToken {
@@ -93,6 +95,8 @@ model PasswordResetToken {
 
   userId    Int
   user      User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 // A requested email change, waiting for the owner of the NEW address to
@@ -168,6 +172,11 @@ model Product {
   orderItems    OrderItem[]
   reviews       Review[]
   cropLogs      CropLog[]
+
+  @@index([farmerId])
+  @@index([categoryId])
+  // Storefront listings: approved, not archived, newest first.
+  @@index([approved, archivedAt, createdAt])
 }
 
 model CropLog {
@@ -178,6 +187,9 @@ model CropLog {
 
   productId Int
   product   Product  @relation(fields: [productId], references: [id])
+
+  @@index([productId])
+  @@index([createdAt])
 }
 
 model Order {
@@ -192,6 +204,9 @@ model Order {
   customer      User         @relation(fields: [customerId], references: [id])
 
   items         OrderItem[]
+
+  @@index([customerId])
+  @@index([status])
 }
 
 model OrderItem {
@@ -205,6 +220,9 @@ model OrderItem {
 
   productId     Int
   product       Product    @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
 }
 
 model Announcement {
@@ -216,6 +234,8 @@ model Announcement {
 
   authorId  Int
   author    User     @relation(fields: [authorId], references: [id])
+
+  @@index([authorId])
 }
 
 model Banner {
@@ -256,6 +276,8 @@ model Review {
   product    Product  @relation(fields: [productId], references: [id])
 
   @@unique([customerId, productId])
+
+  @@index([productId])
 }
 
 model Message {
@@ -269,6 +291,9 @@ model Message {
 
   receiverId Int
   receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
+
+  @@index([senderId, receiverId])
+  @@index([receiverId, read])
 }
 
 model AuditLog {
@@ -281,4 +306,6 @@ model AuditLog {
 
   userId        Int
   user          User       @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
