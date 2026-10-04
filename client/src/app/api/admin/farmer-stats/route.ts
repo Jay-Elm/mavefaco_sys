@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     const farmers = await prisma.user.findMany({
-      where: { role: "farmer" },
+      where: { role: "farmer", deletedAt: null },
       select: {
         id: true,
         name: true,

@@ -31,7 +31,10 @@ export async function GET(req: NextRequest) {
           },
         },
       }),
+      // Deleted accounts don't count as users; any sales they made still
+      // show up below through their order items, under "Deleted user".
       prisma.user.findMany({
+        where: { deletedAt: null },
         select: { id: true, role: true, name: true, email: true },
       }),
       prisma.product.findMany({

@@ -81,8 +81,8 @@ The review found **no critical issues**, **one high-priority operational risk** 
 | # | Finding | Location | Impact |
 |---|---|---|---|
 | M1 | **ID-image deletions fail silently.** `deleteObject` catches only network errors and never checks the HTTP status, yet the database path is cleared regardless. | `api/cron/purge-id-images`, `api/users/me/id-image`, `lib/deleteAccount.ts` | A failed storage delete leaves a government ID image in the bucket with no database reference, defeating the RA 10173 retention purge. |
-| M2 | **Deleting a farmer rewrites other customers' order history.** `deleteUserAccount` removes every order item for the farmer's products. | `lib/deleteAccount.ts` | Customers' delivered orders lose their line items (totals remain). |
-| M3 | **Deleting a user erases their audit trail.** `auditLog.deleteMany({ where: { userId } })`. | `lib/deleteAccount.ts` | All recorded actions taken by the deleted account disappear, including staff actions. |
+| M2 | **Fixed 2026-10-04.** Deleting a farmer removed every order item for their products, rewriting other customers' order history. Accounts are now anonymized instead of deleted, and the farmer's products archived. | `lib/deleteAccount.ts` | Was: customers' delivered orders lost their line items (totals remained). |
+| M3 | **Fixed 2026-10-04.** Deleting a user ran `auditLog.deleteMany({ where: { userId } })`. Audit entries are now kept, attributed to "Deleted user". | `lib/deleteAccount.ts` | Was: every recorded action by the deleted account disappeared, including staff actions. |
 | M4 | **Email change has no verification and no notice.** The new address is not confirmed and the old address is not notified. | `api/users/me` (PATCH) | Anyone holding a session and the password can silently move the account to an address they control. |
 | M5 | **Preview deployments may migrate the production database.** `npm run build` runs `prisma migrate deploy`, and `DIRECT_URL` was added to Vercel's Preview environment in September. | `package.json`, Vercel project settings | If Preview points at production, any pushed branch containing a migration alters production before review, and preview deployments read and write real data. **Requires verification in the Vercel dashboard.** |
 | M6 | **User-supplied names are inserted into email HTML unescaped.** | `api/auth/register` and other email templates | Registering a stranger's address with an HTML "name" delivers attacker-controlled content inside a genuine MaVeFaCo email (phishing vector). |
@@ -149,7 +149,7 @@ Integration tests run against a dedicated `*_test` Postgres database, guarded ag
 | | Fix M1: check the storage response and clear the database path only on success | Small — **done** |
 | **2 — Before defense** | Rewrite `README.md`; update `DEPLOYMENT.md` | Small |
 | | Settle on one brand name (L11) | Small |
-| | M2/M3: anonymize deleted users instead of deleting their history | Medium |
+| | M2/M3: anonymize deleted users instead of deleting their history | Medium — **done** |
 | | M4/M6: verify new email addresses, notify the old address, escape email HTML | Medium |
 | **3 — Hardening** | L1 single-use tokens, L3 length limits, L6 audit coverage, L7 report accuracy | Small each |
 | | Integration tests for the remaining public routes (registration, password reset) | Medium |

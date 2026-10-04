@@ -42,7 +42,7 @@ async function getAnnouncements() {
 
 async function getStats() {
   const [farmers, products, orders] = await Promise.all([
-    prisma.user.count({ where: { role: "farmer", verified: true } }),
+    prisma.user.count({ where: { role: "farmer", verified: true, deletedAt: null } }),
     prisma.product.count({ where: { approved: true, archivedAt: null } }),
     prisma.order.count({ where: { status: "delivered" } }),
   ]);

@@ -89,10 +89,10 @@ describe("account deletion with a stored ID", () => {
     fakeStorage({ deleteOk: () => false });
 
     expect(await deleteUserAccount(farmer.id)).toMatchObject({ ok: false, status: 502 });
-    expect(await prisma.user.count({ where: { id: farmer.id } })).toBe(1);
+    expect((await prisma.user.findUniqueOrThrow({ where: { id: farmer.id } })).deletedAt).toBeNull();
 
     fakeStorage();
     expect(await deleteUserAccount(farmer.id)).toEqual({ ok: true });
-    expect(await prisma.user.count({ where: { id: farmer.id } })).toBe(0);
+    expect(await prisma.user.findUniqueOrThrow({ where: { id: farmer.id } })).toMatchObject({ idImagePath: null, deletedAt: expect.any(Date) });
   });
 });

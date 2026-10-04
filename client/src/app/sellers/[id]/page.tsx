@@ -14,7 +14,7 @@ export default async function SellerPage({
   if (isNaN(farmerId)) notFound()
 
   const farmer = await prisma.user.findUnique({
-    where: { id: farmerId, role: 'farmer' },
+    where: { id: farmerId, role: 'farmer', deletedAt: null },
     select: {
       id: true,
       name: true,

@@ -133,7 +133,7 @@ export default function CustomerProfilePage() {
   async function handleDeleteAccount(e: React.FormEvent) {
     e.preventDefault()
     if (!token) return
-    if (!confirm('Permanently delete your account?\n\nThis removes your profile, orders, and order history. This cannot be undone.')) return
+    if (!confirm('Permanently delete your account?\n\nYour name, email, login, reviews and messages are removed. Past orders stay on record without your details, so farmers\' sales records stay correct. This cannot be undone.')) return
     setDeleteError('')
     setDeleting(true)
     try {
@@ -351,7 +351,7 @@ export default function CustomerProfilePage() {
           <h2 className="text-lg font-semibold text-red-700">Delete Account</h2>
         </div>
         <p className="text-sm text-gray-500 mb-3">
-          Permanently deletes your account and order history. You can&apos;t undo this, and it&apos;s blocked while you have any active (pending/confirmed/shipped) orders.
+          Permanently deletes your account: your name, email, login, reviews and messages are removed, and past orders are kept without your details. You can&apos;t undo this, and it&apos;s blocked while you have any active (pending/confirmed/shipped) orders.
         </p>
 
         {deleteError && (

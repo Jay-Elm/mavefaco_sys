@@ -46,7 +46,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ use
   if (isNaN(receiverId)) return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
   if (receiverId === actor.id) return NextResponse.json({ error: "Cannot message yourself" }, { status: 400 });
 
-  const receiver = await prisma.user.findUnique({ where: { id: receiverId }, select: { id: true, name: true } });
+  const receiver = await prisma.user.findUnique({ where: { id: receiverId, deletedAt: null }, select: { id: true, name: true } });
   if (!receiver) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
   try {

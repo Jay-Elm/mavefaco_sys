@@ -12,7 +12,7 @@ async function resolveTarget(id: string) {
   const userId = Number(id);
   if (isNaN(userId)) return null;
   return prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: userId, deletedAt: null },
     include: { _count: { select: { orders: true, products: true } } },
   });
 }

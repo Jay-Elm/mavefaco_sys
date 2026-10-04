@@ -2517,6 +2517,7 @@ export namespace Prisma {
     verifiedAt: Date | null
     emailVerifiedAt: Date | null
     tokenVersion: number | null
+    deletedAt: Date | null
     totpSecret: string | null
     totpEnabled: boolean | null
     totpLastStep: number | null
@@ -2536,6 +2537,7 @@ export namespace Prisma {
     verifiedAt: Date | null
     emailVerifiedAt: Date | null
     tokenVersion: number | null
+    deletedAt: Date | null
     totpSecret: string | null
     totpEnabled: boolean | null
     totpLastStep: number | null
@@ -2555,6 +2557,7 @@ export namespace Prisma {
     verifiedAt: number
     emailVerifiedAt: number
     tokenVersion: number
+    deletedAt: number
     totpSecret: number
     totpEnabled: number
     totpLastStep: number
@@ -2588,6 +2591,7 @@ export namespace Prisma {
     verifiedAt?: true
     emailVerifiedAt?: true
     tokenVersion?: true
+    deletedAt?: true
     totpSecret?: true
     totpEnabled?: true
     totpLastStep?: true
@@ -2607,6 +2611,7 @@ export namespace Prisma {
     verifiedAt?: true
     emailVerifiedAt?: true
     tokenVersion?: true
+    deletedAt?: true
     totpSecret?: true
     totpEnabled?: true
     totpLastStep?: true
@@ -2626,6 +2631,7 @@ export namespace Prisma {
     verifiedAt?: true
     emailVerifiedAt?: true
     tokenVersion?: true
+    deletedAt?: true
     totpSecret?: true
     totpEnabled?: true
     totpLastStep?: true
@@ -2732,6 +2738,7 @@ export namespace Prisma {
     verifiedAt: Date | null
     emailVerifiedAt: Date | null
     tokenVersion: number
+    deletedAt: Date | null
     totpSecret: string | null
     totpEnabled: boolean
     totpLastStep: number | null
@@ -2770,6 +2777,7 @@ export namespace Prisma {
     verifiedAt?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
+    deletedAt?: boolean
     totpSecret?: boolean
     totpEnabled?: boolean
     totpLastStep?: boolean
@@ -2800,6 +2808,7 @@ export namespace Prisma {
     verifiedAt?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
+    deletedAt?: boolean
     totpSecret?: boolean
     totpEnabled?: boolean
     totpLastStep?: boolean
@@ -2819,6 +2828,7 @@ export namespace Prisma {
     verifiedAt?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
+    deletedAt?: boolean
     totpSecret?: boolean
     totpEnabled?: boolean
     totpLastStep?: boolean
@@ -2838,6 +2848,7 @@ export namespace Prisma {
     verifiedAt?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
+    deletedAt?: boolean
     totpSecret?: boolean
     totpEnabled?: boolean
     totpLastStep?: boolean
@@ -2845,7 +2856,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "idImagePath" | "verified" | "verifiedAt" | "emailVerifiedAt" | "tokenVersion" | "totpSecret" | "totpEnabled" | "totpLastStep" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "idImagePath" | "verified" | "verifiedAt" | "emailVerifiedAt" | "tokenVersion" | "deletedAt" | "totpSecret" | "totpEnabled" | "totpLastStep" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | User$productsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -2888,6 +2899,7 @@ export namespace Prisma {
       verifiedAt: Date | null
       emailVerifiedAt: Date | null
       tokenVersion: number
+      deletedAt: Date | null
       totpSecret: string | null
       totpEnabled: boolean
       totpLastStep: number | null
@@ -3337,6 +3349,7 @@ export namespace Prisma {
     readonly verifiedAt: FieldRef<"User", 'DateTime'>
     readonly emailVerifiedAt: FieldRef<"User", 'DateTime'>
     readonly tokenVersion: FieldRef<"User", 'Int'>
+    readonly deletedAt: FieldRef<"User", 'DateTime'>
     readonly totpSecret: FieldRef<"User", 'String'>
     readonly totpEnabled: FieldRef<"User", 'Boolean'>
     readonly totpLastStep: FieldRef<"User", 'Int'>
@@ -20754,6 +20767,7 @@ export namespace Prisma {
     verifiedAt: 'verifiedAt',
     emailVerifiedAt: 'emailVerifiedAt',
     tokenVersion: 'tokenVersion',
+    deletedAt: 'deletedAt',
     totpSecret: 'totpSecret',
     totpEnabled: 'totpEnabled',
     totpLastStep: 'totpLastStep',
@@ -21072,6 +21086,7 @@ export namespace Prisma {
     verifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     tokenVersion?: IntFilter<"User"> | number
+    deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     totpSecret?: StringNullableFilter<"User"> | string | null
     totpEnabled?: BoolFilter<"User"> | boolean
     totpLastStep?: IntNullableFilter<"User"> | number | null
@@ -21101,6 +21116,7 @@ export namespace Prisma {
     verifiedAt?: SortOrderInput | SortOrder
     emailVerifiedAt?: SortOrderInput | SortOrder
     tokenVersion?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     totpSecret?: SortOrderInput | SortOrder
     totpEnabled?: SortOrder
     totpLastStep?: SortOrderInput | SortOrder
@@ -21133,6 +21149,7 @@ export namespace Prisma {
     verifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     tokenVersion?: IntFilter<"User"> | number
+    deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     totpSecret?: StringNullableFilter<"User"> | string | null
     totpEnabled?: BoolFilter<"User"> | boolean
     totpLastStep?: IntNullableFilter<"User"> | number | null
@@ -21162,6 +21179,7 @@ export namespace Prisma {
     verifiedAt?: SortOrderInput | SortOrder
     emailVerifiedAt?: SortOrderInput | SortOrder
     tokenVersion?: SortOrder
+    deletedAt?: SortOrderInput | SortOrder
     totpSecret?: SortOrderInput | SortOrder
     totpEnabled?: SortOrder
     totpLastStep?: SortOrderInput | SortOrder
@@ -21189,6 +21207,7 @@ export namespace Prisma {
     verifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     emailVerifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     tokenVersion?: IntWithAggregatesFilter<"User"> | number
+    deletedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     totpSecret?: StringNullableWithAggregatesFilter<"User"> | string | null
     totpEnabled?: BoolWithAggregatesFilter<"User"> | boolean
     totpLastStep?: IntNullableWithAggregatesFilter<"User"> | number | null
@@ -22171,6 +22190,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -22200,6 +22220,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -22228,6 +22249,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -22257,6 +22279,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -22286,6 +22309,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -22304,6 +22328,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -22323,6 +22348,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -23452,6 +23478,7 @@ export namespace Prisma {
     verifiedAt?: SortOrder
     emailVerifiedAt?: SortOrder
     tokenVersion?: SortOrder
+    deletedAt?: SortOrder
     totpSecret?: SortOrder
     totpEnabled?: SortOrder
     totpLastStep?: SortOrder
@@ -23477,6 +23504,7 @@ export namespace Prisma {
     verifiedAt?: SortOrder
     emailVerifiedAt?: SortOrder
     tokenVersion?: SortOrder
+    deletedAt?: SortOrder
     totpSecret?: SortOrder
     totpEnabled?: SortOrder
     totpLastStep?: SortOrder
@@ -23496,6 +23524,7 @@ export namespace Prisma {
     verifiedAt?: SortOrder
     emailVerifiedAt?: SortOrder
     tokenVersion?: SortOrder
+    deletedAt?: SortOrder
     totpSecret?: SortOrder
     totpEnabled?: SortOrder
     totpLastStep?: SortOrder
@@ -25995,6 +26024,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -26023,6 +26053,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -26066,6 +26097,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26094,6 +26126,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26121,6 +26154,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -26149,6 +26183,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -26192,6 +26227,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26220,6 +26256,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26247,6 +26284,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -26275,6 +26313,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -26318,6 +26357,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26346,6 +26386,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26442,6 +26483,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -26470,6 +26512,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -26600,6 +26643,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26628,6 +26672,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26849,6 +26894,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -26877,6 +26923,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -26943,6 +26990,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -26971,6 +27019,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27170,6 +27219,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -27198,6 +27248,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -27241,6 +27292,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27269,6 +27321,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27296,6 +27349,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -27324,6 +27378,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -27415,6 +27470,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27443,6 +27499,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27524,6 +27581,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -27552,6 +27610,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -27584,6 +27643,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -27612,6 +27672,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -27655,6 +27716,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27683,6 +27745,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27721,6 +27784,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27749,6 +27813,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27776,6 +27841,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -27804,6 +27870,7 @@ export namespace Prisma {
     verifiedAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
+    deletedAt?: Date | string | null
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
@@ -27847,6 +27914,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
@@ -27875,6 +27943,7 @@ export namespace Prisma {
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null

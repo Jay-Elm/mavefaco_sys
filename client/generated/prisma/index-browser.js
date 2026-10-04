@@ -132,6 +132,7 @@ exports.Prisma.UserScalarFieldEnum = {
   verifiedAt: 'verifiedAt',
   emailVerifiedAt: 'emailVerifiedAt',
   tokenVersion: 'tokenVersion',
+  deletedAt: 'deletedAt',
   totpSecret: 'totpSecret',
   totpEnabled: 'totpEnabled',
   totpLastStep: 'totpLastStep',

@@ -201,7 +201,7 @@ export default function UsersPage() {
 
   async function handleDelete(u: UserRow) {
     if (!token) return
-    if (!confirm(`Permanently delete "${u.name}"?\n\nThis removes their account, products, and order history. Blocked only if they have active orders.`)) return
+    if (!confirm(`Permanently delete "${u.name}"?\n\nTheir name, email, login, reviews and messages are removed, and their products leave the shop. Past orders and audit history are kept under "Deleted user". Blocked only if they have active orders.`)) return
     setActionId(u.id); setActionError(null)
     try {
       const res = await fetch(`/api/admin/users/${u.id}`, {

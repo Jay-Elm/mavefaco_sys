@@ -35,6 +35,11 @@ model User {
   // gets locked out.
   emailVerifiedAt DateTime?
   tokenVersion Int        @default(0)
+  // Set when the account is deleted. Deleted accounts are anonymized, not
+  // removed: orders, order items and audit-log entries that reference the
+  // row stay intact, while name, email and credentials are scrubbed (see
+  // src/lib/deleteAccount.ts). Every user-facing list skips these rows.
+  deletedAt   DateTime?
   // AES-256-GCM ciphertext of the TOTP secret (never stored in the clear),
   // keyed off JWT_SECRET — see src/lib/totpCrypto.ts. Present as soon as an
   // admin/manager starts enrollment; `totpEnabled` is what actually gates
