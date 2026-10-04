@@ -92,7 +92,7 @@ The review found **no critical issues**, **one high-priority operational risk** 
 | # | Finding | Location |
 |---|---|---|
 | L1 | **Fixed 2026-10-04.** Password-reset and email-verification links now claim their token with a conditional update, so two simultaneous requests can't both use one link. | `api/auth/reset-password`, `api/auth/verify-email` |
-| L2 | **Partly fixed 2026-10-04.** The Report-Only policy now reports to `/api/csp-report` (logged server-side, rate-limited) and allows `api.open-meteo.com` for the weather widget. Enforcing it still needs per-request nonces (roadmap 3). | `next.config.ts`, `api/csp-report` |
+| L2 | **Fixed 2026-10-04.** The CSP is now enforced: `src/proxy.ts` sends a per-request policy where scripts must carry that request's nonce (`'strict-dynamic'`, no `'unsafe-inline'` for scripts), every page renders per request so Next.js can stamp the nonce, and violations report to `/api/csp-report`. Styles keep `'unsafe-inline'` by design. | `src/proxy.ts`, `src/lib/csp.ts` |
 | L3 | **Fixed 2026-10-04.** Every free-text input has a maximum length (`src/validators/limits.ts`); new passwords are capped at 128, while login still accepts longer existing passwords. | `src/validators/*` |
 | L4 | **Open.** Rate limiting is in-memory per serverless instance, so limits are not strict across instances (acknowledged in code). Needs a shared store such as Upstash Redis, which requires an account and credentials. | `src/lib/rateLimit.ts` |
 | L5 | **Fixed 2026-10-04** (uploads limited to farmers and staff). Cleaning up product images orphaned by edits remains open. | `api/upload` |
@@ -153,5 +153,5 @@ Integration tests run against a dedicated `*_test` Postgres database, guarded ag
 | | M4/M6: verify new email addresses, notify the old address, escape email HTML | Medium — **done** |
 | **3 — Hardening** | L1 single-use tokens, L3 length limits, L6 audit coverage, L7 report accuracy | Small each — **done** |
 | | Integration tests for the remaining public routes (registration, password reset) | Medium |
-| | Enforce CSP with nonces (reporting endpoint done) (L2) | Medium |
+| | Enforce CSP with nonces (L2) | Medium — **done** |
 | **4 — Later** | Shared rate-limit store (e.g., Upstash Redis), Prisma 8 upgrade, end-to-end UI tests (database indexes done) | Medium |

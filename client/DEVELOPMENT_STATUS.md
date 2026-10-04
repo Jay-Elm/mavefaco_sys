@@ -268,6 +268,8 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 
 **Email templates escape their values:** every `sendEmail` body is built with the `emailHtml` tagged template (`src/lib/email.ts`), which HTML-escapes each interpolated value. Use it for any new email.
 
+**Content-Security-Policy (enforced):** `src/proxy.ts` generates a nonce per page request and sends the policy from `src/lib/csp.ts`: scripts only with that nonce (`'strict-dynamic'`), styles `'unsafe-inline'`, images from https/data, `connect-src` self plus `api.open-meteo.com`, framing denied, reports to `/api/csp-report`. Next.js stamps the nonce on its own scripts while rendering, which is why the root layout awaits `connection()` and **every page renders per request** (no static pages or ISR). Adding a third-party script means passing it the nonce (`(await headers()).get('x-nonce')`) and, if it fetches from another origin, extending `connect-src`.
+
 **Input limits:** maximum lengths for every free-text field live in `src/validators/limits.ts`; use `MAX` and `tooLong()` for new fields.
 
 **Audit log:** `logAudit()` (`src/lib/audit.ts`) records staff changes; product, order, user, and content (categories, announcements, banners, FAQs, site content) changes are all audited. `GET /api/admin/audit-logs` returns 100 entries per page, newest first; pass `?before=<id>` for older ones.

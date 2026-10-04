@@ -147,7 +147,7 @@ GitHub Actions runs both suites on every push and pull request (`.github/workflo
         ├── contexts/     Auth and cart state
         ├── lib/          Server utilities (auth, MFA, email, storage, rate limiting)
         ├── validators/   Zod schemas shared by forms and API routes
-        ├── proxy.ts      Request guard for /api/admin/*
+        ├── proxy.ts      Per-request CSP nonce; guard for /api/admin/*
         └── test-utils/   Integration-test helpers
 ```
 
@@ -156,6 +156,7 @@ GitHub Actions runs both suites on every push and pull request (`.github/workflo
 - Sessions live in an `httpOnly`, `SameSite=Lax` cookie and can be revoked instantly (logout, password or email change, admin reset).
 - Mandatory two-factor authentication for admins and managers; authenticator secrets are encrypted at rest and codes can't be reused.
 - Login, registration, and password-reset responses don't reveal whether an account exists.
+- An enforced Content-Security-Policy: scripts only run if they carry a per-request nonce, so injected scripts are blocked.
 - Uploaded images are checked by their actual file contents; government IDs are kept in a private bucket, viewable only through 5-minute links, and deleted automatically 30 days after verification (Data Privacy Act, RA 10173).
 - Stock and order-status changes are race-safe; products with sales history are archived rather than deleted.
 
