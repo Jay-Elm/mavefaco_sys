@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { registerSchema } from "@/validators/auth";
 import { generateToken, EMAIL_VERIFICATION_TTL_MS } from "@/lib/token";
-import { sendEmail } from "@/lib/email";
+import { emailHtml, sendEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       const sent = await sendEmail({
         to: existingUser.email,
         subject: "Someone tried to register with your email",
-        html: `
+        html: emailHtml`
           <p>Hi ${existingUser.name},</p>
           <p>Someone just tried to create a new MaVeFaCo account using this email address, but you already have one.</p>
           <p>If this was you, you can <a href="${req.nextUrl.origin}/login">log in</a> normally, or <a href="${req.nextUrl.origin}/forgot-password">reset your password</a> if you've forgotten it.</p>
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
     const sent = await sendEmail({
       to: user.email,
       subject: "Verify your MaVeFaCo account",
-      html: `
+      html: emailHtml`
         <p>Hi ${user.name},</p>
         <p>Thanks for signing up for MaVeFaCo. Click the link below to verify your email address and activate your account. This link expires in 24 hours.</p>
         <p><a href="${verifyUrl}">${verifyUrl}</a></p>

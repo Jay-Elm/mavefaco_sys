@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { resendVerificationSchema } from "@/validators/auth";
 import { generateToken, EMAIL_VERIFICATION_TTL_MS } from "@/lib/token";
-import { sendEmail } from "@/lib/email";
+import { emailHtml, sendEmail } from "@/lib/email";
 
 // Always the same response, whether or not the email is registered or
 // already verified — same anti-enumeration reasoning as forgot-password.
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
       const sent = await sendEmail({
         to: user.email,
         subject: "Verify your MaVeFaCo account",
-        html: `
+        html: emailHtml`
           <p>Hi ${user.name},</p>
           <p>Click the link below to verify your email address and activate your account. This link expires in 24 hours.</p>
           <p><a href="${verifyUrl}">${verifyUrl}</a></p>

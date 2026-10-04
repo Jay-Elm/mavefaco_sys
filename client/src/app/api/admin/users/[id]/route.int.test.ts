@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/email", () => ({ sendEmail: vi.fn(async () => true) }));
+// Real email helpers (templating), fake delivery.
+vi.mock("@/lib/email", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/email")>()),
+  sendEmail: vi.fn(async () => true),
+}));
 
 import { PATCH } from "./route";
 import { prisma } from "@/lib/prisma";

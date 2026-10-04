@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { adminUserPatchSchema } from "@/validators/adminUser";
 import { deleteUserAccount } from "@/lib/deleteAccount";
-import { sendEmail } from "@/lib/email";
+import { emailHtml, sendEmail } from "@/lib/email";
 
 async function resolveTarget(id: string) {
   const userId = Number(id);
@@ -91,7 +91,7 @@ export async function PATCH(
       const notified = await sendEmail({
         to: target.email,
         subject: "Two-factor authentication reset on your MaVeFaCo account",
-        html: `
+        html: emailHtml`
           <p>Hi ${target.name},</p>
           <p>An administrator just reset two-factor authentication on your MaVeFaCo account (${target.email}). Your old authenticator and backup codes no longer work — you'll be asked to set up two-factor authentication again the next time you log in.</p>
           <p>If you didn't expect this, contact another administrator immediately.</p>

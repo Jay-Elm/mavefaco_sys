@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { forgotPasswordSchema } from "@/validators/auth";
 import { generateToken, RESET_TOKEN_TTL_MS } from "@/lib/token";
-import { sendEmail } from "@/lib/email";
+import { emailHtml, sendEmail } from "@/lib/email";
 
 // Always the same response, whether or not the email is registered —
 // telling the caller either way is a user-enumeration oracle.
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       const sent = await sendEmail({
         to: user.email,
         subject: "Reset your MaVeFaCo password",
-        html: `
+        html: emailHtml`
           <p>Hi ${user.name},</p>
           <p>Someone requested a password reset for your MaVeFaCo account. If this was you, click the link below to choose a new password. This link expires in 30 minutes.</p>
           <p><a href="${resetUrl}">${resetUrl}</a></p>

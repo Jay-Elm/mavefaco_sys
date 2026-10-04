@@ -8,7 +8,7 @@ import { generateBackupCodes } from "@/lib/backupCodes";
 import { issueSessionResponse } from "@/lib/session";
 import { mfaConfirmSchema } from "@/validators/mfa";
 import { rateLimit, getClientIp } from "@/lib/rateLimit";
-import { sendEmail } from "@/lib/email";
+import { emailHtml, sendEmail } from "@/lib/email";
 
 /**
  * POST /api/auth/mfa/confirm — completes first-time TOTP enrollment.
@@ -81,7 +81,7 @@ export async function POST(req: NextRequest) {
     const notified = await sendEmail({
       to: user.email,
       subject: "Two-factor authentication enabled on your MaVeFaCo account",
-      html: `
+      html: emailHtml`
         <p>Hi ${user.name},</p>
         <p>Two-factor authentication was just turned on for your MaVeFaCo account (${user.email}).</p>
         <p>If this was you, no action is needed. If you didn't do this, your password may be compromised — contact another administrator immediately and change your password.</p>
