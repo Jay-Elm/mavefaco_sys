@@ -58,7 +58,7 @@ export default function ResetPasswordForm() {
     return (
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 text-center space-y-3">
         <p className="text-sm text-red-600">This reset link is missing its token.</p>
-        <Link href="/forgot-password" className="text-sm text-green-700 font-medium hover:underline">
+        <Link href="/forgot-password" className="text-sm text-forest font-medium hover:underline">
           Request a new link
         </Link>
       </div>
@@ -119,7 +119,7 @@ export default function ResetPasswordForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full flex items-center justify-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+        className="w-full flex items-center justify-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
       >
         <KeyRound size={16} />
         {isSubmitting ? 'Resetting…' : 'Reset password'}

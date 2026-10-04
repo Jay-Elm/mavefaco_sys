@@ -95,14 +95,14 @@ export default function CartPage() {
         <div className="flex items-center justify-center gap-3 flex-wrap">
           <Link
             href="/login"
-            className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
+            className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
           >
             <LogIn size={16} />
             Log In
           </Link>
           <Link
             href="/register"
-            className="inline-flex items-center gap-2 border border-gray-300 hover:border-green-600 text-gray-700 hover:text-green-700 font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
+            className="inline-flex items-center gap-2 border border-gray-300 hover:border-forest text-gray-700 hover:text-forest font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
           >
             <UserPlus size={16} />
             Sign Up
@@ -110,7 +110,7 @@ export default function CartPage() {
         </div>
         <Link
           href="/products"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-green-700 transition-colors mt-6"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-forest transition-colors mt-6"
         >
           <ArrowLeft size={14} />
           Or keep browsing products
@@ -127,7 +127,7 @@ export default function CartPage() {
         <p className="text-gray-500 mb-6">Browse our products and add something you like.</p>
         <Link
           href="/products"
-          className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
+          className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
         >
           <ArrowLeft size={16} />
           Browse Products
@@ -281,8 +281,8 @@ export default function CartPage() {
                     onClick={() => setDeliveryMethod(m.value)}
                     className={`py-2 rounded-lg text-sm font-medium border transition-colors ${
                       deliveryMethod === m.value
-                        ? 'bg-green-700 text-white border-green-700'
-                        : 'bg-white text-gray-600 border-gray-300 hover:border-green-500'
+                        ? 'bg-forest text-white border-forest'
+                        : 'bg-white text-gray-600 border-gray-300 hover:border-forest'
                     }`}
                   >
                     {m.label}
@@ -306,7 +306,7 @@ export default function CartPage() {
             <button
               onClick={handleCheckout}
               disabled={placing}
-              className="w-full bg-green-700 hover:bg-green-800 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-sm flex items-center justify-center gap-2"
+              className="w-full bg-forest hover:bg-forest-mid disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-sm flex items-center justify-center gap-2"
             >
               {placing && <Loader2 size={16} className="animate-spin" />}
               {placing ? 'Placing Order…' : isAuthenticated ? 'Place Order' : 'Login to Checkout'}
@@ -314,7 +314,7 @@ export default function CartPage() {
 
             <Link
               href="/products"
-              className="block text-center text-sm text-gray-500 hover:text-green-700 transition-colors"
+              className="block text-center text-sm text-gray-500 hover:text-forest transition-colors"
             >
               Continue Shopping
             </Link>

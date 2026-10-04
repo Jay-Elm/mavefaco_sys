@@ -207,7 +207,7 @@ export default function CustomerProfilePage() {
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors disabled:opacity-60"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
             >
               {submitting && <Loader2 size={14} className="animate-spin" />}
               {submitting ? 'Saving…' : 'Save Name'}
@@ -264,7 +264,7 @@ export default function CustomerProfilePage() {
               <button
                 type="submit"
                 disabled={emailSubmitting}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors disabled:opacity-60"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
               >
                 {emailSubmitting && <Loader2 size={14} className="animate-spin" />}
                 {emailSubmitting ? 'Saving…' : 'Change Email'}
@@ -330,7 +330,7 @@ export default function CustomerProfilePage() {
               <button
                 type="submit"
                 disabled={pwSubmitting}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition-colors disabled:opacity-60"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
               >
                 {pwSubmitting && <Loader2 size={14} className="animate-spin" />}
                 {pwSubmitting ? 'Updating…' : 'Change Password'}

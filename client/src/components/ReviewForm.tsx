@@ -87,7 +87,7 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
         <button
           type="submit"
           disabled={submitting || rating === 0}
-          className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
         >
           {submitting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
           Submit Review

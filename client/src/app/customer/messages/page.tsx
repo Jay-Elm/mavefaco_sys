@@ -45,7 +45,7 @@ export default function CustomerMessagesPage() {
         <div className="text-center py-16 text-gray-400">
           <MessageCircle size={40} className="mx-auto mb-3" />
           <p>No messages yet.</p>
-          <Link href="/products" className="mt-3 inline-block text-green-700 text-sm font-medium hover:underline">
+          <Link href="/products" className="mt-3 inline-block text-forest text-sm font-medium hover:underline">
             Browse products and contact a farmer →
           </Link>
         </div>
@@ -65,7 +65,7 @@ export default function CustomerMessagesPage() {
                   <p className="font-medium text-gray-900 text-sm">{c.user.name}</p>
                   <span className="text-xs text-gray-400 capitalize">{c.user.role}</span>
                   {c.unread > 0 && (
-                    <span className="ml-auto bg-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                    <span className="ml-auto bg-forest text-white text-xs font-bold px-2 py-0.5 rounded-full">
                       {c.unread}
                     </span>
                   )}

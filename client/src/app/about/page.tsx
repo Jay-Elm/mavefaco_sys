@@ -100,7 +100,7 @@ export default async function AboutPage() {
               {email && (
                 <div className="flex items-center gap-3 text-sm text-gray-700">
                   <Mail size={16} className="text-green-600 shrink-0" />
-                  <a href={`mailto:${email}`} className="hover:text-green-700">{email}</a>
+                  <a href={`mailto:${email}`} className="hover:text-forest">{email}</a>
                 </div>
               )}
               {phone && (
@@ -118,7 +118,7 @@ export default async function AboutPage() {
               {fbUrl && isSafeUrl(fbUrl) && (
                 <div className="flex items-center gap-3 text-sm text-gray-700">
                   <Globe size={16} className="text-green-600 shrink-0" />
-                  <a href={fbUrl} target="_blank" rel="noopener noreferrer" className="hover:text-green-700 break-all">{fbUrl}</a>
+                  <a href={fbUrl} target="_blank" rel="noopener noreferrer" className="hover:text-forest break-all">{fbUrl}</a>
                 </div>
               )}
             </div>

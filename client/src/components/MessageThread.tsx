@@ -83,7 +83,7 @@ export default function MessageThread({ otherId, otherName }: Props) {
               <div key={m.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[75%] rounded-2xl px-4 py-2 text-sm ${
                   isMe
-                    ? 'bg-green-700 text-white rounded-br-sm'
+                    ? 'bg-forest text-white rounded-br-sm'
                     : 'bg-white border border-gray-200 text-gray-800 rounded-bl-sm'
                 }`}>
                   <p>{m.content}</p>
@@ -109,7 +109,7 @@ export default function MessageThread({ otherId, otherName }: Props) {
         <button
           type="submit"
           disabled={sending || !text.trim()}
-          className="inline-flex items-center gap-1.5 bg-green-700 hover:bg-green-800 disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors"
+          className="inline-flex items-center gap-1.5 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors"
         >
           {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
         </button>

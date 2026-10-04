@@ -110,7 +110,7 @@ export default function CustomerOrdersPage() {
           <ShoppingBag size={24} />
           My Orders
         </h1>
-        <Link href="/products" className="text-sm text-green-700 hover:underline">
+        <Link href="/products" className="text-sm text-forest hover:underline">
           Continue Shopping
         </Link>
       </div>
@@ -127,7 +127,7 @@ export default function CustomerOrdersPage() {
           <p className="text-gray-500 mb-4">You haven&apos;t placed any orders yet.</p>
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
+            className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
           >
             Browse Products
           </Link>
@@ -172,7 +172,7 @@ export default function CustomerOrdersPage() {
                         <div className="flex items-center gap-2">
                           <Link
                             href={`/products/${item.product.id}`}
-                            className="text-gray-800 hover:text-green-700 font-medium transition-colors"
+                            className="text-gray-800 hover:text-forest font-medium transition-colors"
                           >
                             {item.product.name}
                           </Link>

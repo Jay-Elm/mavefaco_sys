@@ -48,7 +48,7 @@ export default async function SellerPage({
     <div className="max-w-5xl mx-auto px-4 py-10">
       <Link
         href="/products"
-        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-green-700 mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-forest mb-6 transition-colors"
       >
         <ArrowLeft size={16} />
         Back to Products
@@ -92,7 +92,7 @@ export default async function SellerPage({
           </div>
           <Link
             href={`/customer/messages/${farmer.id}`}
-            className="ml-auto shrink-0 inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+            className="ml-auto shrink-0 inline-flex items-center gap-2 bg-forest hover:bg-forest-mid text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
           >
             <MessageCircle size={15} /> Message Farmer
           </Link>

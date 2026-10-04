@@ -57,7 +57,7 @@ export default function VerifyEmailStatus() {
         <>
           <CheckCircle size={32} className="mx-auto text-green-600" />
           <p className="text-sm text-gray-700">{message}</p>
-          <Link href="/login" className="inline-block text-sm text-green-700 font-medium hover:underline">
+          <Link href="/login" className="inline-block text-sm text-forest font-medium hover:underline">
             Sign in
           </Link>
         </>
@@ -66,7 +66,7 @@ export default function VerifyEmailStatus() {
         <>
           <XCircle size={32} className="mx-auto text-red-500" />
           <p className="text-sm text-red-600">{message}</p>
-          <Link href="/login" className="inline-block text-sm text-green-700 font-medium hover:underline">
+          <Link href="/login" className="inline-block text-sm text-forest font-medium hover:underline">
             Back to sign in
           </Link>
         </>

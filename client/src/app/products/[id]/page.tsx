@@ -38,7 +38,7 @@ export default async function ProductDetailPage({
     <div className="max-w-5xl mx-auto px-4 py-10">
       <Link
         href="/products"
-        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-green-700 mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-forest mb-6 transition-colors"
       >
         <ArrowLeft size={16} />
         Back to Products
@@ -98,7 +98,7 @@ export default async function ProductDetailPage({
                 </span>
                 <Link
                   href={`/sellers/${product.farmer.id}`}
-                  className="font-medium text-green-700 hover:underline"
+                  className="font-medium text-forest hover:underline"
                 >
                   {product.farmer.name}
                 </Link>
