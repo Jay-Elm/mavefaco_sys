@@ -16,7 +16,8 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { MFA_PENDING_COOKIE, signMfaPendingToken, type MfaPurpose } from "@/lib/mfaToken";
 import { generateTotpSecret } from "@/lib/totp";
 import { decryptTotpSecret, encryptTotpSecret } from "@/lib/totpCrypto";
-import { generateBackupCodes } from "@/lib/backupCodes";
+import bcrypt from "bcryptjs";
+import { randomBytes } from "node:crypto";
 import { createUser, freshIp, request, withRowLocked } from "@/test-utils/integration/helpers";
 
 const PASSWORD = "correct-horse-battery";
@@ -42,7 +43,14 @@ const pendingFor = (userId: number, purpose: MfaPurpose) => signMfaPendingToken(
 async function enrolledAdmin() {
   const user = await createUser({ role: "admin", password: PASSWORD });
   const secret = generateTotpSecret();
-  const backup = await generateBackupCodes();
+  // Same format as real backup codes, hashed at bcrypt cost 4 instead of 10:
+  // verification works identically, and ten cost-10 hashes per test is
+  // seconds of CPU on a slow machine. The enrollment-flow tests still
+  // exercise the production generator and cost via /confirm.
+  const backup = await Promise.all(
+    Array.from({ length: 10 }, (_, i) => `T${String(i).padStart(3, "0")}-${randomBytes(2).toString("hex").toUpperCase()}`)
+      .map(async (code) => ({ code, hash: await bcrypt.hash(code, 4) })),
+  );
   await prisma.user.update({
     where: { id: user.id },
     data: { totpEnabled: true, totpSecret: encryptTotpSecret(secret) },

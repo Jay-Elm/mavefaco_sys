@@ -15,5 +15,8 @@ export default defineConfig({
     setupFiles: ["src/test-utils/integration/env.ts", "src/test-utils/integration/setup.ts"],
     // Files share one database and truncate it between tests.
     fileParallelism: false,
+    // Route handlers bcrypt-hash passwords and backup codes for real; give
+    // slow machines (battery power, shared CI runners) room beyond the 5s default.
+    testTimeout: 20_000,
   },
 });
