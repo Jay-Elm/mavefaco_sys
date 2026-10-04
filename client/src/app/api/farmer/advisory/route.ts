@@ -15,6 +15,9 @@ export async function GET(req: NextRequest) {
       where: {
         type: { in: ["pest_disease", "weather_impact", "damage"] },
         createdAt: { gte: since },
+        // Shared with every farmer: only logs from listings staff approved,
+        // so unreviewed product names don't circulate.
+        product: { approved: true },
       },
       include: {
         product: { select: { name: true, category: { select: { name: true } } } },

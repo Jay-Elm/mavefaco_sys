@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { logAudit } from "@/lib/audit";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
@@ -40,6 +41,7 @@ export async function POST(req: NextRequest) {
         displayOrder,
       },
     });
+    await logAudit("CREATE_BANNER", "BANNER", banner.id, actor.id);
     return NextResponse.json(banner, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Failed to create banner" }, { status: 500 });

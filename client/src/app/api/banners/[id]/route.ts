@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { logAudit } from "@/lib/audit";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
@@ -34,6 +35,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         ...(displayOrder !== undefined && { displayOrder }),
       },
     });
+    await logAudit("UPDATE_BANNER", "BANNER", bannerId, actor.id);
     return NextResponse.json(banner);
   } catch {
     return NextResponse.json({ error: "Failed to update banner" }, { status: 500 });
@@ -52,6 +54,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     if (isNaN(bannerId)) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
     await prisma.banner.delete({ where: { id: bannerId } });
+    await logAudit("DELETE_BANNER", "BANNER", bannerId, actor.id);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Failed to delete banner" }, { status: 500 });

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { logAudit } from "@/lib/audit";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
@@ -31,6 +32,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
 
     const faq = await prisma.faq.create({ data: parsed.data });
+    await logAudit("CREATE_FAQ", "FAQ", faq.id, actor.id);
     return NextResponse.json(faq, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Failed to create FAQ" }, { status: 500 });

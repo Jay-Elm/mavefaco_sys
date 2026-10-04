@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { logAudit } from "@/lib/audit";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
@@ -29,6 +30,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
 
     const category = await prisma.category.create({ data: { name: parsed.data.name } });
+
+    await logAudit("CREATE_CATEGORY", "CATEGORY", category.id, user.id);
 
     return NextResponse.json(category, { status: 201 });
   } catch (err: unknown) {

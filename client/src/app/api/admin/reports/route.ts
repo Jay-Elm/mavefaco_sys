@@ -4,6 +4,8 @@ import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 
+const PH_OFFSET_MS = 8 * 60 * 60 * 1000;
+
 export async function GET(req: NextRequest) {
   try {
     const actor = await getActiveAuthUser(req);
@@ -38,6 +40,7 @@ export async function GET(req: NextRequest) {
         select: { id: true, role: true, name: true, email: true },
       }),
       prisma.product.findMany({
+        where: { archivedAt: null },
         select: { id: true, approved: true, farmerId: true },
       }),
     ]);
@@ -72,7 +75,9 @@ export async function GET(req: NextRequest) {
     // Sales by month
     const monthMap = new Map<string, { orders: number; revenue: number }>();
     for (const o of orders) {
-      const key = o.createdAt.toISOString().slice(0, 7);
+      // Bucket by the month in the Philippines (UTC+8, no DST), not UTC:
+      // an order placed before 8am on the 1st belongs to the new month.
+      const key = new Date(o.createdAt.getTime() + PH_OFFSET_MS).toISOString().slice(0, 7);
       const entry = monthMap.get(key) ?? { orders: 0, revenue: 0 };
       entry.orders += 1;
       if (o.status === "delivered") entry.revenue += o.totalAmount;
@@ -103,8 +108,9 @@ export async function GET(req: NextRequest) {
         unitsSold: 0,
         revenue: 0,
       };
-      entry.unitsSold += item.quantity;
+      // Only delivered orders are sales; pending ones may still be cancelled.
       if (item.order.status === "delivered") {
+        entry.unitsSold += item.quantity;
         entry.revenue += item.price * item.quantity;
       }
       productMap.set(id, entry);
@@ -119,8 +125,9 @@ export async function GET(req: NextRequest) {
     for (const item of orderItems) {
       const cat = item.product.category.name;
       const entry = catMap.get(cat) ?? { unitsSold: 0, revenue: 0 };
-      entry.unitsSold += item.quantity;
+      // Only delivered orders are sales; pending ones may still be cancelled.
       if (item.order.status === "delivered") {
+        entry.unitsSold += item.quantity;
         entry.revenue += item.price * item.quantity;
       }
       catMap.set(cat, entry);
@@ -139,8 +146,9 @@ export async function GET(req: NextRequest) {
     for (const item of orderItems) {
       const { id, name, email } = item.product.farmer;
       const entry = farmerMap.get(id) ?? { id, name, email, unitsSold: 0, revenue: 0 };
-      entry.unitsSold += item.quantity;
+      // Only delivered orders are sales; pending ones may still be cancelled.
       if (item.order.status === "delivered") {
+        entry.unitsSold += item.quantity;
         entry.revenue += item.price * item.quantity;
       }
       farmerMap.set(id, entry);

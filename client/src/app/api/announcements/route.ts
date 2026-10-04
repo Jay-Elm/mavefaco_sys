@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { logAudit } from "@/lib/audit";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
@@ -33,6 +34,8 @@ export async function POST(req: NextRequest) {
       data: { title, body, type, authorId: actor.id },
       include: { author: { select: { name: true, role: true } } },
     });
+
+    await logAudit("CREATE_ANNOUNCEMENT", "ANNOUNCEMENT", announcement.id, actor.id);
 
     return NextResponse.json(announcement, { status: 201 });
   } catch {

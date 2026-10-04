@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { logAudit } from "@/lib/audit";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
@@ -16,6 +17,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     if (isNaN(announcementId)) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
     await prisma.announcement.delete({ where: { id: announcementId } });
+    await logAudit("DELETE_ANNOUNCEMENT", "ANNOUNCEMENT", announcementId, actor.id);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Failed to delete announcement" }, { status: 500 });

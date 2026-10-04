@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { logAudit } from "@/lib/audit";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
@@ -19,14 +20,26 @@ export async function DELETE(
     if (isNaN(categoryId))
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
-    const productCount = await prisma.product.count({ where: { categoryId } });
-    if (productCount > 0)
+    const [liveCount, archivedCount] = await Promise.all([
+      prisma.product.count({ where: { categoryId, archivedAt: null } }),
+      prisma.product.count({ where: { categoryId, archivedAt: { not: null } } }),
+    ]);
+    if (liveCount > 0)
       return NextResponse.json(
-        { error: `Cannot delete: ${productCount} product(s) still use this category` },
+        { error: `Cannot delete: ${liveCount} product(s) still use this category` },
+        { status: 409 },
+      );
+    // Archived products are hidden everywhere, so say so rather than
+    // reporting products staff can't find.
+    if (archivedCount > 0)
+      return NextResponse.json(
+        { error: `Cannot delete: ${archivedCount} archived product(s) kept for past orders still use this category` },
         { status: 409 },
       );
 
     await prisma.category.delete({ where: { id: categoryId } });
+
+    await logAudit("DELETE_CATEGORY", "CATEGORY", categoryId, user.id);
 
     return NextResponse.json({ message: "Category deleted" });
   } catch {

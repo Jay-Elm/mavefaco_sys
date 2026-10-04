@@ -14,6 +14,9 @@ interface AuditLog {
   user: { id: number; name: string; email: string; role: string }
 }
 
+// Matches the API's page size: a full page means there may be older entries.
+const PAGE_SIZE = 100
+
 const ACTION_COLORS: Record<string, string> = {
   CREATE_PRODUCT:      'bg-green-100 text-green-800',
   DELETE_PRODUCT:      'bg-red-100 text-red-800',
@@ -25,6 +28,8 @@ export default function AuditLogsPage() {
   const [logs, setLogs]       = useState<AuditLog[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState('')
+  const [hasMore, setHasMore] = useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
 
   const [search, setSearch]           = useState('')
   const [filterAction, setFilterAction] = useState('')
@@ -36,11 +41,28 @@ export default function AuditLogsPage() {
       .then((r) => r.json())
       .then((data) => {
         if (data.error) setError(data.error)
-        else setLogs(data)
+        else { setLogs(data); setHasMore(data.length === PAGE_SIZE) }
       })
       .catch(() => setError('Failed to load audit logs'))
       .finally(() => setLoading(false))
   }, [token])
+
+  async function loadOlder() {
+    const oldest = logs.at(-1)
+    if (!token || !oldest) return
+    setLoadingMore(true)
+    try {
+      const res = await fetch(`/api/admin/audit-logs?before=${oldest.id}`, { headers: { Authorization: `Bearer ${token}` } })
+      const data = await res.json()
+      if (data.error) { setError(data.error); return }
+      setLogs((prev) => [...prev, ...data])
+      setHasMore(data.length === PAGE_SIZE)
+    } catch {
+      setError('Failed to load older entries')
+    } finally {
+      setLoadingMore(false)
+    }
+  }
 
   const actions     = useMemo(() => [...new Set(logs.map((l) => l.action))].sort(), [logs])
   const entityTypes = useMemo(() => [...new Set(logs.map((l) => l.entityType))].sort(), [logs])
@@ -75,7 +97,7 @@ export default function AuditLogsPage() {
     <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-serif text-2xl font-bold text-gray-900">Audit Logs</h1>
-        <span className="text-sm text-gray-500">{logs.length} entries (last 100)</span>
+        <span className="text-sm text-gray-500">{logs.length} most recent entries</span>
       </div>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
@@ -188,6 +210,19 @@ export default function AuditLogsPage() {
         </table>
         </div>
       </div>
+
+      {hasMore && (
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={loadOlder}
+            disabled={loadingMore}
+            className="inline-flex items-center gap-2 text-sm font-medium text-forest border border-gray-300 hover:border-forest rounded-lg px-4 py-2 transition-colors disabled:opacity-50"
+          >
+            {loadingMore && <Loader2 size={14} className="animate-spin" />}
+            Load older entries
+          </button>
+        </div>
+      )}
     </div>
   )
 }

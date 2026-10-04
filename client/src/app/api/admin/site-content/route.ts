@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { logAudit } from "@/lib/audit";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
@@ -43,6 +44,7 @@ export async function PUT(req: NextRequest) {
           })
         )
     );
+    await logAudit("UPDATE_SITE_CONTENT", "SITE_CONTENT", 0, actor.id);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: "Failed to update site content" }, { status: 500 });

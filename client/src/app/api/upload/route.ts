@@ -2,10 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getActiveAuthUser } from '@/lib/getActiveAuthUser'
 import { rateLimit } from '@/lib/rateLimit'
 import { detectImageType } from '@/lib/imageSniff'
+import { authorize } from '@/lib/authorize'
+import { ROLES } from '@/lib/roles'
 
 export async function POST(req: NextRequest) {
   const actor = await getActiveAuthUser(req)
   if (!actor) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  // Product photos only. Without this, any customer account could use the
+  // public bucket as free image hosting.
+  if (!authorize(actor, [ROLES.FARMER, ROLES.MANAGER, ROLES.ADMIN]))
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
   const { allowed, retryAfterSeconds } = rateLimit(`upload:${actor.id}`, 20, 60 * 60 * 1000)
   if (!allowed) {
