@@ -3,6 +3,7 @@
 **Scope:** `client/` — the full Next.js application (App Router API routes, Prisma/PostgreSQL data layer, JWT auth, Supabase storage).
 **Method:** Manual source review of auth, authorization, data access, file upload, and configuration code. No dynamic/penetration testing was performed — treat unverified items as hypotheses to confirm.
 **Reviewed:** 2026-09-05
+**Later work:** the 2026-10-03 whole-project review and its fixes are in [`PROJECT_REVIEW.md`](PROJECT_REVIEW.md).
 
 ## How to read this document
 

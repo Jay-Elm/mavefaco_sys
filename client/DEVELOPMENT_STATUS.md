@@ -48,10 +48,11 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 ## Database Schema (Prisma)
 
-16 models. `generated/prisma` is a custom client output path — **always run `npx prisma generate` after `npx prisma migrate dev`**, it does not auto-update. Use the Bash tool (not PowerShell) for Prisma CLI commands.
+17 models. `generated/prisma` is a custom client output path — **always run `npx prisma generate` after `npx prisma migrate dev`**, it does not auto-update. Use the Bash tool (not PowerShell) for Prisma CLI commands.
 
 - `User` — id, name, email, password, role, suspended, `idImagePath` (private storage path, not a URL), `verified`, `verifiedAt` (drives ID-image auto-purge), `emailVerifiedAt`, `tokenVersion`, `totpSecret` (encrypted), `totpEnabled`, createdAt, updatedAt
 - `EmailVerificationToken` / `PasswordResetToken` — id, `tokenHash` (SHA-256, never the raw token), expiresAt, usedAt, userId
+- `EmailChangeToken` — id, `tokenHash`, newEmail, expiresAt, usedAt, userId (a pending email change, confirmed from the new address)
 - `TotpBackupCode` — id, `codeHash` (bcrypt — low-entropy human-typed codes need the slow hash), usedAt, userId
 - `Category` — id, name (unique), createdAt
 - `Product` — id, name, description, **price (`Decimal(10,2)`)**, stock (Float), unit, imageUrl, farmerId, categoryId, approved, plantingDate, expectedHarvestDate, growthStage, readyForHarvest
@@ -284,22 +285,17 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 
 | Issue | Severity | Notes |
 |-------|----------|-------|
-| ~30 simpler CRUD routes on inline validation | Low | announcements, faqs, categories, crop logs, reviews, messages, products not migrated to `src/validators/` — no client/server duplication to drift, so not urgent |
-| No image upload for site banners/site-content | Low | Some fields still URL-only |
-| Messaging is polling, not WebSocket | Low | 8s interval; acceptable for capstone |
-| No push notifications | Low | All alerts are in-app only |
+| Rate limiting is per server instance | Low | In-memory (`src/lib/rateLimit.ts`), so limits aren't strict across simultaneous Vercel instances. Fix: a shared store such as Upstash Redis (needs an account and credentials). Review finding L4 |
+| Every page renders per request | Low | Accepted trade-off of the nonce-based CSP: no static pages, ISR or CDN page caching. Fine at current traffic |
+| 4 high `npm audit` findings in Prisma's CLI tooling | Low | `deepmerge-ts` and `mysql2` inside `prisma`, unused at runtime; resolved by Prisma 8 (release candidate as of 2026-10). Don't apply npm's suggested downgrade |
+| Product images orphaned by edits aren't cleaned up | Low | Replaced product photos stay in the public bucket |
+| Messaging is polling, not WebSocket | Low | 8s interval; acceptable for the cooperative's use |
+| No UI or end-to-end tests | Low | API routes are covered by unit and integration tests; screens are checked manually |
 
-All items from the original review — weak/unrotated `JWT_SECRET`, `Float` money fields, missing route validation, pasted-URL ID verification, no MFA, no dependency hygiene process, no ID-image retention policy, email enumeration on registration — have been fixed; see `SECURITY_REVIEW.md` (Phase 1–3, through 2026-09-08) for the original findings and fixes, cross-checked against the more recent 10-item gap-list pass for anything after that date.
+Every finding from `SECURITY_REVIEW.md` (through 2026-09-08), the 10-item gap list, and the 2026-10-03 whole-project review (`PROJECT_REVIEW.md`) is fixed except L4 above.
 
 ---
 
 ## Not Yet Built / Out of Scope
 
-- Real-time WebSocket chat (replaced with polling)
-- Weather alerts / push notifications
-- AI pest advisory (replaced with community log aggregation)
-- Market price API (Albay province)
-- Coming-soon listings with harvest date countdown
-- Language toggle (EN/TL)
-- Print receipts
-- Admin: backup/restore database
+See [`SCOPE_AND_DELIMITATIONS.md`](SCOPE_AND_DELIMITATIONS.md) for every use-case item marked implemented, partial or not implemented, and the system's delimitations. The largest areas not built: online payments, market intelligence (prices, forecasts, recommendations), manager planning tools, and convenience features such as favorites, invoices, notifications settings and translation.

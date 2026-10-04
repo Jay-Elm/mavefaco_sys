@@ -27,67 +27,40 @@ git push -u origin master
 1. Go to [supabase.com](https://supabase.com) and sign in.
 2. Click **New Project** → fill in name, password, region (choose Asia — Singapore for lower latency).
 3. Wait for the project to finish provisioning (~2 minutes).
-4. Go to **Project Settings → Database → Connection string → URI**.
-5. Copy the connection string. It looks like:
-   ```
-   postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres
-   ```
-6. Replace `<password>` with the database password you set in step 2.
-7. Keep this URL — you will need it in Step 4.
+4. Click **Connect** on the project and copy two connection strings, replacing `<password>` in each with the database password you set:
+   - **Transaction pooler** (port 6543): this becomes `DATABASE_URL`, used by the running app.
+   - **Session pooler** (port 5432 on the `…pooler.supabase.com` host): this becomes `DIRECT_URL`, used for migrations.
+
+   Don't use the "Direct connection" string (`db.<project-ref>.supabase.co`): it's IPv6-only and Vercel can't reach it.
+5. Keep both; you'll add them in Step 6.
 
 ---
 
-## Step 3 — Fix `next.config.ts`
+## Step 3 — Check `next.config.ts`
 
-Remove the `allowedDevOrigins` line — it is a dev-only setting and is not needed in production.
-
-Open `next.config.ts` and change it to:
-
-```ts
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {};
-
-export default nextConfig;
-```
-
-Commit the change:
-
-```bash
-git add next.config.ts
-git commit -m "remove dev-only allowedDevOrigins for production"
-git push
-```
+Nothing to change. `next.config.ts` is already production-ready: it sets the security response headers (HSTS, `X-Frame-Options`, `nosniff`, and others). Don't replace it with an empty config. The Content-Security-Policy itself is set per request by `src/proxy.ts`.
 
 ---
 
-## Step 4 — Generate a strong JWT secret
+## Step 4 — Generate secrets
 
-Run this in your terminal to generate a secure 64-character secret:
+Run this in your terminal three times, once each for `JWT_SECRET`, `TOTP_ENCRYPTION_KEY` and `CRON_SECRET` (each a separate random 64-character value):
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-Copy the output. You will use it as `JWT_SECRET` in Step 6.
+Keep the three values somewhere safe; you will add them in Step 6. Never paste them into chats, tickets or commits.
 
 ---
 
-## Step 5 — Run database migrations against Supabase
+## Step 5 — Database migrations
 
-In your local terminal, inside the `client/` directory:
+You don't run migrations by hand. `npm run build` (`scripts/migrate.mjs`) runs `prisma migrate deploy` against `DIRECT_URL` on every **Production** deploy, so the first deploy creates all tables and later deploys apply new migrations. Preview builds migrate only their own database, and only when `PREVIEW_DATABASE_ISOLATED=true` (see the environment variables below).
 
-```bash
-# Set the Supabase DATABASE_URL temporarily for this command
-$env:DATABASE_URL="postgresql://postgres:<password>@db.<project-ref>.supabase.co:5432/postgres"
+`DIRECT_URL` must be Supabase's **Session pooler** connection string (port 5432 on the pooler host). Supabase's true direct endpoint (`db.<project-ref>.supabase.co`) is IPv6-only and can't be reached from Vercel's build servers or most local networks.
 
-npx prisma migrate deploy
-npx prisma generate
-```
-
-> **Important:** `npx prisma generate` is required after every migration because this project uses a custom Prisma output path (`generated/prisma`).
-
-Verify the migrations ran successfully — you should see all 7 migrations applied with no errors.
+After changing `prisma/schema.prisma` locally, create the migration with `npx prisma migrate dev --name <change>` against your local database, then run `npx prisma generate` (Prisma 7 doesn't do this automatically) and commit both the migration and `generated/`.
 
 ---
 
@@ -97,12 +70,7 @@ Verify the migrations ran successfully — you should see all 7 migrations appli
 2. Click **Add New → Project**.
 3. Import your GitHub repository.
 4. Set the **Root Directory** to `client` (since the Next.js app lives in `client/`, not the repo root).
-5. Under **Environment Variables**, add the following:
-
-   | Key | Value |
-   |---|---|
-   | `DATABASE_URL` | The Supabase connection string from Step 2 |
-   | `JWT_SECRET` | The generated secret from Step 4 |
+5. Under **Environment Variables**, add every variable in the [reference below](#environment-variables-reference) for the **Production** environment: the two connection strings from Step 2, `JWT_SECRET` and `TOTP_ENCRYPTION_KEY` (generated as in Step 4), `BREVO_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` and `CRON_SECRET`. Give Preview its own database and keys (see "Preview deployments" below).
 
 6. Click **Deploy**.
 7. Wait for the build to complete (~2–3 minutes).
@@ -131,23 +99,26 @@ Supabase's Table Editor lets you manually edit rows. To create the first admin:
 3. Set `role` to `admin`.
 4. Save.
 
-Alternatively, run this SQL in Supabase → **SQL Editor**:
+Alternatively, run this SQL in Supabase → **SQL Editor** (this also marks the email verified, in case the verification email didn't arrive):
 
 ```sql
-UPDATE "User" SET role = 'admin' WHERE email = 'your@email.com';
+UPDATE "User" SET role = 'admin', "emailVerifiedAt" = COALESCE("emailVerifiedAt", NOW()) WHERE email = 'your@email.com';
 ```
+
+On their next login, admins and managers must set up two-factor authentication with an authenticator app and save the one-time backup codes shown.
 
 ---
 
-## Known Limitations (acceptable for capstone)
+## Known Limitations
 
 | Item | Notes |
 |---|---|
-| `Float` for price/stock | Minor rounding risk; not an issue for demo scale |
-| JWT in `localStorage` | XSS risk; acceptable for capstone, not for real production |
-| No image file upload | Products use image URLs only; hosting images externally (e.g., Imgur) works fine |
-| Messaging uses polling (8s) | Not real-time WebSocket; functional for demo |
-| No password reset email | Password reset is admin-only via dashboard |
+| Every page renders per request | Required by the nonce-based Content-Security-Policy; pages aren't served from a CDN cache. Fine at the cooperative's traffic |
+| Rate limits are per server instance | In-memory, so not strict across simultaneous Vercel instances. A shared store (e.g. Upstash Redis) would fix this |
+| Messaging uses polling (8s) | Not real-time; functional for the cooperative's use |
+| No online payments | Payment method is recorded on the order; payment happens outside the system |
+
+The full list of what's in and out of scope is in [`SCOPE_AND_DELIMITATIONS.md`](SCOPE_AND_DELIMITATIONS.md).
 
 ---
 
@@ -181,14 +152,4 @@ Generate random values with `node -e "console.log(require('crypto').randomBytes(
 
 ## Redeploying after code changes
 
-Push to the `master` branch and Vercel automatically rebuilds. If you add a new Prisma migration:
-
-```bash
-# Run against production DB first
-$env:DATABASE_URL="<supabase-url>"
-npx prisma migrate deploy
-npx prisma generate
-
-# Then push code
-git push
-```
+Push to `master`; Vercel rebuilds and deploys automatically, applying any new migrations as part of the build. Every push also runs the test and dependency-audit workflows on GitHub. Other branches and pull requests get Preview deployments against the separate Preview database.

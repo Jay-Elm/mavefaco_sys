@@ -6,7 +6,8 @@
 | **Commit reviewed** | `aba62ce` (`master`, deployed to `https://mavefaco-sys.vercel.app`) |
 | **Scope** | Full read of application code, database schema, configuration, CI, and documentation |
 | **Method** | Manual code review of every API route, shared library, validator, and key page/component; schema and config inspection; live checks of lint, type-check, build, unit and integration tests |
-| **Code changes made during review** | None. H1, M1 and M5 were fixed afterwards on 2026-10-03; see the status column in [§9](#9-recommended-roadmap). |
+| **Code changes made during review** | None. |
+| **Status (2026-10-05)** | Every finding has since been fixed and deployed except **L4** (shared rate-limit store), which needs an external service. Each finding's row and the roadmap in [§9](#9-recommended-roadmap) say what was done. The test counts and other figures below are as of the review. |
 
 ## Contents
 
