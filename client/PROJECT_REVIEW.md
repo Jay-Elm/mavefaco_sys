@@ -101,7 +101,7 @@ The review found **no critical issues**, **one high-priority operational risk** 
 | L8 | No database indexes on foreign keys or common filters (`farmerId`, `customerId`, `status`, `approved`, …). Acceptable at current scale. | `prisma/schema.prisma` |
 | L9 | Category deletion counts archived products, so it can refuse with "N products still use this category" when none are visible. | `api/categories/[id]` |
 | L10 | The farmer advisory shows all farmers' pest/damage notes, including names of unapproved products. Anonymous, and possibly intended. | `api/farmer/advisory` |
-| L11 | Inconsistent branding: **CoopMarket** in the UI, page title, and authenticator-app label (12 files) vs. **MaVeFaCo** in all emails (6 files). | Site-wide |
+| L11 | ~~Inconsistent branding: **CoopMarket** in the UI vs. **MaVeFaCo** in emails.~~ **Fixed 2026-10-04:** standardized on Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo). | Site-wide |
 | L12 | A few storefront elements still use default Tailwind greens rather than the brand tokens (e.g., the cart page's login prompt). | `app/cart/page.tsx` |
 
 ## 6. Scope vs. use-case documents
@@ -133,7 +133,7 @@ Integration tests run against a dedicated `*_test` Postgres database, guarded ag
 
 | Item | Status |
 |---|---|
-| `README.md` | **Unmodified create-next-app template** — no project description, setup, environment variables, or architecture. |
+| `README.md` | ~~Unmodified create-next-app template.~~ **Rewritten 2026-10-04** and moved to the repository root. |
 | `DEPLOYMENT.md` | **Stale.** Still describes the JWT as stored in `localStorage`; documents only 2 of the 7 required environment variables (missing `DIRECT_URL`, `BREVO_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`). |
 | `DEVELOPMENT_STATUS.md`, `WHERE_WE_LEFT_OFF.md` | Current. |
 | `SECURITY_REVIEW.md` | Accurate through 2026-09-08; later work is recorded in `DEVELOPMENT_STATUS.md`. |
