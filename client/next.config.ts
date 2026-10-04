@@ -11,11 +11,15 @@ const cspReportOnly = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self' data:",
-  "connect-src 'self'",
+  // api.open-meteo.com: the farmer dashboard's weather widget.
+  "connect-src 'self' https://api.open-meteo.com",
   "form-action 'self'",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "object-src 'none'",
+  // Violations are posted to /api/csp-report and logged server-side.
+  "report-uri /api/csp-report",
+  "report-to csp",
 ].join("; ");
 
 const securityHeaders = [
@@ -25,6 +29,7 @@ const securityHeaders = [
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
   { key: "Content-Security-Policy-Report-Only", value: cspReportOnly },
+  { key: "Reporting-Endpoints", value: 'csp="/api/csp-report"' },
 ];
 
 const nextConfig: NextConfig = {
