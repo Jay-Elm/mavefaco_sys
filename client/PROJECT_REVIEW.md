@@ -91,18 +91,18 @@ The review found **no critical issues**, **one high-priority operational risk** 
 
 | # | Finding | Location |
 |---|---|---|
-| L1 | Password-reset and email-verification tokens are checked and then marked used in separate statements, so two simultaneous requests can both consume one link (same pattern fixed in MFA on 2026-10-03). | `api/auth/reset-password`, `api/auth/verify-email` |
-| L2 | The Content-Security-Policy is Report-Only with no `report-uri`/`report-to`, so it collects nothing; enforcing it as written would block the weather widget (`connect-src 'self'` vs. `api.open-meteo.com`). | `next.config.ts` |
-| L3 | No maximum length on free-text inputs (names, messages, reviews, descriptions, site content). | `src/validators/*` |
-| L4 | Rate limiting is in-memory per serverless instance, so limits are not strict across instances (acknowledged in code). | `src/lib/rateLimit.ts` |
-| L5 | Any authenticated user, including customers, can upload to the public product-image bucket; orphaned uploads are never cleaned up. | `api/upload` |
-| L6 | Category, announcement, banner, FAQ, and site-content changes are not written to the audit log; the audit view returns only the latest 100 entries without paging or filtering. | Various admin routes; `api/admin/audit-logs` |
-| L7 | Report accuracy: months are bucketed in UTC rather than Philippine time; "units sold" includes cancelled and pending orders; product counts include archived products. | `api/admin/reports` |
-| L8 | No database indexes on foreign keys or common filters (`farmerId`, `customerId`, `status`, `approved`, …). Acceptable at current scale. | `prisma/schema.prisma` |
-| L9 | Category deletion counts archived products, so it can refuse with "N products still use this category" when none are visible. | `api/categories/[id]` |
-| L10 | The farmer advisory shows all farmers' pest/damage notes, including names of unapproved products. Anonymous, and possibly intended. | `api/farmer/advisory` |
+| L1 | **Fixed 2026-10-04.** Password-reset and email-verification links now claim their token with a conditional update, so two simultaneous requests can't both use one link. | `api/auth/reset-password`, `api/auth/verify-email` |
+| L2 | **Partly fixed 2026-10-04.** The Report-Only policy now reports to `/api/csp-report` (logged server-side, rate-limited) and allows `api.open-meteo.com` for the weather widget. Enforcing it still needs per-request nonces (roadmap 3). | `next.config.ts`, `api/csp-report` |
+| L3 | **Fixed 2026-10-04.** Every free-text input has a maximum length (`src/validators/limits.ts`); new passwords are capped at 128, while login still accepts longer existing passwords. | `src/validators/*` |
+| L4 | **Open.** Rate limiting is in-memory per serverless instance, so limits are not strict across instances (acknowledged in code). Needs a shared store such as Upstash Redis, which requires an account and credentials. | `src/lib/rateLimit.ts` |
+| L5 | **Fixed 2026-10-04** (uploads limited to farmers and staff). Cleaning up product images orphaned by edits remains open. | `api/upload` |
+| L6 | **Fixed 2026-10-04.** Category, announcement, banner, FAQ, and site-content changes are audited, and the audit view pages through older entries ("Load older entries", `?before=`). | Content routes; `api/admin/audit-logs` |
+| L7 | **Fixed 2026-10-04.** Reports bucket months in Philippine time, count units sold from delivered orders only, and exclude archived products from product counts. | `api/admin/reports` |
+| L8 | **Fixed 2026-10-04.** Indexes on foreign keys and common filters (migration `add_indexes`, 16 indexes). | `prisma/schema.prisma` |
+| L9 | **Fixed 2026-10-04.** When only archived products use a category, the deletion message says so. | `api/categories/[id]` |
+| L10 | **Fixed 2026-10-04.** The advisory only includes logs from approved products. | `api/farmer/advisory` |
 | L11 | ~~Inconsistent branding: **CoopMarket** in the UI vs. **MaVeFaCo** in emails.~~ **Fixed 2026-10-04:** standardized on Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo). | Site-wide |
-| L12 | A few storefront elements still use default Tailwind greens rather than the brand tokens (e.g., the cart page's login prompt). | `app/cart/page.tsx` |
+| L12 | **Fixed 2026-10-04.** Remaining storefront buttons, links and selected states use the brand tokens. | Customer-facing pages |
 
 ## 6. Scope vs. use-case documents
 
@@ -151,7 +151,7 @@ Integration tests run against a dedicated `*_test` Postgres database, guarded ag
 | | Settle on one brand name (L11) | Small |
 | | M2/M3: anonymize deleted users instead of deleting their history | Medium — **done** |
 | | M4/M6: verify new email addresses, notify the old address, escape email HTML | Medium — **done** |
-| **3 — Hardening** | L1 single-use tokens, L3 length limits, L6 audit coverage, L7 report accuracy | Small each |
+| **3 — Hardening** | L1 single-use tokens, L3 length limits, L6 audit coverage, L7 report accuracy | Small each — **done** |
 | | Integration tests for the remaining public routes (registration, password reset) | Medium |
-| | Enforce CSP with nonces and a reporting endpoint (L2) | Medium |
-| **4 — Later** | Shared rate-limit store (e.g., Upstash Redis), database indexes, Prisma 8 upgrade, end-to-end UI tests | Medium |
+| | Enforce CSP with nonces (reporting endpoint done) (L2) | Medium |
+| **4 — Later** | Shared rate-limit store (e.g., Upstash Redis), Prisma 8 upgrade, end-to-end UI tests (database indexes done) | Medium |
