@@ -77,6 +77,7 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
     prisma.message.deleteMany({ where: { OR: [{ senderId: userId }, { receiverId: userId }] } }),
     prisma.passwordResetToken.deleteMany({ where: { userId } }),
     prisma.emailVerificationToken.deleteMany({ where: { userId } }),
+    prisma.emailChangeToken.deleteMany({ where: { userId } }),
     prisma.totpBackupCode.deleteMany({ where: { userId } }),
     prisma.product.updateMany({ where: { farmerId: userId, archivedAt: null }, data: { archivedAt: now } }),
     prisma.user.update({

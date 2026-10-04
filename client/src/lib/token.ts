@@ -21,3 +21,6 @@ export function generateToken(): { raw: string; hash: string } {
 export function hashToken(raw: string): string {
   return createHash("sha256").update(raw).digest("hex");
 }
+// Same window as signup verification: the link goes to an inbox the user
+// may not check right away, and the change is harmless until it's clicked.
+export const EMAIL_CHANGE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours

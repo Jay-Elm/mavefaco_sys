@@ -85,12 +85,8 @@ export default function CustomerProfilePage() {
       if (!res.ok) { setEmailError(data.error ?? 'Failed to update email'); return }
       setEmailSuccess(true)
       setEmailPassword('')
-      // Changing the email invalidates the current session token server-side —
-      // sign the user out locally and send them back to log in with it.
-      setTimeout(() => {
-        logout()
-        router.push('/login')
-      }, 1500)
+      // Nothing changes until the new address confirms via the emailed link,
+      // so the session stays valid; the confirmation itself logs out everywhere.
     } catch {
       setEmailError('Request failed')
     } finally {
@@ -238,7 +234,7 @@ export default function CustomerProfilePage() {
         {emailSuccess && (
           <div className="mb-4 flex items-center gap-2 text-green-700 text-sm bg-green-50 border border-green-200 rounded-lg px-4 py-3">
             <CheckCircle size={16} />
-            Email changed — signing you out…
+            Check {newEmail.trim().toLowerCase()} for a confirmation link. Your email won&apos;t change until you click it.
           </div>
         )}
 

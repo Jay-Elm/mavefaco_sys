@@ -158,6 +158,16 @@ exports.Prisma.PasswordResetTokenScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.EmailChangeTokenScalarFieldEnum = {
+  id: 'id',
+  tokenHash: 'tokenHash',
+  newEmail: 'newEmail',
+  expiresAt: 'expiresAt',
+  usedAt: 'usedAt',
+  createdAt: 'createdAt',
+  userId: 'userId'
+};
+
 exports.Prisma.TotpBackupCodeScalarFieldEnum = {
   id: 'id',
   codeHash: 'codeHash',
@@ -299,6 +309,7 @@ exports.Prisma.ModelName = {
   User: 'User',
   EmailVerificationToken: 'EmailVerificationToken',
   PasswordResetToken: 'PasswordResetToken',
+  EmailChangeToken: 'EmailChangeToken',
   TotpBackupCode: 'TotpBackupCode',
   Category: 'Category',
   Product: 'Product',

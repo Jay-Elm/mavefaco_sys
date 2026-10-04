@@ -91,10 +91,8 @@ export default function FarmerProfilePage() {
       if (!res.ok) { setEmailError(data.error ?? 'Failed to update email'); return }
       setEmailSuccess(true)
       setEmailPassword('')
-      setTimeout(() => {
-        logout()
-        router.push('/login')
-      }, 1500)
+      // Nothing changes until the new address confirms via the emailed link,
+      // so the session stays valid; the confirmation itself logs out everywhere.
     } catch {
       setEmailError('Request failed')
     } finally {
@@ -260,7 +258,7 @@ export default function FarmerProfilePage() {
         {emailError && <div className="mb-3 text-red-600 text-sm">{emailError}</div>}
         {emailSuccess && (
           <div className="mb-3 flex items-center gap-2 text-green-700 text-sm">
-            <CheckCircle size={16} /> Email changed — signing you out…
+            <CheckCircle size={16} /> Check {newEmail.trim().toLowerCase()} for a confirmation link. Your email won&apos;t change until you click it.
           </div>
         )}
 

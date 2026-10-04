@@ -66,7 +66,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `CropLog` — id, type (weather_impact/pest_disease/damage/note), note, createdAt, productId
 - `Message` — id, content, read, createdAt, senderId, receiverId
 
-**Migrations applied (23, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at`.
+**Migrations applied (24, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token`.
 
 **Infra note:** `DIRECT_URL` cannot use Supabase's true direct-connection endpoint (`db.<ref>.supabase.co:5432`) — neither locally nor from Vercel's build infra can reach it (`P1001`), almost certainly Supabase's IPv6-only requirement for that endpoint. Fixed by pointing `DIRECT_URL` at the **Session pooler** instead (distinct from the Transaction pooler `DATABASE_URL` uses) — still holds `prisma migrate deploy`'s advisory lock, and is IPv4-compatible.
 
@@ -82,7 +82,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `/about` — Cooperative info page: name, about, mission/vision, FAQ accordion, contact details (all editable by admin)
 - `/login` — role-based redirect after login; suspension error on 403; branches into MFA setup/verify for admin/manager
 - `/register` — role selector (Customer / Farmer); registration blocked until email is verified
-- `/verify-email`, `/forgot-password`, `/reset-password` — self-service email verification and password reset flows
+- `/verify-email`, `/forgot-password`, `/reset-password`, `/confirm-email-change` — self-service email verification, password reset, and email-change confirmation flows
 
 ### Product Purchase Flow (Customer)
 - Add to Cart → quantity modal → cart badge count in navbar
@@ -209,7 +209,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/messages/[userId]` | authenticated | message thread; marks received as read |
 | POST | `/api/messages/[userId]` | authenticated | send message |
 | GET | `/api/users/me` | authenticated | |
-| PATCH | `/api/users/me` | authenticated | name/email/password change; email change requires current password + kills session |
+| PATCH | `/api/users/me` | authenticated | name/email/password change. Email change requires the current password and only starts a request: a link goes to the new address, a notice to the current one |
+| POST | `/api/auth/confirm-email-change` | public (token) | applies a requested email change, logs out every session, notifies the previous address |
 | DELETE | `/api/users/me` | authenticated (customer/farmer only) | self-service account deletion, password-gated, blocked while an active order exists |
 | POST | `/api/users/me/id-image` | farmer | uploads ID image into private bucket; resets `verified` to false |
 | DELETE | `/api/users/me/id-image` | farmer | removes the submitted ID image |
@@ -261,6 +262,10 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 **ID-image deletion:** all deletes go through `deleteIdImage()` in `src/lib/idImageStorage.ts`, which reports success only when Supabase confirms. Callers keep the database path on failure: the purge cron retries next run (and answers 500), withdrawing an ID returns 502, replacing one rolls back the new upload, and account deletion is refused until the image is gone.
 
 **Preview builds don't migrate:** `npm run build` runs `scripts/migrate.mjs`, which skips `prisma migrate deploy` when `VERCEL_ENV=preview`.
+
+**Email changes are confirmed by the new address:** `PATCH /api/users/me` stores an `EmailChangeToken` (hashed, 24h, single-use, latest request only) instead of changing `User.email`, and emails the current address that a change was requested. `/confirm-email-change` → `POST /api/auth/confirm-email-change` switches the email, sets `emailVerifiedAt`, bumps `tokenVersion`, and notifies the previous address.
+
+**Email templates escape their values:** every `sendEmail` body is built with the `emailHtml` tagged template (`src/lib/email.ts`), which HTML-escapes each interpolated value. Use it for any new email.
 
 **Account deletion anonymizes:** `deleteUserAccount()` (`src/lib/deleteAccount.ts`) no longer deletes the User row. It scrubs name, email (to `deleted-user-<id>@deleted.invalid`, freeing the real address), password, MFA and ID image; deletes the user's own reviews, messages, tokens and backup codes; archives a farmer's products; and sets `User.deletedAt`. Orders, order items, audit-log entries and announcements are kept, shown under "Deleted user". Staff lists, stats, farmer stats, reports, the seller page and messaging skip deleted accounts, and the admin user routes return 404 for them. Still blocked by active orders.
 

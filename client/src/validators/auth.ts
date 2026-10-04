@@ -49,3 +49,8 @@ export const resendVerificationSchema = z.object({
 });
 
 export type ResendVerificationInput = z.input<typeof resendVerificationSchema>;
+
+export const confirmEmailChangeSchema = z.object({
+  token: requiredString(z.string().min(1, "Confirmation link is invalid")),
+});
+export type ConfirmEmailChangeInput = z.input<typeof confirmEmailChangeSchema>;

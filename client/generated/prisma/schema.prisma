@@ -65,6 +65,7 @@ model User {
   receivedMessages        Message[]                @relation("ReceivedMessages")
   passwordResetTokens     PasswordResetToken[]
   emailVerificationTokens EmailVerificationToken[]
+  emailChangeTokens       EmailChangeToken[]
   totpBackupCodes         TotpBackupCode[]
 }
 
@@ -92,6 +93,24 @@ model PasswordResetToken {
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
+}
+
+// A requested email change, waiting for the owner of the NEW address to
+// click the link sent there. User.email only changes once they do, so a
+// session holder can't silently move the account to an address they control.
+model EmailChangeToken {
+  id        Int       @id @default(autoincrement())
+  // SHA-256 of the emailed token, never the raw value.
+  tokenHash String    @unique
+  newEmail  String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model TotpBackupCode {

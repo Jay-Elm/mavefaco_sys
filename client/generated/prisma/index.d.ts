@@ -29,6 +29,11 @@ export type EmailVerificationToken = $Result.DefaultSelection<Prisma.$EmailVerif
  */
 export type PasswordResetToken = $Result.DefaultSelection<Prisma.$PasswordResetTokenPayload>
 /**
+ * Model EmailChangeToken
+ * 
+ */
+export type EmailChangeToken = $Result.DefaultSelection<Prisma.$EmailChangeTokenPayload>
+/**
  * Model TotpBackupCode
  * 
  */
@@ -244,6 +249,16 @@ export class PrismaClient<
     * ```
     */
   get passwordResetToken(): Prisma.PasswordResetTokenDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.emailChangeToken`: Exposes CRUD operations for the **EmailChangeToken** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EmailChangeTokens
+    * const emailChangeTokens = await prisma.emailChangeToken.findMany()
+    * ```
+    */
+  get emailChangeToken(): Prisma.EmailChangeTokenDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.totpBackupCode`: Exposes CRUD operations for the **TotpBackupCode** model.
@@ -824,6 +839,7 @@ export namespace Prisma {
     User: 'User',
     EmailVerificationToken: 'EmailVerificationToken',
     PasswordResetToken: 'PasswordResetToken',
+    EmailChangeToken: 'EmailChangeToken',
     TotpBackupCode: 'TotpBackupCode',
     Category: 'Category',
     Product: 'Product',
@@ -852,7 +868,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "totpBackupCode" | "category" | "product" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "auditLog"
+      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "emailChangeToken" | "totpBackupCode" | "category" | "product" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "auditLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1075,6 +1091,80 @@ export namespace Prisma {
           count: {
             args: Prisma.PasswordResetTokenCountArgs<ExtArgs>
             result: $Utils.Optional<PasswordResetTokenCountAggregateOutputType> | number
+          }
+        }
+      }
+      EmailChangeToken: {
+        payload: Prisma.$EmailChangeTokenPayload<ExtArgs>
+        fields: Prisma.EmailChangeTokenFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EmailChangeTokenFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailChangeTokenPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EmailChangeTokenFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailChangeTokenPayload>
+          }
+          findFirst: {
+            args: Prisma.EmailChangeTokenFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailChangeTokenPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EmailChangeTokenFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailChangeTokenPayload>
+          }
+          findMany: {
+            args: Prisma.EmailChangeTokenFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailChangeTokenPayload>[]
+          }
+          create: {
+            args: Prisma.EmailChangeTokenCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailChangeTokenPayload>
+          }
+          createMany: {
+            args: Prisma.EmailChangeTokenCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.EmailChangeTokenCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailChangeTokenPayload>[]
+          }
+          delete: {
+            args: Prisma.EmailChangeTokenDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailChangeTokenPayload>
+          }
+          update: {
+            args: Prisma.EmailChangeTokenUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailChangeTokenPayload>
+          }
+          deleteMany: {
+            args: Prisma.EmailChangeTokenDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EmailChangeTokenUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.EmailChangeTokenUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailChangeTokenPayload>[]
+          }
+          upsert: {
+            args: Prisma.EmailChangeTokenUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EmailChangeTokenPayload>
+          }
+          aggregate: {
+            args: Prisma.EmailChangeTokenAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEmailChangeToken>
+          }
+          groupBy: {
+            args: Prisma.EmailChangeTokenGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EmailChangeTokenGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EmailChangeTokenCountArgs<ExtArgs>
+            result: $Utils.Optional<EmailChangeTokenCountAggregateOutputType> | number
           }
         }
       }
@@ -2166,6 +2256,7 @@ export namespace Prisma {
     user?: UserOmit
     emailVerificationToken?: EmailVerificationTokenOmit
     passwordResetToken?: PasswordResetTokenOmit
+    emailChangeToken?: EmailChangeTokenOmit
     totpBackupCode?: TotpBackupCodeOmit
     category?: CategoryOmit
     product?: ProductOmit
@@ -2268,6 +2359,7 @@ export namespace Prisma {
     receivedMessages: number
     passwordResetTokens: number
     emailVerificationTokens: number
+    emailChangeTokens: number
     totpBackupCodes: number
   }
 
@@ -2281,6 +2373,7 @@ export namespace Prisma {
     receivedMessages?: boolean | UserCountOutputTypeCountReceivedMessagesArgs
     passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
     emailVerificationTokens?: boolean | UserCountOutputTypeCountEmailVerificationTokensArgs
+    emailChangeTokens?: boolean | UserCountOutputTypeCountEmailChangeTokensArgs
     totpBackupCodes?: boolean | UserCountOutputTypeCountTotpBackupCodesArgs
   }
 
@@ -2356,6 +2449,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountEmailVerificationTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: EmailVerificationTokenWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountEmailChangeTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmailChangeTokenWhereInput
   }
 
   /**
@@ -2792,6 +2892,7 @@ export namespace Prisma {
     receivedMessages?: boolean | User$receivedMessagesArgs<ExtArgs>
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
     emailVerificationTokens?: boolean | User$emailVerificationTokensArgs<ExtArgs>
+    emailChangeTokens?: boolean | User$emailChangeTokensArgs<ExtArgs>
     totpBackupCodes?: boolean | User$totpBackupCodesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
@@ -2867,6 +2968,7 @@ export namespace Prisma {
     receivedMessages?: boolean | User$receivedMessagesArgs<ExtArgs>
     passwordResetTokens?: boolean | User$passwordResetTokensArgs<ExtArgs>
     emailVerificationTokens?: boolean | User$emailVerificationTokensArgs<ExtArgs>
+    emailChangeTokens?: boolean | User$emailChangeTokensArgs<ExtArgs>
     totpBackupCodes?: boolean | User$totpBackupCodesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -2885,6 +2987,7 @@ export namespace Prisma {
       receivedMessages: Prisma.$MessagePayload<ExtArgs>[]
       passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
       emailVerificationTokens: Prisma.$EmailVerificationTokenPayload<ExtArgs>[]
+      emailChangeTokens: Prisma.$EmailChangeTokenPayload<ExtArgs>[]
       totpBackupCodes: Prisma.$TotpBackupCodePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -3308,6 +3411,7 @@ export namespace Prisma {
     receivedMessages<T extends User$receivedMessagesArgs<ExtArgs> = {}>(args?: Subset<T, User$receivedMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     passwordResetTokens<T extends User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     emailVerificationTokens<T extends User$emailVerificationTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$emailVerificationTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    emailChangeTokens<T extends User$emailChangeTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$emailChangeTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     totpBackupCodes<T extends User$totpBackupCodesArgs<ExtArgs> = {}>(args?: Subset<T, User$totpBackupCodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3961,6 +4065,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: EmailVerificationTokenScalarFieldEnum | EmailVerificationTokenScalarFieldEnum[]
+  }
+
+  /**
+   * User.emailChangeTokens
+   */
+  export type User$emailChangeTokensArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenInclude<ExtArgs> | null
+    where?: EmailChangeTokenWhereInput
+    orderBy?: EmailChangeTokenOrderByWithRelationInput | EmailChangeTokenOrderByWithRelationInput[]
+    cursor?: EmailChangeTokenWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EmailChangeTokenScalarFieldEnum | EmailChangeTokenScalarFieldEnum[]
   }
 
   /**
@@ -6231,6 +6359,1133 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: PasswordResetTokenInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model EmailChangeToken
+   */
+
+  export type AggregateEmailChangeToken = {
+    _count: EmailChangeTokenCountAggregateOutputType | null
+    _avg: EmailChangeTokenAvgAggregateOutputType | null
+    _sum: EmailChangeTokenSumAggregateOutputType | null
+    _min: EmailChangeTokenMinAggregateOutputType | null
+    _max: EmailChangeTokenMaxAggregateOutputType | null
+  }
+
+  export type EmailChangeTokenAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type EmailChangeTokenSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type EmailChangeTokenMinAggregateOutputType = {
+    id: number | null
+    tokenHash: string | null
+    newEmail: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    createdAt: Date | null
+    userId: number | null
+  }
+
+  export type EmailChangeTokenMaxAggregateOutputType = {
+    id: number | null
+    tokenHash: string | null
+    newEmail: string | null
+    expiresAt: Date | null
+    usedAt: Date | null
+    createdAt: Date | null
+    userId: number | null
+  }
+
+  export type EmailChangeTokenCountAggregateOutputType = {
+    id: number
+    tokenHash: number
+    newEmail: number
+    expiresAt: number
+    usedAt: number
+    createdAt: number
+    userId: number
+    _all: number
+  }
+
+
+  export type EmailChangeTokenAvgAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type EmailChangeTokenSumAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type EmailChangeTokenMinAggregateInputType = {
+    id?: true
+    tokenHash?: true
+    newEmail?: true
+    expiresAt?: true
+    usedAt?: true
+    createdAt?: true
+    userId?: true
+  }
+
+  export type EmailChangeTokenMaxAggregateInputType = {
+    id?: true
+    tokenHash?: true
+    newEmail?: true
+    expiresAt?: true
+    usedAt?: true
+    createdAt?: true
+    userId?: true
+  }
+
+  export type EmailChangeTokenCountAggregateInputType = {
+    id?: true
+    tokenHash?: true
+    newEmail?: true
+    expiresAt?: true
+    usedAt?: true
+    createdAt?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type EmailChangeTokenAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmailChangeToken to aggregate.
+     */
+    where?: EmailChangeTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailChangeTokens to fetch.
+     */
+    orderBy?: EmailChangeTokenOrderByWithRelationInput | EmailChangeTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EmailChangeTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailChangeTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailChangeTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EmailChangeTokens
+    **/
+    _count?: true | EmailChangeTokenCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: EmailChangeTokenAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EmailChangeTokenSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EmailChangeTokenMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EmailChangeTokenMaxAggregateInputType
+  }
+
+  export type GetEmailChangeTokenAggregateType<T extends EmailChangeTokenAggregateArgs> = {
+        [P in keyof T & keyof AggregateEmailChangeToken]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEmailChangeToken[P]>
+      : GetScalarType<T[P], AggregateEmailChangeToken[P]>
+  }
+
+
+
+
+  export type EmailChangeTokenGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmailChangeTokenWhereInput
+    orderBy?: EmailChangeTokenOrderByWithAggregationInput | EmailChangeTokenOrderByWithAggregationInput[]
+    by: EmailChangeTokenScalarFieldEnum[] | EmailChangeTokenScalarFieldEnum
+    having?: EmailChangeTokenScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EmailChangeTokenCountAggregateInputType | true
+    _avg?: EmailChangeTokenAvgAggregateInputType
+    _sum?: EmailChangeTokenSumAggregateInputType
+    _min?: EmailChangeTokenMinAggregateInputType
+    _max?: EmailChangeTokenMaxAggregateInputType
+  }
+
+  export type EmailChangeTokenGroupByOutputType = {
+    id: number
+    tokenHash: string
+    newEmail: string
+    expiresAt: Date
+    usedAt: Date | null
+    createdAt: Date
+    userId: number
+    _count: EmailChangeTokenCountAggregateOutputType | null
+    _avg: EmailChangeTokenAvgAggregateOutputType | null
+    _sum: EmailChangeTokenSumAggregateOutputType | null
+    _min: EmailChangeTokenMinAggregateOutputType | null
+    _max: EmailChangeTokenMaxAggregateOutputType | null
+  }
+
+  type GetEmailChangeTokenGroupByPayload<T extends EmailChangeTokenGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EmailChangeTokenGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EmailChangeTokenGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EmailChangeTokenGroupByOutputType[P]>
+            : GetScalarType<T[P], EmailChangeTokenGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EmailChangeTokenSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tokenHash?: boolean
+    newEmail?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["emailChangeToken"]>
+
+  export type EmailChangeTokenSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tokenHash?: boolean
+    newEmail?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["emailChangeToken"]>
+
+  export type EmailChangeTokenSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tokenHash?: boolean
+    newEmail?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["emailChangeToken"]>
+
+  export type EmailChangeTokenSelectScalar = {
+    id?: boolean
+    tokenHash?: boolean
+    newEmail?: boolean
+    expiresAt?: boolean
+    usedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+  }
+
+  export type EmailChangeTokenOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "tokenHash" | "newEmail" | "expiresAt" | "usedAt" | "createdAt" | "userId", ExtArgs["result"]["emailChangeToken"]>
+  export type EmailChangeTokenInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type EmailChangeTokenIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type EmailChangeTokenIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $EmailChangeTokenPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EmailChangeToken"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      tokenHash: string
+      newEmail: string
+      expiresAt: Date
+      usedAt: Date | null
+      createdAt: Date
+      userId: number
+    }, ExtArgs["result"]["emailChangeToken"]>
+    composites: {}
+  }
+
+  type EmailChangeTokenGetPayload<S extends boolean | null | undefined | EmailChangeTokenDefaultArgs> = $Result.GetResult<Prisma.$EmailChangeTokenPayload, S>
+
+  type EmailChangeTokenCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<EmailChangeTokenFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: EmailChangeTokenCountAggregateInputType | true
+    }
+
+  export interface EmailChangeTokenDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EmailChangeToken'], meta: { name: 'EmailChangeToken' } }
+    /**
+     * Find zero or one EmailChangeToken that matches the filter.
+     * @param {EmailChangeTokenFindUniqueArgs} args - Arguments to find a EmailChangeToken
+     * @example
+     * // Get one EmailChangeToken
+     * const emailChangeToken = await prisma.emailChangeToken.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EmailChangeTokenFindUniqueArgs>(args: SelectSubset<T, EmailChangeTokenFindUniqueArgs<ExtArgs>>): Prisma__EmailChangeTokenClient<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one EmailChangeToken that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {EmailChangeTokenFindUniqueOrThrowArgs} args - Arguments to find a EmailChangeToken
+     * @example
+     * // Get one EmailChangeToken
+     * const emailChangeToken = await prisma.emailChangeToken.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EmailChangeTokenFindUniqueOrThrowArgs>(args: SelectSubset<T, EmailChangeTokenFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EmailChangeTokenClient<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EmailChangeToken that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailChangeTokenFindFirstArgs} args - Arguments to find a EmailChangeToken
+     * @example
+     * // Get one EmailChangeToken
+     * const emailChangeToken = await prisma.emailChangeToken.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EmailChangeTokenFindFirstArgs>(args?: SelectSubset<T, EmailChangeTokenFindFirstArgs<ExtArgs>>): Prisma__EmailChangeTokenClient<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EmailChangeToken that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailChangeTokenFindFirstOrThrowArgs} args - Arguments to find a EmailChangeToken
+     * @example
+     * // Get one EmailChangeToken
+     * const emailChangeToken = await prisma.emailChangeToken.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EmailChangeTokenFindFirstOrThrowArgs>(args?: SelectSubset<T, EmailChangeTokenFindFirstOrThrowArgs<ExtArgs>>): Prisma__EmailChangeTokenClient<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more EmailChangeTokens that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailChangeTokenFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EmailChangeTokens
+     * const emailChangeTokens = await prisma.emailChangeToken.findMany()
+     * 
+     * // Get first 10 EmailChangeTokens
+     * const emailChangeTokens = await prisma.emailChangeToken.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const emailChangeTokenWithIdOnly = await prisma.emailChangeToken.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EmailChangeTokenFindManyArgs>(args?: SelectSubset<T, EmailChangeTokenFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a EmailChangeToken.
+     * @param {EmailChangeTokenCreateArgs} args - Arguments to create a EmailChangeToken.
+     * @example
+     * // Create one EmailChangeToken
+     * const EmailChangeToken = await prisma.emailChangeToken.create({
+     *   data: {
+     *     // ... data to create a EmailChangeToken
+     *   }
+     * })
+     * 
+     */
+    create<T extends EmailChangeTokenCreateArgs>(args: SelectSubset<T, EmailChangeTokenCreateArgs<ExtArgs>>): Prisma__EmailChangeTokenClient<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many EmailChangeTokens.
+     * @param {EmailChangeTokenCreateManyArgs} args - Arguments to create many EmailChangeTokens.
+     * @example
+     * // Create many EmailChangeTokens
+     * const emailChangeToken = await prisma.emailChangeToken.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EmailChangeTokenCreateManyArgs>(args?: SelectSubset<T, EmailChangeTokenCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many EmailChangeTokens and returns the data saved in the database.
+     * @param {EmailChangeTokenCreateManyAndReturnArgs} args - Arguments to create many EmailChangeTokens.
+     * @example
+     * // Create many EmailChangeTokens
+     * const emailChangeToken = await prisma.emailChangeToken.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many EmailChangeTokens and only return the `id`
+     * const emailChangeTokenWithIdOnly = await prisma.emailChangeToken.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends EmailChangeTokenCreateManyAndReturnArgs>(args?: SelectSubset<T, EmailChangeTokenCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a EmailChangeToken.
+     * @param {EmailChangeTokenDeleteArgs} args - Arguments to delete one EmailChangeToken.
+     * @example
+     * // Delete one EmailChangeToken
+     * const EmailChangeToken = await prisma.emailChangeToken.delete({
+     *   where: {
+     *     // ... filter to delete one EmailChangeToken
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EmailChangeTokenDeleteArgs>(args: SelectSubset<T, EmailChangeTokenDeleteArgs<ExtArgs>>): Prisma__EmailChangeTokenClient<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one EmailChangeToken.
+     * @param {EmailChangeTokenUpdateArgs} args - Arguments to update one EmailChangeToken.
+     * @example
+     * // Update one EmailChangeToken
+     * const emailChangeToken = await prisma.emailChangeToken.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EmailChangeTokenUpdateArgs>(args: SelectSubset<T, EmailChangeTokenUpdateArgs<ExtArgs>>): Prisma__EmailChangeTokenClient<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more EmailChangeTokens.
+     * @param {EmailChangeTokenDeleteManyArgs} args - Arguments to filter EmailChangeTokens to delete.
+     * @example
+     * // Delete a few EmailChangeTokens
+     * const { count } = await prisma.emailChangeToken.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EmailChangeTokenDeleteManyArgs>(args?: SelectSubset<T, EmailChangeTokenDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EmailChangeTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailChangeTokenUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EmailChangeTokens
+     * const emailChangeToken = await prisma.emailChangeToken.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EmailChangeTokenUpdateManyArgs>(args: SelectSubset<T, EmailChangeTokenUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EmailChangeTokens and returns the data updated in the database.
+     * @param {EmailChangeTokenUpdateManyAndReturnArgs} args - Arguments to update many EmailChangeTokens.
+     * @example
+     * // Update many EmailChangeTokens
+     * const emailChangeToken = await prisma.emailChangeToken.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more EmailChangeTokens and only return the `id`
+     * const emailChangeTokenWithIdOnly = await prisma.emailChangeToken.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends EmailChangeTokenUpdateManyAndReturnArgs>(args: SelectSubset<T, EmailChangeTokenUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one EmailChangeToken.
+     * @param {EmailChangeTokenUpsertArgs} args - Arguments to update or create a EmailChangeToken.
+     * @example
+     * // Update or create a EmailChangeToken
+     * const emailChangeToken = await prisma.emailChangeToken.upsert({
+     *   create: {
+     *     // ... data to create a EmailChangeToken
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EmailChangeToken we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EmailChangeTokenUpsertArgs>(args: SelectSubset<T, EmailChangeTokenUpsertArgs<ExtArgs>>): Prisma__EmailChangeTokenClient<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of EmailChangeTokens.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailChangeTokenCountArgs} args - Arguments to filter EmailChangeTokens to count.
+     * @example
+     * // Count the number of EmailChangeTokens
+     * const count = await prisma.emailChangeToken.count({
+     *   where: {
+     *     // ... the filter for the EmailChangeTokens we want to count
+     *   }
+     * })
+    **/
+    count<T extends EmailChangeTokenCountArgs>(
+      args?: Subset<T, EmailChangeTokenCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EmailChangeTokenCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EmailChangeToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailChangeTokenAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EmailChangeTokenAggregateArgs>(args: Subset<T, EmailChangeTokenAggregateArgs>): Prisma.PrismaPromise<GetEmailChangeTokenAggregateType<T>>
+
+    /**
+     * Group by EmailChangeToken.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EmailChangeTokenGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EmailChangeTokenGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EmailChangeTokenGroupByArgs['orderBy'] }
+        : { orderBy?: EmailChangeTokenGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EmailChangeTokenGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEmailChangeTokenGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EmailChangeToken model
+   */
+  readonly fields: EmailChangeTokenFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EmailChangeToken.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EmailChangeTokenClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the EmailChangeToken model
+   */
+  interface EmailChangeTokenFieldRefs {
+    readonly id: FieldRef<"EmailChangeToken", 'Int'>
+    readonly tokenHash: FieldRef<"EmailChangeToken", 'String'>
+    readonly newEmail: FieldRef<"EmailChangeToken", 'String'>
+    readonly expiresAt: FieldRef<"EmailChangeToken", 'DateTime'>
+    readonly usedAt: FieldRef<"EmailChangeToken", 'DateTime'>
+    readonly createdAt: FieldRef<"EmailChangeToken", 'DateTime'>
+    readonly userId: FieldRef<"EmailChangeToken", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * EmailChangeToken findUnique
+   */
+  export type EmailChangeTokenFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailChangeToken to fetch.
+     */
+    where: EmailChangeTokenWhereUniqueInput
+  }
+
+  /**
+   * EmailChangeToken findUniqueOrThrow
+   */
+  export type EmailChangeTokenFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailChangeToken to fetch.
+     */
+    where: EmailChangeTokenWhereUniqueInput
+  }
+
+  /**
+   * EmailChangeToken findFirst
+   */
+  export type EmailChangeTokenFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailChangeToken to fetch.
+     */
+    where?: EmailChangeTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailChangeTokens to fetch.
+     */
+    orderBy?: EmailChangeTokenOrderByWithRelationInput | EmailChangeTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmailChangeTokens.
+     */
+    cursor?: EmailChangeTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailChangeTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailChangeTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmailChangeTokens.
+     */
+    distinct?: EmailChangeTokenScalarFieldEnum | EmailChangeTokenScalarFieldEnum[]
+  }
+
+  /**
+   * EmailChangeToken findFirstOrThrow
+   */
+  export type EmailChangeTokenFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailChangeToken to fetch.
+     */
+    where?: EmailChangeTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailChangeTokens to fetch.
+     */
+    orderBy?: EmailChangeTokenOrderByWithRelationInput | EmailChangeTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EmailChangeTokens.
+     */
+    cursor?: EmailChangeTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailChangeTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailChangeTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmailChangeTokens.
+     */
+    distinct?: EmailChangeTokenScalarFieldEnum | EmailChangeTokenScalarFieldEnum[]
+  }
+
+  /**
+   * EmailChangeToken findMany
+   */
+  export type EmailChangeTokenFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenInclude<ExtArgs> | null
+    /**
+     * Filter, which EmailChangeTokens to fetch.
+     */
+    where?: EmailChangeTokenWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EmailChangeTokens to fetch.
+     */
+    orderBy?: EmailChangeTokenOrderByWithRelationInput | EmailChangeTokenOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EmailChangeTokens.
+     */
+    cursor?: EmailChangeTokenWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EmailChangeTokens from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EmailChangeTokens.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EmailChangeTokens.
+     */
+    distinct?: EmailChangeTokenScalarFieldEnum | EmailChangeTokenScalarFieldEnum[]
+  }
+
+  /**
+   * EmailChangeToken create
+   */
+  export type EmailChangeTokenCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenInclude<ExtArgs> | null
+    /**
+     * The data needed to create a EmailChangeToken.
+     */
+    data: XOR<EmailChangeTokenCreateInput, EmailChangeTokenUncheckedCreateInput>
+  }
+
+  /**
+   * EmailChangeToken createMany
+   */
+  export type EmailChangeTokenCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EmailChangeTokens.
+     */
+    data: EmailChangeTokenCreateManyInput | EmailChangeTokenCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EmailChangeToken createManyAndReturn
+   */
+  export type EmailChangeTokenCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * The data used to create many EmailChangeTokens.
+     */
+    data: EmailChangeTokenCreateManyInput | EmailChangeTokenCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EmailChangeToken update
+   */
+  export type EmailChangeTokenUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenInclude<ExtArgs> | null
+    /**
+     * The data needed to update a EmailChangeToken.
+     */
+    data: XOR<EmailChangeTokenUpdateInput, EmailChangeTokenUncheckedUpdateInput>
+    /**
+     * Choose, which EmailChangeToken to update.
+     */
+    where: EmailChangeTokenWhereUniqueInput
+  }
+
+  /**
+   * EmailChangeToken updateMany
+   */
+  export type EmailChangeTokenUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EmailChangeTokens.
+     */
+    data: XOR<EmailChangeTokenUpdateManyMutationInput, EmailChangeTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which EmailChangeTokens to update
+     */
+    where?: EmailChangeTokenWhereInput
+    /**
+     * Limit how many EmailChangeTokens to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * EmailChangeToken updateManyAndReturn
+   */
+  export type EmailChangeTokenUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * The data used to update EmailChangeTokens.
+     */
+    data: XOR<EmailChangeTokenUpdateManyMutationInput, EmailChangeTokenUncheckedUpdateManyInput>
+    /**
+     * Filter which EmailChangeTokens to update
+     */
+    where?: EmailChangeTokenWhereInput
+    /**
+     * Limit how many EmailChangeTokens to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EmailChangeToken upsert
+   */
+  export type EmailChangeTokenUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenInclude<ExtArgs> | null
+    /**
+     * The filter to search for the EmailChangeToken to update in case it exists.
+     */
+    where: EmailChangeTokenWhereUniqueInput
+    /**
+     * In case the EmailChangeToken found by the `where` argument doesn't exist, create a new EmailChangeToken with this data.
+     */
+    create: XOR<EmailChangeTokenCreateInput, EmailChangeTokenUncheckedCreateInput>
+    /**
+     * In case the EmailChangeToken was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EmailChangeTokenUpdateInput, EmailChangeTokenUncheckedUpdateInput>
+  }
+
+  /**
+   * EmailChangeToken delete
+   */
+  export type EmailChangeTokenDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenInclude<ExtArgs> | null
+    /**
+     * Filter which EmailChangeToken to delete.
+     */
+    where: EmailChangeTokenWhereUniqueInput
+  }
+
+  /**
+   * EmailChangeToken deleteMany
+   */
+  export type EmailChangeTokenDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EmailChangeTokens to delete
+     */
+    where?: EmailChangeTokenWhereInput
+    /**
+     * Limit how many EmailChangeTokens to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * EmailChangeToken without action
+   */
+  export type EmailChangeTokenDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EmailChangeToken
+     */
+    select?: EmailChangeTokenSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EmailChangeToken
+     */
+    omit?: EmailChangeTokenOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmailChangeTokenInclude<ExtArgs> | null
   }
 
 
@@ -20802,6 +22057,19 @@ export namespace Prisma {
   export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
 
 
+  export const EmailChangeTokenScalarFieldEnum: {
+    id: 'id',
+    tokenHash: 'tokenHash',
+    newEmail: 'newEmail',
+    expiresAt: 'expiresAt',
+    usedAt: 'usedAt',
+    createdAt: 'createdAt',
+    userId: 'userId'
+  };
+
+  export type EmailChangeTokenScalarFieldEnum = (typeof EmailChangeTokenScalarFieldEnum)[keyof typeof EmailChangeTokenScalarFieldEnum]
+
+
   export const TotpBackupCodeScalarFieldEnum: {
     id: 'id',
     codeHash: 'codeHash',
@@ -21101,6 +22369,7 @@ export namespace Prisma {
     receivedMessages?: MessageListRelationFilter
     passwordResetTokens?: PasswordResetTokenListRelationFilter
     emailVerificationTokens?: EmailVerificationTokenListRelationFilter
+    emailChangeTokens?: EmailChangeTokenListRelationFilter
     totpBackupCodes?: TotpBackupCodeListRelationFilter
   }
 
@@ -21131,6 +22400,7 @@ export namespace Prisma {
     receivedMessages?: MessageOrderByRelationAggregateInput
     passwordResetTokens?: PasswordResetTokenOrderByRelationAggregateInput
     emailVerificationTokens?: EmailVerificationTokenOrderByRelationAggregateInput
+    emailChangeTokens?: EmailChangeTokenOrderByRelationAggregateInput
     totpBackupCodes?: TotpBackupCodeOrderByRelationAggregateInput
   }
 
@@ -21164,6 +22434,7 @@ export namespace Prisma {
     receivedMessages?: MessageListRelationFilter
     passwordResetTokens?: PasswordResetTokenListRelationFilter
     emailVerificationTokens?: EmailVerificationTokenListRelationFilter
+    emailChangeTokens?: EmailChangeTokenListRelationFilter
     totpBackupCodes?: TotpBackupCodeListRelationFilter
   }, "id" | "email">
 
@@ -21337,6 +22608,73 @@ export namespace Prisma {
     usedAt?: DateTimeNullableWithAggregatesFilter<"PasswordResetToken"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"PasswordResetToken"> | Date | string
     userId?: IntWithAggregatesFilter<"PasswordResetToken"> | number
+  }
+
+  export type EmailChangeTokenWhereInput = {
+    AND?: EmailChangeTokenWhereInput | EmailChangeTokenWhereInput[]
+    OR?: EmailChangeTokenWhereInput[]
+    NOT?: EmailChangeTokenWhereInput | EmailChangeTokenWhereInput[]
+    id?: IntFilter<"EmailChangeToken"> | number
+    tokenHash?: StringFilter<"EmailChangeToken"> | string
+    newEmail?: StringFilter<"EmailChangeToken"> | string
+    expiresAt?: DateTimeFilter<"EmailChangeToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"EmailChangeToken"> | Date | string | null
+    createdAt?: DateTimeFilter<"EmailChangeToken"> | Date | string
+    userId?: IntFilter<"EmailChangeToken"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type EmailChangeTokenOrderByWithRelationInput = {
+    id?: SortOrder
+    tokenHash?: SortOrder
+    newEmail?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type EmailChangeTokenWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    tokenHash?: string
+    AND?: EmailChangeTokenWhereInput | EmailChangeTokenWhereInput[]
+    OR?: EmailChangeTokenWhereInput[]
+    NOT?: EmailChangeTokenWhereInput | EmailChangeTokenWhereInput[]
+    newEmail?: StringFilter<"EmailChangeToken"> | string
+    expiresAt?: DateTimeFilter<"EmailChangeToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"EmailChangeToken"> | Date | string | null
+    createdAt?: DateTimeFilter<"EmailChangeToken"> | Date | string
+    userId?: IntFilter<"EmailChangeToken"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "tokenHash">
+
+  export type EmailChangeTokenOrderByWithAggregationInput = {
+    id?: SortOrder
+    tokenHash?: SortOrder
+    newEmail?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    _count?: EmailChangeTokenCountOrderByAggregateInput
+    _avg?: EmailChangeTokenAvgOrderByAggregateInput
+    _max?: EmailChangeTokenMaxOrderByAggregateInput
+    _min?: EmailChangeTokenMinOrderByAggregateInput
+    _sum?: EmailChangeTokenSumOrderByAggregateInput
+  }
+
+  export type EmailChangeTokenScalarWhereWithAggregatesInput = {
+    AND?: EmailChangeTokenScalarWhereWithAggregatesInput | EmailChangeTokenScalarWhereWithAggregatesInput[]
+    OR?: EmailChangeTokenScalarWhereWithAggregatesInput[]
+    NOT?: EmailChangeTokenScalarWhereWithAggregatesInput | EmailChangeTokenScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"EmailChangeToken"> | number
+    tokenHash?: StringWithAggregatesFilter<"EmailChangeToken"> | string
+    newEmail?: StringWithAggregatesFilter<"EmailChangeToken"> | string
+    expiresAt?: DateTimeWithAggregatesFilter<"EmailChangeToken"> | Date | string
+    usedAt?: DateTimeNullableWithAggregatesFilter<"EmailChangeToken"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"EmailChangeToken"> | Date | string
+    userId?: IntWithAggregatesFilter<"EmailChangeToken"> | number
   }
 
   export type TotpBackupCodeWhereInput = {
@@ -22205,6 +23543,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
@@ -22235,6 +23574,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -22264,6 +23604,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
@@ -22294,6 +23635,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -22468,6 +23810,72 @@ export namespace Prisma {
   export type PasswordResetTokenUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type EmailChangeTokenCreateInput = {
+    tokenHash: string
+    newEmail: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutEmailChangeTokensInput
+  }
+
+  export type EmailChangeTokenUncheckedCreateInput = {
+    id?: number
+    tokenHash: string
+    newEmail: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+    userId: number
+  }
+
+  export type EmailChangeTokenUpdateInput = {
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    newEmail?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutEmailChangeTokensNestedInput
+  }
+
+  export type EmailChangeTokenUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    newEmail?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type EmailChangeTokenCreateManyInput = {
+    id?: number
+    tokenHash: string
+    newEmail: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+    userId: number
+  }
+
+  export type EmailChangeTokenUpdateManyMutationInput = {
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    newEmail?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailChangeTokenUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    newEmail?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -23419,6 +24827,12 @@ export namespace Prisma {
     none?: EmailVerificationTokenWhereInput
   }
 
+  export type EmailChangeTokenListRelationFilter = {
+    every?: EmailChangeTokenWhereInput
+    some?: EmailChangeTokenWhereInput
+    none?: EmailChangeTokenWhereInput
+  }
+
   export type TotpBackupCodeListRelationFilter = {
     every?: TotpBackupCodeWhereInput
     some?: TotpBackupCodeWhereInput
@@ -23459,6 +24873,10 @@ export namespace Prisma {
   }
 
   export type EmailVerificationTokenOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type EmailChangeTokenOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -23717,6 +25135,46 @@ export namespace Prisma {
   }
 
   export type PasswordResetTokenSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type EmailChangeTokenCountOrderByAggregateInput = {
+    id?: SortOrder
+    tokenHash?: SortOrder
+    newEmail?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type EmailChangeTokenAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type EmailChangeTokenMaxOrderByAggregateInput = {
+    id?: SortOrder
+    tokenHash?: SortOrder
+    newEmail?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type EmailChangeTokenMinOrderByAggregateInput = {
+    id?: SortOrder
+    tokenHash?: SortOrder
+    newEmail?: SortOrder
+    expiresAt?: SortOrder
+    usedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type EmailChangeTokenSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
   }
@@ -24381,6 +25839,13 @@ export namespace Prisma {
     connect?: EmailVerificationTokenWhereUniqueInput | EmailVerificationTokenWhereUniqueInput[]
   }
 
+  export type EmailChangeTokenCreateNestedManyWithoutUserInput = {
+    create?: XOR<EmailChangeTokenCreateWithoutUserInput, EmailChangeTokenUncheckedCreateWithoutUserInput> | EmailChangeTokenCreateWithoutUserInput[] | EmailChangeTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmailChangeTokenCreateOrConnectWithoutUserInput | EmailChangeTokenCreateOrConnectWithoutUserInput[]
+    createMany?: EmailChangeTokenCreateManyUserInputEnvelope
+    connect?: EmailChangeTokenWhereUniqueInput | EmailChangeTokenWhereUniqueInput[]
+  }
+
   export type TotpBackupCodeCreateNestedManyWithoutUserInput = {
     create?: XOR<TotpBackupCodeCreateWithoutUserInput, TotpBackupCodeUncheckedCreateWithoutUserInput> | TotpBackupCodeCreateWithoutUserInput[] | TotpBackupCodeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TotpBackupCodeCreateOrConnectWithoutUserInput | TotpBackupCodeCreateOrConnectWithoutUserInput[]
@@ -24449,6 +25914,13 @@ export namespace Prisma {
     connectOrCreate?: EmailVerificationTokenCreateOrConnectWithoutUserInput | EmailVerificationTokenCreateOrConnectWithoutUserInput[]
     createMany?: EmailVerificationTokenCreateManyUserInputEnvelope
     connect?: EmailVerificationTokenWhereUniqueInput | EmailVerificationTokenWhereUniqueInput[]
+  }
+
+  export type EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<EmailChangeTokenCreateWithoutUserInput, EmailChangeTokenUncheckedCreateWithoutUserInput> | EmailChangeTokenCreateWithoutUserInput[] | EmailChangeTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmailChangeTokenCreateOrConnectWithoutUserInput | EmailChangeTokenCreateOrConnectWithoutUserInput[]
+    createMany?: EmailChangeTokenCreateManyUserInputEnvelope
+    connect?: EmailChangeTokenWhereUniqueInput | EmailChangeTokenWhereUniqueInput[]
   }
 
   export type TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput = {
@@ -24620,6 +26092,20 @@ export namespace Prisma {
     deleteMany?: EmailVerificationTokenScalarWhereInput | EmailVerificationTokenScalarWhereInput[]
   }
 
+  export type EmailChangeTokenUpdateManyWithoutUserNestedInput = {
+    create?: XOR<EmailChangeTokenCreateWithoutUserInput, EmailChangeTokenUncheckedCreateWithoutUserInput> | EmailChangeTokenCreateWithoutUserInput[] | EmailChangeTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmailChangeTokenCreateOrConnectWithoutUserInput | EmailChangeTokenCreateOrConnectWithoutUserInput[]
+    upsert?: EmailChangeTokenUpsertWithWhereUniqueWithoutUserInput | EmailChangeTokenUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: EmailChangeTokenCreateManyUserInputEnvelope
+    set?: EmailChangeTokenWhereUniqueInput | EmailChangeTokenWhereUniqueInput[]
+    disconnect?: EmailChangeTokenWhereUniqueInput | EmailChangeTokenWhereUniqueInput[]
+    delete?: EmailChangeTokenWhereUniqueInput | EmailChangeTokenWhereUniqueInput[]
+    connect?: EmailChangeTokenWhereUniqueInput | EmailChangeTokenWhereUniqueInput[]
+    update?: EmailChangeTokenUpdateWithWhereUniqueWithoutUserInput | EmailChangeTokenUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: EmailChangeTokenUpdateManyWithWhereWithoutUserInput | EmailChangeTokenUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: EmailChangeTokenScalarWhereInput | EmailChangeTokenScalarWhereInput[]
+  }
+
   export type TotpBackupCodeUpdateManyWithoutUserNestedInput = {
     create?: XOR<TotpBackupCodeCreateWithoutUserInput, TotpBackupCodeUncheckedCreateWithoutUserInput> | TotpBackupCodeCreateWithoutUserInput[] | TotpBackupCodeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TotpBackupCodeCreateOrConnectWithoutUserInput | TotpBackupCodeCreateOrConnectWithoutUserInput[]
@@ -24760,6 +26246,20 @@ export namespace Prisma {
     deleteMany?: EmailVerificationTokenScalarWhereInput | EmailVerificationTokenScalarWhereInput[]
   }
 
+  export type EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<EmailChangeTokenCreateWithoutUserInput, EmailChangeTokenUncheckedCreateWithoutUserInput> | EmailChangeTokenCreateWithoutUserInput[] | EmailChangeTokenUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: EmailChangeTokenCreateOrConnectWithoutUserInput | EmailChangeTokenCreateOrConnectWithoutUserInput[]
+    upsert?: EmailChangeTokenUpsertWithWhereUniqueWithoutUserInput | EmailChangeTokenUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: EmailChangeTokenCreateManyUserInputEnvelope
+    set?: EmailChangeTokenWhereUniqueInput | EmailChangeTokenWhereUniqueInput[]
+    disconnect?: EmailChangeTokenWhereUniqueInput | EmailChangeTokenWhereUniqueInput[]
+    delete?: EmailChangeTokenWhereUniqueInput | EmailChangeTokenWhereUniqueInput[]
+    connect?: EmailChangeTokenWhereUniqueInput | EmailChangeTokenWhereUniqueInput[]
+    update?: EmailChangeTokenUpdateWithWhereUniqueWithoutUserInput | EmailChangeTokenUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: EmailChangeTokenUpdateManyWithWhereWithoutUserInput | EmailChangeTokenUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: EmailChangeTokenScalarWhereInput | EmailChangeTokenScalarWhereInput[]
+  }
+
   export type TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<TotpBackupCodeCreateWithoutUserInput, TotpBackupCodeUncheckedCreateWithoutUserInput> | TotpBackupCodeCreateWithoutUserInput[] | TotpBackupCodeUncheckedCreateWithoutUserInput[]
     connectOrCreate?: TotpBackupCodeCreateOrConnectWithoutUserInput | TotpBackupCodeCreateOrConnectWithoutUserInput[]
@@ -24800,6 +26300,20 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutPasswordResetTokensInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPasswordResetTokensInput, UserUpdateWithoutPasswordResetTokensInput>, UserUncheckedUpdateWithoutPasswordResetTokensInput>
+  }
+
+  export type UserCreateNestedOneWithoutEmailChangeTokensInput = {
+    create?: XOR<UserCreateWithoutEmailChangeTokensInput, UserUncheckedCreateWithoutEmailChangeTokensInput>
+    connectOrCreate?: UserCreateOrConnectWithoutEmailChangeTokensInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutEmailChangeTokensNestedInput = {
+    create?: XOR<UserCreateWithoutEmailChangeTokensInput, UserUncheckedCreateWithoutEmailChangeTokensInput>
+    connectOrCreate?: UserCreateOrConnectWithoutEmailChangeTokensInput
+    upsert?: UserUpsertWithoutEmailChangeTokensInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutEmailChangeTokensInput, UserUpdateWithoutEmailChangeTokensInput>, UserUncheckedUpdateWithoutEmailChangeTokensInput>
   }
 
   export type UserCreateNestedOneWithoutTotpBackupCodesInput = {
@@ -25711,6 +27225,33 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type EmailChangeTokenCreateWithoutUserInput = {
+    tokenHash: string
+    newEmail: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type EmailChangeTokenUncheckedCreateWithoutUserInput = {
+    id?: number
+    tokenHash: string
+    newEmail: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type EmailChangeTokenCreateOrConnectWithoutUserInput = {
+    where: EmailChangeTokenWhereUniqueInput
+    create: XOR<EmailChangeTokenCreateWithoutUserInput, EmailChangeTokenUncheckedCreateWithoutUserInput>
+  }
+
+  export type EmailChangeTokenCreateManyUserInputEnvelope = {
+    data: EmailChangeTokenCreateManyUserInput | EmailChangeTokenCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type TotpBackupCodeCreateWithoutUserInput = {
     codeHash: string
     usedAt?: Date | string | null
@@ -25986,6 +27527,35 @@ export namespace Prisma {
     userId?: IntFilter<"EmailVerificationToken"> | number
   }
 
+  export type EmailChangeTokenUpsertWithWhereUniqueWithoutUserInput = {
+    where: EmailChangeTokenWhereUniqueInput
+    update: XOR<EmailChangeTokenUpdateWithoutUserInput, EmailChangeTokenUncheckedUpdateWithoutUserInput>
+    create: XOR<EmailChangeTokenCreateWithoutUserInput, EmailChangeTokenUncheckedCreateWithoutUserInput>
+  }
+
+  export type EmailChangeTokenUpdateWithWhereUniqueWithoutUserInput = {
+    where: EmailChangeTokenWhereUniqueInput
+    data: XOR<EmailChangeTokenUpdateWithoutUserInput, EmailChangeTokenUncheckedUpdateWithoutUserInput>
+  }
+
+  export type EmailChangeTokenUpdateManyWithWhereWithoutUserInput = {
+    where: EmailChangeTokenScalarWhereInput
+    data: XOR<EmailChangeTokenUpdateManyMutationInput, EmailChangeTokenUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type EmailChangeTokenScalarWhereInput = {
+    AND?: EmailChangeTokenScalarWhereInput | EmailChangeTokenScalarWhereInput[]
+    OR?: EmailChangeTokenScalarWhereInput[]
+    NOT?: EmailChangeTokenScalarWhereInput | EmailChangeTokenScalarWhereInput[]
+    id?: IntFilter<"EmailChangeToken"> | number
+    tokenHash?: StringFilter<"EmailChangeToken"> | string
+    newEmail?: StringFilter<"EmailChangeToken"> | string
+    expiresAt?: DateTimeFilter<"EmailChangeToken"> | Date | string
+    usedAt?: DateTimeNullableFilter<"EmailChangeToken"> | Date | string | null
+    createdAt?: DateTimeFilter<"EmailChangeToken"> | Date | string
+    userId?: IntFilter<"EmailChangeToken"> | number
+  }
+
   export type TotpBackupCodeUpsertWithWhereUniqueWithoutUserInput = {
     where: TotpBackupCodeWhereUniqueInput
     update: XOR<TotpBackupCodeUpdateWithoutUserInput, TotpBackupCodeUncheckedUpdateWithoutUserInput>
@@ -26038,6 +27608,7 @@ export namespace Prisma {
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
@@ -26067,6 +27638,7 @@ export namespace Prisma {
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -26111,6 +27683,7 @@ export namespace Prisma {
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
@@ -26140,6 +27713,7 @@ export namespace Prisma {
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -26168,6 +27742,7 @@ export namespace Prisma {
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
@@ -26197,6 +27772,7 @@ export namespace Prisma {
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -26241,6 +27817,7 @@ export namespace Prisma {
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
@@ -26269,6 +27846,141 @@ export namespace Prisma {
     reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutEmailChangeTokensInput = {
+    name: string
+    email: string
+    password: string
+    role?: string
+    suspended?: boolean
+    idImagePath?: string | null
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    emailVerifiedAt?: Date | string | null
+    tokenVersion?: number
+    deletedAt?: Date | string | null
+    totpSecret?: string | null
+    totpEnabled?: boolean
+    totpLastStep?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductCreateNestedManyWithoutFarmerInput
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    announcements?: AnnouncementCreateNestedManyWithoutAuthorInput
+    reviews?: ReviewCreateNestedManyWithoutCustomerInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutEmailChangeTokensInput = {
+    id?: number
+    name: string
+    email: string
+    password: string
+    role?: string
+    suspended?: boolean
+    idImagePath?: string | null
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    emailVerifiedAt?: Date | string | null
+    tokenVersion?: number
+    deletedAt?: Date | string | null
+    totpSecret?: string | null
+    totpEnabled?: boolean
+    totpLastStep?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    announcements?: AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutEmailChangeTokensInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutEmailChangeTokensInput, UserUncheckedCreateWithoutEmailChangeTokensInput>
+  }
+
+  export type UserUpsertWithoutEmailChangeTokensInput = {
+    update: XOR<UserUpdateWithoutEmailChangeTokensInput, UserUncheckedUpdateWithoutEmailChangeTokensInput>
+    create: XOR<UserCreateWithoutEmailChangeTokensInput, UserUncheckedCreateWithoutEmailChangeTokensInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutEmailChangeTokensInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutEmailChangeTokensInput, UserUncheckedUpdateWithoutEmailChangeTokensInput>
+  }
+
+  export type UserUpdateWithoutEmailChangeTokensInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUpdateManyWithoutFarmerNestedInput
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    announcements?: AnnouncementUpdateManyWithoutAuthorNestedInput
+    reviews?: ReviewUpdateManyWithoutCustomerNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutEmailChangeTokensInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    announcements?: AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -26299,6 +28011,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTotpBackupCodesInput = {
@@ -26328,6 +28041,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTotpBackupCodesInput = {
@@ -26372,6 +28086,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTotpBackupCodesInput = {
@@ -26401,6 +28116,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductCreateWithoutCategoryInput = {
@@ -26497,6 +28213,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
@@ -26526,6 +28243,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -26657,6 +28375,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
@@ -26686,6 +28405,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -26908,6 +28628,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
@@ -26937,6 +28658,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -27004,6 +28726,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
@@ -27033,6 +28756,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -27233,6 +28957,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
@@ -27262,6 +28987,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -27306,6 +29032,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
@@ -27335,6 +29062,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -27363,6 +29091,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
@@ -27392,6 +29121,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -27484,6 +29214,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
@@ -27513,6 +29244,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -27595,6 +29327,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
@@ -27624,6 +29357,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -27657,6 +29391,7 @@ export namespace Prisma {
     sentMessages?: MessageCreateNestedManyWithoutSenderInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
@@ -27686,6 +29421,7 @@ export namespace Prisma {
     sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -27730,6 +29466,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
@@ -27759,6 +29496,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -27798,6 +29536,7 @@ export namespace Prisma {
     sentMessages?: MessageUpdateManyWithoutSenderNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
@@ -27827,6 +29566,7 @@ export namespace Prisma {
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -27855,6 +29595,7 @@ export namespace Prisma {
     receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
   }
 
@@ -27884,6 +29625,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -27928,6 +29670,7 @@ export namespace Prisma {
     receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
   }
 
@@ -27957,6 +29700,7 @@ export namespace Prisma {
     receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -28039,6 +29783,15 @@ export namespace Prisma {
   export type EmailVerificationTokenCreateManyUserInput = {
     id?: number
     tokenHash: string
+    expiresAt: Date | string
+    usedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type EmailChangeTokenCreateManyUserInput = {
+    id?: number
+    tokenHash: string
+    newEmail: string
     expiresAt: Date | string
     usedAt?: Date | string | null
     createdAt?: Date | string
@@ -28297,6 +30050,32 @@ export namespace Prisma {
   export type EmailVerificationTokenUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     tokenHash?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailChangeTokenUpdateWithoutUserInput = {
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    newEmail?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailChangeTokenUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    newEmail?: StringFieldUpdateOperationsInput | string
+    expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EmailChangeTokenUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tokenHash?: StringFieldUpdateOperationsInput | string
+    newEmail?: StringFieldUpdateOperationsInput | string
     expiresAt?: DateTimeFieldUpdateOperationsInput | Date | string
     usedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
