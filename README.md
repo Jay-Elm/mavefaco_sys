@@ -170,6 +170,7 @@ The app deploys to Vercel from `master`. The build (`npm run build`) applies pen
 
 | Document | Contents |
 |---|---|
+| [`client/SCOPE_AND_DELIMITATIONS.md`](client/SCOPE_AND_DELIMITATIONS.md) | What the system covers, item by item against the use cases, and the boundaries it stays within |
 | [`client/DEVELOPMENT_STATUS.md`](client/DEVELOPMENT_STATUS.md) | Current features, API reference, data model, known technical debt |
 | [`client/PROJECT_REVIEW.md`](client/PROJECT_REVIEW.md) | Whole-project review: findings and roadmap |
 | [`client/SECURITY_REVIEW.md`](client/SECURITY_REVIEW.md) | Security review and fixes (through September 2026) |

@@ -116,7 +116,7 @@ The eight core use cases agreed earlier in the project are all implemented. The 
 | Admin | Dispute and complaint handling, backup/restore, buyer-registration approval, suspicious-activity monitoring |
 | Payments | GCash and bank transfer are selectable labels only — no payment-provider integration; every order is effectively cash on delivery |
 
-It is worth stating this scope boundary explicitly in the capstone documentation and defense.
+This scope boundary is now documented item by item in [`SCOPE_AND_DELIMITATIONS.md`](SCOPE_AND_DELIMITATIONS.md).
 
 ## 7. Testing
 
