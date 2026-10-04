@@ -14,7 +14,7 @@ export type MfaConfirmInput = z.infer<typeof mfaConfirmSchema>;
 // XXXX-XXXX backup code, so only checks it's non-empty here; the route
 // decides which kind it is.
 export const mfaVerifySchema = z.object({
-  code: requiredString(z.string().trim().min(1, "Enter a verification code")),
+  code: requiredString(z.string().trim().min(1, "Enter a verification code").max(64, "Enter a verification code")),
 });
 
 export type MfaVerifyInput = z.infer<typeof mfaVerifySchema>;

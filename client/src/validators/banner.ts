@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { MAX, tooLong } from "./limits";
 import { isSafeUrl } from "@/lib/url";
 
 export const BANNER_COLORS = ["green", "orange", "blue", "purple", "teal"] as const;
@@ -6,6 +7,7 @@ export const BANNER_COLORS = ["green", "orange", "blue", "purple", "teal"] as co
 const ctaLinkField = z
   .string()
   .trim()
+  .max(MAX.url, tooLong("CTA link", MAX.url))
   .nullish()
   .refine((v) => !v || isSafeUrl(v), { message: "CTA link must be a valid URL or site path" });
 
@@ -15,10 +17,10 @@ export const bannerCreateSchema = z.object({
   // zod's generic "expected string, received undefined".
   title: z.preprocess(
     (v) => (typeof v === "string" ? v : ""),
-    z.string().trim().min(1, "Title is required"),
+    z.string().trim().min(1, "Title is required").max(MAX.bannerTitle, tooLong("Title", MAX.bannerTitle)),
   ),
-  subtitle: z.string().trim().nullish(),
-  ctaText: z.string().trim().nullish(),
+  subtitle: z.string().trim().max(MAX.bannerSubtitle, tooLong("Subtitle", MAX.bannerSubtitle)).nullish(),
+  ctaText: z.string().trim().max(MAX.bannerCtaText, tooLong("Button text", MAX.bannerCtaText)).nullish(),
   ctaLink: ctaLinkField,
   color: z.enum(BANNER_COLORS).catch("green"),
   displayOrder: z.coerce.number().catch(0),
@@ -28,9 +30,9 @@ export type BannerCreateInput = z.infer<typeof bannerCreateSchema>;
 
 // PUT /api/banners/[id] — every field optional (partial update).
 export const bannerUpdateSchema = z.object({
-  title: z.string().trim().min(1).optional(),
-  subtitle: z.string().trim().nullish(),
-  ctaText: z.string().trim().nullish(),
+  title: z.string().trim().min(1).max(MAX.bannerTitle, tooLong("Title", MAX.bannerTitle)).optional(),
+  subtitle: z.string().trim().max(MAX.bannerSubtitle, tooLong("Subtitle", MAX.bannerSubtitle)).nullish(),
+  ctaText: z.string().trim().max(MAX.bannerCtaText, tooLong("Button text", MAX.bannerCtaText)).nullish(),
   ctaLink: ctaLinkField,
   color: z.enum(BANNER_COLORS).catch("green").optional(),
   active: z.boolean().optional(),

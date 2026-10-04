@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { MAX, tooLong } from "./limits";
 import { requiredString } from "./helpers";
 
 export const CROP_GROWTH_STAGES = [
@@ -34,7 +35,7 @@ export const CROP_LOG_TYPES = ["weather_impact", "pest_disease", "damage", "note
 // POST /api/farmer/crops/[id]/logs
 export const cropLogCreateSchema = z.object({
   type: z.enum(CROP_LOG_TYPES),
-  note: requiredString(z.string().trim().min(1, "Note is required")),
+  note: requiredString(z.string().trim().min(1, "Note is required").max(MAX.cropNote, tooLong("Note", MAX.cropNote))),
 });
 
 export type CropLogCreateInput = z.infer<typeof cropLogCreateSchema>;

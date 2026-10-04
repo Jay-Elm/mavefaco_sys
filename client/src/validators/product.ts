@@ -1,21 +1,23 @@
 import { z } from "zod";
+import { MAX, tooLong } from "./limits";
 import { isSafeUrl } from "@/lib/url";
 import { requiredString } from "./helpers";
 
 const imageUrlField = z
   .string()
   .trim()
+  .max(MAX.url, tooLong("Image URL", MAX.url))
   .nullish()
   .refine((v) => !v || isSafeUrl(v), { message: "Image URL must be a valid URL" });
 
 // POST /api/products — farmer/admin/manager creating a new product.
 export const productCreateSchema = z.object({
-  name: requiredString(z.string().trim().min(1, "Name is required")),
+  name: requiredString(z.string().trim().min(1, "Name is required").max(MAX.productName, tooLong("Name", MAX.productName))),
   // Optional per the create form — no min-length requirement.
-  description: z.string().trim().catch(""),
+  description: z.preprocess((v) => (typeof v === "string" ? v : ""), z.string().trim().max(MAX.productDescription, tooLong("Description", MAX.productDescription))),
   price: z.coerce.number().positive("Price must be greater than 0"),
   stock: z.coerce.number().min(0, "Stock cannot be negative"),
-  unit: z.string().trim().min(1).catch("piece"),
+  unit: z.preprocess((v) => (typeof v === "string" && v.trim() ? v : "piece"), z.string().trim().max(MAX.unit, tooLong("Unit", MAX.unit))),
   categoryId: z.coerce.number().int().positive("Valid category is required"),
   imageUrl: imageUrlField,
 });
@@ -24,11 +26,11 @@ export type ProductCreateInput = z.infer<typeof productCreateSchema>;
 
 // PATCH /api/products/[id] — farmer editing their own product (partial).
 export const productUpdateSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").optional(),
-  description: z.string().trim().optional(),
+  name: z.string().trim().min(1, "Name is required").max(MAX.productName, tooLong("Name", MAX.productName)).optional(),
+  description: z.string().trim().max(MAX.productDescription, tooLong("Description", MAX.productDescription)).optional(),
   price: z.coerce.number().positive("Price must be greater than 0").optional(),
   stock: z.coerce.number().min(0, "Stock cannot be negative").optional(),
-  unit: z.string().trim().min(1).optional(),
+  unit: z.string().trim().min(1).max(MAX.unit, tooLong("Unit", MAX.unit)).optional(),
   categoryId: z.coerce.number().int().positive("Valid category is required").optional(),
   imageUrl: imageUrlField,
 });

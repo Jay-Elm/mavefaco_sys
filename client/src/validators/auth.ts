@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { MAX, tooLong } from "./limits";
 import { requiredString } from "./helpers";
 
 // Shared by the register form (client, via zodResolver) and
@@ -7,9 +8,9 @@ import { requiredString } from "./helpers";
 // server used a hand-rolled regex.
 
 export const registerSchema = z.object({
-  name: requiredString(z.string().trim().min(2, "Name must be at least 2 characters")),
-  email: requiredString(z.string().trim().toLowerCase().email("Enter a valid email address")),
-  password: requiredString(z.string().min(12, "Password must be at least 12 characters")),
+  name: requiredString(z.string().trim().min(2, "Name must be at least 2 characters").max(MAX.name, tooLong("Name", MAX.name))),
+  email: requiredString(z.string().trim().toLowerCase().max(MAX.email, tooLong("Email", MAX.email)).email("Enter a valid email address")),
+  password: requiredString(z.string().min(12, "Password must be at least 12 characters").max(MAX.newPassword, tooLong("Password", MAX.newPassword))),
   role: z.enum(["customer", "farmer"]).default("customer"),
 });
 
@@ -19,38 +20,38 @@ export const registerSchema = z.object({
 export type RegisterInput = z.input<typeof registerSchema>;
 
 export const loginSchema = z.object({
-  email: z.string().trim().toLowerCase().email("Enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
+  email: z.string().trim().toLowerCase().max(MAX.email, tooLong("Email", MAX.email)).email("Enter a valid email address"),
+  password: z.string().min(1, "Password is required").max(MAX.password, tooLong("Password", MAX.password)),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
 
 export const forgotPasswordSchema = z.object({
-  email: requiredString(z.string().trim().toLowerCase().email("Enter a valid email address")),
+  email: requiredString(z.string().trim().toLowerCase().max(MAX.email, tooLong("Email", MAX.email)).email("Enter a valid email address")),
 });
 
 export type ForgotPasswordInput = z.input<typeof forgotPasswordSchema>;
 
 export const resetPasswordSchema = z.object({
-  token: requiredString(z.string().min(1, "Reset link is invalid")),
-  newPassword: requiredString(z.string().min(12, "Password must be at least 12 characters")),
+  token: requiredString(z.string().min(1, "Reset link is invalid").max(MAX.token, "Reset link is invalid")),
+  newPassword: requiredString(z.string().min(12, "Password must be at least 12 characters").max(MAX.newPassword, tooLong("Password", MAX.newPassword))),
 });
 
 export type ResetPasswordInput = z.input<typeof resetPasswordSchema>;
 
 export const verifyEmailSchema = z.object({
-  token: requiredString(z.string().min(1, "Verification link is invalid")),
+  token: requiredString(z.string().min(1, "Verification link is invalid").max(MAX.token, "Verification link is invalid")),
 });
 
 export type VerifyEmailInput = z.input<typeof verifyEmailSchema>;
 
 export const resendVerificationSchema = z.object({
-  email: requiredString(z.string().trim().toLowerCase().email("Enter a valid email address")),
+  email: requiredString(z.string().trim().toLowerCase().max(MAX.email, tooLong("Email", MAX.email)).email("Enter a valid email address")),
 });
 
 export type ResendVerificationInput = z.input<typeof resendVerificationSchema>;
 
 export const confirmEmailChangeSchema = z.object({
-  token: requiredString(z.string().min(1, "Confirmation link is invalid")),
+  token: requiredString(z.string().min(1, "Confirmation link is invalid").max(MAX.token, "Confirmation link is invalid")),
 });
 export type ConfirmEmailChangeInput = z.input<typeof confirmEmailChangeSchema>;
