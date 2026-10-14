@@ -99,6 +99,11 @@ export async function PATCH(
       return NextResponse.json({ error: "This listing changed, please refresh" }, { status: 409 });
 
     if (resubmit) {
+      // The suspension notice has been acted on: stop offering its edit link.
+      await prisma.notice.updateMany({
+        where: { productId, resolvedAt: null },
+        data: { resolvedAt: new Date(), resolution: "resubmitted" },
+      });
       await prisma.auditLog.create({
         data: { action: "RESUBMIT_PRODUCT", entityType: "PRODUCT", entityId: productId, userId: user.id },
       });

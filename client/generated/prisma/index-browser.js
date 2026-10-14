@@ -291,7 +291,9 @@ exports.Prisma.NoticeScalarFieldEnum = {
   read: 'read',
   createdAt: 'createdAt',
   recipientId: 'recipientId',
-  productId: 'productId'
+  productId: 'productId',
+  resolvedAt: 'resolvedAt',
+  resolution: 'resolution'
 };
 
 exports.Prisma.AuditLogScalarFieldEnum = {

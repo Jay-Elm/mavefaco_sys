@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { ArrowLeft, Bell, Loader2, Pencil } from 'lucide-react'
+import { ArrowLeft, Bell, CheckCircle, Loader2, Pencil, Trash2 } from 'lucide-react'
 import { refreshNavBadges } from '@/components/NavBadge'
 
 interface Notice {
@@ -12,7 +12,18 @@ interface Notice {
   body: string
   read: boolean
   createdAt: string
-  product: { id: number; name: string; archivedAt: string | null; suspendedAt: string | null } | null
+  resolvedAt: string | null
+  resolution: 'resubmitted' | 'removed' | null
+  product: { id: number; name: string; approved: boolean; archivedAt: string | null; suspendedAt: string | null } | null
+}
+
+const fmtDate = (d: string) => new Date(d).toLocaleDateString('en-PH', { dateStyle: 'medium' })
+
+/** Where the listing stands now, after a resubmission. */
+function afterResubmit(product: Notice['product']): string {
+  if (!product || product.archivedAt) return 'the listing has since been removed'
+  if (product.suspendedAt) return 'suspended again since (see the newer notice)'
+  return product.approved ? 'approved by staff' : 'waiting for staff review'
 }
 
 /** System notices from MaVeFaCo. One-way: there is no reply box. */
@@ -63,13 +74,24 @@ export default function FarmerNoticesPage() {
                 </p>
               </div>
               <p className="text-sm text-gray-700 mt-2 whitespace-pre-line">{n.body}</p>
-              {n.product && !n.product.archivedAt ? (
+              {/* Resolved notices show what happened instead of an action. */}
+              {n.resolution === 'resubmitted' && n.resolvedAt ? (
+                <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">
+                  <CheckCircle size={14} />
+                  Resubmitted on {fmtDate(n.resolvedAt)}: {afterResubmit(n.product)}
+                </p>
+              ) : n.resolution === 'removed' && n.resolvedAt ? (
+                <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 bg-gray-100 px-3 py-1.5 rounded-lg">
+                  <Trash2 size={14} />
+                  Listing deleted on {fmtDate(n.resolvedAt)}
+                </p>
+              ) : n.product && !n.product.archivedAt ? (
                 <Link
                   href={`/farmer/products/${n.product.id}/edit`}
                   className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg bg-forest text-white hover:bg-forest-mid transition-colors"
                 >
                   <Pencil size={14} />
-                  {n.product.suspendedAt ? 'Edit or delete this listing' : 'Open this listing'}
+                  Edit or delete this listing
                 </Link>
               ) : (
                 <p className="mt-3 text-xs text-gray-400">This listing has since been removed.</p>

@@ -124,7 +124,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `orders/` — orders with farmer's products; Accept/Reject/Ship/Deliver state machine; CSV export
 - `crops/` — Crop Monitor list: all products with growth stage, planting date, harvest date (red if overdue), log count, ready badge
 - `crops/[id]/` — Crop detail: update planting/harvest dates, growth stage dropdown, ready-for-harvest toggle; crop log with type buttons (weather/pest/damage/note) + timestamped entries
-- `messages/` — conversation inbox with unread counts, plus a "MaVeFaCo notices" entry; `/farmer/messages/notices` — one-way system notices (no reply), each linking to the listing's edit page; `/farmer/messages/[userId]` — message thread
+- `messages/` — conversation inbox with unread counts, plus a "MaVeFaCo notices" entry; `/farmer/messages/notices` — one-way system notices (no reply); an open suspension notice links to the listing's edit page, and once resolved (`Notice.resolvedAt`/`resolution`: resubmitted, or removed by a delete or the 7-day cleanup) it shows that outcome instead; `/farmer/messages/[userId]` — message thread
 - `profile/` — edit name/email; real ID-image file upload for verification; change password
 
 ### Customer Pages

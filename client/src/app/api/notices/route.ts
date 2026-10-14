@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
       where: { recipientId: actor.id },
       orderBy: { id: "desc" },
       take: 100,
-      include: { product: { select: { id: true, name: true, archivedAt: true, suspendedAt: true } } },
+      include: { product: { select: { id: true, name: true, approved: true, archivedAt: true, suspendedAt: true } } },
     });
     return NextResponse.json(notices);
   } catch {

@@ -6,6 +6,8 @@ vi.mock("@/lib/email", async (importOriginal) => {
 });
 
 import { NextRequest } from "next/server";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { POST as suspendRoute } from "./route";
 import { PATCH as approveRoute } from "@/app/api/admin/products/[id]/route";
 import { POST as restoreRoute } from "@/app/api/admin/products/[id]/restore/route";
@@ -275,6 +277,91 @@ describe("GET /api/cron/purge-suspended-products", () => {
   it("refuses a request without the cron secret", async () => {
     expect((await runCron(null)).status).toBe(401);
     expect((await runCron("wrong")).status).toBe(401);
+  });
+});
+
+describe("resolving the suspension notice", () => {
+  const notices = () => prisma.notice.findMany({ orderBy: { id: "asc" } });
+
+  async function suspendedListing() {
+    const farmer = await createUser({ role: "farmer" });
+    const product = await createProduct(farmer.id, { price: 40 });
+    const manager = await createUser({ role: "manager" });
+    await suspend(product.id, manager);
+    return { farmer, product, manager };
+  }
+
+  it("is marked resubmitted when the farmer fixes the listing, and stays open after a stock-only change", async () => {
+    const { farmer, product } = await suspendedListing();
+
+    await edit(product.id, farmer, { stock: 3 });
+    expect((await notices())[0]).toMatchObject({ resolvedAt: null, resolution: null });
+
+    await edit(product.id, farmer, { price: 45 });
+    const [notice] = await notices();
+    expect(notice.resolution).toBe("resubmitted");
+    expect(notice.resolvedAt).not.toBeNull();
+    expect(notice.productId).toBe(product.id);
+  });
+
+  it("is marked removed when staff or the farmer delete the listing", async () => {
+    const staffDeleted = await suspendedListing();
+    const farmerDeleted = await suspendedListing();
+
+    await del(staffDeleted.product.id, staffDeleted.manager);
+    await del(farmerDeleted.product.id, farmerDeleted.farmer);
+
+    for (const notice of await notices()) {
+      expect(notice).toMatchObject({ resolution: "removed", productId: null });
+      expect(notice.resolvedAt).not.toBeNull();
+    }
+  });
+
+  it("is marked removed by the 7-day cleanup, but stays open while the listing waits on an active order", async () => {
+    const expired = await suspendedListing();
+    const busy = await placedOrder({ status: "confirmed" });
+    await suspend(busy.product.id, expired.manager);
+    await ageSuspension(expired.product.id, 8);
+    await ageSuspension(busy.product.id, 8);
+
+    await runCron();
+
+    const [removed, open] = await notices();
+    expect(removed).toMatchObject({ resolution: "removed", productId: null });
+    expect(open).toMatchObject({ resolution: null, resolvedAt: null, productId: busy.product.id });
+  });
+
+  it("stays resolved when the listing is suspended again; the new suspension gets its own open notice", async () => {
+    const { farmer, product, manager } = await suspendedListing();
+    await edit(product.id, farmer, { price: 45 });
+    await approve(product.id, manager);
+
+    await suspend(product.id, manager, { reasons: ["misleading_photo"], note: "" });
+
+    const [first, second] = await notices();
+    expect(first.resolution).toBe("resubmitted");
+    expect(second).toMatchObject({ resolution: null, resolvedAt: null, productId: product.id });
+  });
+
+  it("backfills existing notices in the migration", async () => {
+    const farmer = await createUser({ role: "farmer" });
+    const resubmitted = await createProduct(farmer.id);
+    const stillSuspended = await createProduct(farmer.id);
+    await suspend(stillSuspended.id, await createUser({ role: "manager" }));
+    await prisma.notice.createMany({
+      data: [
+        { recipientId: farmer.id, title: "deleted", body: "", productId: null },
+        { recipientId: farmer.id, title: "resubmitted", body: "", productId: resubmitted.id },
+      ],
+    });
+    await prisma.notice.updateMany({ data: { resolvedAt: null, resolution: null } });
+
+    const sql = readFileSync(join(process.cwd(), "prisma/migrations/20261014181218_add_notice_resolution/migration.sql"), "utf8");
+    for (const statement of sql.split(";").filter((part) => part.includes("UPDATE")))
+      await prisma.$executeRawUnsafe(statement);
+
+    const byTitle = Object.fromEntries((await notices()).map((n) => [n.title, n.resolution]));
+    expect(byTitle).toEqual({ [`Listing suspended: ${stillSuspended.name}`]: null, deleted: "removed", resubmitted: "resubmitted" });
   });
 });
 

@@ -5,10 +5,14 @@ const ACTIVE_ORDER_STATUSES = ["pending", "confirmed", "shipped"];
 
 export type RemovalResult = "deleted" | "archived" | "active-orders" | "not-found";
 
+/** Thrown inside the transaction to roll it back when the listing changed under us. */
+class ListingChanged extends Error {}
+
 /**
  * Removes a live (non-archived) listing: deletes it outright, or archives it
  * when past orders, reviews or crop logs still point at it, so that history
- * stays intact. Refuses while an order for it is still in progress.
+ * stays intact. Refuses while an order for it is still in progress. Any open
+ * notice about the listing (a suspension) is marked resolved as "removed".
  *
  * `condition` narrows which listing qualifies (e.g. "still suspended") and is
  * re-checked by the write itself, so a listing that changed in between — a
@@ -30,10 +34,24 @@ export async function removeListing(productId: number, condition: Prisma.Product
   if (activeOrderItem) return "active-orders";
 
   const { orderItems, reviews, cropLogs } = product._count;
-  if (orderItems + reviews + cropLogs > 0) {
-    const { count } = await prisma.product.updateMany({ where, data: { archivedAt: new Date() } });
-    return count === 0 ? "not-found" : "archived";
+  const archive = orderItems + reviews + cropLogs > 0;
+  const now = new Date();
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      // Resolve first: a deleted listing's notices lose their productId.
+      await tx.notice.updateMany({
+        where: { productId, resolvedAt: null },
+        data: { resolvedAt: now, resolution: "removed" },
+      });
+      const { count } = archive
+        ? await tx.product.updateMany({ where, data: { archivedAt: now } })
+        : await tx.product.deleteMany({ where });
+      if (count === 0) throw new ListingChanged();
+    });
+  } catch (error) {
+    if (error instanceof ListingChanged) return "not-found";
+    throw error;
   }
-  const { count } = await prisma.product.deleteMany({ where });
-  return count === 0 ? "not-found" : "deleted";
+  return archive ? "archived" : "deleted";
 }

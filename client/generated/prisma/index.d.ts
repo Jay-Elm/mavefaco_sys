@@ -21127,6 +21127,8 @@ export namespace Prisma {
     createdAt: Date | null
     recipientId: number | null
     productId: number | null
+    resolvedAt: Date | null
+    resolution: string | null
   }
 
   export type NoticeMaxAggregateOutputType = {
@@ -21137,6 +21139,8 @@ export namespace Prisma {
     createdAt: Date | null
     recipientId: number | null
     productId: number | null
+    resolvedAt: Date | null
+    resolution: string | null
   }
 
   export type NoticeCountAggregateOutputType = {
@@ -21147,6 +21151,8 @@ export namespace Prisma {
     createdAt: number
     recipientId: number
     productId: number
+    resolvedAt: number
+    resolution: number
     _all: number
   }
 
@@ -21171,6 +21177,8 @@ export namespace Prisma {
     createdAt?: true
     recipientId?: true
     productId?: true
+    resolvedAt?: true
+    resolution?: true
   }
 
   export type NoticeMaxAggregateInputType = {
@@ -21181,6 +21189,8 @@ export namespace Prisma {
     createdAt?: true
     recipientId?: true
     productId?: true
+    resolvedAt?: true
+    resolution?: true
   }
 
   export type NoticeCountAggregateInputType = {
@@ -21191,6 +21201,8 @@ export namespace Prisma {
     createdAt?: true
     recipientId?: true
     productId?: true
+    resolvedAt?: true
+    resolution?: true
     _all?: true
   }
 
@@ -21288,6 +21300,8 @@ export namespace Prisma {
     createdAt: Date
     recipientId: number
     productId: number | null
+    resolvedAt: Date | null
+    resolution: string | null
     _count: NoticeCountAggregateOutputType | null
     _avg: NoticeAvgAggregateOutputType | null
     _sum: NoticeSumAggregateOutputType | null
@@ -21317,6 +21331,8 @@ export namespace Prisma {
     createdAt?: boolean
     recipientId?: boolean
     productId?: boolean
+    resolvedAt?: boolean
+    resolution?: boolean
     recipient?: boolean | UserDefaultArgs<ExtArgs>
     product?: boolean | Notice$productArgs<ExtArgs>
   }, ExtArgs["result"]["notice"]>
@@ -21329,6 +21345,8 @@ export namespace Prisma {
     createdAt?: boolean
     recipientId?: boolean
     productId?: boolean
+    resolvedAt?: boolean
+    resolution?: boolean
     recipient?: boolean | UserDefaultArgs<ExtArgs>
     product?: boolean | Notice$productArgs<ExtArgs>
   }, ExtArgs["result"]["notice"]>
@@ -21341,6 +21359,8 @@ export namespace Prisma {
     createdAt?: boolean
     recipientId?: boolean
     productId?: boolean
+    resolvedAt?: boolean
+    resolution?: boolean
     recipient?: boolean | UserDefaultArgs<ExtArgs>
     product?: boolean | Notice$productArgs<ExtArgs>
   }, ExtArgs["result"]["notice"]>
@@ -21353,9 +21373,11 @@ export namespace Prisma {
     createdAt?: boolean
     recipientId?: boolean
     productId?: boolean
+    resolvedAt?: boolean
+    resolution?: boolean
   }
 
-  export type NoticeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "body" | "read" | "createdAt" | "recipientId" | "productId", ExtArgs["result"]["notice"]>
+  export type NoticeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "body" | "read" | "createdAt" | "recipientId" | "productId" | "resolvedAt" | "resolution", ExtArgs["result"]["notice"]>
   export type NoticeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     recipient?: boolean | UserDefaultArgs<ExtArgs>
     product?: boolean | Notice$productArgs<ExtArgs>
@@ -21383,6 +21405,8 @@ export namespace Prisma {
       createdAt: Date
       recipientId: number
       productId: number | null
+      resolvedAt: Date | null
+      resolution: string | null
     }, ExtArgs["result"]["notice"]>
     composites: {}
   }
@@ -21815,6 +21839,8 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Notice", 'DateTime'>
     readonly recipientId: FieldRef<"Notice", 'Int'>
     readonly productId: FieldRef<"Notice", 'Int'>
+    readonly resolvedAt: FieldRef<"Notice", 'DateTime'>
+    readonly resolution: FieldRef<"Notice", 'String'>
   }
     
 
@@ -23604,7 +23630,9 @@ export namespace Prisma {
     read: 'read',
     createdAt: 'createdAt',
     recipientId: 'recipientId',
-    productId: 'productId'
+    productId: 'productId',
+    resolvedAt: 'resolvedAt',
+    resolution: 'resolution'
   };
 
   export type NoticeScalarFieldEnum = (typeof NoticeScalarFieldEnum)[keyof typeof NoticeScalarFieldEnum]
@@ -24884,6 +24912,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Notice"> | Date | string
     recipientId?: IntFilter<"Notice"> | number
     productId?: IntNullableFilter<"Notice"> | number | null
+    resolvedAt?: DateTimeNullableFilter<"Notice"> | Date | string | null
+    resolution?: StringNullableFilter<"Notice"> | string | null
     recipient?: XOR<UserScalarRelationFilter, UserWhereInput>
     product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
   }
@@ -24896,6 +24926,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     recipientId?: SortOrder
     productId?: SortOrderInput | SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    resolution?: SortOrderInput | SortOrder
     recipient?: UserOrderByWithRelationInput
     product?: ProductOrderByWithRelationInput
   }
@@ -24911,6 +24943,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Notice"> | Date | string
     recipientId?: IntFilter<"Notice"> | number
     productId?: IntNullableFilter<"Notice"> | number | null
+    resolvedAt?: DateTimeNullableFilter<"Notice"> | Date | string | null
+    resolution?: StringNullableFilter<"Notice"> | string | null
     recipient?: XOR<UserScalarRelationFilter, UserWhereInput>
     product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
   }, "id">
@@ -24923,6 +24957,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     recipientId?: SortOrder
     productId?: SortOrderInput | SortOrder
+    resolvedAt?: SortOrderInput | SortOrder
+    resolution?: SortOrderInput | SortOrder
     _count?: NoticeCountOrderByAggregateInput
     _avg?: NoticeAvgOrderByAggregateInput
     _max?: NoticeMaxOrderByAggregateInput
@@ -24941,6 +24977,8 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Notice"> | Date | string
     recipientId?: IntWithAggregatesFilter<"Notice"> | number
     productId?: IntNullableWithAggregatesFilter<"Notice"> | number | null
+    resolvedAt?: DateTimeNullableWithAggregatesFilter<"Notice"> | Date | string | null
+    resolution?: StringNullableWithAggregatesFilter<"Notice"> | string | null
   }
 
   export type AuditLogWhereInput = {
@@ -26170,6 +26208,8 @@ export namespace Prisma {
     body: string
     read?: boolean
     createdAt?: Date | string
+    resolvedAt?: Date | string | null
+    resolution?: string | null
     recipient: UserCreateNestedOneWithoutNoticesInput
     product?: ProductCreateNestedOneWithoutNoticesInput
   }
@@ -26182,6 +26222,8 @@ export namespace Prisma {
     createdAt?: Date | string
     recipientId: number
     productId?: number | null
+    resolvedAt?: Date | string | null
+    resolution?: string | null
   }
 
   export type NoticeUpdateInput = {
@@ -26189,6 +26231,8 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     recipient?: UserUpdateOneRequiredWithoutNoticesNestedInput
     product?: ProductUpdateOneWithoutNoticesNestedInput
   }
@@ -26201,6 +26245,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     recipientId?: IntFieldUpdateOperationsInput | number
     productId?: NullableIntFieldUpdateOperationsInput | number | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolution?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type NoticeCreateManyInput = {
@@ -26211,6 +26257,8 @@ export namespace Prisma {
     createdAt?: Date | string
     recipientId: number
     productId?: number | null
+    resolvedAt?: Date | string | null
+    resolution?: string | null
   }
 
   export type NoticeUpdateManyMutationInput = {
@@ -26218,6 +26266,8 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolution?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type NoticeUncheckedUpdateManyInput = {
@@ -26228,6 +26278,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     recipientId?: IntFieldUpdateOperationsInput | number
     productId?: NullableIntFieldUpdateOperationsInput | number | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolution?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AuditLogCreateInput = {
@@ -27369,6 +27421,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     recipientId?: SortOrder
     productId?: SortOrder
+    resolvedAt?: SortOrder
+    resolution?: SortOrder
   }
 
   export type NoticeAvgOrderByAggregateInput = {
@@ -27385,6 +27439,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     recipientId?: SortOrder
     productId?: SortOrder
+    resolvedAt?: SortOrder
+    resolution?: SortOrder
   }
 
   export type NoticeMinOrderByAggregateInput = {
@@ -27395,6 +27451,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     recipientId?: SortOrder
     productId?: SortOrder
+    resolvedAt?: SortOrder
+    resolution?: SortOrder
   }
 
   export type NoticeSumOrderByAggregateInput = {
@@ -29079,6 +29137,8 @@ export namespace Prisma {
     body: string
     read?: boolean
     createdAt?: Date | string
+    resolvedAt?: Date | string | null
+    resolution?: string | null
     product?: ProductCreateNestedOneWithoutNoticesInput
   }
 
@@ -29089,6 +29149,8 @@ export namespace Prisma {
     read?: boolean
     createdAt?: Date | string
     productId?: number | null
+    resolvedAt?: Date | string | null
+    resolution?: string | null
   }
 
   export type NoticeCreateOrConnectWithoutRecipientInput = {
@@ -29440,6 +29502,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Notice"> | Date | string
     recipientId?: IntFilter<"Notice"> | number
     productId?: IntNullableFilter<"Notice"> | number | null
+    resolvedAt?: DateTimeNullableFilter<"Notice"> | Date | string | null
+    resolution?: StringNullableFilter<"Notice"> | string | null
   }
 
   export type UserCreateWithoutEmailVerificationTokensInput = {
@@ -30231,6 +30295,8 @@ export namespace Prisma {
     body: string
     read?: boolean
     createdAt?: Date | string
+    resolvedAt?: Date | string | null
+    resolution?: string | null
     recipient: UserCreateNestedOneWithoutNoticesInput
   }
 
@@ -30241,6 +30307,8 @@ export namespace Prisma {
     read?: boolean
     createdAt?: Date | string
     recipientId: number
+    resolvedAt?: Date | string | null
+    resolution?: string | null
   }
 
   export type NoticeCreateOrConnectWithoutProductInput = {
@@ -32091,6 +32159,8 @@ export namespace Prisma {
     read?: boolean
     createdAt?: Date | string
     productId?: number | null
+    resolvedAt?: Date | string | null
+    resolution?: string | null
   }
 
   export type ProductUpdateWithoutFarmerInput = {
@@ -32409,6 +32479,8 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     product?: ProductUpdateOneWithoutNoticesNestedInput
   }
 
@@ -32419,6 +32491,8 @@ export namespace Prisma {
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     productId?: NullableIntFieldUpdateOperationsInput | number | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolution?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type NoticeUncheckedUpdateManyWithoutRecipientInput = {
@@ -32428,6 +32502,8 @@ export namespace Prisma {
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     productId?: NullableIntFieldUpdateOperationsInput | number | null
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolution?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProductCreateManyCategoryInput = {
@@ -32558,6 +32634,8 @@ export namespace Prisma {
     read?: boolean
     createdAt?: Date | string
     recipientId: number
+    resolvedAt?: Date | string | null
+    resolution?: string | null
   }
 
   export type OrderItemUpdateWithoutProductInput = {
@@ -32628,6 +32706,8 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolution?: NullableStringFieldUpdateOperationsInput | string | null
     recipient?: UserUpdateOneRequiredWithoutNoticesNestedInput
   }
 
@@ -32638,6 +32718,8 @@ export namespace Prisma {
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     recipientId?: IntFieldUpdateOperationsInput | number
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolution?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type NoticeUncheckedUpdateManyWithoutProductInput = {
@@ -32647,6 +32729,8 @@ export namespace Prisma {
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     recipientId?: IntFieldUpdateOperationsInput | number
+    resolvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    resolution?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type OrderItemCreateManyOrderInput = {

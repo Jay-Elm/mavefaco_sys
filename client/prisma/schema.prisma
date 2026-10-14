@@ -328,7 +328,15 @@ model Notice {
   productId   Int?
   product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
 
+  // Set once what the notice asked for is done, so it stops offering its
+  // action: "resubmitted" (the farmer fixed the listing) or "removed" (the
+  // listing was deleted or archived). A later suspension of the same listing
+  // gets a new notice.
+  resolvedAt  DateTime?
+  resolution  String?
+
   @@index([recipientId, read])
+  @@index([productId])
 }
 
 model AuditLog {
