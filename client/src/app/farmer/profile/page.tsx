@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, CheckCircle, ShieldCheck, ShieldAlert, X, KeyRound, Mail, AlertTriangle } from 'lucide-react'
+import { useDialog } from '@/contexts/DialogContext'
 
 interface ProfileData {
   hasIdImage: boolean
@@ -12,6 +13,7 @@ interface ProfileData {
 
 export default function FarmerProfilePage() {
   const { token, user, login, logout } = useAuth()
+  const dialog = useDialog()
   const router = useRouter()
   const [name, setName] = useState(user?.name ?? '')
   const [submitting, setSubmitting] = useState(false)
@@ -128,7 +130,7 @@ export default function FarmerProfilePage() {
 
   async function handleRemoveId() {
     if (!token) return
-    if (!confirm('Remove your submitted ID? You will need to upload a new one to be verified again.')) return
+    if (!(await dialog.confirm({ title: 'Remove your submitted ID?', message: 'You will need to upload a new one to be verified again.', confirmLabel: 'Remove ID', tone: 'danger' }))) return
     setIdError('')
     setIdSuccess(false)
     setSavingId(true)
@@ -183,7 +185,7 @@ export default function FarmerProfilePage() {
   async function handleDeleteAccount(e: React.FormEvent) {
     e.preventDefault()
     if (!token) return
-    if (!confirm('Permanently delete your account?\n\nYour name, email, login and messages are removed and your products leave the shop. Past orders stay on record without your details, so customers\' order history stays correct. This cannot be undone.')) return
+    if (!(await dialog.confirm({ title: 'Permanently delete your account?', message: "Your name, email, login and messages are removed and your products leave the shop. Past orders stay on record without your details, so customers' order history stays correct.\n\nThis cannot be undone.", confirmLabel: 'Delete account', tone: 'danger' }))) return
     setDeleteError('')
     setDeleting(true)
     try {

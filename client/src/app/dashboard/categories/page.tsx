@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useRef } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, Tag, Trash2, Plus, AlertCircle, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
+import { useDialog } from '@/contexts/DialogContext'
 
 interface Category {
   id: number
@@ -24,6 +25,7 @@ function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; s
 
 export default function CategoriesPage() {
   const { token } = useAuth()
+  const dialog = useDialog()
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading]       = useState(true)
   const [error, setError]           = useState('')
@@ -100,10 +102,10 @@ export default function CategoriesPage() {
 
   async function handleDelete(id: number, productCount: number) {
     if (productCount > 0) {
-      alert(`Cannot delete: ${productCount} product(s) use this category.`)
+      await dialog.alert({ title: "Can't delete this category", message: `${productCount} product(s) use this category.` })
       return
     }
-    if (!confirm('Delete this category?')) return
+    if (!(await dialog.confirm({ title: 'Delete this category?', confirmLabel: 'Delete', tone: 'danger' }))) return
     if (!token) return
     setDeletingId(id)
     try {
@@ -112,10 +114,10 @@ export default function CategoriesPage() {
         headers: { Authorization: `Bearer ${token}` },
       })
       const data = await res.json()
-      if (!res.ok) { alert(data.error); return }
+      if (!res.ok) { await dialog.alert({ title: "Couldn't delete category", message: data.error }); return }
       setCategories((prev) => prev.filter((c) => c.id !== id))
     } catch {
-      alert('Failed to delete category')
+      await dialog.alert({ title: "Couldn't delete category", message: 'Please try again.' })
     } finally {
       setDeletingId(null)
     }

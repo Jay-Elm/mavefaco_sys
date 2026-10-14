@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { refreshNavBadges } from '@/components/NavBadge'
 import {
   Loader2, Shield, User, Leaf, ShoppingBag,
   Ban, CheckCircle, Trash2, AlertTriangle, ShieldCheck,
@@ -9,6 +10,7 @@ import {
   ShieldAlert, ShieldOff,
 } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
+import { useDialog } from '@/contexts/DialogContext'
 
 interface UserRow {
   id: number
@@ -49,6 +51,7 @@ function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; s
 
 export default function UsersPage() {
   const { token, user: currentUser } = useAuth()
+  const dialog = useDialog()
   const [users, setUsers]         = useState<UserRow[]>([])
   const [loading, setLoading]     = useState(true)
   const [error, setError]         = useState('')
@@ -107,7 +110,7 @@ export default function UsersPage() {
   async function handleSuspend(u: UserRow) {
     if (!token) return
     const next = !u.suspended
-    if (!confirm(`${next ? 'Suspend' : 'Reactivate'} ${u.name}?`)) return
+    if (!(await dialog.confirm({ title: `${next ? 'Suspend' : 'Reactivate'} ${u.name}?`, message: next ? 'They will be signed out and unable to log in until reactivated.' : 'They will be able to log in again.', confirmLabel: next ? 'Suspend' : 'Reactivate', tone: next ? 'danger' : 'default' }))) return
     setActionId(u.id); setActionError(null)
     try {
       const res = await fetch(`/api/admin/users/${u.id}`, {
@@ -156,6 +159,7 @@ export default function UsersPage() {
       const data = await res.json()
       if (!res.ok) { setActionError({ id: u.id, msg: data.error }); return }
       setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, verified: !u.verified } : x)))
+      refreshNavBadges()
     } catch {
       setActionError({ id: u.id, msg: 'Request failed' })
     } finally { setActionId(null) }
@@ -183,7 +187,7 @@ export default function UsersPage() {
 
   async function handleResetMfa(u: UserRow) {
     if (!token) return
-    if (!confirm(`Reset two-factor authentication for ${u.name}? They will need to set it up again from scratch on their next login.`)) return
+    if (!(await dialog.confirm({ title: `Reset two-factor authentication for ${u.name}?`, message: 'They will need to set it up again from scratch on their next login.', confirmLabel: 'Reset 2FA', tone: 'danger' }))) return
     setActionId(u.id); setActionError(null)
     try {
       const res = await fetch(`/api/admin/users/${u.id}`, {
@@ -201,7 +205,7 @@ export default function UsersPage() {
 
   async function handleDelete(u: UserRow) {
     if (!token) return
-    if (!confirm(`Permanently delete "${u.name}"?\n\nTheir name, email, login, reviews and messages are removed, and their products leave the shop. Past orders and audit history are kept under "Deleted user". Blocked only if they have active orders.`)) return
+    if (!(await dialog.confirm({ title: `Permanently delete "${u.name}"?`, message: 'Their name, email, login, reviews and messages are removed, and their products leave the shop. Past orders and audit history are kept under "Deleted user". Blocked only if they have active orders.\n\nThis cannot be undone.', confirmLabel: 'Delete user', tone: 'danger' }))) return
     setActionId(u.id); setActionError(null)
     try {
       const res = await fetch(`/api/admin/users/${u.id}`, {

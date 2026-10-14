@@ -4,9 +4,11 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, CheckCircle, User, KeyRound, Mail, AlertTriangle } from 'lucide-react'
+import { useDialog } from '@/contexts/DialogContext'
 
 export default function CustomerProfilePage() {
   const { isAuthenticated, loading, token, user, login, logout } = useAuth()
+  const dialog = useDialog()
   const router = useRouter()
 
   const [name, setName] = useState('')
@@ -129,7 +131,7 @@ export default function CustomerProfilePage() {
   async function handleDeleteAccount(e: React.FormEvent) {
     e.preventDefault()
     if (!token) return
-    if (!confirm('Permanently delete your account?\n\nYour name, email, login, reviews and messages are removed. Past orders stay on record without your details, so farmers\' sales records stay correct. This cannot be undone.')) return
+    if (!(await dialog.confirm({ title: 'Permanently delete your account?', message: "Your name, email, login, reviews and messages are removed. Past orders stay on record without your details, so farmers' sales records stay correct.\n\nThis cannot be undone.", confirmLabel: 'Delete account', tone: 'danger' }))) return
     setDeleteError('')
     setDeleting(true)
     try {

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { useDialog } from '@/contexts/DialogContext'
 import {
   Loader2, Plus, Trash2, AlertCircle, Save, Globe,
   Image as ImageIcon, HelpCircle, Info,
@@ -100,6 +101,7 @@ export default function SitePage() {
 // ── Banners Tab ───────────────────────────────────────────────────────────────
 
 function BannersTab({ token }: { token: string | null }) {
+  const dialog = useDialog()
   const [banners, setBanners] = useState<Banner[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState('')
@@ -161,7 +163,7 @@ function BannersTab({ token }: { token: string | null }) {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm('Delete this banner?') || !token) return
+    if (!(await dialog.confirm({ title: 'Delete this banner?', message: 'It will be removed from the home page.', confirmLabel: 'Delete', tone: 'danger' })) || !token) return
     setDeletingId(id)
     try {
       await fetch(`/api/banners/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
@@ -354,6 +356,7 @@ function InfoTab({ token }: { token: string | null }) {
 // ── FAQs Tab ──────────────────────────────────────────────────────────────────
 
 function FaqsTab({ token }: { token: string | null }) {
+  const dialog = useDialog()
   const [faqs, setFaqs]       = useState<Faq[]>([])
   const [loading, setLoading] = useState(true)
   const [question, setQuestion] = useState('')
@@ -391,7 +394,7 @@ function FaqsTab({ token }: { token: string | null }) {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm('Delete this FAQ?') || !token) return
+    if (!(await dialog.confirm({ title: 'Delete this FAQ?', confirmLabel: 'Delete', tone: 'danger' })) || !token) return
     setDeletingId(id)
     try {
       await fetch(`/api/admin/faqs/${id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })

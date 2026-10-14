@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, Megaphone, Trash2, AlertCircle, Plus, Info, AlertTriangle, Leaf } from 'lucide-react'
+import { useDialog } from '@/contexts/DialogContext'
 
 interface Announcement {
   id: number
@@ -23,6 +24,7 @@ type AnnouncementType = keyof typeof TYPE_CONFIG
 
 export default function AnnouncementsPage() {
   const { token } = useAuth()
+  const dialog = useDialog()
   const [items, setItems]       = useState<Announcement[]>([])
   const [loading, setLoading]   = useState(true)
   const [error, setError]       = useState('')
@@ -69,7 +71,7 @@ export default function AnnouncementsPage() {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm('Delete this announcement?')) return
+    if (!(await dialog.confirm({ title: 'Delete this announcement?', message: 'It will be removed from the home page.', confirmLabel: 'Delete', tone: 'danger' }))) return
     if (!token) return
     setDeletingId(id)
     try {
@@ -78,10 +80,10 @@ export default function AnnouncementsPage() {
         headers: { Authorization: `Bearer ${token}` },
       })
       const data = await res.json()
-      if (!res.ok) { alert(data.error); return }
+      if (!res.ok) { await dialog.alert({ title: "Couldn't delete announcement", message: data.error }); return }
       setItems((prev) => prev.filter((a) => a.id !== id))
     } catch {
-      alert('Failed to delete announcement')
+      await dialog.alert({ title: "Couldn't delete announcement", message: 'Please try again.' })
     } finally {
       setDeletingId(null)
     }

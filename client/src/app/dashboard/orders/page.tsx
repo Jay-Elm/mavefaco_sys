@@ -4,6 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, ShoppingCart, AlertTriangle, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
+import { useDialog } from '@/contexts/DialogContext'
 
 interface OrderRow {
   id: number
@@ -54,6 +55,7 @@ function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; s
 
 export default function OrdersPage() {
   const { token, user } = useAuth()
+  const dialog = useDialog()
   const isManager = user?.role === 'manager'
   const [orders, setOrders]     = useState<OrderRow[]>([])
   const [loading, setLoading]   = useState(true)
@@ -112,7 +114,7 @@ export default function OrdersPage() {
 
   async function handleStatusChange(orderId: number, status: string) {
     if (!token) return
-    if (status === 'cancelled' && !confirm('Cancel this order? This cannot be undone.')) return
+    if (status === 'cancelled' && !(await dialog.confirm({ title: 'Cancel this order?', message: 'This cannot be undone.', confirmLabel: 'Cancel order', cancelLabel: 'Keep order', tone: 'danger' }))) return
     setUpdatingId(orderId)
     setUpdateError(null)
     try {

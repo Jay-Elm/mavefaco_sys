@@ -3,10 +3,12 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
+import { refreshNavBadges } from '@/components/NavBadge'
 import { Loader2, Package, Trash2, AlertTriangle, CheckCircle, Ban, Eye, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download, ArchiveRestore } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
 import SuspendListingModal, { type SuspendResult } from '@/components/SuspendListingModal'
 import { suspensionDeadline } from '@/validators/productSuspension'
+import { useDialog } from '@/contexts/DialogContext'
 
 interface ProductRow {
   id: number
@@ -43,6 +45,7 @@ function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; s
 
 export default function DashboardProductsPage() {
   const { token } = useAuth()
+  const dialog = useDialog()
   const [products, setProducts]       = useState<ProductRow[]>([])
   const [loading, setLoading]         = useState(true)
   const [error, setError]             = useState('')
@@ -131,6 +134,7 @@ export default function DashboardProductsPage() {
       const data = await res.json()
       if (!res.ok) { setActionError({ id, msg: data.error }); return }
       setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, approved: true } : p)))
+      refreshNavBadges()
     } catch {
       setActionError({ id, msg: 'Request failed' })
     } finally {
@@ -160,6 +164,7 @@ export default function DashboardProductsPage() {
 
   function handleSuspended(id: number, result: SuspendResult & { suspensionNote: string | null }) {
     setSuspending(null)
+    refreshNavBadges()
     setProducts((prev) => prev.map((p) => (p.id === id
       ? { ...p, approved: false, suspendedAt: result.suspendedAt, suspensionReasons: result.suspensionReasons, suspensionNote: result.suspensionNote }
       : p)))
@@ -170,7 +175,7 @@ export default function DashboardProductsPage() {
   // Only offered on a suspended listing: deleting it now instead of waiting
   // for the automatic removal at the end of the suspension.
   async function handleDelete(id: number, name: string) {
-    if (!confirm(`Delete the suspended listing "${name}" now?\n\nIf it has past orders or reviews it is archived so order history stays intact; otherwise it is deleted. This cannot be undone.`)) return
+    if (!(await dialog.confirm({ title: `Delete "${name}" now?`, message: 'This listing is suspended. If it has past orders or reviews it is archived so order history stays intact; otherwise it is deleted. This cannot be undone.', confirmLabel: 'Delete listing', tone: 'danger' }))) return
     if (!token) return
     setActingId(id)
     setActionError(null)

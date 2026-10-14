@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
+import { useDialog } from '@/contexts/DialogContext'
 import {
   Loader2, ArrowLeft, Sprout, Save, Plus, Trash2,
   CloudRain, Bug, Flame, FileText, CheckCircle2,
@@ -54,6 +55,7 @@ const INPUT = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:
 
 export default function CropDetailPage() {
   const { token } = useAuth()
+  const dialog = useDialog()
   const params = useParams()
   const productId = Number(params.id)
 
@@ -136,7 +138,7 @@ export default function CropDetailPage() {
 
   async function handleDeleteLog(logId: number) {
     if (!token) return
-    if (!confirm('Delete this log entry?')) return
+    if (!(await dialog.confirm({ title: 'Delete this log entry?', confirmLabel: 'Delete', tone: 'danger' }))) return
     setDeletingLogId(logId)
     try {
       await fetch(`/api/farmer/crops/${productId}/logs/${logId}`, {

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { ArrowLeft, Bell, Loader2, Pencil } from 'lucide-react'
+import { refreshNavBadges } from '@/components/NavBadge'
 
 interface Notice {
   id: number
@@ -28,7 +29,7 @@ export default function FarmerNoticesPage() {
         if (!Array.isArray(d)) return
         setNotices(d)
         if (d.some((n: Notice) => !n.read))
-          fetch('/api/notices/read', { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
+          fetch('/api/notices/read', { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).then(refreshNavBadges)
       })
       .finally(() => setLoading(false))
   }, [token])

@@ -11,11 +11,14 @@ export async function GET(req: NextRequest) {
     if (!authorize(user, [ROLES.ADMIN, ROLES.MANAGER]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    const [userCount, approvedProductCount, pendingProductCount, orderCount, revenueAgg, recentOrders] =
+    const [userCount, approvedProductCount, pendingProductCount, suspendedProductCount, orderCount, revenueAgg, recentOrders] =
       await Promise.all([
         prisma.user.count({ where: { deletedAt: null } }),
         prisma.product.count({ where: { approved: true, archivedAt: null } }),
-        prisma.product.count({ where: { approved: false, archivedAt: null } }),
+        // Pending = waiting for review. A suspended listing is unapproved too,
+        // but it waits on its farmer, not on staff, so it's counted apart.
+        prisma.product.count({ where: { approved: false, archivedAt: null, suspendedAt: null } }),
+        prisma.product.count({ where: { archivedAt: null, suspendedAt: { not: null } } }),
         prisma.order.count(),
         prisma.order.aggregate({ _sum: { totalAmount: true }, where: { status: 'delivered' } }),
         prisma.order.findMany({
@@ -29,6 +32,7 @@ export async function GET(req: NextRequest) {
       userCount,
       approvedProductCount,
       pendingProductCount,
+      suspendedProductCount,
       orderCount,
       totalRevenue: Number(revenueAgg._sum.totalAmount ?? 0),
       recentOrders: recentOrders.map((o) => ({ ...o, totalAmount: Number(o.totalAmount) })),

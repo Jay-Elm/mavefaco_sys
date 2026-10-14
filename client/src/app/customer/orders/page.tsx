@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ShoppingBag, ChevronDown, ChevronUp, Loader2, Package, X, CheckCheck } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
+import { useDialog } from '@/contexts/DialogContext'
 
 interface OrderItem {
   id: number
@@ -44,6 +45,7 @@ const DELIVERY_LABELS: Record<string, string> = {
 
 export default function CustomerOrdersPage() {
   const { isAuthenticated, loading, token } = useAuth()
+  const dialog = useDialog()
   const router = useRouter()
   const [orders, setOrders] = useState<Order[]>([])
   const [fetching, setFetching] = useState(true)
@@ -76,7 +78,7 @@ export default function CustomerOrdersPage() {
 
   async function handleAction(orderId: number, status: string) {
     if (!token) return
-    if (status === 'cancelled' && !confirm('Cancel this order? This cannot be undone.')) return
+    if (status === 'cancelled' && !(await dialog.confirm({ title: 'Cancel this order?', message: 'This cannot be undone.', confirmLabel: 'Cancel order', cancelLabel: 'Keep order', tone: 'danger' }))) return
     setActingId(orderId)
     setActionError(null)
     try {

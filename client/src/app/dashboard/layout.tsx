@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+import { MenuDot, NavBadge, useNavBadges } from '@/components/NavBadge'
 import {
   LayoutDashboard, Users, Tag, Package, ShoppingCart,
   ScrollText, BarChart2, Megaphone, Globe, Loader2, Menu,
@@ -36,6 +37,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const router = useRouter()
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const badges = useNavBadges()
 
   // Close sidebar on route change (mobile). Adjusted during render rather
   // than in an effect so the old open state never paints on the new page.
@@ -74,11 +76,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar: w-46 (184px) just fits the longest link, "Announcements" */}
       <aside
         className={`
           fixed lg:static inset-y-0 left-0 z-30
-          w-56 shrink-0 bg-forest text-white/75 flex flex-col overflow-y-auto
+          w-46 shrink-0 bg-forest text-white/75 flex flex-col overflow-y-auto
           transition-transform duration-200
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
@@ -101,8 +103,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   active ? 'bg-forest-mid text-white' : 'hover:bg-white/10 hover:text-white'
                 }`}
               >
-                <Icon size={16} />
-                {label}
+                <Icon size={16} className="shrink-0" />
+                <span className="whitespace-nowrap">{label}</span>
+                <NavBadge count={badges[href]} />
               </Link>
             )
           })}
@@ -119,10 +122,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="lg:hidden flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-200 sticky top-0 z-10">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors text-gray-600"
+            className="relative p-1.5 rounded-lg hover:bg-gray-100 transition-colors text-gray-600"
             aria-label="Open menu"
           >
             <Menu size={20} />
+            <MenuDot badges={badges} />
           </button>
           <span className="text-sm font-semibold text-gray-700 capitalize">
             {user.role === 'admin' ? 'Admin' : 'Manager'} Panel

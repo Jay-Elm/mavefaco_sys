@@ -2,8 +2,10 @@
 
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { refreshNavBadges } from '@/components/NavBadge'
 import { Loader2, ShoppingCart, AlertTriangle, Download } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
+import { useDialog } from '@/contexts/DialogContext'
 
 interface OrderRow {
   id: number
@@ -41,6 +43,7 @@ const ACTIONS: Record<string, { label: string; next: string; style: string }[]> 
 
 export default function FarmerOrdersPage() {
   const { token } = useAuth()
+  const dialog = useDialog()
   const [orders, setOrders] = useState<OrderRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -62,7 +65,7 @@ export default function FarmerOrdersPage() {
 
   async function handleStatusChange(orderId: number, status: string) {
     if (!token) return
-    if (status === 'cancelled' && !confirm('Cancel this order? This cannot be undone.')) return
+    if (status === 'cancelled' && !(await dialog.confirm({ title: 'Cancel this order?', message: 'This cannot be undone.', confirmLabel: 'Cancel order', cancelLabel: 'Keep order', tone: 'danger' }))) return
     setUpdatingId(orderId)
     setUpdateError(null)
     try {
@@ -74,6 +77,7 @@ export default function FarmerOrdersPage() {
       const data = await res.json()
       if (!res.ok) { setUpdateError({ id: orderId, msg: data.error ?? 'Failed to update order' }); return }
       setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)))
+      refreshNavBadges()
     } catch {
       setUpdateError({ id: orderId, msg: 'Request failed' })
     } finally {

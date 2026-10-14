@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, Send } from 'lucide-react'
+import { refreshNavBadges } from '@/components/NavBadge'
 
 interface Message {
   id: number
@@ -29,7 +30,8 @@ export default function MessageThread({ otherId, otherName }: Props) {
     if (!token) return
     fetch(`/api/messages/${otherId}`, { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => r.json())
-      .then((d) => { if (Array.isArray(d)) setMessages(d) })
+      // Fetching the thread marks its incoming messages read.
+      .then((d) => { if (Array.isArray(d)) { setMessages(d); refreshNavBadges() } })
       .finally(() => setLoading(false))
   }
 

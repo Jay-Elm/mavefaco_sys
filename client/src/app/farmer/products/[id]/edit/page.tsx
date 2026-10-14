@@ -8,6 +8,7 @@ import ImageUploader from '@/components/ImageUploader'
 import SuggestionBanner from '@/components/SuggestionBanner'
 import { suggestCategory, suggestUnit } from '@/lib/productSuggestions'
 import { reasonLabels, suspensionDeadline } from '@/validators/productSuspension'
+import { useDialog } from '@/contexts/DialogContext'
 
 interface Suspension { suspendedAt: string; reasons: string[]; note: string | null }
 
@@ -18,6 +19,7 @@ interface Category { id: number; name: string }
 
 export default function EditProductPage() {
   const { token } = useAuth()
+  const dialog = useDialog()
   const router = useRouter()
   const params = useParams()
   const productId = params.id as string
@@ -122,7 +124,7 @@ export default function EditProductPage() {
 
   async function handleDelete() {
     if (!token) return
-    if (!confirm(`Delete "${form.name}"?\n\nIt will disappear from the shop. If it has past orders or reviews it is archived so order history stays intact; otherwise it is deleted. This cannot be undone.`)) return
+    if (!(await dialog.confirm({ title: `Delete "${form.name}"?`, message: 'It will disappear from the shop. If it has past orders or reviews it is archived so order history stays intact; otherwise it is deleted. This cannot be undone.', confirmLabel: 'Delete listing', tone: 'danger' }))) return
     setError('')
     setDeleting(true)
     try {

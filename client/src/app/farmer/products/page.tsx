@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, Package, Trash2, Pencil, Plus, AlertTriangle, CheckCircle, Clock, Download, XCircle, Ban } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
 import { reasonLabels, suspensionDeadline } from '@/validators/productSuspension'
+import { useDialog } from '@/contexts/DialogContext'
 
 interface ProductRow {
   id: number
@@ -41,6 +42,7 @@ function StockBadge({ stock }: { stock: number }) {
 
 export default function FarmerProductsPage() {
   const { token, user } = useAuth()
+  const dialog = useDialog()
   const [products, setProducts] = useState<ProductRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -57,7 +59,7 @@ export default function FarmerProductsPage() {
   }, [token, user])
 
   async function handleDelete(id: number, name: string) {
-    if (!confirm(`Remove "${name}"?\n\nIt will disappear from the shop. If it has past orders or reviews it is archived so order history stays intact; otherwise it is deleted. This cannot be undone.`)) return
+    if (!(await dialog.confirm({ title: `Delete "${name}"?`, message: 'It will disappear from the shop. If it has past orders or reviews it is archived so order history stays intact; otherwise it is deleted. This cannot be undone.', confirmLabel: 'Delete listing', tone: 'danger' }))) return
     if (!token) return
     setDeletingId(id)
     setDeleteError(null)

@@ -200,6 +200,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | POST | `/api/orders` | customer | validates stock, approved, same-farmer; `$transaction`; 403 for farmers and staff |
 | GET | `/api/notices` | authenticated | own system notices, newest first |
 | POST | `/api/notices/read` | authenticated | marks own notices read |
+| GET | `/api/nav-badges` | authenticated | sidebar badge counts by path: farmer (unread messages + notices, new orders, suspended listings, overdue crops, ID not submitted), staff (listings to review, IDs to verify) |
 | GET | `/api/customer/orders` | authenticated | caller's own orders |
 | PATCH | `/api/customer/orders/[id]` | authenticated | pending→cancelled (stock restore); shipped→delivered |
 | GET | `/api/farmer/orders` | farmer | orders with farmer's products |

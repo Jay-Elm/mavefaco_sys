@@ -8,6 +8,7 @@ interface Stats {
   userCount: number
   approvedProductCount: number
   pendingProductCount: number
+  suspendedProductCount: number
   orderCount: number
   totalRevenue: number
   recentOrders: {
@@ -94,7 +95,7 @@ export default function DashboardOverviewPage() {
         <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
           <div className="bg-green-500 text-white p-3 rounded-lg"><Package size={22} /></div>
           <div>
-            <p className="text-2xl font-bold text-gray-900">{stats.approvedProductCount + stats.pendingProductCount}</p>
+            <p className="text-2xl font-bold text-gray-900">{stats.approvedProductCount + stats.pendingProductCount + stats.suspendedProductCount}</p>
             <p className="text-sm text-gray-500">Products</p>
             <p className="text-xs mt-0.5">
               <span className="text-green-600 font-medium">{stats.approvedProductCount} approved</span>
@@ -105,6 +106,12 @@ export default function DashboardOverviewPage() {
                 </span>
               ) : (
                 <span className="text-gray-400">0 pending</span>
+              )}
+              {stats.suspendedProductCount > 0 && (
+                <>
+                  <span className="text-gray-400"> · </span>
+                  <span className="text-red-600 font-medium">{stats.suspendedProductCount} suspended</span>
+                </>
               )}
             </p>
           </div>
