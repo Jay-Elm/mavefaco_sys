@@ -26,9 +26,32 @@ describe("POST /api/messages/[userId]", () => {
     ["a message to yourself", "Hi", 400],
   ])("rejects %s", async (_, content, status) => {
     const user = await createUser();
-    const to = content === "Hi" ? user.id : (await createUser()).id;
+    const to = content === "Hi" ? user.id : (await createUser({ role: "farmer" })).id;
 
     expect((await post(user, to, content)).status).toBe(status);
+    expect(await prisma.message.count()).toBe(0);
+  });
+
+  it("lets a farmer reply to a customer", async () => {
+    const customer = await createUser();
+    const farmer = await createUser({ role: "farmer" });
+
+    expect((await post(farmer, customer.id, "Yes, picked today")).status).toBe(201);
+  });
+
+  it.each([
+    ["customer", "customer"],
+    ["farmer", "farmer"],
+    ["customer", "manager"],
+    ["customer", "admin"],
+    ["farmer", "manager"],
+    ["manager", "farmer"],
+    ["admin", "customer"],
+  ] as const)("refuses a %s messaging a %s", async (from, to) => {
+    const sender = await createUser({ role: from });
+    const receiver = await createUser({ role: to });
+
+    expect((await post(sender, receiver.id)).status).toBe(403);
     expect(await prisma.message.count()).toBe(0);
   });
 

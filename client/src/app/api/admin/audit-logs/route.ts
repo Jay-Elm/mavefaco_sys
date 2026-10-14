@@ -10,7 +10,8 @@ export async function GET(req: NextRequest) {
   try {
     const user = await getActiveAuthUser(req);
     if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    if (!authorize(user, [ROLES.ADMIN, ROLES.MANAGER]))
+    // Admin-only: managers are among the staff whose actions it records.
+    if (!authorize(user, [ROLES.ADMIN]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     // Newest first, a page at a time: ?before=<id> continues from the last

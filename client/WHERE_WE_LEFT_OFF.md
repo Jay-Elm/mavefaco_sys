@@ -9,7 +9,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 1. **Phase 1–3 security review** (completed 2026-09-08, `SECURITY_REVIEW.md`): cookie-based sessions, admin-route guard, private ID storage, password reset, shared validators, email verification.
 2. **10-item gap list** (completed 2026-09-21): Next.js CVE patches, JWT secret validation, `Decimal` money, connection pooling, Dependabot + CI audit, mandatory TOTP MFA for staff, ID-image auto-purge, no email enumeration.
 3. **Whole-project review and fixes** (2026-10-03 to 2026-10-05, `PROJECT_REVIEW.md`): every finding fixed except L4. Highlights:
-   - **Integration tests** against a real Postgres database (`npm run test:integration`, 183 tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron; 54 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
+   - **Integration tests** against a real Postgres database (`npm run test:integration`, 193 tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron; 54 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
    - **MFA encryption key** separated from `JWT_SECRET` (`TOTP_ENCRYPTION_KEY`); all staff migrated.
    - **Preview deployments** have their own Supabase database and keys; Preview builds migrate only that database (`PREVIEW_DATABASE_ISOLATED`).
    - **Product archiving** (and staff restore) instead of deleting products with history.

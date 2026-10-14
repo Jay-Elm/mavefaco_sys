@@ -76,7 +76,7 @@ describe("GET /api/admin/audit-logs paging", () => {
     expect(new Set([...first, ...second].map((l) => l.id)).size).toBe(130); // no overlap, nothing missed
   });
 
-  it("is staff-only", async () => {
-    expect((await auditLogs(request("/api/admin/audit-logs", { as: await createUser({ role: "farmer" }) }))).status).toBe(403);
+  it.each(["manager", "farmer", "customer"] as const)("is admin-only: a %s gets 403", async (role) => {
+    expect((await auditLogs(request("/api/admin/audit-logs", { as: await createUser({ role }) }))).status).toBe(403);
   });
 });

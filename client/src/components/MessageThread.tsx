@@ -22,6 +22,7 @@ export default function MessageThread({ otherId, otherName }: Props) {
   const [loading, setLoading] = useState(true)
   const [text, setText] = useState('')
   const [sending, setSending] = useState(false)
+  const [sendError, setSendError] = useState('')
   const bottomRef = useRef<HTMLDivElement>(null)
 
   function fetchMessages() {
@@ -47,6 +48,7 @@ export default function MessageThread({ otherId, otherName }: Props) {
     e.preventDefault()
     if (!text.trim() || !token) return
     setSending(true)
+    setSendError('')
     try {
       const res = await fetch(`/api/messages/${otherId}`, {
         method: 'POST',
@@ -55,7 +57,8 @@ export default function MessageThread({ otherId, otherName }: Props) {
       })
       const d = await res.json()
       if (res.ok) { setMessages((prev) => [...prev, d]); setText('') }
-    } catch {}
+      else setSendError(d.error ?? 'Message not sent')
+    } catch { setSendError('Message not sent') }
     finally { setSending(false) }
   }
 
@@ -97,6 +100,10 @@ export default function MessageThread({ otherId, otherName }: Props) {
         )}
         <div ref={bottomRef} />
       </div>
+
+      {sendError && (
+        <p className="px-4 pt-2 text-xs text-red-600 bg-white border-t border-gray-200">{sendError}</p>
+      )}
 
       {/* Input */}
       <form onSubmit={handleSend} className="px-4 py-3 border-t border-gray-200 bg-white flex gap-2">

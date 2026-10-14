@@ -179,7 +179,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/admin/products` | admin/manager | all products, no approval filter |
 | PATCH | `/api/admin/products/[id]` | admin/manager | approve/reject/edit; audit logged |
 | GET | `/api/admin/farmer-stats` | admin/manager | per-farmer metrics |
-| GET | `/api/admin/audit-logs` | admin/manager | |
+| GET | `/api/admin/audit-logs` | admin | |
 | GET | `/api/admin/reports` | admin/manager | aggregated sales/crop/user/farmer data |
 | GET | `/api/admin/site-content` | admin | all key-value site content |
 | PUT | `/api/admin/site-content` | admin | upsert multiple keys |
@@ -208,7 +208,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/farmer/advisory` | farmer | recent pest/disease/damage logs from all farmers (30 days) |
 | GET | `/api/messages` | authenticated | conversation list with unread counts |
 | GET | `/api/messages/[userId]` | authenticated | message thread; marks received as read |
-| POST | `/api/messages/[userId]` | authenticated | send message |
+| POST | `/api/messages/[userId]` | customer/farmer | send message; only between a customer and a farmer (403 otherwise) |
 | GET | `/api/users/me` | authenticated | |
 | PATCH | `/api/users/me` | authenticated | name/email/password change. Email change requires the current password and only starts a request: a link goes to the new address, a notice to the current one |
 | POST | `/api/auth/confirm-email-change` | public (token) | applies a requested email change, logs out every session, notifies the previous address |
