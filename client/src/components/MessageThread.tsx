@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, Send } from 'lucide-react'
 import { refreshNavBadges } from '@/components/NavBadge'
@@ -8,6 +8,7 @@ import { refreshNavBadges } from '@/components/NavBadge'
 interface Message {
   id: number
   content: string
+  read: boolean
   createdAt: string
   sender: { id: number; name: string }
 }
@@ -15,23 +16,61 @@ interface Message {
 interface Props {
   otherId: number
   otherName: string
+  /** Called once the other person's name is known from the thread. */
+  onOtherName?: (name: string) => void
 }
 
-export default function MessageThread({ otherId, otherName }: Props) {
+/** Within this many pixels of the bottom counts as "reading the latest". */
+const NEAR_BOTTOM_PX = 80
+
+export default function MessageThread({ otherId, otherName, onOtherName }: Props) {
   const { token, user } = useAuth()
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
   const [text, setText] = useState('')
   const [sending, setSending] = useState(false)
   const [sendError, setSendError] = useState('')
-  const bottomRef = useRef<HTMLDivElement>(null)
+  // The earliest message that was unread when the thread opened (null: none).
+  // Fixed for the visit, so the "New messages" line doesn't jump as they're read.
+  const [firstUnreadId, setFirstUnreadId] = useState<number | null>(null)
+
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const firstUnreadRef = useRef<HTMLDivElement>(null)
+  const loaded = useRef(false)
+  const positioned = useRef(false)
+  // Whether the next change to the list should scroll to the bottom: only if
+  // the reader was already there (or just sent something), so a new message
+  // arriving doesn't yank them away from older ones they're reading.
+  const followLatest = useRef(true)
+
+  function isNearBottom() {
+    const el = scrollRef.current
+    return !el || el.scrollHeight - el.scrollTop - el.clientHeight < NEAR_BOTTOM_PX
+  }
 
   function fetchMessages() {
     if (!token) return
     fetch(`/api/messages/${otherId}`, { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => r.json())
-      // Fetching the thread marks its incoming messages read.
-      .then((d) => { if (Array.isArray(d)) { setMessages(d); refreshNavBadges() } })
+      .then((d: Message[]) => {
+        if (!Array.isArray(d)) return
+        // The thread arrives with its read flags as they were before this
+        // request, which then marks the incoming ones read.
+        const hasUnread = d.some((m) => m.sender.id === otherId && !m.read)
+        if (!loaded.current) {
+          loaded.current = true
+          setFirstUnreadId(d.find((m) => m.sender.id === otherId && !m.read)?.id ?? null)
+          const other = d.find((m) => m.sender.id === otherId)
+          if (other) onOtherName?.(other.sender.name)
+        }
+        if (hasUnread) refreshNavBadges()
+        followLatest.current = isNearBottom()
+        // Polling returns the same list most of the time; keep the old array
+        // then, so nothing re-renders or scrolls.
+        setMessages((prev) =>
+          prev.length === d.length && prev.at(-1)?.id === d.at(-1)?.id ? prev : d,
+        )
+      })
       .finally(() => setLoading(false))
   }
 
@@ -42,9 +81,18 @@ export default function MessageThread({ otherId, otherName }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, otherId])
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+  // Before paint: open at the first unread message (or the latest), then
+  // follow new messages only while the reader is at the bottom.
+  useLayoutEffect(() => {
+    const el = scrollRef.current
+    if (!el || messages.length === 0) return
+    if (!positioned.current) {
+      positioned.current = true
+      el.scrollTop = firstUnreadRef.current ? firstUnreadRef.current.offsetTop - 16 : el.scrollHeight
+      return
+    }
+    if (followLatest.current) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+  }, [messages, loading])
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault()
@@ -58,7 +106,11 @@ export default function MessageThread({ otherId, otherName }: Props) {
         body: JSON.stringify({ content: text.trim() }),
       })
       const d = await res.json()
-      if (res.ok) { setMessages((prev) => [...prev, d]); setText('') }
+      if (res.ok) {
+        followLatest.current = true
+        setMessages((prev) => [...prev, d])
+        setText('')
+      }
       else setSendError(d.error ?? 'Message not sent')
     } catch { setSendError('Message not sent') }
     finally { setSending(false) }
@@ -71,36 +123,44 @@ export default function MessageThread({ otherId, otherName }: Props) {
   )
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full min-h-0">
       {/* Header */}
       <div className="px-5 py-3 border-b border-gray-200 bg-white">
         <p className="font-semibold text-gray-900 text-sm">{otherName}</p>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-5 py-4 space-y-3 bg-gray-50">
+      <div ref={scrollRef} className="relative flex-1 min-h-0 overflow-y-auto px-5 py-4 space-y-3 bg-gray-50">
         {messages.length === 0 ? (
           <p className="text-center text-sm text-gray-400 py-8">No messages yet. Say hello!</p>
         ) : (
           messages.map((m) => {
             const isMe = m.sender.id === user?.id
             return (
-              <div key={m.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[75%] rounded-2xl px-4 py-2 text-sm ${
-                  isMe
-                    ? 'bg-forest text-white rounded-br-sm'
-                    : 'bg-white border border-gray-200 text-gray-800 rounded-bl-sm'
-                }`}>
-                  <p>{m.content}</p>
-                  <p className={`text-xs mt-1 ${isMe ? 'text-green-200' : 'text-gray-400'}`}>
-                    {new Date(m.createdAt).toLocaleTimeString('en-PH', { timeStyle: 'short' })}
-                  </p>
+              <div key={m.id}>
+                {m.id === firstUnreadId && (
+                  <div ref={firstUnreadRef} className="flex items-center gap-2 text-xs font-medium text-red-600 pb-3">
+                    <span className="flex-1 h-px bg-red-200" />
+                    New messages
+                    <span className="flex-1 h-px bg-red-200" />
+                  </div>
+                )}
+                <div className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[75%] rounded-2xl px-4 py-2 text-sm ${
+                    isMe
+                      ? 'bg-forest text-white rounded-br-sm'
+                      : 'bg-white border border-gray-200 text-gray-800 rounded-bl-sm'
+                  }`}>
+                    <p>{m.content}</p>
+                    <p className={`text-xs mt-1 ${isMe ? 'text-green-200' : 'text-gray-400'}`}>
+                      {new Date(m.createdAt).toLocaleTimeString('en-PH', { timeStyle: 'short' })}
+                    </p>
+                  </div>
                 </div>
               </div>
             )
           })
         )}
-        <div ref={bottomRef} />
       </div>
 
       {sendError && (
