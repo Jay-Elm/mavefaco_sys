@@ -2,7 +2,11 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import ProductCard from '@/components/ProductCard'
-import { ShieldCheck, ShieldAlert, User, CalendarDays, Package, ArrowLeft, Star, MessageCircle } from 'lucide-react'
+import { ShieldCheck, ShieldAlert, User, CalendarDays, Package, ArrowLeft, Star } from 'lucide-react'
+import RoleRedirect from '@/components/RoleRedirect'
+import MessageFarmerLink from '@/components/MessageFarmerLink'
+
+const STAFF_ROLES = ['admin', 'manager']
 
 export default async function SellerPage({
   params,
@@ -46,6 +50,8 @@ export default async function SellerPage({
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
+      {/* The storefront is for shoppers; staff work from the dashboard. */}
+      <RoleRedirect roles={STAFF_ROLES} />
       <Link
         href="/products"
         className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-forest mb-6 transition-colors"
@@ -90,12 +96,7 @@ export default async function SellerPage({
               </span>
             </div>
           </div>
-          <Link
-            href={`/customer/messages/${farmer.id}`}
-            className="ml-auto shrink-0 inline-flex items-center gap-2 bg-forest hover:bg-forest-mid text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-          >
-            <MessageCircle size={15} /> Message Farmer
-          </Link>
+          <MessageFarmerLink farmerId={farmer.id} />
         </div>
       </div>
 

@@ -3,8 +3,9 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, Trash2, Pencil, Plus, AlertTriangle, CheckCircle, Clock, Download, XCircle } from 'lucide-react'
+import { Loader2, Package, Trash2, Pencil, Plus, AlertTriangle, CheckCircle, Clock, Download, XCircle, Ban } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
+import { reasonLabels, suspensionDeadline } from '@/validators/productSuspension'
 
 interface ProductRow {
   id: number
@@ -13,8 +14,12 @@ interface ProductRow {
   stock: number
   approved: boolean
   createdAt: string
+  suspendedAt: string | null
+  suspensionReasons: string[]
   category: { name: string }
 }
+
+const fmtDate = (d: string | Date) => new Date(d).toLocaleDateString('en-PH')
 
 const LOW_STOCK_THRESHOLD = 5
 
@@ -90,7 +95,7 @@ export default function FarmerProductsPage() {
               ['Product', 'Category', 'Price (PHP)', 'Stock', 'Status', 'Listed Date'],
               products.map((p) => [
                 p.name, p.category.name, p.price.toFixed(2), p.stock,
-                p.approved ? 'Approved' : 'Pending',
+                p.suspendedAt ? 'Suspended' : p.approved ? 'Approved' : 'Pending',
                 new Date(p.createdAt).toLocaleDateString('en-PH'),
               ])
             )}
@@ -110,6 +115,20 @@ export default function FarmerProductsPage() {
       </div>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
+
+      {/* Suspended listings: hidden from customers until edited and resubmitted */}
+      {products.some((p) => p.suspendedAt) && (
+        <div className="mb-5 bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+          <Ban size={18} className="text-red-600 shrink-0 mt-0.5" />
+          <div className="text-sm text-red-800">
+            <p className="font-semibold">Some of your listings were suspended by MaVeFaCo staff</p>
+            <p className="mt-0.5">
+              They are hidden from customers. Edit a listing to fix the issues and resubmit it for review, or delete it.
+              A suspended listing that isn&apos;t resubmitted is deleted automatically on the date shown.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Stock alert banner */}
       {(() => {
@@ -167,6 +186,9 @@ export default function FarmerProductsPage() {
                       <p className="text-xs text-gray-400">
                         {new Date(p.createdAt).toLocaleDateString('en-PH')}
                       </p>
+                      {p.suspendedAt && (
+                        <p className="text-xs text-red-600 mt-0.5">{reasonLabels(p.suspensionReasons).join('; ')}</p>
+                      )}
                     </td>
                     <td className="px-5 py-3">
                       <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">
@@ -180,7 +202,12 @@ export default function FarmerProductsPage() {
                       <StockBadge stock={p.stock} />
                     </td>
                     <td className="px-5 py-3 text-center">
-                      {p.approved ? (
+                      {p.suspendedAt ? (
+                        <span className="inline-flex flex-col items-center text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-lg">
+                          <span className="inline-flex items-center gap-1"><Ban size={11} /> Suspended</span>
+                          <span className="font-normal">deleted {fmtDate(suspensionDeadline(p.suspendedAt))}</span>
+                        </span>
+                      ) : p.approved ? (
                         <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
                           <CheckCircle size={11} /> Approved
                         </span>
@@ -200,7 +227,7 @@ export default function FarmerProductsPage() {
                           className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
                         >
                           <Pencil size={12} />
-                          Edit
+                          {p.suspendedAt ? 'Fix & resubmit' : 'Edit'}
                         </Link>
                         <button
                           onClick={() => handleDelete(p.id, p.name)}

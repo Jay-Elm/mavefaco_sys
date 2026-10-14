@@ -94,6 +94,11 @@ export type Review = $Result.DefaultSelection<Prisma.$ReviewPayload>
  */
 export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
 /**
+ * Model Notice
+ * 
+ */
+export type Notice = $Result.DefaultSelection<Prisma.$NoticePayload>
+/**
  * Model AuditLog
  * 
  */
@@ -379,6 +384,16 @@ export class PrismaClient<
     * ```
     */
   get message(): Prisma.MessageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.notice`: Exposes CRUD operations for the **Notice** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Notices
+    * const notices = await prisma.notice.findMany()
+    * ```
+    */
+  get notice(): Prisma.NoticeDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.auditLog`: Exposes CRUD operations for the **AuditLog** model.
@@ -852,6 +867,7 @@ export namespace Prisma {
     SiteContent: 'SiteContent',
     Review: 'Review',
     Message: 'Message',
+    Notice: 'Notice',
     AuditLog: 'AuditLog'
   };
 
@@ -868,7 +884,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "emailChangeToken" | "totpBackupCode" | "category" | "product" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "auditLog"
+      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "emailChangeToken" | "totpBackupCode" | "category" | "product" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "notice" | "auditLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2056,6 +2072,80 @@ export namespace Prisma {
           }
         }
       }
+      Notice: {
+        payload: Prisma.$NoticePayload<ExtArgs>
+        fields: Prisma.NoticeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.NoticeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.NoticeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>
+          }
+          findFirst: {
+            args: Prisma.NoticeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.NoticeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>
+          }
+          findMany: {
+            args: Prisma.NoticeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>[]
+          }
+          create: {
+            args: Prisma.NoticeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>
+          }
+          createMany: {
+            args: Prisma.NoticeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.NoticeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>[]
+          }
+          delete: {
+            args: Prisma.NoticeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>
+          }
+          update: {
+            args: Prisma.NoticeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>
+          }
+          deleteMany: {
+            args: Prisma.NoticeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.NoticeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.NoticeUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>[]
+          }
+          upsert: {
+            args: Prisma.NoticeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$NoticePayload>
+          }
+          aggregate: {
+            args: Prisma.NoticeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNotice>
+          }
+          groupBy: {
+            args: Prisma.NoticeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NoticeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.NoticeCountArgs<ExtArgs>
+            result: $Utils.Optional<NoticeCountAggregateOutputType> | number
+          }
+        }
+      }
       AuditLog: {
         payload: Prisma.$AuditLogPayload<ExtArgs>
         fields: Prisma.AuditLogFieldRefs
@@ -2269,6 +2359,7 @@ export namespace Prisma {
     siteContent?: SiteContentOmit
     review?: ReviewOmit
     message?: MessageOmit
+    notice?: NoticeOmit
     auditLog?: AuditLogOmit
   }
 
@@ -2361,6 +2452,7 @@ export namespace Prisma {
     emailVerificationTokens: number
     emailChangeTokens: number
     totpBackupCodes: number
+    notices: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2375,6 +2467,7 @@ export namespace Prisma {
     emailVerificationTokens?: boolean | UserCountOutputTypeCountEmailVerificationTokensArgs
     emailChangeTokens?: boolean | UserCountOutputTypeCountEmailChangeTokensArgs
     totpBackupCodes?: boolean | UserCountOutputTypeCountTotpBackupCodesArgs
+    notices?: boolean | UserCountOutputTypeCountNoticesArgs
   }
 
   // Custom InputTypes
@@ -2465,6 +2558,13 @@ export namespace Prisma {
     where?: TotpBackupCodeWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountNoticesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NoticeWhereInput
+  }
+
 
   /**
    * Count Type CategoryCountOutputType
@@ -2505,12 +2605,14 @@ export namespace Prisma {
     orderItems: number
     reviews: number
     cropLogs: number
+    notices: number
   }
 
   export type ProductCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orderItems?: boolean | ProductCountOutputTypeCountOrderItemsArgs
     reviews?: boolean | ProductCountOutputTypeCountReviewsArgs
     cropLogs?: boolean | ProductCountOutputTypeCountCropLogsArgs
+    notices?: boolean | ProductCountOutputTypeCountNoticesArgs
   }
 
   // Custom InputTypes
@@ -2543,6 +2645,13 @@ export namespace Prisma {
    */
   export type ProductCountOutputTypeCountCropLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CropLogWhereInput
+  }
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeCountNoticesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NoticeWhereInput
   }
 
 
@@ -2894,6 +3003,7 @@ export namespace Prisma {
     emailVerificationTokens?: boolean | User$emailVerificationTokensArgs<ExtArgs>
     emailChangeTokens?: boolean | User$emailChangeTokensArgs<ExtArgs>
     totpBackupCodes?: boolean | User$totpBackupCodesArgs<ExtArgs>
+    notices?: boolean | User$noticesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2970,6 +3080,7 @@ export namespace Prisma {
     emailVerificationTokens?: boolean | User$emailVerificationTokensArgs<ExtArgs>
     emailChangeTokens?: boolean | User$emailChangeTokensArgs<ExtArgs>
     totpBackupCodes?: boolean | User$totpBackupCodesArgs<ExtArgs>
+    notices?: boolean | User$noticesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2989,6 +3100,7 @@ export namespace Prisma {
       emailVerificationTokens: Prisma.$EmailVerificationTokenPayload<ExtArgs>[]
       emailChangeTokens: Prisma.$EmailChangeTokenPayload<ExtArgs>[]
       totpBackupCodes: Prisma.$TotpBackupCodePayload<ExtArgs>[]
+      notices: Prisma.$NoticePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3413,6 +3525,7 @@ export namespace Prisma {
     emailVerificationTokens<T extends User$emailVerificationTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$emailVerificationTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailVerificationTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     emailChangeTokens<T extends User$emailChangeTokensArgs<ExtArgs> = {}>(args?: Subset<T, User$emailChangeTokensArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmailChangeTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     totpBackupCodes<T extends User$totpBackupCodesArgs<ExtArgs> = {}>(args?: Subset<T, User$totpBackupCodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notices<T extends User$noticesArgs<ExtArgs> = {}>(args?: Subset<T, User$noticesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4113,6 +4226,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TotpBackupCodeScalarFieldEnum | TotpBackupCodeScalarFieldEnum[]
+  }
+
+  /**
+   * User.notices
+   */
+  export type User$noticesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    where?: NoticeWhereInput
+    orderBy?: NoticeOrderByWithRelationInput | NoticeOrderByWithRelationInput[]
+    cursor?: NoticeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NoticeScalarFieldEnum | NoticeScalarFieldEnum[]
   }
 
   /**
@@ -9689,6 +9826,7 @@ export namespace Prisma {
     id: number | null
     price: Decimal | null
     stock: number | null
+    suspendedById: number | null
     farmerId: number | null
     categoryId: number | null
   }
@@ -9697,6 +9835,7 @@ export namespace Prisma {
     id: number | null
     price: Decimal | null
     stock: number | null
+    suspendedById: number | null
     farmerId: number | null
     categoryId: number | null
   }
@@ -9711,6 +9850,9 @@ export namespace Prisma {
     imageUrl: string | null
     approved: boolean | null
     archivedAt: Date | null
+    suspendedAt: Date | null
+    suspensionNote: string | null
+    suspendedById: number | null
     createdAt: Date | null
     updatedAt: Date | null
     plantingDate: Date | null
@@ -9731,6 +9873,9 @@ export namespace Prisma {
     imageUrl: string | null
     approved: boolean | null
     archivedAt: Date | null
+    suspendedAt: Date | null
+    suspensionNote: string | null
+    suspendedById: number | null
     createdAt: Date | null
     updatedAt: Date | null
     plantingDate: Date | null
@@ -9751,6 +9896,10 @@ export namespace Prisma {
     imageUrl: number
     approved: number
     archivedAt: number
+    suspendedAt: number
+    suspensionReasons: number
+    suspensionNote: number
+    suspendedById: number
     createdAt: number
     updatedAt: number
     plantingDate: number
@@ -9767,6 +9916,7 @@ export namespace Prisma {
     id?: true
     price?: true
     stock?: true
+    suspendedById?: true
     farmerId?: true
     categoryId?: true
   }
@@ -9775,6 +9925,7 @@ export namespace Prisma {
     id?: true
     price?: true
     stock?: true
+    suspendedById?: true
     farmerId?: true
     categoryId?: true
   }
@@ -9789,6 +9940,9 @@ export namespace Prisma {
     imageUrl?: true
     approved?: true
     archivedAt?: true
+    suspendedAt?: true
+    suspensionNote?: true
+    suspendedById?: true
     createdAt?: true
     updatedAt?: true
     plantingDate?: true
@@ -9809,6 +9963,9 @@ export namespace Prisma {
     imageUrl?: true
     approved?: true
     archivedAt?: true
+    suspendedAt?: true
+    suspensionNote?: true
+    suspendedById?: true
     createdAt?: true
     updatedAt?: true
     plantingDate?: true
@@ -9829,6 +9986,10 @@ export namespace Prisma {
     imageUrl?: true
     approved?: true
     archivedAt?: true
+    suspendedAt?: true
+    suspensionReasons?: true
+    suspensionNote?: true
+    suspendedById?: true
     createdAt?: true
     updatedAt?: true
     plantingDate?: true
@@ -9936,6 +10097,10 @@ export namespace Prisma {
     imageUrl: string | null
     approved: boolean
     archivedAt: Date | null
+    suspendedAt: Date | null
+    suspensionReasons: string[]
+    suspensionNote: string | null
+    suspendedById: number | null
     createdAt: Date
     updatedAt: Date
     plantingDate: Date | null
@@ -9975,6 +10140,10 @@ export namespace Prisma {
     imageUrl?: boolean
     approved?: boolean
     archivedAt?: boolean
+    suspendedAt?: boolean
+    suspensionReasons?: boolean
+    suspensionNote?: boolean
+    suspendedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     plantingDate?: boolean
@@ -9988,6 +10157,7 @@ export namespace Prisma {
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
     cropLogs?: boolean | Product$cropLogsArgs<ExtArgs>
+    notices?: boolean | Product$noticesArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
@@ -10001,6 +10171,10 @@ export namespace Prisma {
     imageUrl?: boolean
     approved?: boolean
     archivedAt?: boolean
+    suspendedAt?: boolean
+    suspensionReasons?: boolean
+    suspensionNote?: boolean
+    suspendedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     plantingDate?: boolean
@@ -10023,6 +10197,10 @@ export namespace Prisma {
     imageUrl?: boolean
     approved?: boolean
     archivedAt?: boolean
+    suspendedAt?: boolean
+    suspensionReasons?: boolean
+    suspensionNote?: boolean
+    suspendedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     plantingDate?: boolean
@@ -10045,6 +10223,10 @@ export namespace Prisma {
     imageUrl?: boolean
     approved?: boolean
     archivedAt?: boolean
+    suspendedAt?: boolean
+    suspensionReasons?: boolean
+    suspensionNote?: boolean
+    suspendedById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     plantingDate?: boolean
@@ -10055,13 +10237,14 @@ export namespace Prisma {
     categoryId?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "stock" | "unit" | "imageUrl" | "approved" | "archivedAt" | "createdAt" | "updatedAt" | "plantingDate" | "expectedHarvestDate" | "growthStage" | "readyForHarvest" | "farmerId" | "categoryId", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "stock" | "unit" | "imageUrl" | "approved" | "archivedAt" | "suspendedAt" | "suspensionReasons" | "suspensionNote" | "suspendedById" | "createdAt" | "updatedAt" | "plantingDate" | "expectedHarvestDate" | "growthStage" | "readyForHarvest" | "farmerId" | "categoryId", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     farmer?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
     cropLogs?: boolean | Product$cropLogsArgs<ExtArgs>
+    notices?: boolean | Product$noticesArgs<ExtArgs>
     _count?: boolean | ProductCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10081,6 +10264,7 @@ export namespace Prisma {
       orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
       cropLogs: Prisma.$CropLogPayload<ExtArgs>[]
+      notices: Prisma.$NoticePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -10092,6 +10276,10 @@ export namespace Prisma {
       imageUrl: string | null
       approved: boolean
       archivedAt: Date | null
+      suspendedAt: Date | null
+      suspensionReasons: string[]
+      suspensionNote: string | null
+      suspendedById: number | null
       createdAt: Date
       updatedAt: Date
       plantingDate: Date | null
@@ -10499,6 +10687,7 @@ export namespace Prisma {
     orderItems<T extends Product$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviews<T extends Product$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Product$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cropLogs<T extends Product$cropLogsArgs<ExtArgs> = {}>(args?: Subset<T, Product$cropLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CropLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notices<T extends Product$noticesArgs<ExtArgs> = {}>(args?: Subset<T, Product$noticesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10537,6 +10726,10 @@ export namespace Prisma {
     readonly imageUrl: FieldRef<"Product", 'String'>
     readonly approved: FieldRef<"Product", 'Boolean'>
     readonly archivedAt: FieldRef<"Product", 'DateTime'>
+    readonly suspendedAt: FieldRef<"Product", 'DateTime'>
+    readonly suspensionReasons: FieldRef<"Product", 'String[]'>
+    readonly suspensionNote: FieldRef<"Product", 'String'>
+    readonly suspendedById: FieldRef<"Product", 'Int'>
     readonly createdAt: FieldRef<"Product", 'DateTime'>
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
     readonly plantingDate: FieldRef<"Product", 'DateTime'>
@@ -11015,6 +11208,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: CropLogScalarFieldEnum | CropLogScalarFieldEnum[]
+  }
+
+  /**
+   * Product.notices
+   */
+  export type Product$noticesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    where?: NoticeWhereInput
+    orderBy?: NoticeOrderByWithRelationInput | NoticeOrderByWithRelationInput[]
+    cursor?: NoticeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NoticeScalarFieldEnum | NoticeScalarFieldEnum[]
   }
 
   /**
@@ -20879,6 +21096,1164 @@ export namespace Prisma {
 
 
   /**
+   * Model Notice
+   */
+
+  export type AggregateNotice = {
+    _count: NoticeCountAggregateOutputType | null
+    _avg: NoticeAvgAggregateOutputType | null
+    _sum: NoticeSumAggregateOutputType | null
+    _min: NoticeMinAggregateOutputType | null
+    _max: NoticeMaxAggregateOutputType | null
+  }
+
+  export type NoticeAvgAggregateOutputType = {
+    id: number | null
+    recipientId: number | null
+    productId: number | null
+  }
+
+  export type NoticeSumAggregateOutputType = {
+    id: number | null
+    recipientId: number | null
+    productId: number | null
+  }
+
+  export type NoticeMinAggregateOutputType = {
+    id: number | null
+    title: string | null
+    body: string | null
+    read: boolean | null
+    createdAt: Date | null
+    recipientId: number | null
+    productId: number | null
+  }
+
+  export type NoticeMaxAggregateOutputType = {
+    id: number | null
+    title: string | null
+    body: string | null
+    read: boolean | null
+    createdAt: Date | null
+    recipientId: number | null
+    productId: number | null
+  }
+
+  export type NoticeCountAggregateOutputType = {
+    id: number
+    title: number
+    body: number
+    read: number
+    createdAt: number
+    recipientId: number
+    productId: number
+    _all: number
+  }
+
+
+  export type NoticeAvgAggregateInputType = {
+    id?: true
+    recipientId?: true
+    productId?: true
+  }
+
+  export type NoticeSumAggregateInputType = {
+    id?: true
+    recipientId?: true
+    productId?: true
+  }
+
+  export type NoticeMinAggregateInputType = {
+    id?: true
+    title?: true
+    body?: true
+    read?: true
+    createdAt?: true
+    recipientId?: true
+    productId?: true
+  }
+
+  export type NoticeMaxAggregateInputType = {
+    id?: true
+    title?: true
+    body?: true
+    read?: true
+    createdAt?: true
+    recipientId?: true
+    productId?: true
+  }
+
+  export type NoticeCountAggregateInputType = {
+    id?: true
+    title?: true
+    body?: true
+    read?: true
+    createdAt?: true
+    recipientId?: true
+    productId?: true
+    _all?: true
+  }
+
+  export type NoticeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Notice to aggregate.
+     */
+    where?: NoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notices to fetch.
+     */
+    orderBy?: NoticeOrderByWithRelationInput | NoticeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: NoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Notices
+    **/
+    _count?: true | NoticeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: NoticeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: NoticeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NoticeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NoticeMaxAggregateInputType
+  }
+
+  export type GetNoticeAggregateType<T extends NoticeAggregateArgs> = {
+        [P in keyof T & keyof AggregateNotice]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNotice[P]>
+      : GetScalarType<T[P], AggregateNotice[P]>
+  }
+
+
+
+
+  export type NoticeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: NoticeWhereInput
+    orderBy?: NoticeOrderByWithAggregationInput | NoticeOrderByWithAggregationInput[]
+    by: NoticeScalarFieldEnum[] | NoticeScalarFieldEnum
+    having?: NoticeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NoticeCountAggregateInputType | true
+    _avg?: NoticeAvgAggregateInputType
+    _sum?: NoticeSumAggregateInputType
+    _min?: NoticeMinAggregateInputType
+    _max?: NoticeMaxAggregateInputType
+  }
+
+  export type NoticeGroupByOutputType = {
+    id: number
+    title: string
+    body: string
+    read: boolean
+    createdAt: Date
+    recipientId: number
+    productId: number | null
+    _count: NoticeCountAggregateOutputType | null
+    _avg: NoticeAvgAggregateOutputType | null
+    _sum: NoticeSumAggregateOutputType | null
+    _min: NoticeMinAggregateOutputType | null
+    _max: NoticeMaxAggregateOutputType | null
+  }
+
+  type GetNoticeGroupByPayload<T extends NoticeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NoticeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NoticeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NoticeGroupByOutputType[P]>
+            : GetScalarType<T[P], NoticeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type NoticeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    body?: boolean
+    read?: boolean
+    createdAt?: boolean
+    recipientId?: boolean
+    productId?: boolean
+    recipient?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | Notice$productArgs<ExtArgs>
+  }, ExtArgs["result"]["notice"]>
+
+  export type NoticeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    body?: boolean
+    read?: boolean
+    createdAt?: boolean
+    recipientId?: boolean
+    productId?: boolean
+    recipient?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | Notice$productArgs<ExtArgs>
+  }, ExtArgs["result"]["notice"]>
+
+  export type NoticeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    body?: boolean
+    read?: boolean
+    createdAt?: boolean
+    recipientId?: boolean
+    productId?: boolean
+    recipient?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | Notice$productArgs<ExtArgs>
+  }, ExtArgs["result"]["notice"]>
+
+  export type NoticeSelectScalar = {
+    id?: boolean
+    title?: boolean
+    body?: boolean
+    read?: boolean
+    createdAt?: boolean
+    recipientId?: boolean
+    productId?: boolean
+  }
+
+  export type NoticeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "body" | "read" | "createdAt" | "recipientId" | "productId", ExtArgs["result"]["notice"]>
+  export type NoticeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    recipient?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | Notice$productArgs<ExtArgs>
+  }
+  export type NoticeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    recipient?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | Notice$productArgs<ExtArgs>
+  }
+  export type NoticeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    recipient?: boolean | UserDefaultArgs<ExtArgs>
+    product?: boolean | Notice$productArgs<ExtArgs>
+  }
+
+  export type $NoticePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Notice"
+    objects: {
+      recipient: Prisma.$UserPayload<ExtArgs>
+      product: Prisma.$ProductPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      title: string
+      body: string
+      read: boolean
+      createdAt: Date
+      recipientId: number
+      productId: number | null
+    }, ExtArgs["result"]["notice"]>
+    composites: {}
+  }
+
+  type NoticeGetPayload<S extends boolean | null | undefined | NoticeDefaultArgs> = $Result.GetResult<Prisma.$NoticePayload, S>
+
+  type NoticeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<NoticeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NoticeCountAggregateInputType | true
+    }
+
+  export interface NoticeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Notice'], meta: { name: 'Notice' } }
+    /**
+     * Find zero or one Notice that matches the filter.
+     * @param {NoticeFindUniqueArgs} args - Arguments to find a Notice
+     * @example
+     * // Get one Notice
+     * const notice = await prisma.notice.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends NoticeFindUniqueArgs>(args: SelectSubset<T, NoticeFindUniqueArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Notice that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {NoticeFindUniqueOrThrowArgs} args - Arguments to find a Notice
+     * @example
+     * // Get one Notice
+     * const notice = await prisma.notice.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends NoticeFindUniqueOrThrowArgs>(args: SelectSubset<T, NoticeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Notice that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeFindFirstArgs} args - Arguments to find a Notice
+     * @example
+     * // Get one Notice
+     * const notice = await prisma.notice.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends NoticeFindFirstArgs>(args?: SelectSubset<T, NoticeFindFirstArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Notice that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeFindFirstOrThrowArgs} args - Arguments to find a Notice
+     * @example
+     * // Get one Notice
+     * const notice = await prisma.notice.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends NoticeFindFirstOrThrowArgs>(args?: SelectSubset<T, NoticeFindFirstOrThrowArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Notices that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Notices
+     * const notices = await prisma.notice.findMany()
+     * 
+     * // Get first 10 Notices
+     * const notices = await prisma.notice.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const noticeWithIdOnly = await prisma.notice.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends NoticeFindManyArgs>(args?: SelectSubset<T, NoticeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Notice.
+     * @param {NoticeCreateArgs} args - Arguments to create a Notice.
+     * @example
+     * // Create one Notice
+     * const Notice = await prisma.notice.create({
+     *   data: {
+     *     // ... data to create a Notice
+     *   }
+     * })
+     * 
+     */
+    create<T extends NoticeCreateArgs>(args: SelectSubset<T, NoticeCreateArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Notices.
+     * @param {NoticeCreateManyArgs} args - Arguments to create many Notices.
+     * @example
+     * // Create many Notices
+     * const notice = await prisma.notice.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends NoticeCreateManyArgs>(args?: SelectSubset<T, NoticeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Notices and returns the data saved in the database.
+     * @param {NoticeCreateManyAndReturnArgs} args - Arguments to create many Notices.
+     * @example
+     * // Create many Notices
+     * const notice = await prisma.notice.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Notices and only return the `id`
+     * const noticeWithIdOnly = await prisma.notice.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends NoticeCreateManyAndReturnArgs>(args?: SelectSubset<T, NoticeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Notice.
+     * @param {NoticeDeleteArgs} args - Arguments to delete one Notice.
+     * @example
+     * // Delete one Notice
+     * const Notice = await prisma.notice.delete({
+     *   where: {
+     *     // ... filter to delete one Notice
+     *   }
+     * })
+     * 
+     */
+    delete<T extends NoticeDeleteArgs>(args: SelectSubset<T, NoticeDeleteArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Notice.
+     * @param {NoticeUpdateArgs} args - Arguments to update one Notice.
+     * @example
+     * // Update one Notice
+     * const notice = await prisma.notice.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends NoticeUpdateArgs>(args: SelectSubset<T, NoticeUpdateArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Notices.
+     * @param {NoticeDeleteManyArgs} args - Arguments to filter Notices to delete.
+     * @example
+     * // Delete a few Notices
+     * const { count } = await prisma.notice.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends NoticeDeleteManyArgs>(args?: SelectSubset<T, NoticeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Notices
+     * const notice = await prisma.notice.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends NoticeUpdateManyArgs>(args: SelectSubset<T, NoticeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notices and returns the data updated in the database.
+     * @param {NoticeUpdateManyAndReturnArgs} args - Arguments to update many Notices.
+     * @example
+     * // Update many Notices
+     * const notice = await prisma.notice.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Notices and only return the `id`
+     * const noticeWithIdOnly = await prisma.notice.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends NoticeUpdateManyAndReturnArgs>(args: SelectSubset<T, NoticeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Notice.
+     * @param {NoticeUpsertArgs} args - Arguments to update or create a Notice.
+     * @example
+     * // Update or create a Notice
+     * const notice = await prisma.notice.upsert({
+     *   create: {
+     *     // ... data to create a Notice
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Notice we want to update
+     *   }
+     * })
+     */
+    upsert<T extends NoticeUpsertArgs>(args: SelectSubset<T, NoticeUpsertArgs<ExtArgs>>): Prisma__NoticeClient<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Notices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeCountArgs} args - Arguments to filter Notices to count.
+     * @example
+     * // Count the number of Notices
+     * const count = await prisma.notice.count({
+     *   where: {
+     *     // ... the filter for the Notices we want to count
+     *   }
+     * })
+    **/
+    count<T extends NoticeCountArgs>(
+      args?: Subset<T, NoticeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NoticeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Notice.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NoticeAggregateArgs>(args: Subset<T, NoticeAggregateArgs>): Prisma.PrismaPromise<GetNoticeAggregateType<T>>
+
+    /**
+     * Group by Notice.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends NoticeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: NoticeGroupByArgs['orderBy'] }
+        : { orderBy?: NoticeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, NoticeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNoticeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Notice model
+   */
+  readonly fields: NoticeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Notice.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__NoticeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    recipient<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    product<T extends Notice$productArgs<ExtArgs> = {}>(args?: Subset<T, Notice$productArgs<ExtArgs>>): Prisma__ProductClient<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Notice model
+   */
+  interface NoticeFieldRefs {
+    readonly id: FieldRef<"Notice", 'Int'>
+    readonly title: FieldRef<"Notice", 'String'>
+    readonly body: FieldRef<"Notice", 'String'>
+    readonly read: FieldRef<"Notice", 'Boolean'>
+    readonly createdAt: FieldRef<"Notice", 'DateTime'>
+    readonly recipientId: FieldRef<"Notice", 'Int'>
+    readonly productId: FieldRef<"Notice", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Notice findUnique
+   */
+  export type NoticeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * Filter, which Notice to fetch.
+     */
+    where: NoticeWhereUniqueInput
+  }
+
+  /**
+   * Notice findUniqueOrThrow
+   */
+  export type NoticeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * Filter, which Notice to fetch.
+     */
+    where: NoticeWhereUniqueInput
+  }
+
+  /**
+   * Notice findFirst
+   */
+  export type NoticeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * Filter, which Notice to fetch.
+     */
+    where?: NoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notices to fetch.
+     */
+    orderBy?: NoticeOrderByWithRelationInput | NoticeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notices.
+     */
+    cursor?: NoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notices.
+     */
+    distinct?: NoticeScalarFieldEnum | NoticeScalarFieldEnum[]
+  }
+
+  /**
+   * Notice findFirstOrThrow
+   */
+  export type NoticeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * Filter, which Notice to fetch.
+     */
+    where?: NoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notices to fetch.
+     */
+    orderBy?: NoticeOrderByWithRelationInput | NoticeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notices.
+     */
+    cursor?: NoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notices.
+     */
+    distinct?: NoticeScalarFieldEnum | NoticeScalarFieldEnum[]
+  }
+
+  /**
+   * Notice findMany
+   */
+  export type NoticeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * Filter, which Notices to fetch.
+     */
+    where?: NoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notices to fetch.
+     */
+    orderBy?: NoticeOrderByWithRelationInput | NoticeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Notices.
+     */
+    cursor?: NoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notices.
+     */
+    distinct?: NoticeScalarFieldEnum | NoticeScalarFieldEnum[]
+  }
+
+  /**
+   * Notice create
+   */
+  export type NoticeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Notice.
+     */
+    data: XOR<NoticeCreateInput, NoticeUncheckedCreateInput>
+  }
+
+  /**
+   * Notice createMany
+   */
+  export type NoticeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Notices.
+     */
+    data: NoticeCreateManyInput | NoticeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Notice createManyAndReturn
+   */
+  export type NoticeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * The data used to create many Notices.
+     */
+    data: NoticeCreateManyInput | NoticeCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Notice update
+   */
+  export type NoticeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Notice.
+     */
+    data: XOR<NoticeUpdateInput, NoticeUncheckedUpdateInput>
+    /**
+     * Choose, which Notice to update.
+     */
+    where: NoticeWhereUniqueInput
+  }
+
+  /**
+   * Notice updateMany
+   */
+  export type NoticeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Notices.
+     */
+    data: XOR<NoticeUpdateManyMutationInput, NoticeUncheckedUpdateManyInput>
+    /**
+     * Filter which Notices to update
+     */
+    where?: NoticeWhereInput
+    /**
+     * Limit how many Notices to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Notice updateManyAndReturn
+   */
+  export type NoticeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * The data used to update Notices.
+     */
+    data: XOR<NoticeUpdateManyMutationInput, NoticeUncheckedUpdateManyInput>
+    /**
+     * Filter which Notices to update
+     */
+    where?: NoticeWhereInput
+    /**
+     * Limit how many Notices to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Notice upsert
+   */
+  export type NoticeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Notice to update in case it exists.
+     */
+    where: NoticeWhereUniqueInput
+    /**
+     * In case the Notice found by the `where` argument doesn't exist, create a new Notice with this data.
+     */
+    create: XOR<NoticeCreateInput, NoticeUncheckedCreateInput>
+    /**
+     * In case the Notice was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<NoticeUpdateInput, NoticeUncheckedUpdateInput>
+  }
+
+  /**
+   * Notice delete
+   */
+  export type NoticeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+    /**
+     * Filter which Notice to delete.
+     */
+    where: NoticeWhereUniqueInput
+  }
+
+  /**
+   * Notice deleteMany
+   */
+  export type NoticeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Notices to delete
+     */
+    where?: NoticeWhereInput
+    /**
+     * Limit how many Notices to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Notice.product
+   */
+  export type Notice$productArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Product
+     */
+    omit?: ProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    where?: ProductWhereInput
+  }
+
+  /**
+   * Notice without action
+   */
+  export type NoticeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Notice
+     */
+    select?: NoticeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Notice
+     */
+    omit?: NoticeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: NoticeInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model AuditLog
    */
 
@@ -22100,6 +23475,10 @@ export namespace Prisma {
     imageUrl: 'imageUrl',
     approved: 'approved',
     archivedAt: 'archivedAt',
+    suspendedAt: 'suspendedAt',
+    suspensionReasons: 'suspensionReasons',
+    suspensionNote: 'suspensionNote',
+    suspendedById: 'suspendedById',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     plantingDate: 'plantingDate',
@@ -22216,6 +23595,19 @@ export namespace Prisma {
   };
 
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+  export const NoticeScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    body: 'body',
+    read: 'read',
+    createdAt: 'createdAt',
+    recipientId: 'recipientId',
+    productId: 'productId'
+  };
+
+  export type NoticeScalarFieldEnum = (typeof NoticeScalarFieldEnum)[keyof typeof NoticeScalarFieldEnum]
 
 
   export const AuditLogScalarFieldEnum: {
@@ -22371,6 +23763,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenListRelationFilter
     emailChangeTokens?: EmailChangeTokenListRelationFilter
     totpBackupCodes?: TotpBackupCodeListRelationFilter
+    notices?: NoticeListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -22402,6 +23795,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenOrderByRelationAggregateInput
     emailChangeTokens?: EmailChangeTokenOrderByRelationAggregateInput
     totpBackupCodes?: TotpBackupCodeOrderByRelationAggregateInput
+    notices?: NoticeOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -22436,6 +23830,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenListRelationFilter
     emailChangeTokens?: EmailChangeTokenListRelationFilter
     totpBackupCodes?: TotpBackupCodeListRelationFilter
+    notices?: NoticeListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -22794,6 +24189,10 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"Product"> | string | null
     approved?: BoolFilter<"Product"> | boolean
     archivedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
+    suspendedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
+    suspensionReasons?: StringNullableListFilter<"Product">
+    suspensionNote?: StringNullableFilter<"Product"> | string | null
+    suspendedById?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     plantingDate?: DateTimeNullableFilter<"Product"> | Date | string | null
@@ -22807,6 +24206,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     reviews?: ReviewListRelationFilter
     cropLogs?: CropLogListRelationFilter
+    notices?: NoticeListRelationFilter
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -22819,6 +24219,10 @@ export namespace Prisma {
     imageUrl?: SortOrderInput | SortOrder
     approved?: SortOrder
     archivedAt?: SortOrderInput | SortOrder
+    suspendedAt?: SortOrderInput | SortOrder
+    suspensionReasons?: SortOrder
+    suspensionNote?: SortOrderInput | SortOrder
+    suspendedById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     plantingDate?: SortOrderInput | SortOrder
@@ -22832,6 +24236,7 @@ export namespace Prisma {
     orderItems?: OrderItemOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
     cropLogs?: CropLogOrderByRelationAggregateInput
+    notices?: NoticeOrderByRelationAggregateInput
   }
 
   export type ProductWhereUniqueInput = Prisma.AtLeast<{
@@ -22847,6 +24252,10 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"Product"> | string | null
     approved?: BoolFilter<"Product"> | boolean
     archivedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
+    suspendedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
+    suspensionReasons?: StringNullableListFilter<"Product">
+    suspensionNote?: StringNullableFilter<"Product"> | string | null
+    suspendedById?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     plantingDate?: DateTimeNullableFilter<"Product"> | Date | string | null
@@ -22860,6 +24269,7 @@ export namespace Prisma {
     orderItems?: OrderItemListRelationFilter
     reviews?: ReviewListRelationFilter
     cropLogs?: CropLogListRelationFilter
+    notices?: NoticeListRelationFilter
   }, "id">
 
   export type ProductOrderByWithAggregationInput = {
@@ -22872,6 +24282,10 @@ export namespace Prisma {
     imageUrl?: SortOrderInput | SortOrder
     approved?: SortOrder
     archivedAt?: SortOrderInput | SortOrder
+    suspendedAt?: SortOrderInput | SortOrder
+    suspensionReasons?: SortOrder
+    suspensionNote?: SortOrderInput | SortOrder
+    suspendedById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     plantingDate?: SortOrderInput | SortOrder
@@ -22900,6 +24314,10 @@ export namespace Prisma {
     imageUrl?: StringNullableWithAggregatesFilter<"Product"> | string | null
     approved?: BoolWithAggregatesFilter<"Product"> | boolean
     archivedAt?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
+    suspendedAt?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
+    suspensionReasons?: StringNullableListFilter<"Product">
+    suspensionNote?: StringNullableWithAggregatesFilter<"Product"> | string | null
+    suspendedById?: IntNullableWithAggregatesFilter<"Product"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     plantingDate?: DateTimeNullableWithAggregatesFilter<"Product"> | Date | string | null
@@ -23455,6 +24873,76 @@ export namespace Prisma {
     receiverId?: IntWithAggregatesFilter<"Message"> | number
   }
 
+  export type NoticeWhereInput = {
+    AND?: NoticeWhereInput | NoticeWhereInput[]
+    OR?: NoticeWhereInput[]
+    NOT?: NoticeWhereInput | NoticeWhereInput[]
+    id?: IntFilter<"Notice"> | number
+    title?: StringFilter<"Notice"> | string
+    body?: StringFilter<"Notice"> | string
+    read?: BoolFilter<"Notice"> | boolean
+    createdAt?: DateTimeFilter<"Notice"> | Date | string
+    recipientId?: IntFilter<"Notice"> | number
+    productId?: IntNullableFilter<"Notice"> | number | null
+    recipient?: XOR<UserScalarRelationFilter, UserWhereInput>
+    product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+  }
+
+  export type NoticeOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    read?: SortOrder
+    createdAt?: SortOrder
+    recipientId?: SortOrder
+    productId?: SortOrderInput | SortOrder
+    recipient?: UserOrderByWithRelationInput
+    product?: ProductOrderByWithRelationInput
+  }
+
+  export type NoticeWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: NoticeWhereInput | NoticeWhereInput[]
+    OR?: NoticeWhereInput[]
+    NOT?: NoticeWhereInput | NoticeWhereInput[]
+    title?: StringFilter<"Notice"> | string
+    body?: StringFilter<"Notice"> | string
+    read?: BoolFilter<"Notice"> | boolean
+    createdAt?: DateTimeFilter<"Notice"> | Date | string
+    recipientId?: IntFilter<"Notice"> | number
+    productId?: IntNullableFilter<"Notice"> | number | null
+    recipient?: XOR<UserScalarRelationFilter, UserWhereInput>
+    product?: XOR<ProductNullableScalarRelationFilter, ProductWhereInput> | null
+  }, "id">
+
+  export type NoticeOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    read?: SortOrder
+    createdAt?: SortOrder
+    recipientId?: SortOrder
+    productId?: SortOrderInput | SortOrder
+    _count?: NoticeCountOrderByAggregateInput
+    _avg?: NoticeAvgOrderByAggregateInput
+    _max?: NoticeMaxOrderByAggregateInput
+    _min?: NoticeMinOrderByAggregateInput
+    _sum?: NoticeSumOrderByAggregateInput
+  }
+
+  export type NoticeScalarWhereWithAggregatesInput = {
+    AND?: NoticeScalarWhereWithAggregatesInput | NoticeScalarWhereWithAggregatesInput[]
+    OR?: NoticeScalarWhereWithAggregatesInput[]
+    NOT?: NoticeScalarWhereWithAggregatesInput | NoticeScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Notice"> | number
+    title?: StringWithAggregatesFilter<"Notice"> | string
+    body?: StringWithAggregatesFilter<"Notice"> | string
+    read?: BoolWithAggregatesFilter<"Notice"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"Notice"> | Date | string
+    recipientId?: IntWithAggregatesFilter<"Notice"> | number
+    productId?: IntNullableWithAggregatesFilter<"Notice"> | number | null
+  }
+
   export type AuditLogWhereInput = {
     AND?: AuditLogWhereInput | AuditLogWhereInput[]
     OR?: AuditLogWhereInput[]
@@ -23545,6 +25033,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -23576,6 +25065,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUpdateInput = {
@@ -23606,6 +25096,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -23637,6 +25128,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -23986,6 +25478,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -23997,6 +25493,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     cropLogs?: CropLogCreateNestedManyWithoutProductInput
+    notices?: NoticeCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateInput = {
@@ -24009,6 +25506,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -24020,6 +25521,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     cropLogs?: CropLogUncheckedCreateNestedManyWithoutProductInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductUpdateInput = {
@@ -24031,6 +25533,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24042,6 +25548,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     cropLogs?: CropLogUpdateManyWithoutProductNestedInput
+    notices?: NoticeUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -24054,6 +25561,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24065,6 +25576,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     cropLogs?: CropLogUncheckedUpdateManyWithoutProductNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductCreateManyInput = {
@@ -24077,6 +25589,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -24096,6 +25612,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24114,6 +25634,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -24641,6 +26165,71 @@ export namespace Prisma {
     receiverId?: IntFieldUpdateOperationsInput | number
   }
 
+  export type NoticeCreateInput = {
+    title: string
+    body: string
+    read?: boolean
+    createdAt?: Date | string
+    recipient: UserCreateNestedOneWithoutNoticesInput
+    product?: ProductCreateNestedOneWithoutNoticesInput
+  }
+
+  export type NoticeUncheckedCreateInput = {
+    id?: number
+    title: string
+    body: string
+    read?: boolean
+    createdAt?: Date | string
+    recipientId: number
+    productId?: number | null
+  }
+
+  export type NoticeUpdateInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    recipient?: UserUpdateOneRequiredWithoutNoticesNestedInput
+    product?: ProductUpdateOneWithoutNoticesNestedInput
+  }
+
+  export type NoticeUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    recipientId?: IntFieldUpdateOperationsInput | number
+    productId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type NoticeCreateManyInput = {
+    id?: number
+    title: string
+    body: string
+    read?: boolean
+    createdAt?: Date | string
+    recipientId: number
+    productId?: number | null
+  }
+
+  export type NoticeUpdateManyMutationInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NoticeUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    recipientId?: IntFieldUpdateOperationsInput | number
+    productId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type AuditLogCreateInput = {
     action: string
     entityType: string
@@ -24839,6 +26428,12 @@ export namespace Prisma {
     none?: TotpBackupCodeWhereInput
   }
 
+  export type NoticeListRelationFilter = {
+    every?: NoticeWhereInput
+    some?: NoticeWhereInput
+    none?: NoticeWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -24881,6 +26476,10 @@ export namespace Prisma {
   }
 
   export type TotpBackupCodeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type NoticeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -25261,6 +26860,14 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
   export type CategoryScalarRelationFilter = {
     is?: CategoryWhereInput
     isNot?: CategoryWhereInput
@@ -25296,6 +26903,10 @@ export namespace Prisma {
     imageUrl?: SortOrder
     approved?: SortOrder
     archivedAt?: SortOrder
+    suspendedAt?: SortOrder
+    suspensionReasons?: SortOrder
+    suspensionNote?: SortOrder
+    suspendedById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     plantingDate?: SortOrder
@@ -25310,6 +26921,7 @@ export namespace Prisma {
     id?: SortOrder
     price?: SortOrder
     stock?: SortOrder
+    suspendedById?: SortOrder
     farmerId?: SortOrder
     categoryId?: SortOrder
   }
@@ -25324,6 +26936,9 @@ export namespace Prisma {
     imageUrl?: SortOrder
     approved?: SortOrder
     archivedAt?: SortOrder
+    suspendedAt?: SortOrder
+    suspensionNote?: SortOrder
+    suspendedById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     plantingDate?: SortOrder
@@ -25344,6 +26959,9 @@ export namespace Prisma {
     imageUrl?: SortOrder
     approved?: SortOrder
     archivedAt?: SortOrder
+    suspendedAt?: SortOrder
+    suspensionNote?: SortOrder
+    suspendedById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     plantingDate?: SortOrder
@@ -25358,6 +26976,7 @@ export namespace Prisma {
     id?: SortOrder
     price?: SortOrder
     stock?: SortOrder
+    suspendedById?: SortOrder
     farmerId?: SortOrder
     categoryId?: SortOrder
   }
@@ -25737,6 +27356,53 @@ export namespace Prisma {
     receiverId?: SortOrder
   }
 
+  export type ProductNullableScalarRelationFilter = {
+    is?: ProductWhereInput | null
+    isNot?: ProductWhereInput | null
+  }
+
+  export type NoticeCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    read?: SortOrder
+    createdAt?: SortOrder
+    recipientId?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type NoticeAvgOrderByAggregateInput = {
+    id?: SortOrder
+    recipientId?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type NoticeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    read?: SortOrder
+    createdAt?: SortOrder
+    recipientId?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type NoticeMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    body?: SortOrder
+    read?: SortOrder
+    createdAt?: SortOrder
+    recipientId?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type NoticeSumOrderByAggregateInput = {
+    id?: SortOrder
+    recipientId?: SortOrder
+    productId?: SortOrder
+  }
+
   export type AuditLogCountOrderByAggregateInput = {
     id?: SortOrder
     action?: SortOrder
@@ -25853,6 +27519,13 @@ export namespace Prisma {
     connect?: TotpBackupCodeWhereUniqueInput | TotpBackupCodeWhereUniqueInput[]
   }
 
+  export type NoticeCreateNestedManyWithoutRecipientInput = {
+    create?: XOR<NoticeCreateWithoutRecipientInput, NoticeUncheckedCreateWithoutRecipientInput> | NoticeCreateWithoutRecipientInput[] | NoticeUncheckedCreateWithoutRecipientInput[]
+    connectOrCreate?: NoticeCreateOrConnectWithoutRecipientInput | NoticeCreateOrConnectWithoutRecipientInput[]
+    createMany?: NoticeCreateManyRecipientInputEnvelope
+    connect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+  }
+
   export type ProductUncheckedCreateNestedManyWithoutFarmerInput = {
     create?: XOR<ProductCreateWithoutFarmerInput, ProductUncheckedCreateWithoutFarmerInput> | ProductCreateWithoutFarmerInput[] | ProductUncheckedCreateWithoutFarmerInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutFarmerInput | ProductCreateOrConnectWithoutFarmerInput[]
@@ -25928,6 +27601,13 @@ export namespace Prisma {
     connectOrCreate?: TotpBackupCodeCreateOrConnectWithoutUserInput | TotpBackupCodeCreateOrConnectWithoutUserInput[]
     createMany?: TotpBackupCodeCreateManyUserInputEnvelope
     connect?: TotpBackupCodeWhereUniqueInput | TotpBackupCodeWhereUniqueInput[]
+  }
+
+  export type NoticeUncheckedCreateNestedManyWithoutRecipientInput = {
+    create?: XOR<NoticeCreateWithoutRecipientInput, NoticeUncheckedCreateWithoutRecipientInput> | NoticeCreateWithoutRecipientInput[] | NoticeUncheckedCreateWithoutRecipientInput[]
+    connectOrCreate?: NoticeCreateOrConnectWithoutRecipientInput | NoticeCreateOrConnectWithoutRecipientInput[]
+    createMany?: NoticeCreateManyRecipientInputEnvelope
+    connect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -26120,6 +27800,20 @@ export namespace Prisma {
     deleteMany?: TotpBackupCodeScalarWhereInput | TotpBackupCodeScalarWhereInput[]
   }
 
+  export type NoticeUpdateManyWithoutRecipientNestedInput = {
+    create?: XOR<NoticeCreateWithoutRecipientInput, NoticeUncheckedCreateWithoutRecipientInput> | NoticeCreateWithoutRecipientInput[] | NoticeUncheckedCreateWithoutRecipientInput[]
+    connectOrCreate?: NoticeCreateOrConnectWithoutRecipientInput | NoticeCreateOrConnectWithoutRecipientInput[]
+    upsert?: NoticeUpsertWithWhereUniqueWithoutRecipientInput | NoticeUpsertWithWhereUniqueWithoutRecipientInput[]
+    createMany?: NoticeCreateManyRecipientInputEnvelope
+    set?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    disconnect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    delete?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    connect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    update?: NoticeUpdateWithWhereUniqueWithoutRecipientInput | NoticeUpdateWithWhereUniqueWithoutRecipientInput[]
+    updateMany?: NoticeUpdateManyWithWhereWithoutRecipientInput | NoticeUpdateManyWithWhereWithoutRecipientInput[]
+    deleteMany?: NoticeScalarWhereInput | NoticeScalarWhereInput[]
+  }
+
   export type ProductUncheckedUpdateManyWithoutFarmerNestedInput = {
     create?: XOR<ProductCreateWithoutFarmerInput, ProductUncheckedCreateWithoutFarmerInput> | ProductCreateWithoutFarmerInput[] | ProductUncheckedCreateWithoutFarmerInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutFarmerInput | ProductCreateOrConnectWithoutFarmerInput[]
@@ -26274,6 +27968,20 @@ export namespace Prisma {
     deleteMany?: TotpBackupCodeScalarWhereInput | TotpBackupCodeScalarWhereInput[]
   }
 
+  export type NoticeUncheckedUpdateManyWithoutRecipientNestedInput = {
+    create?: XOR<NoticeCreateWithoutRecipientInput, NoticeUncheckedCreateWithoutRecipientInput> | NoticeCreateWithoutRecipientInput[] | NoticeUncheckedCreateWithoutRecipientInput[]
+    connectOrCreate?: NoticeCreateOrConnectWithoutRecipientInput | NoticeCreateOrConnectWithoutRecipientInput[]
+    upsert?: NoticeUpsertWithWhereUniqueWithoutRecipientInput | NoticeUpsertWithWhereUniqueWithoutRecipientInput[]
+    createMany?: NoticeCreateManyRecipientInputEnvelope
+    set?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    disconnect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    delete?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    connect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    update?: NoticeUpdateWithWhereUniqueWithoutRecipientInput | NoticeUpdateWithWhereUniqueWithoutRecipientInput[]
+    updateMany?: NoticeUpdateManyWithWhereWithoutRecipientInput | NoticeUpdateManyWithWhereWithoutRecipientInput[]
+    deleteMany?: NoticeScalarWhereInput | NoticeScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutEmailVerificationTokensInput = {
     create?: XOR<UserCreateWithoutEmailVerificationTokensInput, UserUncheckedCreateWithoutEmailVerificationTokensInput>
     connectOrCreate?: UserCreateOrConnectWithoutEmailVerificationTokensInput
@@ -26372,6 +28080,10 @@ export namespace Prisma {
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
   }
 
+  export type ProductCreatesuspensionReasonsInput = {
+    set: string[]
+  }
+
   export type UserCreateNestedOneWithoutProductsInput = {
     create?: XOR<UserCreateWithoutProductsInput, UserUncheckedCreateWithoutProductsInput>
     connectOrCreate?: UserCreateOrConnectWithoutProductsInput
@@ -26405,6 +28117,13 @@ export namespace Prisma {
     connect?: CropLogWhereUniqueInput | CropLogWhereUniqueInput[]
   }
 
+  export type NoticeCreateNestedManyWithoutProductInput = {
+    create?: XOR<NoticeCreateWithoutProductInput, NoticeUncheckedCreateWithoutProductInput> | NoticeCreateWithoutProductInput[] | NoticeUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: NoticeCreateOrConnectWithoutProductInput | NoticeCreateOrConnectWithoutProductInput[]
+    createMany?: NoticeCreateManyProductInputEnvelope
+    connect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutProductInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -26426,6 +28145,13 @@ export namespace Prisma {
     connect?: CropLogWhereUniqueInput | CropLogWhereUniqueInput[]
   }
 
+  export type NoticeUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<NoticeCreateWithoutProductInput, NoticeUncheckedCreateWithoutProductInput> | NoticeCreateWithoutProductInput[] | NoticeUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: NoticeCreateOrConnectWithoutProductInput | NoticeCreateOrConnectWithoutProductInput[]
+    createMany?: NoticeCreateManyProductInputEnvelope
+    connect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+  }
+
   export type DecimalFieldUpdateOperationsInput = {
     set?: Decimal | DecimalJsLike | number | string
     increment?: Decimal | DecimalJsLike | number | string
@@ -26440,6 +28166,11 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type ProductUpdatesuspensionReasonsInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type UserUpdateOneRequiredWithoutProductsNestedInput = {
@@ -26500,6 +28231,20 @@ export namespace Prisma {
     deleteMany?: CropLogScalarWhereInput | CropLogScalarWhereInput[]
   }
 
+  export type NoticeUpdateManyWithoutProductNestedInput = {
+    create?: XOR<NoticeCreateWithoutProductInput, NoticeUncheckedCreateWithoutProductInput> | NoticeCreateWithoutProductInput[] | NoticeUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: NoticeCreateOrConnectWithoutProductInput | NoticeCreateOrConnectWithoutProductInput[]
+    upsert?: NoticeUpsertWithWhereUniqueWithoutProductInput | NoticeUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: NoticeCreateManyProductInputEnvelope
+    set?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    disconnect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    delete?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    connect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    update?: NoticeUpdateWithWhereUniqueWithoutProductInput | NoticeUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: NoticeUpdateManyWithWhereWithoutProductInput | NoticeUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: NoticeScalarWhereInput | NoticeScalarWhereInput[]
+  }
+
   export type OrderItemUncheckedUpdateManyWithoutProductNestedInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -26540,6 +28285,20 @@ export namespace Prisma {
     update?: CropLogUpdateWithWhereUniqueWithoutProductInput | CropLogUpdateWithWhereUniqueWithoutProductInput[]
     updateMany?: CropLogUpdateManyWithWhereWithoutProductInput | CropLogUpdateManyWithWhereWithoutProductInput[]
     deleteMany?: CropLogScalarWhereInput | CropLogScalarWhereInput[]
+  }
+
+  export type NoticeUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<NoticeCreateWithoutProductInput, NoticeUncheckedCreateWithoutProductInput> | NoticeCreateWithoutProductInput[] | NoticeUncheckedCreateWithoutProductInput[]
+    connectOrCreate?: NoticeCreateOrConnectWithoutProductInput | NoticeCreateOrConnectWithoutProductInput[]
+    upsert?: NoticeUpsertWithWhereUniqueWithoutProductInput | NoticeUpsertWithWhereUniqueWithoutProductInput[]
+    createMany?: NoticeCreateManyProductInputEnvelope
+    set?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    disconnect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    delete?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    connect?: NoticeWhereUniqueInput | NoticeWhereUniqueInput[]
+    update?: NoticeUpdateWithWhereUniqueWithoutProductInput | NoticeUpdateWithWhereUniqueWithoutProductInput[]
+    updateMany?: NoticeUpdateManyWithWhereWithoutProductInput | NoticeUpdateManyWithWhereWithoutProductInput[]
+    deleteMany?: NoticeScalarWhereInput | NoticeScalarWhereInput[]
   }
 
   export type ProductCreateNestedOneWithoutCropLogsInput = {
@@ -26708,6 +28467,36 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutReceivedMessagesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReceivedMessagesInput, UserUpdateWithoutReceivedMessagesInput>, UserUncheckedUpdateWithoutReceivedMessagesInput>
+  }
+
+  export type UserCreateNestedOneWithoutNoticesInput = {
+    create?: XOR<UserCreateWithoutNoticesInput, UserUncheckedCreateWithoutNoticesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNoticesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type ProductCreateNestedOneWithoutNoticesInput = {
+    create?: XOR<ProductCreateWithoutNoticesInput, ProductUncheckedCreateWithoutNoticesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutNoticesInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type UserUpdateOneRequiredWithoutNoticesNestedInput = {
+    create?: XOR<UserCreateWithoutNoticesInput, UserUncheckedCreateWithoutNoticesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutNoticesInput
+    upsert?: UserUpsertWithoutNoticesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutNoticesInput, UserUpdateWithoutNoticesInput>, UserUncheckedUpdateWithoutNoticesInput>
+  }
+
+  export type ProductUpdateOneWithoutNoticesNestedInput = {
+    create?: XOR<ProductCreateWithoutNoticesInput, ProductUncheckedCreateWithoutNoticesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutNoticesInput
+    upsert?: ProductUpsertWithoutNoticesInput
+    disconnect?: ProductWhereInput | boolean
+    delete?: ProductWhereInput | boolean
+    connect?: ProductWhereUniqueInput
+    update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutNoticesInput, ProductUpdateWithoutNoticesInput>, ProductUncheckedUpdateWithoutNoticesInput>
   }
 
   export type UserCreateNestedOneWithoutAuditLogsInput = {
@@ -26977,6 +28766,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -26987,6 +28780,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     cropLogs?: CropLogCreateNestedManyWithoutProductInput
+    notices?: NoticeCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutFarmerInput = {
@@ -26999,6 +28793,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -27009,6 +28807,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     cropLogs?: CropLogUncheckedCreateNestedManyWithoutProductInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutFarmerInput = {
@@ -27275,6 +29074,33 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type NoticeCreateWithoutRecipientInput = {
+    title: string
+    body: string
+    read?: boolean
+    createdAt?: Date | string
+    product?: ProductCreateNestedOneWithoutNoticesInput
+  }
+
+  export type NoticeUncheckedCreateWithoutRecipientInput = {
+    id?: number
+    title: string
+    body: string
+    read?: boolean
+    createdAt?: Date | string
+    productId?: number | null
+  }
+
+  export type NoticeCreateOrConnectWithoutRecipientInput = {
+    where: NoticeWhereUniqueInput
+    create: XOR<NoticeCreateWithoutRecipientInput, NoticeUncheckedCreateWithoutRecipientInput>
+  }
+
+  export type NoticeCreateManyRecipientInputEnvelope = {
+    data: NoticeCreateManyRecipientInput | NoticeCreateManyRecipientInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProductUpsertWithWhereUniqueWithoutFarmerInput = {
     where: ProductWhereUniqueInput
     update: XOR<ProductUpdateWithoutFarmerInput, ProductUncheckedUpdateWithoutFarmerInput>
@@ -27304,6 +29130,10 @@ export namespace Prisma {
     imageUrl?: StringNullableFilter<"Product"> | string | null
     approved?: BoolFilter<"Product"> | boolean
     archivedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
+    suspendedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
+    suspensionReasons?: StringNullableListFilter<"Product">
+    suspensionNote?: StringNullableFilter<"Product"> | string | null
+    suspendedById?: IntNullableFilter<"Product"> | number | null
     createdAt?: DateTimeFilter<"Product"> | Date | string
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     plantingDate?: DateTimeNullableFilter<"Product"> | Date | string | null
@@ -27583,6 +29413,35 @@ export namespace Prisma {
     userId?: IntFilter<"TotpBackupCode"> | number
   }
 
+  export type NoticeUpsertWithWhereUniqueWithoutRecipientInput = {
+    where: NoticeWhereUniqueInput
+    update: XOR<NoticeUpdateWithoutRecipientInput, NoticeUncheckedUpdateWithoutRecipientInput>
+    create: XOR<NoticeCreateWithoutRecipientInput, NoticeUncheckedCreateWithoutRecipientInput>
+  }
+
+  export type NoticeUpdateWithWhereUniqueWithoutRecipientInput = {
+    where: NoticeWhereUniqueInput
+    data: XOR<NoticeUpdateWithoutRecipientInput, NoticeUncheckedUpdateWithoutRecipientInput>
+  }
+
+  export type NoticeUpdateManyWithWhereWithoutRecipientInput = {
+    where: NoticeScalarWhereInput
+    data: XOR<NoticeUpdateManyMutationInput, NoticeUncheckedUpdateManyWithoutRecipientInput>
+  }
+
+  export type NoticeScalarWhereInput = {
+    AND?: NoticeScalarWhereInput | NoticeScalarWhereInput[]
+    OR?: NoticeScalarWhereInput[]
+    NOT?: NoticeScalarWhereInput | NoticeScalarWhereInput[]
+    id?: IntFilter<"Notice"> | number
+    title?: StringFilter<"Notice"> | string
+    body?: StringFilter<"Notice"> | string
+    read?: BoolFilter<"Notice"> | boolean
+    createdAt?: DateTimeFilter<"Notice"> | Date | string
+    recipientId?: IntFilter<"Notice"> | number
+    productId?: IntNullableFilter<"Notice"> | number | null
+  }
+
   export type UserCreateWithoutEmailVerificationTokensInput = {
     name: string
     email: string
@@ -27610,6 +29469,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUncheckedCreateWithoutEmailVerificationTokensInput = {
@@ -27640,6 +29500,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
   }
 
   export type UserCreateOrConnectWithoutEmailVerificationTokensInput = {
@@ -27685,6 +29546,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailVerificationTokensInput = {
@@ -27715,6 +29577,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserCreateWithoutPasswordResetTokensInput = {
@@ -27744,6 +29607,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -27774,6 +29638,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -27819,6 +29684,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -27849,6 +29715,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserCreateWithoutEmailChangeTokensInput = {
@@ -27878,6 +29745,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUncheckedCreateWithoutEmailChangeTokensInput = {
@@ -27908,6 +29776,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
   }
 
   export type UserCreateOrConnectWithoutEmailChangeTokensInput = {
@@ -27953,6 +29822,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailChangeTokensInput = {
@@ -27983,6 +29853,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserCreateWithoutTotpBackupCodesInput = {
@@ -28012,6 +29883,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUncheckedCreateWithoutTotpBackupCodesInput = {
@@ -28042,6 +29914,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
   }
 
   export type UserCreateOrConnectWithoutTotpBackupCodesInput = {
@@ -28087,6 +29960,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTotpBackupCodesInput = {
@@ -28117,6 +29991,7 @@ export namespace Prisma {
     passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
   }
 
   export type ProductCreateWithoutCategoryInput = {
@@ -28128,6 +30003,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -28138,6 +30017,7 @@ export namespace Prisma {
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     cropLogs?: CropLogCreateNestedManyWithoutProductInput
+    notices?: NoticeCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCategoryInput = {
@@ -28150,6 +30030,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -28160,6 +30044,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     cropLogs?: CropLogUncheckedCreateNestedManyWithoutProductInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCategoryInput = {
@@ -28215,6 +30100,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUncheckedCreateWithoutProductsInput = {
@@ -28245,6 +30131,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
   }
 
   export type UserCreateOrConnectWithoutProductsInput = {
@@ -28339,6 +30226,33 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type NoticeCreateWithoutProductInput = {
+    title: string
+    body: string
+    read?: boolean
+    createdAt?: Date | string
+    recipient: UserCreateNestedOneWithoutNoticesInput
+  }
+
+  export type NoticeUncheckedCreateWithoutProductInput = {
+    id?: number
+    title: string
+    body: string
+    read?: boolean
+    createdAt?: Date | string
+    recipientId: number
+  }
+
+  export type NoticeCreateOrConnectWithoutProductInput = {
+    where: NoticeWhereUniqueInput
+    create: XOR<NoticeCreateWithoutProductInput, NoticeUncheckedCreateWithoutProductInput>
+  }
+
+  export type NoticeCreateManyProductInputEnvelope = {
+    data: NoticeCreateManyProductInput | NoticeCreateManyProductInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutProductsInput = {
     update: XOR<UserUpdateWithoutProductsInput, UserUncheckedUpdateWithoutProductsInput>
     create: XOR<UserCreateWithoutProductsInput, UserUncheckedCreateWithoutProductsInput>
@@ -28377,6 +30291,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProductsInput = {
@@ -28407,6 +30322,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
   }
 
   export type CategoryUpsertWithoutProductsInput = {
@@ -28501,6 +30417,22 @@ export namespace Prisma {
     productId?: IntFilter<"CropLog"> | number
   }
 
+  export type NoticeUpsertWithWhereUniqueWithoutProductInput = {
+    where: NoticeWhereUniqueInput
+    update: XOR<NoticeUpdateWithoutProductInput, NoticeUncheckedUpdateWithoutProductInput>
+    create: XOR<NoticeCreateWithoutProductInput, NoticeUncheckedCreateWithoutProductInput>
+  }
+
+  export type NoticeUpdateWithWhereUniqueWithoutProductInput = {
+    where: NoticeWhereUniqueInput
+    data: XOR<NoticeUpdateWithoutProductInput, NoticeUncheckedUpdateWithoutProductInput>
+  }
+
+  export type NoticeUpdateManyWithWhereWithoutProductInput = {
+    where: NoticeScalarWhereInput
+    data: XOR<NoticeUpdateManyMutationInput, NoticeUncheckedUpdateManyWithoutProductInput>
+  }
+
   export type ProductCreateWithoutCropLogsInput = {
     name: string
     description: string
@@ -28510,6 +30442,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -28520,6 +30456,7 @@ export namespace Prisma {
     category: CategoryCreateNestedOneWithoutProductsInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
+    notices?: NoticeCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutCropLogsInput = {
@@ -28532,6 +30469,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -28542,6 +30483,7 @@ export namespace Prisma {
     categoryId: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutCropLogsInput = {
@@ -28569,6 +30511,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28579,6 +30525,7 @@ export namespace Prisma {
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
+    notices?: NoticeUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCropLogsInput = {
@@ -28591,6 +30538,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28601,6 +30552,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutOrdersInput = {
@@ -28630,6 +30582,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -28660,6 +30613,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -28728,6 +30682,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -28758,6 +30713,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -28809,6 +30765,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -28819,6 +30779,7 @@ export namespace Prisma {
     category: CategoryCreateNestedOneWithoutProductsInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     cropLogs?: CropLogCreateNestedManyWithoutProductInput
+    notices?: NoticeCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutOrderItemsInput = {
@@ -28831,6 +30792,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -28841,6 +30806,7 @@ export namespace Prisma {
     categoryId: number
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     cropLogs?: CropLogUncheckedCreateNestedManyWithoutProductInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutOrderItemsInput = {
@@ -28898,6 +30864,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28908,6 +30878,7 @@ export namespace Prisma {
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     cropLogs?: CropLogUpdateManyWithoutProductNestedInput
+    notices?: NoticeUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutOrderItemsInput = {
@@ -28920,6 +30891,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28930,6 +30905,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     cropLogs?: CropLogUncheckedUpdateManyWithoutProductNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutAnnouncementsInput = {
@@ -28959,6 +30935,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUncheckedCreateWithoutAnnouncementsInput = {
@@ -28989,6 +30966,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
   }
 
   export type UserCreateOrConnectWithoutAnnouncementsInput = {
@@ -29034,6 +31012,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAnnouncementsInput = {
@@ -29064,6 +31043,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserCreateWithoutReviewsInput = {
@@ -29093,6 +31073,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -29123,6 +31104,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -29139,6 +31121,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -29149,6 +31135,7 @@ export namespace Prisma {
     category: CategoryCreateNestedOneWithoutProductsInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     cropLogs?: CropLogCreateNestedManyWithoutProductInput
+    notices?: NoticeCreateNestedManyWithoutProductInput
   }
 
   export type ProductUncheckedCreateWithoutReviewsInput = {
@@ -29161,6 +31148,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -29171,6 +31162,7 @@ export namespace Prisma {
     categoryId: number
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     cropLogs?: CropLogUncheckedCreateNestedManyWithoutProductInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutProductInput
   }
 
   export type ProductCreateOrConnectWithoutReviewsInput = {
@@ -29216,6 +31208,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -29246,6 +31239,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
   }
 
   export type ProductUpsertWithoutReviewsInput = {
@@ -29268,6 +31262,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29278,6 +31276,7 @@ export namespace Prisma {
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     cropLogs?: CropLogUpdateManyWithoutProductNestedInput
+    notices?: NoticeUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutReviewsInput = {
@@ -29290,6 +31289,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29300,6 +31303,7 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     cropLogs?: CropLogUncheckedUpdateManyWithoutProductNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutSentMessagesInput = {
@@ -29329,6 +31333,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -29359,6 +31364,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
   }
 
   export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -29393,6 +31399,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUncheckedCreateWithoutReceivedMessagesInput = {
@@ -29423,6 +31430,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
   }
 
   export type UserCreateOrConnectWithoutReceivedMessagesInput = {
@@ -29468,6 +31476,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -29498,6 +31507,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUpsertWithoutReceivedMessagesInput = {
@@ -29538,6 +31548,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
@@ -29568,6 +31579,267 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
+  }
+
+  export type UserCreateWithoutNoticesInput = {
+    name: string
+    email: string
+    password: string
+    role?: string
+    suspended?: boolean
+    idImagePath?: string | null
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    emailVerifiedAt?: Date | string | null
+    tokenVersion?: number
+    deletedAt?: Date | string | null
+    totpSecret?: string | null
+    totpEnabled?: boolean
+    totpLastStep?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductCreateNestedManyWithoutFarmerInput
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    announcements?: AnnouncementCreateNestedManyWithoutAuthorInput
+    reviews?: ReviewCreateNestedManyWithoutCustomerInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutNoticesInput = {
+    id?: number
+    name: string
+    email: string
+    password: string
+    role?: string
+    suspended?: boolean
+    idImagePath?: string | null
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    emailVerifiedAt?: Date | string | null
+    tokenVersion?: number
+    deletedAt?: Date | string | null
+    totpSecret?: string | null
+    totpEnabled?: boolean
+    totpLastStep?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    announcements?: AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutNoticesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutNoticesInput, UserUncheckedCreateWithoutNoticesInput>
+  }
+
+  export type ProductCreateWithoutNoticesInput = {
+    name: string
+    description: string
+    price: Decimal | DecimalJsLike | number | string
+    stock: number
+    unit?: string
+    imageUrl?: string | null
+    approved?: boolean
+    archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    plantingDate?: Date | string | null
+    expectedHarvestDate?: Date | string | null
+    growthStage?: string | null
+    readyForHarvest?: boolean
+    farmer: UserCreateNestedOneWithoutProductsInput
+    category: CategoryCreateNestedOneWithoutProductsInput
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    reviews?: ReviewCreateNestedManyWithoutProductInput
+    cropLogs?: CropLogCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutNoticesInput = {
+    id?: number
+    name: string
+    description: string
+    price: Decimal | DecimalJsLike | number | string
+    stock: number
+    unit?: string
+    imageUrl?: string | null
+    approved?: boolean
+    archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    plantingDate?: Date | string | null
+    expectedHarvestDate?: Date | string | null
+    growthStage?: string | null
+    readyForHarvest?: boolean
+    farmerId: number
+    categoryId: number
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    cropLogs?: CropLogUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutNoticesInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutNoticesInput, ProductUncheckedCreateWithoutNoticesInput>
+  }
+
+  export type UserUpsertWithoutNoticesInput = {
+    update: XOR<UserUpdateWithoutNoticesInput, UserUncheckedUpdateWithoutNoticesInput>
+    create: XOR<UserCreateWithoutNoticesInput, UserUncheckedCreateWithoutNoticesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutNoticesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutNoticesInput, UserUncheckedUpdateWithoutNoticesInput>
+  }
+
+  export type UserUpdateWithoutNoticesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUpdateManyWithoutFarmerNestedInput
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    announcements?: AnnouncementUpdateManyWithoutAuthorNestedInput
+    reviews?: ReviewUpdateManyWithoutCustomerNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutNoticesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    announcements?: AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type ProductUpsertWithoutNoticesInput = {
+    update: XOR<ProductUpdateWithoutNoticesInput, ProductUncheckedUpdateWithoutNoticesInput>
+    create: XOR<ProductCreateWithoutNoticesInput, ProductUncheckedCreateWithoutNoticesInput>
+    where?: ProductWhereInput
+  }
+
+  export type ProductUpdateToOneWithWhereWithoutNoticesInput = {
+    where?: ProductWhereInput
+    data: XOR<ProductUpdateWithoutNoticesInput, ProductUncheckedUpdateWithoutNoticesInput>
+  }
+
+  export type ProductUpdateWithoutNoticesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expectedHarvestDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    growthStage?: NullableStringFieldUpdateOperationsInput | string | null
+    readyForHarvest?: BoolFieldUpdateOperationsInput | boolean
+    farmer?: UserUpdateOneRequiredWithoutProductsNestedInput
+    category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUpdateManyWithoutProductNestedInput
+    cropLogs?: CropLogUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutNoticesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    expectedHarvestDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    growthStage?: NullableStringFieldUpdateOperationsInput | string | null
+    readyForHarvest?: BoolFieldUpdateOperationsInput | boolean
+    farmerId?: IntFieldUpdateOperationsInput | number
+    categoryId?: IntFieldUpdateOperationsInput | number
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    cropLogs?: CropLogUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -29597,6 +31869,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -29627,6 +31900,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -29672,6 +31946,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -29702,6 +31977,7 @@ export namespace Prisma {
     emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
   }
 
   export type ProductCreateManyFarmerInput = {
@@ -29714,6 +31990,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -29804,6 +32084,15 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type NoticeCreateManyRecipientInput = {
+    id?: number
+    title: string
+    body: string
+    read?: boolean
+    createdAt?: Date | string
+    productId?: number | null
+  }
+
   export type ProductUpdateWithoutFarmerInput = {
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
@@ -29813,6 +32102,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29823,6 +32116,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     cropLogs?: CropLogUpdateManyWithoutProductNestedInput
+    notices?: NoticeUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutFarmerInput = {
@@ -29835,6 +32129,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29845,6 +32143,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     cropLogs?: CropLogUncheckedUpdateManyWithoutProductNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutFarmerInput = {
@@ -29857,6 +32156,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30101,6 +32404,32 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type NoticeUpdateWithoutRecipientInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    product?: ProductUpdateOneWithoutNoticesNestedInput
+  }
+
+  export type NoticeUncheckedUpdateWithoutRecipientInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type NoticeUncheckedUpdateManyWithoutRecipientInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type ProductCreateManyCategoryInput = {
     id?: number
     name: string
@@ -30111,6 +32440,10 @@ export namespace Prisma {
     imageUrl?: string | null
     approved?: boolean
     archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
     plantingDate?: Date | string | null
@@ -30129,6 +32462,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30139,6 +32476,7 @@ export namespace Prisma {
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     cropLogs?: CropLogUpdateManyWithoutProductNestedInput
+    notices?: NoticeUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateWithoutCategoryInput = {
@@ -30151,6 +32489,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30161,6 +32503,7 @@ export namespace Prisma {
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     cropLogs?: CropLogUncheckedUpdateManyWithoutProductNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutProductNestedInput
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryInput = {
@@ -30173,6 +32516,10 @@ export namespace Prisma {
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     approved?: BoolFieldUpdateOperationsInput | boolean
     archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -30202,6 +32549,15 @@ export namespace Prisma {
     type: string
     note: string
     createdAt?: Date | string
+  }
+
+  export type NoticeCreateManyProductInput = {
+    id?: number
+    title: string
+    body: string
+    read?: boolean
+    createdAt?: Date | string
+    recipientId: number
   }
 
   export type OrderItemUpdateWithoutProductInput = {
@@ -30265,6 +32621,32 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     note?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type NoticeUpdateWithoutProductInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    recipient?: UserUpdateOneRequiredWithoutNoticesNestedInput
+  }
+
+  export type NoticeUncheckedUpdateWithoutProductInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    recipientId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type NoticeUncheckedUpdateManyWithoutProductInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    body?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    recipientId?: IntFieldUpdateOperationsInput | number
   }
 
   export type OrderItemCreateManyOrderInput = {

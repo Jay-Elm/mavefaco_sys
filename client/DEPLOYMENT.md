@@ -134,7 +134,7 @@ The full list of what's in and out of scope is in [`SCOPE_AND_DELIMITATIONS.md`]
 | `BREVO_API_KEY` | Yes | Transactional email (verification, password reset, security notices) |
 | `SUPABASE_URL` | Yes | Supabase project URL, for product images and ID storage |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Server-side Storage access; never expose to the browser |
-| `CRON_SECRET` | Yes | Authenticates Vercel Cron calls to `/api/cron/purge-id-images` |
+| `CRON_SECRET` | Yes | Authenticates Vercel Cron calls to `/api/cron/purge-id-images` and `/api/cron/purge-suspended-products` |
 
 Generate random values with `node -e "console.log(require('crypto').randomBytes(48).toString('base64'))"`.
 

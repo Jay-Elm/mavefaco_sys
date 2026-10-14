@@ -3,10 +3,16 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2 } from 'lucide-react'
+import { Loader2, Ban, Trash2 } from 'lucide-react'
 import ImageUploader from '@/components/ImageUploader'
 import SuggestionBanner from '@/components/SuggestionBanner'
 import { suggestCategory, suggestUnit } from '@/lib/productSuggestions'
+import { reasonLabels, suspensionDeadline } from '@/validators/productSuspension'
+
+interface Suspension { suspendedAt: string; reasons: string[]; note: string | null }
+
+const fmtDate = (d: string | Date) =>
+  new Date(d).toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric' })
 
 interface Category { id: number; name: string }
 
@@ -20,6 +26,8 @@ export default function EditProductPage() {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [suspension, setSuspension] = useState<Suspension | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   const [form, setForm] = useState({
     name: '', description: '', price: '', stock: '', unit: 'piece', categoryId: '', imageUrl: '',
@@ -37,6 +45,8 @@ export default function EditProductPage() {
       fetch('/api/categories').then((r) => r.json()),
     ]).then(([product, cats]) => {
       if (product.error) { setError(product.error); return }
+      if (product.suspendedAt)
+        setSuspension({ suspendedAt: product.suspendedAt, reasons: product.suspensionReasons, note: product.suspensionNote })
       setForm({
         name: product.name,
         description: product.description,
@@ -96,11 +106,37 @@ export default function EditProductPage() {
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error ?? 'Failed to update product'); return }
+      // Saving a suspended listing only resubmits it when something customers
+      // see changed; otherwise it stays suspended.
+      if (data.suspendedAt) {
+        setError('Your listing is still suspended. Change the details staff flagged, then save to resubmit it for review.')
+        return
+      }
       router.push('/farmer/products')
     } catch {
       setError('Request failed')
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  async function handleDelete() {
+    if (!token) return
+    if (!confirm(`Delete "${form.name}"?\n\nIt will disappear from the shop. If it has past orders or reviews it is archived so order history stays intact; otherwise it is deleted. This cannot be undone.`)) return
+    setError('')
+    setDeleting(true)
+    try {
+      const res = await fetch(`/api/products/${productId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error ?? 'Failed to delete product'); return }
+      router.push('/farmer/products')
+    } catch {
+      setError('Request failed')
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -118,6 +154,20 @@ export default function EditProductPage() {
   return (
     <div className="p-4 sm:p-8 max-w-xl">
       <h1 className="font-serif text-2xl font-bold text-gray-900 mb-6">Edit Product</h1>
+
+      {suspension && (
+        <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-800">
+          <p className="flex items-center gap-2 font-semibold"><Ban size={15} /> This listing was suspended by MaVeFaCo staff</p>
+          <ul className="list-disc ml-6 mt-2 space-y-0.5">
+            {reasonLabels(suspension.reasons).map((r) => <li key={r}>{r}</li>)}
+          </ul>
+          {suspension.note && <p className="mt-2">Note from staff: {suspension.note}</p>}
+          <p className="mt-2">
+            Fix these details and save to resubmit it for review, or delete it. If it isn&apos;t resubmitted by{' '}
+            <span className="font-semibold">{fmtDate(suspensionDeadline(suspension.suspendedAt))}</span>, it will be deleted automatically.
+          </p>
+        </div>
+      )}
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
@@ -202,12 +252,18 @@ export default function EditProductPage() {
             className="inline-flex items-center gap-2 px-5 py-2 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
           >
             {submitting && <Loader2 size={14} className="animate-spin" />}
-            {submitting ? 'Saving…' : 'Save Changes'}
+            {submitting ? 'Saving…' : suspension ? 'Save & Resubmit' : 'Save Changes'}
           </button>
           <button type="button" onClick={() => router.back()}
             className="px-5 py-2 bg-white border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
           >
             Cancel
+          </button>
+          <button type="button" onClick={handleDelete} disabled={deleting}
+            className="ml-auto inline-flex items-center gap-1.5 px-4 py-2 bg-red-50 border border-red-200 text-red-700 text-sm font-medium rounded-lg hover:bg-red-100 transition-colors disabled:opacity-60"
+          >
+            {deleting ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+            Delete
           </button>
         </div>
       </form>

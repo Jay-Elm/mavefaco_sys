@@ -3,8 +3,10 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, Trash2, AlertTriangle, CheckCircle, XCircle, Pencil, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download, ArchiveRestore } from 'lucide-react'
+import { Loader2, Package, Trash2, AlertTriangle, CheckCircle, Ban, Eye, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download, ArchiveRestore } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
+import SuspendListingModal, { type SuspendResult } from '@/components/SuspendListingModal'
+import { suspensionDeadline } from '@/validators/productSuspension'
 
 interface ProductRow {
   id: number
@@ -14,10 +16,20 @@ interface ProductRow {
   approved: boolean
   createdAt: string
   archivedAt: string | null
+  suspendedAt: string | null
+  suspensionReasons: string[]
+  suspensionNote: string | null
   category: { name: string }
   farmer: { name: string; email: string }
   _count: { orderItems: number }
 }
+
+type StatusFilter = 'all' | 'approved' | 'pending' | 'suspended' | 'archived'
+
+const statusOf = (p: ProductRow) =>
+  p.archivedAt ? 'Archived' : p.suspendedAt ? 'Suspended' : p.approved ? 'Approved' : 'Pending'
+
+const fmtDate = (d: string | Date) => new Date(d).toLocaleDateString('en-PH')
 
 type SortKey = 'name' | 'price' | 'stock' | 'createdAt' | 'orders'
 type SortDir = 'asc' | 'desc'
@@ -36,10 +48,11 @@ export default function DashboardProductsPage() {
   const [error, setError]             = useState('')
   const [actingId, setActingId]       = useState<number | null>(null)
   const [actionError, setActionError] = useState<{ id: number; msg: string } | null>(null)
+  const [suspending, setSuspending]   = useState<ProductRow | null>(null)
 
   const [search, setSearch]           = useState('')
   const [filterCategory, setFilterCategory] = useState('')
-  const [filterStatus, setFilterStatus]     = useState<'all' | 'approved' | 'pending' | 'archived'>('all')
+  const [filterStatus, setFilterStatus]     = useState<StatusFilter>('all')
   // Archived products come from a separate request, loaded the first time
   // the "Archived" filter is picked.
   const [archivedProducts, setArchivedProducts] = useState<ProductRow[] | null>(null)
@@ -83,8 +96,9 @@ export default function DashboardProductsPage() {
       )
     }
     if (filterCategory) list = list.filter((p) => p.category.name === filterCategory)
-    if (filterStatus === 'approved') list = list.filter((p) => p.approved)
-    if (filterStatus === 'pending')  list = list.filter((p) => !p.approved)
+    if (filterStatus === 'approved')  list = list.filter((p) => p.approved)
+    if (filterStatus === 'pending')   list = list.filter((p) => !p.approved && !p.suspendedAt)
+    if (filterStatus === 'suspended') list = list.filter((p) => p.suspendedAt)
 
     list.sort((a, b) => {
       let diff = 0
@@ -104,7 +118,7 @@ export default function DashboardProductsPage() {
     else { setSortKey(key); setSortDir('asc') }
   }
 
-  async function handleApprove(id: number, approved: boolean) {
+  async function handleApprove(id: number) {
     if (!token) return
     setActingId(id)
     setActionError(null)
@@ -112,11 +126,11 @@ export default function DashboardProductsPage() {
       const res = await fetch(`/api/admin/products/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ approved }),
+        body: JSON.stringify({ approved: true }),
       })
       const data = await res.json()
       if (!res.ok) { setActionError({ id, msg: data.error }); return }
-      setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, approved } : p)))
+      setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, approved: true } : p)))
     } catch {
       setActionError({ id, msg: 'Request failed' })
     } finally {
@@ -144,8 +158,19 @@ export default function DashboardProductsPage() {
     }
   }
 
+  function handleSuspended(id: number, result: SuspendResult & { suspensionNote: string | null }) {
+    setSuspending(null)
+    setProducts((prev) => prev.map((p) => (p.id === id
+      ? { ...p, approved: false, suspendedAt: result.suspendedAt, suspensionReasons: result.suspensionReasons, suspensionNote: result.suspensionNote }
+      : p)))
+    if (!result.emailSent)
+      setActionError({ id, msg: "Suspended, but the email to the farmer couldn't be sent. The notice is still in their Messages." })
+  }
+
+  // Only offered on a suspended listing: deleting it now instead of waiting
+  // for the automatic removal at the end of the suspension.
   async function handleDelete(id: number, name: string) {
-    if (!confirm(`Remove "${name}"?\n\nIt will disappear from the shop. If it has past orders or reviews it is archived so order history stays intact; otherwise it is deleted. This cannot be undone.`)) return
+    if (!confirm(`Delete the suspended listing "${name}" now?\n\nIf it has past orders or reviews it is archived so order history stays intact; otherwise it is deleted. This cannot be undone.`)) return
     if (!token) return
     setActingId(id)
     setActionError(null)
@@ -173,7 +198,8 @@ export default function DashboardProductsPage() {
     )
   }
 
-  const pending   = products.filter((p) => !p.approved).length
+  const pending   = products.filter((p) => !p.approved && !p.suspendedAt).length
+  const suspended = products.filter((p) => p.suspendedAt).length
   const approved  = products.filter((p) => p.approved).length
 
   return (
@@ -184,6 +210,11 @@ export default function DashboardProductsPage() {
           {pending > 0 && (
             <span className="bg-yellow-100 text-yellow-800 font-semibold px-2.5 py-1 rounded-full">
               {pending} pending
+            </span>
+          )}
+          {suspended > 0 && (
+            <span className="bg-red-100 text-red-700 font-semibold px-2.5 py-1 rounded-full">
+              {suspended} suspended
             </span>
           )}
           <span>{approved} approved / {products.length} total</span>
@@ -214,12 +245,13 @@ export default function DashboardProductsPage() {
 
         <select
           value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value as 'all' | 'approved' | 'pending' | 'archived')}
+          onChange={(e) => setFilterStatus(e.target.value as StatusFilter)}
           className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
         >
           <option value="all">All statuses</option>
           <option value="approved">Approved</option>
           <option value="pending">Pending</option>
+          <option value="suspended">Suspended</option>
           <option value="archived">Archived</option>
         </select>
 
@@ -242,8 +274,8 @@ export default function DashboardProductsPage() {
             displayed.map((p) => [
               p.name, p.category.name, p.farmer.name, p.farmer.email,
               p.price.toFixed(2), p.stock, p._count.orderItems,
-              p.archivedAt ? 'Archived' : p.approved ? 'Approved' : 'Pending',
-              new Date(p.createdAt).toLocaleDateString('en-PH'),
+              statusOf(p),
+              fmtDate(p.createdAt),
             ])
           )}
           className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 border border-gray-300 rounded-lg px-3 py-1.5 transition-colors shrink-0"
@@ -336,6 +368,14 @@ export default function DashboardProductsPage() {
                         >
                           Archived
                         </span>
+                      ) : p.suspendedAt ? (
+                        <span
+                          title={`Suspended ${fmtDate(p.suspendedAt)}; deleted after ${fmtDate(suspensionDeadline(p.suspendedAt))} unless resubmitted`}
+                          className="inline-flex flex-col items-center text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-lg"
+                        >
+                          <span className="inline-flex items-center gap-1"><Ban size={11} /> Suspended</span>
+                          <span className="font-normal">until {fmtDate(suspensionDeadline(p.suspendedAt))}</span>
+                        </span>
                       ) : p.approved ? (
                         <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
                           <CheckCircle size={11} /> Approved
@@ -362,40 +402,42 @@ export default function DashboardProductsPage() {
                             Restore
                           </button>
                         ) : (<>
-                        {!p.approved ? (
+                        {!p.approved && !p.suspendedAt && (
                           <button
-                            onClick={() => handleApprove(p.id, true)}
+                            onClick={() => handleApprove(p.id)}
                             disabled={actingId === p.id}
                             className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition-colors disabled:opacity-40"
                           >
                             <CheckCircle size={12} />
                             Approve
                           </button>
+                        )}
+                        <Link
+                          href={`/dashboard/products/${p.id}`}
+                          className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
+                        >
+                          <Eye size={12} />
+                          View
+                        </Link>
+                        {p.suspendedAt ? (
+                          <button
+                            onClick={() => handleDelete(p.id, p.name)}
+                            disabled={actingId === p.id}
+                            className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors disabled:opacity-40"
+                          >
+                            <Trash2 size={12} />
+                            Delete
+                          </button>
                         ) : (
                           <button
-                            onClick={() => handleApprove(p.id, false)}
+                            onClick={() => { setActionError(null); setSuspending(p) }}
                             disabled={actingId === p.id}
                             className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors disabled:opacity-40"
                           >
-                            <XCircle size={12} />
-                            Revoke
+                            <Ban size={12} />
+                            Suspend
                           </button>
                         )}
-                        <Link
-                          href={`/dashboard/products/${p.id}/edit`}
-                          className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
-                        >
-                          <Pencil size={12} />
-                          Edit
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(p.id, p.name)}
-                          disabled={actingId === p.id}
-                          className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors disabled:opacity-40"
-                        >
-                          <Trash2 size={12} />
-                          Delete
-                        </button>
                         </>)}
                       </div>
                     </td>
@@ -424,6 +466,15 @@ export default function DashboardProductsPage() {
         </table>
         </div>
       </div>
+
+      {suspending && token && (
+        <SuspendListingModal
+          product={suspending}
+          token={token}
+          onDone={(result) => handleSuspended(suspending.id, result)}
+          onCancel={() => setSuspending(null)}
+        />
+      )}
     </div>
   )
 }

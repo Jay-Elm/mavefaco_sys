@@ -30,7 +30,7 @@ function fmtQty(n: number): string {
 }
 
 export default function AddToCartButton({ product }: Props) {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
   const { addItem, items, clearCart } = useCart()
   const router = useRouter()
 
@@ -115,6 +115,9 @@ export default function AddToCartButton({ product }: Props) {
     if (!isAuthenticated) { router.push('/login'); return }
     router.push(`/customer/messages/${product.farmerId}`)
   }
+
+  // Buying and messaging farmers are for customers; guests are sent to log in.
+  if (isAuthenticated && user?.role !== 'customer') return null
 
   if (product.stock === 0) {
     return (

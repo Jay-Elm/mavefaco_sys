@@ -64,6 +64,11 @@ export default function Navbar() {
     router.refresh()
   }
 
+  // Shopping is for customers (and guests, who sign in as customers to buy).
+  // Staff don't browse the storefront at all; farmers browse but don't buy.
+  const isStaff = user?.role === 'admin' || user?.role === 'manager'
+  const canShop = !isAuthenticated || user?.role === 'customer'
+
   const linkCls = 'flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium'
   const mobileLinkCls = 'flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-colors text-base font-medium w-full'
 
@@ -86,20 +91,24 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-0.5">
-            <Link href="/products" className={linkCls}>
-              <ShoppingBag size={15} /><span>Products</span>
-            </Link>
+            {!isStaff && (
+              <Link href="/products" className={linkCls}>
+                <ShoppingBag size={15} /><span>Products</span>
+              </Link>
+            )}
             <Link href="/about" className={linkCls}>
               <Info size={15} /><span>About</span>
             </Link>
-            <Link href="/cart" className={`relative ${linkCls}`}>
-              <ShoppingCart size={15} /><span>Cart</span>
-              {totalItems > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-orange-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center leading-none">
-                  {totalItems > 9 ? '9+' : totalItems}
-                </span>
-              )}
-            </Link>
+            {canShop && (
+              <Link href="/cart" className={`relative ${linkCls}`}>
+                <ShoppingCart size={15} /><span>Cart</span>
+                {totalItems > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-orange-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center leading-none">
+                    {totalItems > 9 ? '9+' : totalItems}
+                  </span>
+                )}
+              </Link>
+            )}
 
             {isAuthenticated ? (
               <>
@@ -134,16 +143,18 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Mobile: cart badge + hamburger */}
+          {/* Mobile: cart badge (shoppers only) + hamburger */}
           <div className="flex lg:hidden items-center gap-2">
-            <Link href="/cart" className="relative p-2 rounded-lg hover:bg-white/10 transition-colors">
-              <ShoppingCart size={20} />
-              {totalItems > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-orange-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center leading-none">
-                  {totalItems > 9 ? '9+' : totalItems}
-                </span>
-              )}
-            </Link>
+            {canShop && (
+              <Link href="/cart" className="relative p-2 rounded-lg hover:bg-white/10 transition-colors">
+                <ShoppingCart size={20} />
+                {totalItems > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-orange-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center leading-none">
+                    {totalItems > 9 ? '9+' : totalItems}
+                  </span>
+                )}
+              </Link>
+            )}
             <button
               onClick={() => setMobileOpen(v => !v)}
               className="p-2 rounded-lg hover:bg-white/10 transition-colors"
@@ -159,7 +170,7 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 bg-forest z-40 overflow-y-auto">
           <div className="px-4 py-4 space-y-1">
-            <Link href="/products" className={mobileLinkCls}><ShoppingBag size={18} />Products</Link>
+            {!isStaff && <Link href="/products" className={mobileLinkCls}><ShoppingBag size={18} />Products</Link>}
             <Link href="/about" className={mobileLinkCls}><Info size={18} />About</Link>
 
             {isAuthenticated ? (

@@ -9,7 +9,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 1. **Phase 1–3 security review** (completed 2026-09-08, `SECURITY_REVIEW.md`): cookie-based sessions, admin-route guard, private ID storage, password reset, shared validators, email verification.
 2. **10-item gap list** (completed 2026-09-21): Next.js CVE patches, JWT secret validation, `Decimal` money, connection pooling, Dependabot + CI audit, mandatory TOTP MFA for staff, ID-image auto-purge, no email enumeration.
 3. **Whole-project review and fixes** (2026-10-03 to 2026-10-05, `PROJECT_REVIEW.md`): every finding fixed except L4. Highlights:
-   - **Integration tests** against a real Postgres database (`npm run test:integration`, 193 tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron; 54 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
+   - **Integration tests** against a real Postgres database (`npm run test:integration`, 219 tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron; 54 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
    - **MFA encryption key** separated from `JWT_SECRET` (`TOTP_ENCRYPTION_KEY`); all staff migrated.
    - **Preview deployments** have their own Supabase database and keys; Preview builds migrate only that database (`PREVIEW_DATABASE_ISOLATED`).
    - **Product archiving** (and staff restore) instead of deleting products with history.
@@ -29,11 +29,14 @@ Feature-complete for the capstone scope and through three structured hardening p
 
 1. Change a test customer's email: notice at the old address, link at the new one, logged out after clicking, final notice to the old address (only test of real Brevo delivery).
 2. Cancel an order as a farmer and as a manager: stock goes back up exactly once.
-3. Delete a product with a past order, find it under **Archived** on the dashboard Products page, restore it.
+3. As staff, suspend a product with a past order, then delete it; find it under **Archived** on the dashboard Products page and restore it (it comes back as Pending).
 4. Cart survives logout/login; profile page shows name and email.
 5. On a phone-sized screen, menus close after tapping a link.
 6. As admin, "Reset 2FA" appears on other admins and managers with 2FA enabled.
 7. The farmer portal shows the brand colors (the manager dashboard was confirmed).
+8. Suspend a listing as a manager: the farmer sees it under Messages → MaVeFaCo notices with an "Edit or delete this listing" button, receives the email (real Brevo delivery), and the listing shows as Suspended with its deadline.
+9. As that farmer, save the listing without changes (stays suspended, with a message), then change the flagged detail and save (back to Pending).
+10. As admin or manager, the navbar has no Products or Cart, and opening `/products` or `/cart` goes to the dashboard; as a farmer, there is no Cart and no Add to Cart on product pages.
 
 **Remaining debt** (see `DEVELOPMENT_STATUS.md` → Known Technical Debt): per-instance rate limiting (L4, needs Upstash Redis credentials from the project owner), Prisma 8 upgrade when released (clears the last 4 `npm audit` findings), no UI/end-to-end tests.
 
@@ -62,7 +65,8 @@ src/app/
     page.tsx                            ← stat cards + farmer performance (manager)
     users/page.tsx                      ← includes signed-URL ID image view
     categories/page.tsx
-    products/page.tsx                   ← approve/revoke/edit/delete + CSV export
+    products/page.tsx                   ← approve/view/suspend/delete-suspended/restore + CSV export
+    products/[id]/page.tsx              ← read-only listing view (staff don't edit)
     orders/page.tsx                     ← status management + CSV export
     audit-logs/page.tsx
     announcements/page.tsx
@@ -124,6 +128,7 @@ src/app/
     admin/products/route.ts
     admin/products/[id]/route.ts
     admin/products/[id]/restore/route.ts ← un-archive a product (staff)
+    admin/products/[id]/suspend/route.ts ← suspend with reasons; notice + email to the farmer
     admin/audit-logs/route.ts
     admin/farmer-stats/route.ts
     admin/reports/route.ts
@@ -146,6 +151,7 @@ src/app/
     messages/route.ts                   ← conversation list with unread counts
     messages/[userId]/route.ts          ← GET thread (marks read) + POST send
     cron/purge-id-images/route.ts       ← CRON_SECRET-gated daily job
+    cron/purge-suspended-products/route.ts ← removes listings suspended 7+ days
 
 src/components/
   Navbar.tsx                            ← About link, Messages link (customer), cart badge

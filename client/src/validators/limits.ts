@@ -15,6 +15,7 @@ export const MAX = {
   message: 2000,
   review: 1000,
   cropNote: 1000,
+  suspensionNote: 500,
   announcementTitle: 150,
   announcementBody: 5000,
   bannerTitle: 120,

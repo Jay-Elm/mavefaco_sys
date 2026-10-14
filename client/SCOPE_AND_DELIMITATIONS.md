@@ -23,8 +23,8 @@ This document states what the system covers (**scope**) and the boundaries it de
 | Customer | 32 | 23 | 3 | 6 |
 | Farmer | 51 | 31 | 7 | 13 |
 | Manager | 17 | 5 | 5 | 7 |
-| Administrator | 29 | 21 | 4 | 4 |
-| **Total** | **129** | **80** | **19** | **30** |
+| Administrator | 29 | 20 | 5 | 4 |
+| **Total** | **129** | **79** | **20** | **30** |
 
 The system fully supports the cooperative's core workflow: farmers list produce, staff review it, customers buy it, farmers and staff fulfil orders, and staff monitor the cooperative through reports and an audit log. The items outside the scope cluster in four areas: **online payments**, **market intelligence** (prices, forecasts, recommendations), **planning tools** for managers, and **convenience features** (favorites, invoices, notification settings, translation).
 
@@ -167,7 +167,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | View regional statistics | Not implemented | |
 | Evaluate inactive members | Partial | Farmer performance shows activity per farmer; inactive members aren't flagged |
 
-Managers can also approve and reject product listings, restore archived products, manage orders, categories and announcements, and suspend customers and farmers.
+Managers can also approve product listings, view and suspend them (or delete a suspended one early), restore archived products, manage orders, categories and announcements, and suspend customers and farmers.
 
 ### 2.4 Administrator
 
@@ -181,8 +181,8 @@ Managers can also approve and reject product listings, restore archived products
 | Reset user passwords | Implemented | Also resetting a staff member's two-factor authentication after a lost device |
 | **Product management** | | |
 | Approve crop listings | Implemented | |
-| Remove prohibited listings | Implemented | Reject or remove; listings with history are archived and can be restored |
-| Edit incorrect listings | Implemented | |
+| Remove prohibited listings | Implemented | Suspend with reasons: the listing is hidden from customers, the farmer gets a notice in Messages and an email, and it is deleted after 7 days unless resubmitted; staff can delete a suspended listing early. Listings with history are archived instead, and can be restored |
+| Edit incorrect listings | Partial | Staff don't edit listings; they suspend one with reasons and the farmer edits and resubmits it |
 | Verify crop authenticity | Partial | Manual staff review when approving a listing |
 | **Order management** | | |
 | Monitor transactions | Implemented | All orders, filterable by status |
@@ -216,6 +216,7 @@ Managers can also approve and reject product listings, restore archived products
 
 - The system serves **one cooperative, MaVeFaCo, and its customers**. It is not a multi-cooperative platform.
 - **Four roles** with fixed permissions: Administrator, Manager, Farmer, Customer. Roles are not configurable.
+- **Only customers buy.** Farmers, managers and administrators have no cart and cannot place orders; managers and administrators don't see the storefront.
 - Sign-up is open to **customers and farmers only**. Staff accounts are created by promoting an existing account in the database (see the README).
 - A farmer can list products only after staff **verify the farmer's government ID**. Customers need only a verified email address.
 - **Two-factor authentication** (authenticator app) is mandatory for staff and not offered to customers or farmers.
@@ -234,6 +235,7 @@ Managers can also approve and reject product listings, restore archived products
 - **One photo per product**: PNG, JPEG or WEBP, up to 4 MB.
 - Stock is a single quantity per product in its selling unit; there are no variants, batches or expiry tracking.
 - Products with any order, review or crop-log history are **archived, never deleted**, so order records stay complete.
+- Staff **don't edit listings**. A listing that needs fixing is **suspended** with one or more reasons: it is hidden from customers at once, orders already placed carry on, and the farmer has **7 days** to edit and resubmit it before it is removed automatically (by a daily job, so up to a day later). A listing with an order still in progress is removed only once those orders finish.
 
 ### 3.4 Geography, weather and market data
 
@@ -243,9 +245,9 @@ Managers can also approve and reject product listings, restore archived products
 
 ### 3.5 Communication and notifications
 
-- **Email** (via Brevo) is used only for account and security events: verification, password reset, email change, two-factor changes.
+- **Email** (via Brevo) is used only for account and security events (verification, password reset, email change, two-factor changes) and to tell a farmer a listing was suspended.
 - There are **no order-status notifications**, in-app notifications, SMS or push notifications, and no notification settings.
-- Messaging is **one-to-one between customers and farmers**; staff have no inbox.
+- Messaging is **one-to-one between customers and farmers**; staff have no inbox. The system sends farmers one-way **notices** (listing suspensions), shown in Messages without a reply box.
 - The interface is **in English only**.
 
 ### 3.6 Platform

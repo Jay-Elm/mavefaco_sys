@@ -104,7 +104,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `page.tsx` — stat cards: Users, Products, Orders, Revenue; Farmer Performance table (admin + manager)
 - `users/` — suspend/verify (via signed-URL ID image view)/reset password/delete; inline modals
 - `categories/` — list with product count; inline add/delete
-- `products/` — all products; Approve/Revoke/Edit/Delete; sorting + filtering + CSV export
+- `products/` — all products; Approve (pending) / View / Suspend with reasons / Delete (suspended only) / Restore (archived); Suspended status filter; sorting + filtering + CSV export
+- `products/[id]` — read-only listing view, with suspension reasons and deadline
 - `orders/` — all orders; expandable; status management; CSV export
 - `audit-logs/` — last 100 entries; search + action/entity type filters; CSV export
 - `announcements/` — post/delete announcements (info/alert/advisory types)
@@ -123,7 +124,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `orders/` — orders with farmer's products; Accept/Reject/Ship/Deliver state machine; CSV export
 - `crops/` — Crop Monitor list: all products with growth stage, planting date, harvest date (red if overdue), log count, ready badge
 - `crops/[id]/` — Crop detail: update planting/harvest dates, growth stage dropdown, ready-for-harvest toggle; crop log with type buttons (weather/pest/damage/note) + timestamped entries
-- `messages/` — conversation inbox with unread counts; `/farmer/messages/[userId]` — message thread
+- `messages/` — conversation inbox with unread counts, plus a "MaVeFaCo notices" entry; `/farmer/messages/notices` — one-way system notices (no reply), each linking to the listing's edit page; `/farmer/messages/[userId]` — message thread
 - `profile/` — edit name/email; real ID-image file upload for verification; change password
 
 ### Customer Pages
@@ -161,8 +162,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/products` | public | `?categoryId=` `?farmerId=` `?search=` `?minPrice=` `?maxPrice=`; approved:true unless farmerId |
 | POST | `/api/products` | farmer/admin/manager | farmer must be verified |
 | GET | `/api/products/[id]` | public | unapproved: owner + admin/manager only |
-| PATCH | `/api/products/[id]` | farmer(own)/admin/manager | farmer edits reset approval |
-| DELETE | `/api/products/[id]` | farmer(own)/admin/manager | blocked if active orders |
+| PATCH | `/api/products/[id]` | farmer(own) | content edits reset approval; on a suspended listing they resubmit it (suspension cleared, back to pending, audit `RESUBMIT_PRODUCT`) |
+| DELETE | `/api/products/[id]` | farmer(own)/admin/manager | staff: suspended listings only (409 otherwise); blocked if active orders; archives when the product has history |
 | GET | `/api/products/[id]/reviews` | public | all reviews for product |
 | POST | `/api/products/[id]/reviews` | customer | must have delivered order with product; one per customer |
 | DELETE | `/api/products/[id]/reviews/[reviewId]` | customer(own)/admin/manager | |
@@ -177,7 +178,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/admin/orders` | admin/manager | all orders |
 | PATCH | `/api/admin/orders/[id]` | admin/manager | manager: state machine; admin: free override |
 | GET | `/api/admin/products` | admin/manager | all products, no approval filter |
-| PATCH | `/api/admin/products/[id]` | admin/manager | approve/reject/edit; audit logged |
+| PATCH | `/api/admin/products/[id]` | admin/manager | `{ approved: true }` only: approves a pending listing; 409 while suspended; audit logged |
+| POST | `/api/admin/products/[id]/suspend` | admin/manager | `{ reasons[], note }`; hides the listing, sends the farmer a notice + email, audit `SUSPEND_PRODUCT` |
 | GET | `/api/admin/farmer-stats` | admin/manager | per-farmer metrics |
 | GET | `/api/admin/audit-logs` | admin | |
 | GET | `/api/admin/reports` | admin/manager | aggregated sales/crop/user/farmer data |
@@ -195,7 +197,9 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/announcements` | public | all announcements with author |
 | POST | `/api/announcements` | admin/manager | create announcement |
 | DELETE | `/api/announcements/[id]` | admin/manager | |
-| POST | `/api/orders` | authenticated | validates stock, approved, same-farmer; `$transaction` |
+| POST | `/api/orders` | customer | validates stock, approved, same-farmer; `$transaction`; 403 for farmers and staff |
+| GET | `/api/notices` | authenticated | own system notices, newest first |
+| POST | `/api/notices/read` | authenticated | marks own notices read |
 | GET | `/api/customer/orders` | authenticated | caller's own orders |
 | PATCH | `/api/customer/orders/[id]` | authenticated | pending→cancelled (stock restore); shipped→delivered |
 | GET | `/api/farmer/orders` | farmer | orders with farmer's products |
@@ -218,6 +222,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | DELETE | `/api/users/me/id-image` | farmer | removes the submitted ID image |
 | POST | `/api/upload` | authenticated | shared image-upload endpoint (magic-byte sniffed, rate-limited) |
 | GET | `/api/cron/purge-id-images` | `CRON_SECRET` header | daily Vercel Cron job; purges ID images 30 days post-verification |
+| GET | `/api/cron/purge-suspended-products` | `CRON_SECRET` header | daily Vercel Cron job; removes listings suspended over 7 days ago and not resubmitted (archives if they have history, skips if an order is in progress) |
 
 ---
 

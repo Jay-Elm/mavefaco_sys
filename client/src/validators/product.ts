@@ -37,9 +37,11 @@ export const productUpdateSchema = z.object({
 
 export type ProductUpdateInput = z.infer<typeof productUpdateSchema>;
 
-// PATCH /api/admin/products/[id] — admin/manager editing or approving.
-export const adminProductUpdateSchema = productUpdateSchema.extend({
-  approved: z.boolean().optional(),
+// PATCH /api/admin/products/[id] — admin/manager approving a pending listing.
+// Staff don't edit listings and there is no "revoke": a listing that needs
+// fixing is suspended (validators/productSuspension.ts) for its farmer to edit.
+export const adminProductUpdateSchema = z.object({
+  approved: z.literal(true, { message: "approved must be true" }),
 });
 
 export type AdminProductUpdateInput = z.infer<typeof adminProductUpdateSchema>;

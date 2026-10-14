@@ -20,7 +20,7 @@ export type DeleteAccountResult =
  * audit log of what a staff member did — and deleting the row used to
  * mean deleting those records with it. Instead:
  *   - personal data goes: name, email, password, MFA, ID image, the
- *     user's own reviews and messages, outstanding tokens and backup codes
+ *     user's own reviews, messages and notices, outstanding tokens and backup codes
  *   - shared history stays: orders and order items (on both the buyer's
  *     and the seller's side), audit-log entries, announcements
  *   - a farmer's products are archived, so they leave the shop but past
@@ -75,6 +75,7 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
   await prisma.$transaction([
     prisma.review.deleteMany({ where: { customerId: userId } }),
     prisma.message.deleteMany({ where: { OR: [{ senderId: userId }, { receiverId: userId }] } }),
+    prisma.notice.deleteMany({ where: { recipientId: userId } }),
     prisma.passwordResetToken.deleteMany({ where: { userId } }),
     prisma.emailVerificationToken.deleteMany({ where: { userId } }),
     prisma.emailChangeToken.deleteMany({ where: { userId } }),

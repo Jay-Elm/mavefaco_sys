@@ -47,8 +47,9 @@ function readStoredCart(cartKey: string | null): CartItem[] {
 export function CartProvider({ children }: { children: ReactNode }) {
   const { user, loading: authLoading } = useAuth()
 
-  // Each user gets their own isolated cart key. Guests have no persistent cart.
-  const cartKey = user ? `cart_${user.id}` : null
+  // Each customer gets their own isolated cart key. Guests have no
+  // persistent cart, and farmers and staff have none at all: they can't buy.
+  const cartKey = user?.role === 'customer' ? `cart_${user.id}` : null
 
   const [items, setItems] = useState<CartItem[]>([])
   // The cart key `items` was loaded for; undefined until the first load.

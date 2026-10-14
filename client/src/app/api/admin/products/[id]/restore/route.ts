@@ -24,10 +24,19 @@ export async function POST(
     if (isNaN(productId)) return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
 
     // Conditional on still being archived, so a double-click can't log two restores.
+    // A listing archived at the end of a suspension comes back as an ordinary
+    // pending one; keeping its expired suspension would have the cron
+    // archive it again the next night.
     const { count } = await prisma.product.updateMany({
       where: { id: productId, archivedAt: { not: null } },
       data: { archivedAt: null },
     });
+    if (count > 0) {
+      await prisma.product.updateMany({
+        where: { id: productId, suspendedAt: { not: null } },
+        data: { suspendedAt: null, suspensionReasons: [], suspensionNote: null, suspendedById: null, approved: false },
+      });
+    }
     if (count === 0) return NextResponse.json({ error: "Archived product not found" }, { status: 404 });
 
     await prisma.auditLog.create({

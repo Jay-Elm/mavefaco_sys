@@ -126,5 +126,15 @@ describe("POST /api/orders (checkout)", () => {
       const res = await checkout(customer, [{ productId: 1, quantity: 1 }]);
       expect(res.status).toBe(401);
     });
+
+    it.each(["farmer", "manager", "admin"] as const)("refuses a %s: only customers buy", async (role) => {
+      const product = await createProduct((await createUser({ role: "farmer" })).id, { stock: 10 });
+
+      const res = await checkout(await createUser({ role }), [{ productId: product.id, quantity: 1 }]);
+
+      expect(res.status).toBe(403);
+      expect(await prisma.order.count()).toBe(0);
+      expect((await prisma.product.findUniqueOrThrow({ where: { id: product.id } })).stock).toBe(10);
+    });
   });
 });

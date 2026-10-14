@@ -13,8 +13,8 @@ const patch = (id: number, as: SessionUser, body: unknown) =>
   PATCH(request(`/api/products/${id}`, { method: "PATCH", as, body }), params({ id: String(id) }));
 const del = (id: number, as: SessionUser) =>
   DELETE(request(`/api/products/${id}`, { method: "DELETE", as }), params({ id: String(id) }));
-const approveRoute = (id: number, as: SessionUser, approved: boolean) =>
-  adminPATCH(request(`/api/admin/products/${id}`, { method: "PATCH", as, body: { approved } }), params({ id: String(id) }));
+const approveRoute = (id: number, as: SessionUser, approved: boolean, extra: Record<string, unknown> = {}) =>
+  adminPATCH(request(`/api/admin/products/${id}`, { method: "PATCH", as, body: { approved, ...extra } }), params({ id: String(id) }));
 const approval = async (id: number) => (await prisma.product.findUniqueOrThrow({ where: { id } })).approved;
 
 describe("GET /api/products/[id]", () => {
@@ -59,12 +59,11 @@ describe("PATCH /api/products/[id]", () => {
     expect(await approval(product.id)).toBe(true);
   });
 
-  it("doesn't revoke approval when a manager edits", async () => {
-    const product = await createProduct((await createUser({ role: "farmer" })).id);
+  it.each(["manager", "admin"] as const)("doesn't let a %s edit a listing (staff approve or suspend instead)", async (role) => {
+    const product = await createProduct((await createUser({ role: "farmer" })).id, { name: "Original" });
 
-    await patch(product.id, await createUser({ role: "manager" }), { name: "Renamed" });
-
-    expect(await approval(product.id)).toBe(true);
+    expect((await patch(product.id, await createUser({ role }), { name: "Renamed" })).status).toBe(403);
+    expect((await prisma.product.findUniqueOrThrow({ where: { id: product.id } })).name).toBe("Original");
   });
 
   it("forbids editing another farmer's product, and customers entirely", async () => {
@@ -212,17 +211,25 @@ describe("restoring an archived product", () => {
 describe("admin product approval", () => {
   const approve = approveRoute;
 
-  it("lets a manager approve and reject, with an audit trail", async () => {
+  it("lets a manager approve a pending listing, with an audit trail", async () => {
     const manager = await createUser({ role: "manager" });
     const product = await createProduct((await createUser({ role: "farmer" })).id, { approved: false });
 
     expect((await approve(product.id, manager, true)).status).toBe(200);
     expect(await approval(product.id)).toBe(true);
-    expect((await approve(product.id, manager, false)).status).toBe(200);
-    expect(await approval(product.id)).toBe(false);
 
     const actions = (await prisma.auditLog.findMany({ where: { entityId: product.id }, orderBy: { id: "asc" } })).map((l) => l.action);
-    expect(actions).toEqual(["APPROVE_PRODUCT", "REJECT_PRODUCT"]);
+    expect(actions).toEqual(["APPROVE_PRODUCT"]);
+  });
+
+  it("has no revoke and no staff edits: only approved: true is accepted", async () => {
+    const manager = await createUser({ role: "manager" });
+    const product = await createProduct((await createUser({ role: "farmer" })).id, { name: "Original" });
+
+    expect((await approve(product.id, manager, false)).status).toBe(400);
+    expect((await approve(product.id, manager, true, { name: "Renamed" })).status).toBe(200);
+    const after = await prisma.product.findUniqueOrThrow({ where: { id: product.id } });
+    expect(after).toMatchObject({ approved: true, name: "Original" });
   });
 
   it("doesn't let a farmer approve their own product", async () => {

@@ -24,11 +24,13 @@ The app has four roles, from most to least privileged: **Admin**, **Manager**, *
 | Role | What they can do |
 |---|---|
 | **Customer** | Browse, search, and filter the shop; view farmer profiles; keep a cart; check out (choose cash on delivery, GCash, or bank transfer — payment is settled outside the app — and pickup or delivery); track, cancel, and confirm orders; review products from delivered orders; message farmers |
-| **Farmer** | Submit their ID for verification; list products (each reviewed by staff before going live); manage stock and prices; fulfil orders; monitor crops (planting and harvest dates, growth stage, pest/weather/damage logs); see a shared pest and weather advisory and a local weather widget |
-| **Manager** | Approve or reject listings and restore archived ones; move orders through their lifecycle; manage categories and announcements; verify farmer IDs; suspend customers and farmers; view reports and farmer performance |
+| **Farmer** | Submit their ID for verification; list products (each reviewed by staff before going live); fix and resubmit, or delete, a listing staff suspended; manage stock and prices; fulfil orders; monitor crops (planting and harvest dates, growth stage, pest/weather/damage logs); see a shared pest and weather advisory and a local weather widget |
+| **Manager** | Approve listings; view a listing and suspend it with reasons (the farmer gets a notice and an email, and has 7 days to resubmit before it is deleted), or delete a suspended one early; restore archived listings; move orders through their lifecycle; manage categories and announcements; verify farmer IDs; suspend customers and farmers; view reports and farmer performance |
 | **Admin** | Everything a manager can do, plus deleting accounts, resetting passwords and two-factor authentication, overriding order status, the audit log, homepage banners, FAQs, and site content |
 
 Admin and manager accounts must use an authenticator app (two-factor authentication) to sign in.
+
+Only customers buy: farmers, managers and admins have no cart and can't place orders. Managers and admins work from their dashboard and don't see the storefront.
 
 ## Tech stack
 

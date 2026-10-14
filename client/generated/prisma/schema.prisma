@@ -67,6 +67,7 @@ model User {
   emailVerificationTokens EmailVerificationToken[]
   emailChangeTokens       EmailChangeToken[]
   totpBackupCodes         TotpBackupCode[]
+  notices                 Notice[]
 }
 
 model EmailVerificationToken {
@@ -142,21 +143,32 @@ model Category {
 }
 
 model Product {
-  id          Int       @id @default(autoincrement())
-  name        String
-  description String
-  price       Decimal   @db.Decimal(10, 2)
-  stock       Float
-  unit        String    @default("piece")
-  imageUrl    String?
-  approved    Boolean   @default(false)
+  id                Int       @id @default(autoincrement())
+  name              String
+  description       String
+  price             Decimal   @db.Decimal(10, 2)
+  stock             Float
+  unit              String    @default("piece")
+  imageUrl          String?
+  approved          Boolean   @default(false)
   // Set instead of deleting once a product has history (orders, reviews,
   // crop logs) that still references it. Archived products are hidden
   // everywhere a live product appears (shop, farmer and staff lists,
   // checkout) but stay in order history and revenue reports.
-  archivedAt  DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  archivedAt        DateTime?
+  // Set when staff suspend the listing (see /api/admin/products/[id]/suspend).
+  // A suspended listing is unapproved and hidden from customers; the farmer
+  // resubmits it by editing what customers see, which clears these fields.
+  // Not resubmitted within SUSPENSION_DAYS, the daily cron deletes it (or
+  // archives it, if it has history). Orders already placed carry on.
+  suspendedAt       DateTime?
+  suspensionReasons String[]  @default([])
+  suspensionNote    String?
+  // The staff member who suspended it. A plain id rather than a relation:
+  // it only attributes the cron's automatic removal in the audit log.
+  suspendedById     Int?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
   plantingDate        DateTime?
   expectedHarvestDate DateTime?
@@ -172,11 +184,13 @@ model Product {
   orderItems OrderItem[]
   reviews    Review[]
   cropLogs   CropLog[]
+  notices    Notice[]
 
   @@index([farmerId])
   @@index([categoryId])
   // Storefront listings: approved, not archived, newest first.
   @@index([approved, archivedAt, createdAt])
+  @@index([suspendedAt])
 }
 
 model CropLog {
@@ -293,6 +307,27 @@ model Message {
 
   @@index([senderId, receiverId])
   @@index([receiverId, read])
+}
+
+// One-way notices from the system to a user (e.g. a listing suspension),
+// shown in the farmer's Messages as "MaVeFaCo notices" with no reply box.
+// Kept apart from Message because they have no sender to reply to.
+model Notice {
+  id        Int      @id @default(autoincrement())
+  title     String
+  body      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  recipientId Int
+  recipient   User @relation(fields: [recipientId], references: [id])
+
+  // The listing it's about, for the edit link. Cleared if the listing is
+  // deleted; the notice text still says what happened.
+  productId Int?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([recipientId, read])
 }
 
 model AuditLog {

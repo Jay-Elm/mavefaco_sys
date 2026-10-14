@@ -2,10 +2,14 @@ import { prisma } from '@/lib/prisma'
 import { getActiveAuthUser } from '@/lib/getActiveAuthUser'
 import { NextRequest, NextResponse } from 'next/server'
 import { orderSchema } from '@/validators/order'
+import { ROLES } from '@/lib/roles'
 
 export async function POST(req: NextRequest) {
   const user = await getActiveAuthUser(req)
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  // Buying is for customer accounts only; farmers sell and staff administer.
+  if (user.role !== ROLES.CUSTOMER)
+    return NextResponse.json({ error: 'Only customer accounts can place orders' }, { status: 403 })
 
   let rawBody: unknown
   try {

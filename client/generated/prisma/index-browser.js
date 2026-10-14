@@ -192,6 +192,10 @@ exports.Prisma.ProductScalarFieldEnum = {
   imageUrl: 'imageUrl',
   approved: 'approved',
   archivedAt: 'archivedAt',
+  suspendedAt: 'suspendedAt',
+  suspensionReasons: 'suspensionReasons',
+  suspensionNote: 'suspensionNote',
+  suspendedById: 'suspendedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   plantingDate: 'plantingDate',
@@ -280,6 +284,16 @@ exports.Prisma.MessageScalarFieldEnum = {
   receiverId: 'receiverId'
 };
 
+exports.Prisma.NoticeScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  body: 'body',
+  read: 'read',
+  createdAt: 'createdAt',
+  recipientId: 'recipientId',
+  productId: 'productId'
+};
+
 exports.Prisma.AuditLogScalarFieldEnum = {
   id: 'id',
   action: 'action',
@@ -322,6 +336,7 @@ exports.Prisma.ModelName = {
   SiteContent: 'SiteContent',
   Review: 'Review',
   Message: 'Message',
+  Notice: 'Notice',
   AuditLog: 'AuditLog'
 };
 
