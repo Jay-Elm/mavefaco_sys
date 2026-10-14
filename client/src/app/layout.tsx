@@ -5,6 +5,7 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import Navbar from "@/components/Navbar";
 import ConditionalFooter from "@/components/ConditionalFooter";
+import { getSessionUser } from "@/lib/serverSession";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -37,6 +38,8 @@ export default async function RootLayout({
   // scripts while rendering a request; a page prerendered at build time
   // would ship scripts without it, and the browser would block them.
   await connection();
+  // Who's signed in, so the first paint is already theirs (no signed-out flash).
+  const user = await getSessionUser();
 
   return (
     <html
@@ -44,7 +47,7 @@ export default async function RootLayout({
       className={`${fraunces.variable} ${plusJakarta.variable} ${geistMono.variable} antialiased`}
     >
       <body className="min-h-screen flex flex-col bg-white font-sans">
-        <Providers>
+        <Providers initialUser={user}>
           <Navbar />
           <main className="flex-1">{children}</main>
           <ConditionalFooter />

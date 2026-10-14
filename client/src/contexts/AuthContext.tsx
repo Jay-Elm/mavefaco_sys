@@ -30,10 +30,22 @@ const SESSION_SENTINEL = 'session'
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [auth, setAuth] = useState<AuthState>({ user: null, token: null, loading: true })
+/**
+ * `initialUser` is who the server found in the session cookie while rendering
+ * the page (lib/serverSession.ts): null for nobody, undefined if it didn't
+ * check. When given, the very first render already shows the right user, so
+ * a refresh never flashes the signed-out page first.
+ */
+export function AuthProvider({ children, initialUser }: { children: ReactNode; initialUser?: User | null }) {
+  const [auth, setAuth] = useState<AuthState>(() =>
+    initialUser === undefined
+      ? { user: null, token: null, loading: true }
+      : { user: initialUser, token: initialUser ? SESSION_SENTINEL : null, loading: false },
+  )
+  const knownFromServer = initialUser !== undefined
 
   useEffect(() => {
+    if (knownFromServer) return
     // The token itself is httpOnly and can't be read here — rehydrate the
     // session by asking the server to verify the cookie it already has.
     fetch('/api/users/me')
@@ -50,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       })
       .catch(() => setAuth({ token: null, user: null, loading: false }))
-  }, [])
+  }, [knownFromServer])
 
   function login(user: User) {
     setAuth({ token: SESSION_SENTINEL, user, loading: false })

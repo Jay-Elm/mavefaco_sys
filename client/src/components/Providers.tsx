@@ -3,10 +3,11 @@
 import { AuthProvider } from '@/contexts/AuthContext'
 import { CartProvider } from '@/contexts/CartContext'
 import { DialogProvider } from '@/contexts/DialogContext'
+import type { SessionUser } from '@/lib/serverSession'
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({ children, initialUser }: { children: React.ReactNode; initialUser: SessionUser | null }) {
   return (
-    <AuthProvider>
+    <AuthProvider initialUser={initialUser}>
       <CartProvider>
         <DialogProvider>{children}</DialogProvider>
       </CartProvider>

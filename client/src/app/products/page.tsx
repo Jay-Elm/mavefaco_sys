@@ -3,15 +3,15 @@ import ProductGrid from '@/components/ProductGrid'
 import ProductFilters from '@/components/ProductFilters'
 import { Package } from 'lucide-react'
 import { Suspense } from 'react'
-import RoleRedirect from '@/components/RoleRedirect'
-
-const STAFF_ROLES = ['admin', 'manager']
+import { redirectRoles } from '@/lib/serverSession'
 
 export default async function ProductsPage({
   searchParams,
 }: {
   searchParams: Promise<{ categoryId?: string; search?: string; minPrice?: string; maxPrice?: string }>
 }) {
+  // The storefront is for shoppers; staff work from the dashboard.
+  await redirectRoles(['admin', 'manager'])
   const { categoryId, search, minPrice, maxPrice } = await searchParams
 
   const activeCategoryId = categoryId ? Number(categoryId) : null
@@ -45,8 +45,6 @@ export default async function ProductsPage({
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
-      {/* The storefront is for shoppers; staff work from the dashboard. */}
-      <RoleRedirect roles={STAFF_ROLES} />
       <div className="mb-8">
         <h1 className="font-serif text-3xl font-bold text-gray-900">Products</h1>
         <p className="text-gray-500 mt-1">Browse fresh products from local farmers</p>

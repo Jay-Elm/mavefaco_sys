@@ -5,15 +5,15 @@ import { prisma } from '@/lib/prisma'
 import { Package, ArrowLeft, Tag, User, CalendarDays } from 'lucide-react'
 import AddToCartButton from '@/components/AddToCartButton'
 import ReviewsSection from '@/components/ReviewsSection'
-import RoleRedirect from '@/components/RoleRedirect'
-
-const STAFF_ROLES = ['admin', 'manager']
+import { redirectRoles } from '@/lib/serverSession'
 
 export default async function ProductDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>
 }) {
+  // The storefront is for shoppers; staff work from the dashboard.
+  await redirectRoles(['admin', 'manager'])
   const { id } = await params
   const productId = Number(id)
 
@@ -39,8 +39,6 @@ export default async function ProductDetailPage({
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
-      {/* The storefront is for shoppers; staff work from the dashboard. */}
-      <RoleRedirect roles={STAFF_ROLES} />
       <Link
         href="/products"
         className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-forest mb-6 transition-colors"

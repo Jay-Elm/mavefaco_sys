@@ -1,13 +1,7 @@
-import RoleRedirect from '@/components/RoleRedirect'
+import { redirectRoles } from '@/lib/serverSession'
 
 // Only customers (and guests, who sign in as customers to check out) shop.
-const NON_SHOPPERS = ['admin', 'manager', 'farmer']
-
-export default function CartLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <RoleRedirect roles={NON_SHOPPERS} />
-      {children}
-    </>
-  )
+export default async function CartLayout({ children }: { children: React.ReactNode }) {
+  await redirectRoles(['admin', 'manager', 'farmer'])
+  return children
 }

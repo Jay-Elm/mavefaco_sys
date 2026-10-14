@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
-import HomeRedirect from "@/components/HomeRedirect";
+import { redirectRoles } from "@/lib/serverSession";
 import HomeHeroActions from "@/components/HomeHeroActions";
 import HomeBottomCTAButtons from "@/components/HomeBottomCTAButtons";
 import { ShoppingBag, Leaf, ArrowRight, Info, AlertTriangle, Package, Users, CheckCircle, Star } from "lucide-react";
@@ -100,6 +100,8 @@ const TESTIMONIALS = [
 ];
 
 export default async function HomePage() {
+  // The storefront home is for customers and guests; everyone else has a portal.
+  await redirectRoles(["admin", "manager", "farmer"]);
   const [featuredProducts, announcements, banners, stats, categories] = await Promise.all([
     getFeaturedProducts(),
     getAnnouncements(),
@@ -112,8 +114,6 @@ export default async function HomePage() {
 
   return (
     <div className="bg-white">
-      <HomeRedirect />
-
       {/* ── HERO — split layout ──────────────────────────── */}
       <section className="flex flex-col lg:flex-row" style={{ minHeight: "580px" }}>
 
