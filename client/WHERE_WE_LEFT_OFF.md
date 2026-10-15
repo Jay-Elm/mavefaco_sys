@@ -1,6 +1,6 @@
 # Where We Left Off
 
-_Updated: 2026-10-05_
+_Updated: 2026-10-15_
 
 ## Current state
 
@@ -19,7 +19,14 @@ Feature-complete for the capstone scope and through three structured hardening p
    - **Enforced nonce-based Content-Security-Policy** (`src/proxy.ts`, `src/lib/csp.ts`); every page renders per request.
    - Input length limits, audit logging of content changes with paging, report accuracy, 16 database indexes, single-use reset/verification links.
    - Rebranded to **Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo)**; README rewritten at the repo root; brand colors across all portals; lint at 0 errors and 0 warnings.
-4. **Scope** is documented item by item in `SCOPE_AND_DELIMITATIONS.md` (129 use-case items: 80 implemented, 19 partial, 30 not implemented).
+4. **Changes 2026-10-14 to 2026-10-15** (all deployed):
+   - Audit log is admin-only; messaging is customer↔farmer only (both enforced on the server).
+   - **Listing suspension** replaces staff edit/revoke/delete: staff View, Approve, Suspend with reasons, and Delete only a suspended listing. The farmer gets a one-way notice in Messages and an email; editing resubmits; the daily cron removes listings not resubmitted within 7 days. Notices show their outcome once resolved.
+   - **Only customers buy**: no cart or ordering for farmers and staff; staff don't see the storefront.
+   - In-page dialogs replace every browser `confirm()`/`alert()`; red count badges on the farmer and staff sidebars; sidebars narrowed to 184px.
+   - Message threads open at the first unread message (or the latest).
+   - No signed-out flash on refresh: the session is read on the server and role redirects happen there.
+5. **Scope** is documented item by item in `SCOPE_AND_DELIMITATIONS.md` (129 use-case items: 79 implemented, 20 partial, 30 not implemented).
 
 ---
 
@@ -37,6 +44,8 @@ Feature-complete for the capstone scope and through three structured hardening p
 8. Suspend a listing as a manager: the farmer sees it under Messages → MaVeFaCo notices with an "Edit or delete this listing" button, receives the email (real Brevo delivery), and the listing shows as Suspended with its deadline.
 9. As that farmer, save the listing without changes (stays suspended, with a message), then change the flagged detail and save (back to Pending).
 10. As admin or manager, the navbar has no Products or Cart, and opening `/products` or `/cart` goes to the dashboard; as a farmer, there is no Cart and no Add to Cart on product pages.
+11. As admin: the sidebar shows a count on Products and Users when something is waiting, and the dashboard overview counts suspended listings apart from pending ones.
+12. Refresh a page as each role: no Login/Register flash, and `/` goes straight to the farmer or staff portal.
 
 **Remaining debt** (see `DEVELOPMENT_STATUS.md` → Known Technical Debt): per-instance rate limiting (L4, needs Upstash Redis credentials from the project owner), Prisma 8 upgrade when released (clears the last 4 `npm audit` findings), no UI/end-to-end tests.
 
@@ -149,7 +158,9 @@ src/app/
     farmer/crops/[id]/logs/[logId]/route.ts
     farmer/advisory/route.ts            ← pest/damage/weather logs from all farmers (30 days)
     messages/route.ts                   ← conversation list with unread counts
-    messages/[userId]/route.ts          ← GET thread (marks read) + POST send
+    messages/[userId]/route.ts          ← GET thread (marks read) + POST send (customer↔farmer only)
+    notices/route.ts, notices/read/route.ts ← the caller's system notices; mark read
+    nav-badges/route.ts                 ← sidebar badge counts by role
     cron/purge-id-images/route.ts       ← CRON_SECRET-gated daily job
     cron/purge-suspended-products/route.ts ← removes listings suspended 7+ days
 
@@ -159,18 +170,24 @@ src/components/
   ReviewForm.tsx                        ← interactive star picker + comment textarea
   ReviewsSection.tsx                    ← avg rating + form + review cards
   WeatherWidget.tsx                     ← Open-Meteo, Legazpi City (lat=13.1391, lon=123.7438)
-  MessageThread.tsx                     ← shared inbox/thread component (8s polling)
-  AddToCartButton.tsx
+  MessageThread.tsx                     ← shared thread: opens at first unread, 8s polling
+  AddToCartButton.tsx                   ← hidden for farmers and staff
+  NavBadge.tsx                          ← useNavBadges(), NavBadge, refreshNavBadges()
+  SuspendListingModal.tsx               ← staff pick suspension reasons
+  MessageFarmerLink.tsx                 ← seller-page button, customers and guests only
 
 src/contexts/
-  AuthContext.tsx                       ← rehydrates via GET /api/users/me, no token in JS
-  CartContext.tsx                       ← cart_${user.id} localStorage key
+  AuthContext.tsx                       ← initialUser from the server (serverSession.ts), no token in JS
+  CartContext.tsx                       ← cart_${user.id} localStorage key, customers only
+  DialogContext.tsx                     ← useDialog(): in-page confirm/alert
 
 src/lib/
   auth.ts                               ← getJwtSecret, verifyToken
   authorize.ts
   session.ts                            ← issueSessionResponse (shared by login + MFA completion)
   getActiveAuthUser.ts                  ← JWT verify + DB suspended/tokenVersion check
+  serverSession.ts                      ← getSessionUser() for server-rendered pages, redirectRoles()
+  productRemoval.ts                     ← removeListing(): delete or archive, resolves notices
   mfaToken.ts / totp.ts / totpCrypto.ts / backupCodes.ts
   deleteAccount.ts                      ← anonymizes accounts (self-delete + admin-delete), keeps order/audit history
   idImageStorage.ts                     ← deleteIdImage(): confirmed deletes from the private ID bucket
@@ -187,10 +204,11 @@ src/validators/                          ← shared Zod schemas (client + server
   auth.ts, order.ts, profile.ts, adminUser.ts, banner.ts, siteContent.ts,
   category.ts, product.ts, review.ts, message.ts, faq.ts, crop.ts, mfa.ts, helpers.ts,
   limits.ts                             ← maximum lengths (MAX, tooLong)
+  productSuspension.ts                  ← suspension reasons, SUSPENSION_DAYS, deadline
 
 prisma/
-  schema.prisma                         ← 17 models; generated/prisma custom output
-  migrations/ (25 applied — see DEVELOPMENT_STATUS.md for the full list)
+  schema.prisma                         ← 18 models; generated/prisma custom output
+  migrations/ (27 applied — see DEVELOPMENT_STATUS.md for the full list)
 
 src/proxy.ts                            ← per-request CSP nonce + /api/admin guard
 src/test-utils/integration/             ← integration-test helpers (test DB guard, factories, withRowLocked, fakeStorage)
@@ -208,5 +226,7 @@ scripts/migrate.mjs                     ← build-time migrations (skipped on Pr
 - Every page renders per request because of the CSP nonce (root layout awaits `connection()`). A new third-party script needs the nonce from `(await headers()).get('x-nonce')`.
 - Any new query listing live products must filter `archivedAt: null`; any new user listing must filter `deletedAt: null`.
 - Build new email bodies with the `emailHtml` template so user values are escaped.
+- Confirmations and alerts go through `useDialog()`, never the browser's `confirm()`/`alert()`.
+- Role-based redirects belong on the server (`redirectRoles()`); client-side ones flash the wrong page first.
 - Don't run `npx prisma format`; it reformats the whole schema. Use `npx prisma validate`.
 - If this file goes stale, `git log` is the source of truth.

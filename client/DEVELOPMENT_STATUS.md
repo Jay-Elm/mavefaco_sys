@@ -1,6 +1,6 @@
 # Development Status — MaVeFaCo Marketplace
 
-_Last updated: 2026-09-23_
+_Last updated: 2026-10-15_
 
 ---
 
@@ -48,14 +48,14 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 ## Database Schema (Prisma)
 
-17 models. `generated/prisma` is a custom client output path — **always run `npx prisma generate` after `npx prisma migrate dev`**, it does not auto-update. Use the Bash tool (not PowerShell) for Prisma CLI commands.
+18 models. `generated/prisma` is a custom client output path — **always run `npx prisma generate` after `npx prisma migrate dev`**, it does not auto-update. Use the Bash tool (not PowerShell) for Prisma CLI commands.
 
 - `User` — id, name, email, password, role, suspended, `idImagePath` (private storage path, not a URL), `verified`, `verifiedAt` (drives ID-image auto-purge), `emailVerifiedAt`, `tokenVersion`, `totpSecret` (encrypted), `totpEnabled`, createdAt, updatedAt
 - `EmailVerificationToken` / `PasswordResetToken` — id, `tokenHash` (SHA-256, never the raw token), expiresAt, usedAt, userId
 - `EmailChangeToken` — id, `tokenHash`, newEmail, expiresAt, usedAt, userId (a pending email change, confirmed from the new address)
 - `TotpBackupCode` — id, `codeHash` (bcrypt — low-entropy human-typed codes need the slow hash), usedAt, userId
 - `Category` — id, name (unique), createdAt
-- `Product` — id, name, description, **price (`Decimal(10,2)`)**, stock (Float), unit, imageUrl, farmerId, categoryId, approved, plantingDate, expectedHarvestDate, growthStage, readyForHarvest
+- `Product` — id, name, description, **price (`Decimal(10,2)`)**, stock (Float), unit, imageUrl, farmerId, categoryId, approved, archivedAt, plantingDate, expectedHarvestDate, growthStage, readyForHarvest, suspendedAt, suspensionReasons (text[]), suspensionNote, suspendedById (plain id, for audit attribution)
 - `Order` — id, **totalAmount (`Decimal(10,2)`)**, status, paymentMethod, deliveryMethod, createdAt, customerId
 - `OrderItem` — id, quantity (Float), **price (`Decimal(10,2)`)**, orderId, productId
 - `AuditLog` — id, action, entityType, entityId, timestamp, userId
@@ -66,8 +66,9 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `Review` — id, rating (1–5), comment, createdAt, customerId, productId — `@@unique([customerId, productId])`
 - `CropLog` — id, type (weather_impact/pest_disease/damage/note), note, createdAt, productId
 - `Message` — id, content, read, createdAt, senderId, receiverId
+- `Notice` — id, title, body, read, createdAt, recipientId, productId (set null if the listing is deleted), resolvedAt, resolution (`resubmitted` | `removed`) — one-way system notices, e.g. a listing suspension
 
-**Migrations applied (25, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes`.
+**Migrations applied (27, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution`.
 
 **Infra note:** `DIRECT_URL` cannot use Supabase's true direct-connection endpoint (`db.<ref>.supabase.co:5432`) — neither locally nor from Vercel's build infra can reach it (`P1001`), almost certainly Supabase's IPv6-only requirement for that endpoint. Fixed by pointing `DIRECT_URL` at the **Session pooler** instead (distinct from the Transaction pooler `DATABASE_URL` uses) — still holds `prisma migrate deploy`'s advisory lock, and is IPv4-compatible.
 
@@ -100,7 +101,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - Average rating shown on seller profile page
 
 ### Admin Dashboard (`/dashboard/`) — admin + manager roles
-- `layout.tsx` — dark sidebar, auth guard, isolated scroll
+- `layout.tsx` — dark sidebar (184px), auth guard, isolated scroll; red count badges on Products (listings to review) and Users (IDs to verify) from `GET /api/nav-badges`
 - `page.tsx` — stat cards: Users, Products, Orders, Revenue; Farmer Performance table (admin + manager)
 - `users/` — suspend/verify (via signed-URL ID image view)/reset password/delete; inline modals
 - `categories/` — list with product count; inline add/delete
@@ -116,11 +117,11 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
   - **FAQs** — add/delete FAQ entries with display order
 
 ### Farmer Dashboard (`/farmer/`) — farmer role only
-- `layout.tsx` — green-accent sidebar, auth guard, isolated scroll
+- `layout.tsx` — green-accent sidebar (184px), auth guard, isolated scroll; red count badges on Messages (unread messages + notices), Orders (new), My Products (suspended), Crop Monitor (overdue harvests), Profile (no ID submitted)
 - `page.tsx` — product count, orders, revenue; **stock alerts** (out of stock + low stock); **weather widget** (Legazpi City, Albay via Open-Meteo); **community advisory** (recent pest/disease/damage logs from all farmers, last 30 days)
-- `products/` — table with stock badges (Out of Stock / Low / normal); alert banner listing specific problem products; Edit/Delete; CSV export
+- `products/` — table with stock badges (Out of Stock / Low / normal) and status (Approved / Pending / Suspended with its deletion date and reasons); alert banners for stock problems and suspended listings; Edit ("Fix & resubmit" when suspended)/Delete; CSV export
 - `products/new/` — create product form; requires `verified: true`
-- `products/[id]/edit/` — pre-filled edit form; content edits reset `approved: false`
+- `products/[id]/edit/` — pre-filled edit form; content edits reset `approved: false`; on a suspended listing shows the reasons and deadline, saving a content change resubmits it; Delete button
 - `orders/` — orders with farmer's products; Accept/Reject/Ship/Deliver state machine; CSV export
 - `crops/` — Crop Monitor list: all products with growth stage, planting date, harvest date (red if overdue), log count, ready badge
 - `crops/[id]/` — Crop detail: update planting/harvest dates, growth stage dropdown, ready-for-harvest toggle; crop log with type buttons (weather/pest/damage/note) + timestamped entries
@@ -136,6 +137,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - All products created with `approved: false`; must be verified farmer to list
 - Unapproved products hidden from public pages
 - Farmer content edits reset `approved: false`; stock-only changes do not
+- Staff don't edit listings: they approve a pending one, or **suspend** one with reasons (`POST /api/admin/products/[id]/suspend`). Suspension hides it from customers (orders already placed continue), sends the farmer a `Notice` and an email linking to the edit page, and starts a 7-day clock. A content edit by the farmer resubmits it (back to pending; the notice is resolved). Staff can delete a suspended listing early; otherwise `/api/cron/purge-suspended-products` removes it after 7 days (archives it if it has history, waits if an order is in progress). Removal goes through `removeListing()` in `src/lib/productRemoval.ts`
+- Only customers can place orders (`POST /api/orders` returns 403 for farmers and staff); staff don't see the storefront or a cart, farmers have no cart
 
 ### User Verification System
 - Farmers submit a real ID image file (uploaded to a private Supabase bucket) via the profile page
@@ -246,7 +249,7 @@ Only `status: 'delivered'` orders count as revenue — in stats API, farmer-stat
 After every `prisma migrate dev`, run `prisma generate` separately. The generated client at `generated/prisma` is what the app imports — it does NOT auto-update from migrations alone.
 
 ### Messaging (polling, not WebSocket)
-`MessageThread` component polls `/api/messages/[userId]` every 8 seconds via `setInterval`. Not real-time but functional for a capstone.
+`MessageThread` component polls `/api/messages/[userId]` every 8 seconds via `setInterval`. Not real-time but functional for a capstone. A thread opens at the earliest message that was unread (under a "New messages" line), or at the latest; new messages scroll into view only while the reader is at the bottom. Fetching a thread marks its incoming messages read, so nothing else should fetch it before `MessageThread` does (the conversation pages take the other person's name from it via `onOtherName`).
 
 ### Weather widget
 `WeatherWidget` calls Open-Meteo API client-side for Legazpi City (lat=13.1391, lon=123.7438). No API key required. Shown on farmer overview page.
@@ -257,13 +260,22 @@ After every `prisma migrate dev`, run `prisma generate` separately. The generate
 ### Cart isolation
 `CartContext` uses `cart_${user.id}` as localStorage key. Waits for `authLoading` before loading cart to avoid guest-cart flash.
 
+### Server-rendered session
+The root layout calls `getSessionUser()` (`src/lib/serverSession.ts`: session cookie → same checks as `getActiveAuthUser`, memoized per request) and passes the user to `AuthContext` as `initialUser`, so the first paint already shows the right navbar. Role-only pages redirect on the server with `redirectRoles()` (home for farmers/staff, storefront for staff, cart and `/customer/*` for farmers/staff, login/register for anyone signed in). Don't add client-side role redirects; they show the wrong page first.
+
+### Dialogs
+Use `useDialog()` (`src/contexts/DialogContext.tsx`) — `confirm({ title, message, confirmLabel, tone: 'danger' })` resolves true/false, `alert({...})` shows one OK button. Never the browser's `confirm()`/`alert()`.
+
+### Sidebar badges
+`GET /api/nav-badges` returns counts keyed by sidebar path for the caller's role; `useNavBadges()`/`NavBadge` (`src/components/NavBadge.tsx`) poll it every 30s and on navigation. Call `refreshNavBadges()` after an action that clears a badge.
+
 ### Layout / scroll architecture
 - Navbar: `sticky top-0 z-50 h-14`; gains `shadow-xl` on scroll
 - Root layout: `body` is `h-full flex flex-col`; `main` is `flex-1 min-h-0 overflow-y-auto`
 - Dashboard + Farmer layouts: `flex h-full overflow-hidden` — sidebar and content scroll independently
 
 ### Automated tests
-Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/order/helpers schemas) and the security-critical parts of `src/lib/` (`getJwtSecret`/`verifyToken`, `authorize`, `isSafeUrl`). `npm run test:integration` (`vitest.integration.config.mts`) calls route handlers directly against a real Postgres database — `<DATABASE_URL db name>_test` on localhost by default, or `TEST_DATABASE_URL`. It refuses any database that isn't on localhost with a name ending in `_test`, creates the database and runs `prisma migrate deploy` on first run, and truncates every table before each test. Test files are `*.int.test.ts` next to the route; helpers (users, products, signed session cookies) are in `src/test-utils/integration/`. Coverage so far: checkout (`POST /api/orders`), the three order-status routes (customer, farmer, admin/manager), admin user management, login/logout plus the full MFA flow (setup, confirm, verify, backup codes, pending-token scoping, rate limits), products (create, listing visibility, edit/re-approval, delete, admin approval), reviews and messages.
+Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/order/helpers schemas) and the security-critical parts of `src/lib/` (`getJwtSecret`/`verifyToken`, `authorize`, `isSafeUrl`). `npm run test:integration` (`vitest.integration.config.mts`) calls route handlers directly against a real Postgres database — `<DATABASE_URL db name>_test` on localhost by default, or `TEST_DATABASE_URL`. It refuses any database that isn't on localhost with a name ending in `_test`, creates the database and runs `prisma migrate deploy` on first run, and truncates every table before each test. Test files are `*.int.test.ts` next to the route; helpers (users, products, signed session cookies) are in `src/test-utils/integration/`. Coverage so far: checkout (`POST /api/orders`), the three order-status routes (customer, farmer, admin/manager), admin user management, login/logout plus the full MFA flow (setup, confirm, verify, backup codes, pending-token scoping, rate limits), products (create, listing visibility, edit/re-approval, delete, admin approval), listing suspension (notices, email, resubmission, early delete, the 7-day cron, notice resolution), reviews, messages, notices, sidebar badges, and the server-side session check (`serverSession.int.test.ts`).
 
 **MFA secret encryption key:** `src/lib/totpCrypto.ts` encrypts with `TOTP_ENCRYPTION_KEY` and decrypts by trying it, then `TOTP_ENCRYPTION_KEY_PREVIOUS`, then the legacy `JWT_SECRET`-derived key; a secret found under an older key is re-encrypted on the user's next successful TOTP login. `/api/auth/mfa/verify` still accepts backup codes when a secret can't be decrypted. (Before this, rotating `JWT_SECRET` would have locked out every admin and manager.)
 
@@ -296,6 +308,7 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 | 4 high `npm audit` findings in Prisma's CLI tooling | Low | `deepmerge-ts` and `mysql2` inside `prisma`, unused at runtime; resolved by Prisma 8 (release candidate as of 2026-10). Don't apply npm's suggested downgrade |
 | Product images orphaned by edits aren't cleaned up | Low | Replaced product photos stay in the public bucket |
 | Messaging is polling, not WebSocket | Low | 8s interval; acceptable for the cooperative's use |
+| A resubmitted listing keeps no record of its previous details | Low | The audit log records the suspension and resubmission (who, when) and the notice keeps the reasons, but not the before/after values |
 | No UI or end-to-end tests | Low | API routes are covered by unit and integration tests; screens are checked manually |
 
 Every finding from `SECURITY_REVIEW.md` (through 2026-09-08), the 10-item gap list, and the 2026-10-03 whole-project review (`PROJECT_REVIEW.md`) is fixed except L4 above.

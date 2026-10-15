@@ -146,7 +146,7 @@ GitHub Actions runs both suites on every push and pull request (`.github/workflo
         │   ├── farmer/       Farmer portal
         │   └── customer/     Customer orders, messages, profile
         ├── components/   Shared UI components
-        ├── contexts/     Auth and cart state
+        ├── contexts/     Auth, cart and dialog state
         ├── lib/          Server utilities (auth, MFA, email, storage, rate limiting)
         ├── validators/   Zod schemas shared by forms and API routes
         ├── proxy.ts      Per-request CSP nonce; guard for /api/admin/*
