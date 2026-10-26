@@ -146,7 +146,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - Only customers can place orders (`POST /api/orders` returns 403 for farmers and staff); staff don't see the storefront or a cart, farmers have no cart
 
 ### User Verification System
-- `IdSubmission` — idType (one of `ID_TYPES` in `src/lib/idVerification.ts`, or `unspecified` for pre-2026-10-27 uploads), numberHash, numberLast4, front/back/selfie paths, captureMethod (camera/upload/legacy), status (pending/approved/rejected/replaced), rejectionReasons, rejectionNote, reviewedById, reviewedAt, imagesPurgedAt
+- `IdSubmission` — idType (one of `ID_TYPES` in `src/lib/idVerification.ts`, or `unspecified` for pre-2026-10-26 uploads), numberHash, numberLast4, front/back/selfie paths, captureMethod (camera/upload/legacy), status (pending/approved/rejected/replaced), rejectionReasons, rejectionNote, reviewedById, reviewedAt, imagesPurgedAt
 - Farmer profile → "Verify my ID": choose the ID type, then front, back (not for a passport) and a selfie holding the ID through `IdCamera` (getUserMedia, ID-shaped frame, crop + resize + JPEG re-encode on the phone; blur and brightness checks in `src/lib/photoQuality.ts`). File upload appears only when no camera can be used, and is tagged for staff. `Permissions-Policy` allows `camera=(self)`.
 - Staff → Users → Review: the three photos side by side, capture method, last 4 digits, other accounts with the same number, earlier rejections; Approve (verifies) or Reject with reasons — the farmer gets a notice and an email. "Mark verified in person" (`verifiedInPerson: true`) for IDs checked at the cooperative office; `verified: false` revokes.
 - Verified status required before a farmer can list products
