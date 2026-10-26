@@ -1,7 +1,7 @@
 # Scope and Delimitations
 
 **System:** MaVeFaCo Marketplace — the online marketplace of the Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo)
-**As of:** 2026-10-05 · deployed at https://mavefaco-sys.vercel.app
+**As of:** 2026-10-26 · checked against the code on `master` (last code change 1355189, 2026-10-15) · deployed at https://mavefaco-sys.vercel.app
 
 This document states what the system covers (**scope**) and the boundaries it deliberately stays within (**delimitations**). The scope is measured against the four use-case documents written at the start of the project — [`ADMIN_USE_CASE.md`](ADMIN_USE_CASE.md), [`MANAGER_USE_CASE.md`](MANAGER_USE_CASE.md), [`FARMER_USE_CASE.md`](FARMER_USE_CASE.md) and [`CUSTOMER_USE_CASE.md`](CUSTOMER_USE_CASE.md) — which describe the full long-term vision. The implemented system covers the core marketplace workflow end to end; the remaining items are documented below as outside the current scope.
 
@@ -26,7 +26,7 @@ This document states what the system covers (**scope**) and the boundaries it de
 | Administrator | 29 | 20 | 5 | 4 |
 | **Total** | **129** | **79** | **20** | **30** |
 
-The system fully supports the cooperative's core workflow: farmers list produce, staff review it, customers buy it, farmers and staff fulfil orders, and staff monitor the cooperative through reports and an audit log. The items outside the scope cluster in four areas: **online payments**, **market intelligence** (prices, forecasts, recommendations), **planning tools** for managers, and **convenience features** (favorites, invoices, notification settings, translation).
+The system fully supports the cooperative's core workflow: farmers list produce, staff review it, customers buy it, farmers and staff fulfil orders, and staff monitor the cooperative through reports and an audit log. The 30 items outside the scope fall into seven areas (see [section 4](#4-outside-the-current-scope)): payments, market intelligence, planning, customer convenience, farmer convenience, administration and localization.
 
 ## 2. Scope by role
 
@@ -43,7 +43,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Reset password | Implemented | Emailed single-use link, valid 30 minutes |
 | Update profile | Implemented | Name, password, and email (the new address must confirm the change) |
 | **Marketplace** | | |
-| Browse products | Implemented | Only staff-approved products are shown |
+| Browse products | Implemented | Only staff-approved, non-archived products are shown |
 | Search products | Implemented | By product name |
 | Filter by crop type | Implemented | By category |
 | Filter by price | Implemented | Minimum and maximum price |
@@ -51,7 +51,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | View product photos | Implemented | One photo per product |
 | Compare products | Not implemented | |
 | **Ordering** | | |
-| Add to cart | Implemented | Cart is saved per account |
+| Add to cart | Implemented | One cart per account, kept in that browser |
 | Place order | Implemented | Stock is checked and reserved at checkout |
 | Reserve products | Not implemented | No pre-orders for products not yet in stock |
 | Cancel order | Implemented | While the order is still pending; stock is returned |
@@ -89,16 +89,16 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Upload valid ID | Implemented | Stored privately; staff verify it before the farmer can list products |
 | **Crop/product management** | | |
 | Add crop listing | Implemented | Reviewed by staff before going live |
-| Edit crop listing | Implemented | Changing what customers see sends the listing back for review |
-| Delete crop listing | Implemented | Listings with sales history are archived instead, preserving order records |
+| Edit crop listing | Implemented | Changing what customers see sends the listing back for review; stock-only changes don't |
+| Delete crop listing | Implemented | Listings with order, review or crop-log history are archived instead, preserving records |
 | Upload crop images | Implemented | PNG, JPEG or WEBP, up to 4 MB |
-| Set price per kilo/unit | Implemented | Price per chosen unit (piece, kg, gram, bundle, pack, bag, tray, dozen, liter, sack, bottle) |
+| Set price per kilo/unit | Implemented | Price per chosen unit: piece, kg, gram, bundle, pack, bag, tray, dozen, liter, sack or bottle |
 | Set available quantity | Implemented | |
 | Set harvest date for "coming soon" products | Partial | The expected harvest date is recorded in the crop monitor but not shown to customers as "coming soon" |
 | Set crop category | Implemented | |
 | Spoilage alerts | Not implemented | |
-| Low stock alerts | Implemented | Warning on the farmer dashboard |
-| Out of stock alerts | Implemented | Warning on the farmer dashboard |
+| Low stock alerts | Implemented | Dashboard warning at 5 units or fewer |
+| Out of stock alerts | Implemented | Dashboard warning at zero stock |
 | **Crop monitoring** | | |
 | Update crop growth stage | Implemented | Seedling → vegetative → flowering → fruiting → harvest-ready → harvested |
 | Input planting date | Implemented | |
@@ -107,8 +107,8 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Record pest/disease issues | Implemented | Crop log entry |
 | Record damaged crops | Implemented | Crop log entry |
 | Mark ready for harvest | Implemented | |
-| Local pest/disease advisory, AI-translated from members' records | Partial | A shared advisory lists the last 30 days of pest, weather and damage logs from all members' approved products, as written; no AI translation or summarization |
-| Weather alerts API (Albay) | Partial | Current conditions for Albay from Open-Meteo on the farmer dashboard; no alerts or forecasts |
+| Local pest/disease advisory, AI-translated from members' records | Partial | A shared advisory lists up to 50 pest, weather and damage logs from the last 30 days on approved products, as written; no AI translation or summary |
+| Weather alerts API (Albay) | Partial | Current temperature, humidity and wind for Legazpi City from Open-Meteo; no alerts or forecasts |
 | **Market features** | | |
 | View current market prices (Albay) | Not implemented | No external market-price data source |
 | View price trends (Albay) | Not implemented | |
@@ -118,7 +118,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | **Orders** | | |
 | Receive orders | Implemented | |
 | Accept order | Implemented | Pending → confirmed |
-| Reject order | Implemented | Cancelling a pending order; stock is returned |
+| Reject order | Implemented | Cancelling a pending or confirmed order; stock is returned |
 | Confirm stock availability | Partial | Stock is checked automatically at checkout; accepting the order is the farmer's confirmation |
 | Update order status | Implemented | Forward-only: pending → confirmed → shipped → delivered |
 | Mark ready for pickup | Partial | No separate "ready for pickup" status; "shipped" is used for both pickup and delivery |
@@ -135,7 +135,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Search buyers | Not implemented | |
 | Filter order history | Not implemented | |
 | Print sales receipt | Not implemented | |
-| Download reports | Implemented | Orders as CSV |
+| Download reports | Implemented | Orders and products as CSV |
 | Enable notifications | Not implemented | |
 | Disable notifications | Not implemented | |
 | Change language | Not implemented | English only |
@@ -156,7 +156,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Approve farmer membership | Implemented | Managers verify farmers' submitted IDs |
 | **Reports** | | |
 | Print executive reports | Implemented | Print view of the reports page |
-| Export annual analytics | Partial | Full report as CSV (all time, with monthly breakdown); not per year |
+| Export annual analytics | Partial | Full report as CSV (all time, with a monthly breakdown); not per year |
 | Compare yearly growth | Not implemented | |
 | **Communication** | | |
 | Broadcast meetings | Partial | Announcements can announce a meeting; no scheduling or RSVP |
@@ -167,7 +167,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | View regional statistics | Not implemented | |
 | Evaluate inactive members | Partial | Farmer performance shows activity per farmer; inactive members aren't flagged |
 
-Managers can also approve product listings, view and suspend them (or delete a suspended one early), restore archived products, manage orders, categories and announcements, and suspend customers and farmers.
+Beyond the use cases, managers also approve, view and suspend product listings (and delete suspended ones early), restore archived products, move orders through their lifecycle (including cancelling), manage categories and announcements, and suspend customers and farmers. Managers cannot act on admin or other manager accounts, reset passwords, delete accounts, or edit banners, FAQs and site content.
 
 ### 2.4 Administrator
 
@@ -176,18 +176,18 @@ Managers can also approve product listings, view and suspend them (or delete a s
 | **User management** | | |
 | Approve farmer registrations | Implemented | Farmer ID verification gates product listing |
 | Approve buyer registrations | Not implemented | Customers are verified by email only |
-| Suspend accounts | Implemented | |
+| Suspend accounts | Implemented | Customers, farmers and managers; not other administrators |
 | Delete fake users | Implemented | Accounts are anonymized; their order and audit history is kept |
-| Reset user passwords | Implemented | Also resetting a staff member's two-factor authentication after a lost device |
+| Reset user passwords | Implemented | Also resets a staff member's two-factor authentication after a lost device |
 | **Product management** | | |
 | Approve crop listings | Implemented | |
-| Remove prohibited listings | Implemented | Suspend with reasons: the listing is hidden from customers, the farmer gets a notice in Messages and an email, and it is deleted after 7 days unless resubmitted; staff can delete a suspended listing early. Listings with history are archived instead, and can be restored |
+| Remove prohibited listings | Implemented | Suspend with reasons: hidden from customers at once, the farmer gets a notice in Messages and an email, and it is deleted after 7 days unless resubmitted; staff can delete a suspended listing early. Listings with history are archived instead and can be restored |
 | Edit incorrect listings | Partial | Staff don't edit listings; they suspend one with reasons and the farmer edits and resubmits it |
 | Verify crop authenticity | Partial | Manual staff review when approving a listing |
 | **Order management** | | |
 | Monitor transactions | Implemented | All orders, filterable by status |
 | Resolve disputes | Not implemented | |
-| Cancel fraudulent orders | Implemented | Staff can cancel; stock is returned |
+| Cancel fraudulent orders | Implemented | Staff can cancel; stock is returned. Administrators can also override any status change |
 | Review complaints | Not implemented | |
 | **Content management** | | |
 | Post announcements | Implemented | |
@@ -200,9 +200,9 @@ Managers can also approve product listings, view and suspend them (or delete a s
 | Generate sales reports | Implemented | Revenue, top products, sales by category and farmer |
 | Generate crop demand reports | Partial | Top products and sales by category; no demand forecasting |
 | **Security** | | |
-| Audit logs | Implemented | Product, order, user and content changes, with paging |
-| Monitor suspicious activity | Partial | Audit log, security emails (MFA changes, email changes), rate limiting and CSP violation logs; no automated anomaly detection |
-| Backup database | Not implemented | Relies on the database host (Supabase) backups |
+| Audit logs | Implemented | Administrators only; product, order, user and content changes, searchable, with paging and CSV export |
+| Monitor suspicious activity | Partial | Audit log, security emails (MFA and email changes), rate limiting and CSP violation logs; no automated anomaly detection |
+| Backup database | Not implemented | Relies on the database host's (Supabase) backups |
 | Restore records | Partial | Archived products can be restored; no general record restore |
 | **Minor actions** | | |
 | Manage FAQs | Implemented | |
@@ -220,6 +220,7 @@ Managers can also approve product listings, view and suspend them (or delete a s
 - Sign-up is open to **customers and farmers only**. Staff accounts are created by promoting an existing account in the database (see the README).
 - A farmer can list products only after staff **verify the farmer's government ID**. Customers need only a verified email address.
 - **Two-factor authentication** (authenticator app) is mandatory for staff and not offered to customers or farmers.
+- Passwords must be **12 to 128 characters**.
 
 ### 3.2 Transactions and payments
 
@@ -228,6 +229,7 @@ Managers can also approve product listings, view and suspend them (or delete a s
 - **One farmer per order.** A cart can only hold products from one farmer.
 - Order statuses are fixed: pending → confirmed → shipped → delivered, or cancelled. **Pickup and delivery are arranged outside the system**; there is no courier integration, delivery scheduling or location tracking.
 - Customers can cancel only while an order is pending.
+- The cart is **stored in the browser** per account, so it does not follow the customer to another device.
 
 ### 3.3 Products and inventory
 
@@ -239,9 +241,9 @@ Managers can also approve product listings, view and suspend them (or delete a s
 
 ### 3.4 Geography, weather and market data
 
-- The cooperative operates in **Albay, Philippines**. The weather widget shows current conditions for one fixed location in Albay (from Open-Meteo); it provides no alerts or forecasts.
+- The cooperative operates in **Albay, Philippines**. The weather widget shows current conditions for one fixed location, **Legazpi City, Albay** (from Open-Meteo); it provides no alerts or forecasts.
 - **No external agricultural data** is used: no market prices, price trends, supply or demand data. All reports are computed from the system's own orders, products and users.
-- The pest and weather advisory shares members' own crop logs from the last 30 days, as written; it is not AI-generated or translated.
+- The pest and weather advisory shares up to 50 of members' own crop logs from the last 30 days, as written; it is not AI-generated or translated.
 
 ### 3.5 Communication and notifications
 
@@ -254,13 +256,13 @@ Managers can also approve product listings, view and suspend them (or delete a s
 
 - A **responsive web application** used through a modern browser on desktop or mobile; there is no native mobile app and no offline mode.
 - Hosted on **Vercel** (application) and **Supabase** (database and file storage); availability, capacity and backups depend on those services.
-- Rate limits on sign-in and similar actions are tracked per server instance, so they are not strictly enforced across simultaneous instances.
+- Rate limits on sign-in, registration, password reset, uploads and similar actions are tracked per server instance, so they are not strictly enforced across simultaneous instances.
 
 ### 3.7 Data and privacy
 
 - Government ID images are kept in private storage, viewable by staff only through links that expire after 5 minutes, and **deleted automatically 30 days after verification** (Data Privacy Act of 2012, RA 10173).
-- **Deleting an account anonymizes it**: name, email, password, two-factor setup, ID image, reviews and messages are removed; orders and audit-log entries remain, attributed to "Deleted user".
-- Text fields have maximum lengths (for example 100 characters for names and 2,000 for messages).
+- **Deleting an account anonymizes it**: name, email, password, two-factor setup, ID image, reviews and messages are removed; orders and audit-log entries remain, attributed to "Deleted user", and a farmer's products are archived. Deletion is blocked while the account has an active order.
+- Text fields have maximum lengths (for example 100 characters for names, 2,000 for messages and product descriptions, and 1,000 for reviews).
 - Reports count **delivered orders only** as sales and group months by **Philippine time**.
 
 ## 4. Outside the current scope
