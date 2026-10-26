@@ -11,6 +11,7 @@ This document states what the system covers (**scope**) and the boundaries it de
 2. [Scope by role](#2-scope-by-role)
 3. [Delimitations](#3-delimitations)
 4. [Outside the current scope](#4-outside-the-current-scope)
+5. [Thesis text](#5-thesis-text) — sections 1–4 as prose for Chapter 1 of the IMRAD paper
 
 **Status key:** **Implemented** — available in the system. **Partial** — the need is met in a narrower form than the use case describes (the note says how). **Not implemented** — outside the current scope.
 
@@ -246,7 +247,7 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 - **No external agricultural data** is used: no market prices, price trends, supply or demand data. All reports are computed from the system's own orders, products and users.
 - The pest and weather advisory groups members' crop reports from the last 30 days by crop and problem, counting farms without naming them, and shows the farmers' notes as written; it is not AI-generated or translated.
 - **Crop growing times are approximate.** Each crop type's days to harvest and stage start days were set from general figures and can be corrected by staff; growth stages and harvest windows are calculated from them, not observed.
-- **Expected yields are farmers' own estimates**, in kilograms. Upcoming Supply spreads each planting's expected yield evenly across the rest of its harvest window and looks 8 weeks ahead; plantings without an estimate are counted as farms, not kilograms.
+- **Expected yields are farmers' own estimates**, in kilograms. Upcoming Supply spreads each planting's expected yield evenly across the rest of its harvest window and looks 8 weeks ahead; plantings without an estimate are counted as farms, not kilograms. It flags possible oversupply but doesn't schedule harvests or recommend what to plant.
 
 ### 3.5 Communication and notifications
 
@@ -281,3 +282,67 @@ The following capabilities from the use-case documents are not implemented. They
 | Farmer convenience | Spoilage alerts, buyer search, order-history filters, sales receipts, notification settings, chat with staff |
 | Administration | Dispute and complaint handling, buyer approval, automated anomaly detection, in-app database backup and restore |
 | Localization | Languages other than English; AI translation of advisories |
+
+## 5. Thesis text
+
+The same scope and delimitations written as prose for Chapter 1 (Introduction) of the IMRAD thesis. Square brackets mark details to fill in or delete. Keep this section in step with sections 1–4 and with the "Thesis text" tab of the shared Claude Doc.
+
+### Scope and Delimitations of the Study
+
+#### Scope
+
+This study covers the design, development, and deployment of the MaVeFaCo Marketplace, a web-based online marketplace for the Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo) in Albay, Philippines. The system lets the cooperative's member farmers sell fresh produce directly to customers. Cooperative staff use it to oversee product listings, orders, membership, and site content. It was developed during [School Year 2026–2027] and is accessible online through a web browser.
+
+The system has four user roles, listed from most to least privileged: Administrator, Manager, Farmer, and Customer. Each role has its own set of functions.
+
+**Customer.** Customers can register with email verification, log in, reset their password, and update their profile. They can browse staff-approved products, search by product name, and filter by category and price range. Out-of-stock produce with a harvest on the way is marked "coming soon" with its expected harvest dates. They can view each farmer's public seller page and keep a cart stored in their browser. At checkout, customers choose a payment method (cash on delivery, GCash, or bank transfer) and either pickup or delivery. They can track an order through its statuses and cancel it while it is still pending. They can also confirm receipt of a shipped order, review products from delivered orders, and message farmers within the system.
+
+**Farmer.** Farmers can register, upload a valid government-issued ID for verification, and manage their profile. Once verified, they can create, edit, and delete product listings. Each listing has a photo, category, price per unit, and available quantity, and must be approved by staff before it goes live. The farmer dashboard warns when a product has five units or fewer left or is out of stock. Farmers can accept, reject, and update orders, and they can message customers. They can view sales history and an earnings summary and export their orders and products to CSV. Farmers record each planting of a crop as its own season, with the planting date and, optionally, the area planted and the expected yield. The system works out each planting's growth stage and expected harvest window from the crop's typical growing time, flags plantings that are ready to harvest or overdue, and lets the farmer record the harvest and add it directly to a listing's stock. Farmers also log pest, disease, weather, and damage problems with their severity, and see a community advisory that groups members' reports by crop and problem and shows how many farms reported each and a widget showing current weather in Tabaco City, Albay.
+
+**Manager.** Managers review and approve product listings. They can suspend a listing with stated reasons, which notifies the farmer and gives them seven days to correct and resubmit it, and they can restore archived listings. Managers move orders through the order lifecycle and verify farmers' submitted IDs. They also manage product categories and announcements, including alerts and advisories, and suspend customer and farmer accounts. They maintain the list of crop types and their typical growing times, and view the expected supply of each crop for the next eight weeks, with weeks flagged when many farms will harvest the same crop. They can view and print sales reports, farmer-performance summaries, and sales by month and by category, and export the reports to CSV.
+
+**Administrator.** Administrators have all manager functions. They can also delete user accounts, reset users' passwords and two-factor authentication, and override order statuses. They have access to the audit log of product, order, user, and content changes. They also manage homepage banners, frequently asked questions, contact details, and the cooperative's profile information.
+
+The system includes several security measures:
+
+- mandatory two-factor authentication for administrators and managers
+- email verification and time-limited password-reset links
+- role-based access control enforced on the server
+- rate limiting on sign-in and similar actions
+- private storage of government ID images
+- an audit trail of administrative actions
+
+Measured against the use-case requirements gathered at the start of the project, the system covers 129 use-case items. Eighty-one (81) are fully implemented, twenty (20) are partially implemented, and twenty-eight (28) are outside the scope of the current version.
+
+[The study also covers the evaluation of the system by [respondents, e.g., cooperative officers, member farmers, customers, and IT experts] using [evaluation instrument, e.g., the ISO/IEC 25010 software quality model] in terms of [criteria, e.g., functional suitability, usability, reliability, and security].]
+
+#### Delimitations
+
+The study is limited to the following boundaries.
+
+**Users and access.** The system serves only one cooperative, MaVeFaCo, and its customers. It is not a multi-cooperative or general-purpose marketplace. The four roles have fixed permissions that cannot be reconfigured. Only customers can place orders. Public sign-up is limited to customers and farmers. Staff accounts are created by promoting an existing account. Two-factor authentication is required for staff only; customers and farmers are not offered it. Passwords must be 12 to 128 characters.
+
+**Transactions and payments.** The system does not process online payments. The customer's chosen payment method is recorded on the order, but payment happens outside the system and is not confirmed by it. Prices are in Philippine pesos only. The system does not handle taxes, service fees, discounts, or vouchers. Each order can contain products from only one farmer. The cart is stored in the customer's browser, so it does not carry over to another device. Pickup and delivery are arranged outside the system. There is no courier integration, delivery scheduling, or location tracking. Order statuses are fixed: pending, confirmed, shipped, delivered, and cancelled. Customers can cancel an order only while it is pending. A "coming soon" product cannot be ordered or reserved until the farmer restocks it.
+
+**Products and inventory.** Each product has one photo (PNG, JPEG, or WEBP, up to 4 MB) and one stock quantity in its selling unit. The system does not track product variants, batches, or expiry dates. Staff do not edit farmers' listings directly. A listing that needs correcting is suspended with reasons and must be fixed by the farmer within seven days, or it is removed automatically. Products with existing order or review history are archived rather than deleted so that transaction records stay complete.
+
+**Geographic, weather, and market data.** The study is limited to the cooperative's area of operation in Albay. The weather widget shows current conditions for one fixed location, Tabaco City, from the Open-Meteo service. It gives no forecasts or weather alerts. The system does not use external agricultural market data such as market prices, price trends, or supply and demand figures. All reports are computed only from the system's own records. The community advisory groups members' reports from the last 30 days by crop and problem, without naming farms, and shows the farmers' notes as they were written, without AI-based summarization or translation.
+
+**Crop monitoring.** Growth stages and harvest windows are estimated from approximate growing times for each crop, not observed in the field, and staff can correct those times. Expected yields are the farmers' own estimates in kilograms, and the expected harvest dates shown to customers are estimates. The supply outlook covers only the next eight weeks and only the plantings farmers have recorded. It flags possible oversupply but does not schedule harvests or recommend what to plant.
+
+**Communication and notifications.** Email is used only for account and security events (account verification, password reset, email change, and two-factor authentication changes) and for notifying farmers of suspended listings. The system has no order-status notifications, in-app or push notifications, SMS, or notification settings. In-system messaging is limited to one-to-one conversations between customers and farmers, and staff have no messaging inbox. The interface is in English only.
+
+**Platform.** The system is a responsive web application used through a modern web browser on desktop or mobile devices. It has no native mobile application and no offline mode. It is hosted on Vercel (application) and Supabase (database and file storage), so its availability, capacity, and data backups depend on those providers. Rate limits on sign-in, registration, password reset, and uploads are tracked per server instance. They are therefore not strictly enforced across simultaneous instances.
+
+**Data privacy.** Following the Data Privacy Act of 2012 (Republic Act No. 10173), farmers' government ID images are visible to staff only through links that expire after five minutes. The images are deleted automatically 30 days after verification. Deleting an account anonymizes the user's personal information, while order and audit records are kept for accountability. When a farmer's account is deleted, their products are archived and their plantings and crop logs are deleted. An account cannot be deleted while it has an active order. Sales reports count only delivered orders and group monthly figures by Philippine Standard Time.
+
+**Features outside the current scope.** The following features appeared in the initial use-case requirements but are not part of this study. They are recommended for future development:
+
+- online payment processing and invoice generation
+- market intelligence, such as market prices, price trends, demand and supply alerts, crop recommendations, and demand forecasting
+- managerial planning tools, such as pricing guidance, automated harvest scheduling, and meeting and training scheduling
+- customer and farmer conveniences, such as product comparison, pre-orders, favorite sellers, reordering, and notification settings
+- dispute and complaint handling
+- automated detection of suspicious activity
+- in-system database backup and restore
+- languages other than English
