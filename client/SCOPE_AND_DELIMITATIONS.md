@@ -127,7 +127,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | **Communication** | | |
 | Chat with buyer | Implemented | |
 | Chat with admin | Not implemented | Staff have no message inbox |
-| Receive announcements | Partial | Shown on the public home page, not in the farmer portal or as notifications |
+| Receive announcements | Partial | Shown on the home page and the farmer overview; no notifications |
 | **Reports** | | |
 | View sales history | Implemented | Orders list for the farmer's products |
 | View earnings summary | Implemented | Total revenue from delivered orders on the dashboard |
@@ -168,7 +168,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | View regional statistics | Not implemented | |
 | Evaluate inactive members | Partial | Farmer performance shows activity per farmer; inactive members aren't flagged |
 
-Beyond the use cases, managers also approve, view and suspend product listings (and delete suspended ones early), restore archived products, move orders through their lifecycle (including cancelling), manage categories, crop types and announcements, and suspend customers and farmers. Managers cannot act on admin or other manager accounts, reset passwords, delete accounts, or edit banners, FAQs and site content.
+Beyond the use cases, managers also approve, view and suspend product listings (and delete suspended ones early), restore archived products, delete product reviews, move orders through their lifecycle (including cancelling), manage categories, crop types and announcements, and suspend customers and farmers. Managers cannot act on admin or other manager accounts, reset passwords, delete accounts, or edit banners, FAQs and site content.
 
 ### 2.4 Administrator
 
