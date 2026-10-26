@@ -111,12 +111,24 @@ describe("DELETE /api/products/[id]/reviews/[reviewId]", () => {
 
     expect((await remove(product.id, reviewId, customer)).status).toBe(200);
     expect(await prisma.review.count()).toBe(0);
+    expect(await prisma.auditLog.count({ where: { action: "DELETE_REVIEW" } })).toBe(0);
   });
 
-  it("lets a manager remove any review", async () => {
+  it("lets a manager remove any review, and audits it", async () => {
     const { product, reviewId } = await existingReview();
+    const manager = await createUser({ role: "manager" });
 
-    expect((await remove(product.id, reviewId, await createUser({ role: "manager" }))).status).toBe(200);
+    expect((await remove(product.id, reviewId, manager)).status).toBe(200);
+    expect(await prisma.auditLog.findMany({ select: { action: true, entityType: true, entityId: true, userId: true } })).toEqual([
+      { action: "DELETE_REVIEW", entityType: "REVIEW", entityId: reviewId, userId: manager.id },
+    ]);
+  });
+
+  it("refuses a review addressed under another product", async () => {
+    const { customer, product, reviewId } = await existingReview();
+
+    expect((await remove(product.id + 1000, reviewId, customer)).status).toBe(404);
+    expect(await prisma.review.count()).toBe(1);
   });
 
   it("forbids other customers and the product's farmer", async () => {

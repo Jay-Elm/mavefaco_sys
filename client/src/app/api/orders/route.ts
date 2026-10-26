@@ -81,8 +81,8 @@ export async function POST(req: NextRequest) {
 
       await tx.auditLog.create({
         data: {
-          action: 'CREATE',
-          entityType: 'Order',
+          action: 'CREATE_ORDER',
+          entityType: 'ORDER',
           entityId: created.id,
           userId: user.id,
         },

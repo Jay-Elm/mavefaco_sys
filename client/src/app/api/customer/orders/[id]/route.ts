@@ -65,7 +65,7 @@ export async function PATCH(
     await tx.auditLog.create({
       data: {
         action: status === 'cancelled' ? 'CANCEL_ORDER' : 'CONFIRM_RECEIVED',
-        entityType: 'Order',
+        entityType: 'ORDER',
         entityId: orderId,
         userId: user.id,
       },

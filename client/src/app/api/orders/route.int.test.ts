@@ -31,7 +31,7 @@ describe("POST /api/orders (checkout)", () => {
 
     expect((await prisma.product.findUniqueOrThrow({ where: { id: tomato.id } })).stock).toBe(8);
     expect((await prisma.product.findUniqueOrThrow({ where: { id: onion.id } })).stock).toBe(0);
-    expect(await prisma.auditLog.count({ where: { entityType: "Order", entityId: order.id } })).toBe(1);
+    expect(await prisma.auditLog.count({ where: { entityType: "ORDER", action: "CREATE_ORDER", entityId: order.id } })).toBe(1);
   });
 
   it("rejects the whole order and changes nothing when one item is short on stock", async () => {
