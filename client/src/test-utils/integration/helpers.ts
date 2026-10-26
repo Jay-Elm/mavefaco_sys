@@ -130,3 +130,42 @@ export async function withRowLocked<T>(table: string, id: number, waiters: numbe
     await holder.end();
   }
 }
+
+/** A crop type with a tomato-like schedule unless overridden. */
+export async function createCropType(
+  overrides: Partial<{ name: string; daysToHarvestMin: number; daysToHarvestMax: number; vegetativeDay: number; floweringDay: number | null; fruitingDay: number | null }> = {},
+) {
+  seq++;
+  return prisma.cropType.create({
+    data: {
+      name: overrides.name ?? `Crop ${seq}`,
+      daysToHarvestMin: overrides.daysToHarvestMin ?? 70,
+      daysToHarvestMax: overrides.daysToHarvestMax ?? 90,
+      vegetativeDay: overrides.vegetativeDay ?? 14,
+      floweringDay: overrides.floweringDay === undefined ? 35 : overrides.floweringDay,
+      fruitingDay: overrides.fruitingDay === undefined ? 50 : overrides.fruitingDay,
+    },
+  });
+}
+
+/** A growing planting; dates are "YYYY-MM-DD" (defaults: planted 30 days ago, harvest window 40–60 days out). */
+export async function createPlanting(
+  farmerId: number,
+  overrides: Partial<{ cropTypeId: number; productId: number | null; plantedOn: string; harvestStart: string; harvestEnd: string; expectedYield: number | null; status: string }> = {},
+) {
+  const day = (offset: number) => new Date(Date.now() + 8 * 3_600_000 + offset * 86_400_000).toISOString().slice(0, 10);
+  const asDate = (s: string) => new Date(`${s}T00:00:00.000Z`);
+  const cropTypeId = overrides.cropTypeId ?? (await createCropType()).id;
+  return prisma.planting.create({
+    data: {
+      farmerId,
+      cropTypeId,
+      productId: overrides.productId ?? null,
+      plantedOn: asDate(overrides.plantedOn ?? day(-30)),
+      harvestStart: asDate(overrides.harvestStart ?? day(40)),
+      harvestEnd: asDate(overrides.harvestEnd ?? day(60)),
+      expectedYield: overrides.expectedYield === undefined ? 100 : overrides.expectedYield,
+      status: overrides.status ?? "growing",
+    },
+  });
+}

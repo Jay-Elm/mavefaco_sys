@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, Package, ShoppingCart, TrendingUp, Plus, AlertTriangle, CloudRain, Bug, Flame } from 'lucide-react'
 import WeatherWidget from '@/components/WeatherWidget'
+import { PEST_LABELS } from '@/validators/crop'
 
 const LOW_STOCK_THRESHOLD = 5
 
@@ -20,8 +21,10 @@ interface AdvisoryLog {
   id: number
   type: string
   note: string
-  createdAt: string
-  product: { name: string; category: { name: string } }
+  observedOn: string
+  severity: string | null
+  pest: string | null
+  cropType: string
 }
 
 const LOG_TYPE_INFO: Record<string, { label: string; icon: React.ElementType; cls: string }> = {
@@ -150,11 +153,15 @@ export default function FarmerOverviewPage() {
                 <div key={log.id} className="flex items-start gap-2 text-sm">
                   <Icon size={14} className={`shrink-0 mt-0.5 ${info?.cls ?? 'text-gray-500'}`} />
                   <div>
-                    <span className="font-medium text-gray-700">{log.product.category.name}</span>
+                    <span className="font-medium text-gray-700">{log.cropType}</span>
+                    {log.pest && <span className="text-gray-700"> · {PEST_LABELS[log.pest as keyof typeof PEST_LABELS] ?? log.pest}</span>}
+                    {log.severity === 'high' && (
+                      <span className="ml-1.5 text-[11px] font-semibold uppercase text-red-600">High</span>
+                    )}
                     <span className="text-gray-500 mx-1">—</span>
                     <span className="text-gray-600">{log.note}</span>
                     <span className="text-xs text-gray-400 ml-2">
-                      {new Date(log.createdAt).toLocaleDateString('en-PH', { dateStyle: 'medium' })}
+                      {new Date(`${log.observedOn}T00:00:00Z`).toLocaleDateString('en-PH', { dateStyle: 'medium', timeZone: 'UTC' })}
                     </span>
                   </div>
                 </div>

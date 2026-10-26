@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { NextRequest, NextResponse } from "next/server";
 
+/** DELETE /api/farmer/plantings/[id]/logs/[logId] — remove an entry from the farmer's own log. */
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string; logId: string }> },
@@ -11,19 +12,18 @@ export async function DELETE(
   if (actor.role !== "farmer") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
   const { id, logId } = await params;
-  const productId = Number(id);
+  const plantingId = Number(id);
   const logIdNum = Number(logId);
-  if (isNaN(productId) || isNaN(logIdNum))
+  if (!Number.isInteger(plantingId) || !Number.isInteger(logIdNum))
     return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
-  const log = await prisma.cropLog.findUnique({ where: { id: logIdNum } });
-  if (!log || log.productId !== productId)
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
-
-  // verify farmer owns this product
-  const product = await prisma.product.findUnique({ where: { id: productId, farmerId: actor.id, archivedAt: null } });
-  if (!product) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-
-  await prisma.cropLog.delete({ where: { id: logIdNum } });
-  return NextResponse.json({ success: true });
+  try {
+    const { count } = await prisma.cropLog.deleteMany({
+      where: { id: logIdNum, plantingId, planting: { farmerId: actor.id } },
+    });
+    if (count === 0) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Failed to delete log" }, { status: 500 });
+  }
 }

@@ -10,8 +10,8 @@ class ListingChanged extends Error {}
 
 /**
  * Removes a live (non-archived) listing: deletes it outright, or archives it
- * when past orders, reviews or crop logs still point at it, so that history
- * stays intact. Refuses while an order for it is still in progress. Any open
+ * when past orders or reviews still point at it, so that history stays
+ * intact. Plantings linked to it just lose the link. Refuses while an order for it is still in progress. Any open
  * notice about the listing (a suspension) is marked resolved as "removed".
  *
  * `condition` narrows which listing qualifies (e.g. "still suspended") and is
@@ -24,7 +24,7 @@ export async function removeListing(productId: number, condition: Prisma.Product
 
   const product = await prisma.product.findFirst({
     where,
-    include: { _count: { select: { orderItems: true, reviews: true, cropLogs: true } } },
+    include: { _count: { select: { orderItems: true, reviews: true } } },
   });
   if (!product) return "not-found";
 
@@ -33,8 +33,8 @@ export async function removeListing(productId: number, condition: Prisma.Product
   });
   if (activeOrderItem) return "active-orders";
 
-  const { orderItems, reviews, cropLogs } = product._count;
-  const archive = orderItems + reviews + cropLogs > 0;
+  const { orderItems, reviews } = product._count;
+  const archive = orderItems + reviews > 0;
   const now = new Date();
 
   try {

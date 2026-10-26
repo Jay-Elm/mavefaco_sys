@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { MenuDot, NavBadge, useNavBadges } from '@/components/NavBadge'
 import {
   LayoutDashboard, Users, Tag, Package, ShoppingCart,
-  ScrollText, BarChart2, Megaphone, Globe, Loader2, Menu,
+  ScrollText, BarChart2, Megaphone, Globe, Loader2, Menu, Sprout, CalendarRange,
 } from 'lucide-react'
 
 const ADMIN_NAV = [
@@ -19,6 +19,8 @@ const ADMIN_NAV = [
   { href: '/dashboard/audit-logs', label: 'Audit Logs', icon: ScrollText },
   { href: '/dashboard/announcements', label: 'Announcements', icon: Megaphone },
   { href: '/dashboard/site', label: 'Site Content', icon: Globe },
+  { href: '/dashboard/crop-types', label: 'Crop Types', icon: Sprout },
+  { href: '/dashboard/supply', label: 'Supply', icon: CalendarRange },
   { href: '/dashboard/reports', label: 'Reports', icon: BarChart2 },
 ]
 
@@ -29,6 +31,8 @@ const MANAGER_NAV = [
   { href: '/dashboard/products', label: 'Products', icon: Package },
   { href: '/dashboard/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/dashboard/announcements', label: 'Announcements', icon: Megaphone },
+  { href: '/dashboard/crop-types', label: 'Crop Types', icon: Sprout },
+  { href: '/dashboard/supply', label: 'Supply', icon: CalendarRange },
   { href: '/dashboard/reports', label: 'Reports', icon: BarChart2 },
 ]
 

@@ -5,7 +5,7 @@ import { DELETE as deleteCategory } from "@/app/api/categories/[id]/route";
 import { GET as advisory } from "@/app/api/farmer/advisory/route";
 import { POST as upload } from "@/app/api/upload/route";
 import { prisma } from "@/lib/prisma";
-import { createProduct, createUser, params, request, sessionToken, type SessionUser } from "@/test-utils/integration/helpers";
+import { createCropType, createPlanting, createProduct, createUser, params, request, sessionToken, type SessionUser } from "@/test-utils/integration/helpers";
 import { fakeStorage } from "@/test-utils/integration/storage";
 
 afterEach(() => {
@@ -86,17 +86,21 @@ describe("category deletion message (L9)", () => {
 });
 
 describe("farmer advisory (L10)", () => {
-  it("only shares crop logs from approved products", async () => {
-    const farmer = await createUser({ role: "farmer" });
-    const approved = await createProduct(farmer.id, { name: "Approved eggplant" });
-    const pending = await createProduct(farmer.id, { name: "Secret new variety", approved: false });
-    for (const p of [approved, pending]) {
-      await prisma.cropLog.create({ data: { productId: p.id, type: "pest_disease", note: "Fruit borer" } });
-    }
+  it("shares reports under the crop type's name, never the farmer's listing or name", async () => {
+    const farmer = await createUser({ role: "farmer", name: "Juan Farmer" });
+    const listing = await createProduct(farmer.id, { name: "Secret new variety", approved: false });
+    const eggplant = await createCropType({ name: "Eggplant" });
+    const planting = await createPlanting(farmer.id, { cropTypeId: eggplant.id, productId: listing.id });
+    await prisma.cropLog.create({
+      data: { plantingId: planting.id, type: "pest_disease", note: "Fruit borer", observedOn: new Date(), severity: "high", pest: "fruit-and-shoot-borer" },
+    });
 
-    const logs = await (await advisory(request("/api/farmer/advisory", { as: await createUser({ role: "farmer" }) }))).json();
+    const res = await advisory(request("/api/farmer/advisory", { as: await createUser({ role: "farmer" }) }));
+    const body = await res.text();
 
-    expect(logs.map((l: { product: { name: string } }) => l.product.name)).toEqual(["Approved eggplant"]);
+    expect(JSON.parse(body)).toMatchObject([{ cropType: "Eggplant", pest: "fruit-and-shoot-borer", severity: "high", note: "Fruit borer" }]);
+    expect(body).not.toContain("Secret new variety");
+    expect(body).not.toContain("Juan Farmer");
   });
 });
 

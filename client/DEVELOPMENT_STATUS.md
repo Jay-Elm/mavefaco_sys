@@ -55,7 +55,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `EmailChangeToken` — id, `tokenHash`, newEmail, expiresAt, usedAt, userId (a pending email change, confirmed from the new address)
 - `TotpBackupCode` — id, `codeHash` (bcrypt — low-entropy human-typed codes need the slow hash), usedAt, userId
 - `Category` — id, name (unique), createdAt
-- `Product` — id, name, description, **price (`Decimal(10,2)`)**, stock (Float), unit, imageUrl, farmerId, categoryId, approved, archivedAt, plantingDate, expectedHarvestDate, growthStage, readyForHarvest, suspendedAt, suspensionReasons (text[]), suspensionNote, suspendedById (plain id, for audit attribution)
+- `Product` — id, name, description, **price (`Decimal(10,2)`)**, stock (Float), unit, imageUrl, farmerId, categoryId, approved, archivedAt, suspendedAt, suspensionReasons (text[]), suspensionNote, suspendedById (plain id, for audit attribution)
 - `Order` — id, **totalAmount (`Decimal(10,2)`)**, status, paymentMethod, deliveryMethod, createdAt, customerId
 - `OrderItem` — id, quantity (Float), **price (`Decimal(10,2)`)**, orderId, productId
 - `AuditLog` — id, action, entityType, entityId, timestamp, userId
@@ -64,11 +64,13 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `Faq` — id, question, answer, displayOrder, createdAt
 - `SiteContent` — key (PK), value (key-value store for cooperative info)
 - `Review` — id, rating (1–5), comment, createdAt, customerId, productId — `@@unique([customerId, productId])`
-- `CropLog` — id, type (weather_impact/pest_disease/damage/note), note, createdAt, productId
+- `CropType` — id, name (unique), daysToHarvestMin/Max, vegetativeDay, floweringDay?, fruitingDay? (approximate growing times; staff-managed; seeded with 14 common crops)
+- `Planting` — id, plantedOn/harvestStart/harvestEnd (`@db.Date`, Philippine calendar dates), areaSqm?, expectedYield? (kg), status (growing/harvested/failed), harvestedOn?, actualYield?, farmerId, cropTypeId, productId? (SetNull when the listing is deleted)
+- `CropLog` — id, type (weather_impact/pest_disease/damage/note), note, observedOn (date), severity? (low/medium/high), pest? (from `CROP_PESTS`), createdAt, plantingId (cascade)
 - `Message` — id, content, read, createdAt, senderId, receiverId
 - `Notice` — id, title, body, read, createdAt, recipientId, productId (set null if the listing is deleted), resolvedAt, resolution (`resubmitted` | `removed`) — one-way system notices, e.g. a listing suspension
 
-**Migrations applied (27, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution`.
+**Migrations applied (28, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`).
 
 **Infra note:** `DIRECT_URL` cannot use Supabase's true direct-connection endpoint (`db.<ref>.supabase.co:5432`) — neither locally nor from Vercel's build infra can reach it (`P1001`), almost certainly Supabase's IPv6-only requirement for that endpoint. Fixed by pointing `DIRECT_URL` at the **Session pooler** instead (distinct from the Transaction pooler `DATABASE_URL` uses) — still holds `prisma migrate deploy`'s advisory lock, and is IPv4-compatible.
 
@@ -110,6 +112,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `orders/` — all orders; expandable; status management; CSV export
 - `audit-logs/` — last 100 entries; search + action/entity type filters; CSV export
 - `announcements/` — post/delete announcements (info/alert/advisory types)
+- `crop-types/` — add/edit/delete crop types and their approximate growing times (delete refused while plantings use one); audit logged
+- `supply/` — Upcoming Supply: expected kg per crop per week for 8 weeks (heat grid, hover details, expandable planting lists), 3+ farms in a week flagged as possible oversupply, overdue plantings listed separately; CSV export
 - `reports/` — Sales, Crop Demand, Users, Farmers tabs; CSS bar charts; per-section CSV + full report export; print button
 - `site/` — **Admin only**: 3-tab CMS:
   - **Banners** — add/toggle/delete homepage banners (5 color themes, CTA link, display order)
@@ -117,14 +121,15 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
   - **FAQs** — add/delete FAQ entries with display order
 
 ### Farmer Dashboard (`/farmer/`) — farmer role only
-- `layout.tsx` — green-accent sidebar (184px), auth guard, isolated scroll; red count badges on Messages (unread messages + notices), Orders (new), My Products (suspended), Crop Monitor (overdue harvests), Profile (no ID submitted)
-- `page.tsx` — product count, orders, revenue; **stock alerts** (out of stock + low stock); **weather widget** (Tabaco City, Albay via Open-Meteo); **community advisory** (recent pest/disease/damage logs from all farmers, last 30 days)
+- `layout.tsx` — green-accent sidebar (184px), auth guard, isolated scroll; red count badges on Messages (unread messages + notices), Orders (new), My Products (suspended), Crop Monitor (plantings whose harvest window has opened), Profile (no ID submitted)
+- `page.tsx` — product count, orders, revenue; **stock alerts** (out of stock + low stock); **weather widget** (Tabaco City, Albay via Open-Meteo); **community advisory** (recent pest/weather/damage reports from all farmers, last 30 days, by crop type with pest and severity)
 - `products/` — table with stock badges (Out of Stock / Low / normal) and status (Approved / Pending / Suspended with its deletion date and reasons); alert banners for stock problems and suspended listings; Edit ("Fix & resubmit" when suspended)/Delete; CSV export
 - `products/new/` — create product form; requires `verified: true`
 - `products/[id]/edit/` — pre-filled edit form; content edits reset `approved: false`; on a suspended listing shows the reasons and deadline, saving a content change resubmits it; Delete button
 - `orders/` — orders with farmer's products; Accept/Reject/Ship/Deliver state machine; CSV export
-- `crops/` — Crop Monitor list: all products with growth stage, planting date, harvest date (red if overdue), log count, ready badge
-- `crops/[id]/` — Crop detail: update planting/harvest dates, growth stage dropdown, ready-for-harvest toggle; crop log with type buttons (weather/pest/damage/note) + timestamped entries
+- `crops/` — Crop Monitor: "Needs attention" (harvest window open, overdue, high-severity report in 14 days), growing plantings with stage and progress to harvest, past seasons with expected vs actual yield
+- `crops/new/` — record a planting (crop type, date, optional area, expected yield, linked listing); previews the harvest window
+- `crops/[id]/` — planting detail: growth timeline, record harvest (optionally adding to the linked listing's stock) or mark failed, edit details/harvest window, structured crop log (pest from a list, severity, date seen), delete
 - `messages/` — conversation inbox with unread counts, plus a "MaVeFaCo notices" entry; `/farmer/messages/notices` — one-way system notices (no reply); an open suspension notice links to the listing's edit page, and once resolved (`Notice.resolvedAt`/`resolution`: resubmitted, or removed by a delete or the 7-day cleanup) it shows that outcome instead; `/farmer/messages/[userId]` — message thread
 - `profile/` — edit name/email; real ID-image file upload for verification; change password
 
@@ -203,17 +208,23 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | POST | `/api/orders` | customer | validates stock, approved, same-farmer; `$transaction`; 403 for farmers and staff |
 | GET | `/api/notices` | authenticated | own system notices, newest first |
 | POST | `/api/notices/read` | authenticated | marks own notices read |
-| GET | `/api/nav-badges` | authenticated | sidebar badge counts by path: farmer (unread messages + notices, new orders, suspended listings, overdue crops, ID not submitted), staff (listings to review, IDs to verify) |
+| GET | `/api/nav-badges` | authenticated | sidebar badge counts by path: farmer (unread messages + notices, new orders, suspended listings, plantings to harvest, ID not submitted), staff (listings to review, IDs to verify) |
 | GET | `/api/customer/orders` | authenticated | caller's own orders |
 | PATCH | `/api/customer/orders/[id]` | authenticated | pending→cancelled (stock restore); shipped→delivered |
 | GET | `/api/farmer/orders` | farmer | orders with farmer's products |
 | PATCH | `/api/farmer/orders/[id]` | farmer | state machine + stock restore on cancel |
-| GET | `/api/farmer/crops` | farmer | list own products with monitoring fields |
-| GET | `/api/farmer/crops/[id]` | farmer | product monitoring detail + crop logs |
-| PATCH | `/api/farmer/crops/[id]` | farmer | update plantingDate/harvestDate/growthStage/readyForHarvest |
-| POST | `/api/farmer/crops/[id]/logs` | farmer | add crop log entry |
-| DELETE | `/api/farmer/crops/[id]/logs/[logId]` | farmer | |
-| GET | `/api/farmer/advisory` | farmer | recent pest/disease/damage logs from all farmers (30 days) |
+| GET | `/api/farmer/plantings` | farmer | own plantings with computed stage/attention/progress and latest high-severity report |
+| POST | `/api/farmer/plantings` | farmer | record a planting; harvest window from the crop type |
+| GET | `/api/farmer/plantings/[id]` | farmer | one planting + its log |
+| PATCH | `/api/farmer/plantings/[id]` | farmer | details, harvest window (a new planting date shifts it), linked listing, status failed/growing; conditional on `updatedAt` |
+| DELETE | `/api/farmer/plantings/[id]` | farmer | with its log |
+| POST | `/api/farmer/plantings/[id]/harvest` | farmer | growing → harvested once (conditional update), optional `addToStock` to the linked listing in the same transaction |
+| POST | `/api/farmer/plantings/[id]/logs` | farmer | structured entry: type, note, observedOn, severity, pest |
+| DELETE | `/api/farmer/plantings/[id]/logs/[logId]` | farmer | |
+| GET | `/api/farmer/advisory` | farmer | recent pest/weather/damage reports from all farmers (30 days), crop type name only |
+| GET | `/api/crop-types` | farmer/manager/admin | crop list |
+| POST | `/api/crop-types` · PUT/DELETE `/api/crop-types/[id]` | admin/manager | manage crop types; audit `CREATE/UPDATE/DELETE_CROP_TYPE` |
+| GET | `/api/admin/supply` | admin/manager | expected kg per crop per week (8 weeks), possible-oversupply flags, overdue plantings |
 | GET | `/api/messages` | authenticated | conversation list with unread counts |
 | GET | `/api/messages/[userId]` | authenticated | message thread; marks received as read |
 | POST | `/api/messages/[userId]` | customer/farmer | send message; only between a customer and a farmer (403 otherwise) |
@@ -255,7 +266,10 @@ After every `prisma migrate dev`, run `prisma generate` separately. The generate
 `WeatherWidget` calls Open-Meteo API client-side for Tabaco City (lat=13.3594, lon=123.7331). No API key required. Shown on farmer overview page.
 
 ### Community advisory
-`/api/farmer/advisory` returns the 50 most recent crop logs of type `pest_disease`, `weather_impact`, or `damage` from ALL farmers in the last 30 days. Shown (top 5) on farmer overview page.
+`/api/farmer/advisory` returns the 50 most recent crop logs of type `pest_disease`, `weather_impact`, or `damage` (by date observed) from ALL farmers in the last 30 days, named by crop type only — never the farmer or their listing. Shown (top 5) on farmer overview page.
+
+### Crop monitoring
+A `Planting` is one season of one crop. Its harvest window is copied from the `CropType` when recorded and is then the farmer's to adjust; the growth stage, "needs attention" flag and progress are computed per request in `src/lib/planting.ts` (`serializePlanting`), not stored. All planting dates are calendar dates in Philippine time (`todayPH()`), passed as `YYYY-MM-DD`. `expectedSupply()` spreads each growing planting's expected yield evenly over the remaining days of its window and sums by crop and Monday-to-Sunday week; `CLASH_FARMS` (3) farms in one week flags possible oversupply. Crop growing times are approximate seed values staff can correct on Dashboard → Crop Types.
 
 ### Cart isolation
 `CartContext` uses `cart_${user.id}` as localStorage key. Waits for `authLoading` before loading cart to avoid guest-cart flash.
@@ -275,7 +289,7 @@ Use `useDialog()` (`src/contexts/DialogContext.tsx`) — `confirm({ title, messa
 - Dashboard + Farmer layouts: `flex h-full overflow-hidden` — sidebar and content scroll independently
 
 ### Automated tests
-Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/order/helpers schemas) and the security-critical parts of `src/lib/` (`getJwtSecret`/`verifyToken`, `authorize`, `isSafeUrl`). `npm run test:integration` (`vitest.integration.config.mts`) calls route handlers directly against a real Postgres database — `<DATABASE_URL db name>_test` on localhost by default, or `TEST_DATABASE_URL`. It refuses any database that isn't on localhost with a name ending in `_test`, creates the database and runs `prisma migrate deploy` on first run, and truncates every table before each test. Test files are `*.int.test.ts` next to the route; helpers (users, products, signed session cookies) are in `src/test-utils/integration/`. Coverage so far: checkout (`POST /api/orders`), the three order-status routes (customer, farmer, admin/manager), admin user management, login/logout plus the full MFA flow (setup, confirm, verify, backup codes, pending-token scoping, rate limits), products (create, listing visibility, edit/re-approval, delete, admin approval), listing suspension (notices, email, resubmission, early delete, the 7-day cron, notice resolution), reviews, messages, notices, sidebar badges, and the server-side session check (`serverSession.int.test.ts`).
+Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/order/helpers schemas) and the security-critical parts of `src/lib/` (`getJwtSecret`/`verifyToken`, `authorize`, `isSafeUrl`). `npm run test:integration` (`vitest.integration.config.mts`) calls route handlers directly against a real Postgres database — `<DATABASE_URL db name>_test` on localhost by default, or `TEST_DATABASE_URL`. It refuses any database that isn't on localhost with a name ending in `_test`, creates the database and runs `prisma migrate deploy` on first run, and truncates every table before each test. Test files are `*.int.test.ts` next to the route; helpers (users, products, signed session cookies) are in `src/test-utils/integration/`. Coverage so far: checkout (`POST /api/orders`), the three order-status routes (customer, farmer, admin/manager), admin user management, login/logout plus the full MFA flow (setup, confirm, verify, backup codes, pending-token scoping, rate limits), products (create, listing visibility, edit/re-approval, delete, admin approval), listing suspension (notices, email, resubmission, early delete, the 7-day cron, notice resolution), crop monitoring (plantings, harvest race, logs, crop types, supply), reviews, messages, notices, sidebar badges, and the server-side session check (`serverSession.int.test.ts`).
 
 **MFA secret encryption key:** `src/lib/totpCrypto.ts` encrypts with `TOTP_ENCRYPTION_KEY` and decrypts by trying it, then `TOTP_ENCRYPTION_KEY_PREVIOUS`, then the legacy `JWT_SECRET`-derived key; a secret found under an older key is re-encrypted on the user's next successful TOTP login. `/api/auth/mfa/verify` still accepts backup codes when a secret can't be decrypted. (Before this, rotating `JWT_SECRET` would have locked out every admin and manager.)
 
@@ -295,7 +309,7 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 
 **Account deletion anonymizes:** `deleteUserAccount()` (`src/lib/deleteAccount.ts`) no longer deletes the User row. It scrubs name, email (to `deleted-user-<id>@deleted.invalid`, freeing the real address), password, MFA and ID image; deletes the user's own reviews, messages, tokens and backup codes; archives a farmer's products; and sets `User.deletedAt`. Orders, order items, audit-log entries and announcements are kept, shown under "Deleted user". Staff lists, stats, farmer stats, reports, the seller page and messaging skip deleted accounts, and the admin user routes return 404 for them. Still blocked by active orders.
 
-**Product archiving:** `DELETE /api/products/[id]` hard-deletes a product with no history, but once anything references it (order items, reviews, crop logs) it sets `Product.archivedAt` instead. Archived products are filtered out of every live surface — storefront pages, `/api/products` (public and `?farmerId`), `/api/products/[id]`, checkout, the farmer crop monitor, and the staff product list, approval route and stats — while order history and revenue reports keep them. Any new product query on a live surface needs `archivedAt: null`. Staff can see archived products (`GET /api/admin/products?archived=1`, the "Archived" status filter on the dashboard Products page) and restore them (`POST /api/admin/products/[id]/restore`, audit `RESTORE_PRODUCT`); a restored product keeps the approval status it had when archived. Race tests use `withRowLocked()` to force two requests to genuinely overlap rather than hoping they do.
+**Product archiving:** `DELETE /api/products/[id]` hard-deletes a product with no history, but once anything references it (order items, reviews) it sets `Product.archivedAt` instead. Archived products are filtered out of every live surface — storefront pages, `/api/products` (public and `?farmerId`), `/api/products/[id]`, checkout, the farmer crop monitor, and the staff product list, approval route and stats — while order history and revenue reports keep them. Any new product query on a live surface needs `archivedAt: null`. Staff can see archived products (`GET /api/admin/products?archived=1`, the "Archived" status filter on the dashboard Products page) and restore them (`POST /api/admin/products/[id]/restore`, audit `RESTORE_PRODUCT`); a restored product keeps the approval status it had when archived. Race tests use `withRowLocked()` to force two requests to genuinely overlap rather than hoping they do.
 
 ---
 

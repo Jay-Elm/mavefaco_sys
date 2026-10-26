@@ -24,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.10.0
- * Query Engine version: 0edf323efd1d98336f3f0a68684b56f689b900d3
+ * Prisma Client JS version: 7.10.1
+ * Query Engine version: d1b3f377ca835d73fd50954a5e22128b9ebdd6b8
  */
 Prisma.prismaVersion = {
-  client: "7.10.0",
-  engine: "0edf323efd1d98336f3f0a68684b56f689b900d3"
+  client: "7.10.1",
+  engine: "d1b3f377ca835d73fd50954a5e22128b9ebdd6b8"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -198,20 +198,47 @@ exports.Prisma.ProductScalarFieldEnum = {
   suspendedById: 'suspendedById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  plantingDate: 'plantingDate',
-  expectedHarvestDate: 'expectedHarvestDate',
-  growthStage: 'growthStage',
-  readyForHarvest: 'readyForHarvest',
   farmerId: 'farmerId',
   categoryId: 'categoryId'
+};
+
+exports.Prisma.CropTypeScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  daysToHarvestMin: 'daysToHarvestMin',
+  daysToHarvestMax: 'daysToHarvestMax',
+  vegetativeDay: 'vegetativeDay',
+  floweringDay: 'floweringDay',
+  fruitingDay: 'fruitingDay',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.PlantingScalarFieldEnum = {
+  id: 'id',
+  plantedOn: 'plantedOn',
+  harvestStart: 'harvestStart',
+  harvestEnd: 'harvestEnd',
+  areaSqm: 'areaSqm',
+  expectedYield: 'expectedYield',
+  status: 'status',
+  harvestedOn: 'harvestedOn',
+  actualYield: 'actualYield',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  farmerId: 'farmerId',
+  cropTypeId: 'cropTypeId',
+  productId: 'productId'
 };
 
 exports.Prisma.CropLogScalarFieldEnum = {
   id: 'id',
   type: 'type',
   note: 'note',
+  observedOn: 'observedOn',
+  severity: 'severity',
+  pest: 'pest',
   createdAt: 'createdAt',
-  productId: 'productId'
+  plantingId: 'plantingId'
 };
 
 exports.Prisma.OrderScalarFieldEnum = {
@@ -329,6 +356,8 @@ exports.Prisma.ModelName = {
   TotpBackupCode: 'TotpBackupCode',
   Category: 'Category',
   Product: 'Product',
+  CropType: 'CropType',
+  Planting: 'Planting',
   CropLog: 'CropLog',
   Order: 'Order',
   OrderItem: 'OrderItem',

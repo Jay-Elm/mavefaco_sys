@@ -5,7 +5,7 @@ import { POST as restoreRoute } from "@/app/api/admin/products/[id]/restore/rout
 import { GET as adminList } from "@/app/api/admin/products/route";
 import { GET as list } from "@/app/api/products/route";
 import { prisma } from "@/lib/prisma";
-import { createProduct, createUser, params, request, type SessionUser } from "@/test-utils/integration/helpers";
+import { createPlanting, createProduct, createUser, params, request, type SessionUser } from "@/test-utils/integration/helpers";
 import { placedOrder } from "@/test-utils/integration/orders";
 
 const get = (id: number, as?: SessionUser) => GET(request(`/api/products/${id}`, { as }), params({ id: String(id) }));
@@ -111,16 +111,24 @@ describe("DELETE /api/products/[id]", () => {
     expect(await prisma.auditLog.count({ where: { action: "ARCHIVE_PRODUCT", entityId: product.id } })).toBe(1);
   });
 
-  it("archives a product that only has reviews or crop logs, keeping them", async () => {
+  it("archives a product that only has reviews, keeping them", async () => {
     const { farmer, customer, product } = await placedOrder({ status: "delivered" });
     await prisma.orderItem.deleteMany(); // leave reviews as the only history
     await prisma.review.create({ data: { customerId: customer.id, productId: product.id, rating: 5 } });
-    const crop = await createProduct(farmer.id);
-    await prisma.cropLog.create({ data: { productId: crop.id, type: "note", note: "Planted" } });
 
     expect(await (await del(product.id, farmer)).json()).toMatchObject({ archived: true });
-    expect(await (await del(crop.id, farmer)).json()).toMatchObject({ archived: true });
     expect(await prisma.review.count()).toBe(1);
+  });
+
+  it("deletes a product its plantings are linked to, keeping the plantings and their logs", async () => {
+    const farmer = await createUser({ role: "farmer" });
+    const product = await createProduct(farmer.id);
+    const planting = await createPlanting(farmer.id, { productId: product.id });
+    await prisma.cropLog.create({ data: { plantingId: planting.id, type: "note", note: "Planted", observedOn: new Date() } });
+
+    expect(await (await del(product.id, farmer)).json()).toMatchObject({ archived: false });
+    expect(await prisma.product.count({ where: { id: product.id } })).toBe(0);
+    expect(await prisma.planting.findUniqueOrThrow({ where: { id: planting.id } })).toMatchObject({ productId: null });
     expect(await prisma.cropLog.count()).toBe(1);
   });
 

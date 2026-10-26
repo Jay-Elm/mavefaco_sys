@@ -68,6 +68,7 @@ model User {
   emailChangeTokens        EmailChangeToken[]
   totpBackupCodes          TotpBackupCode[]
   notices                  Notice[]
+  plantings                Planting[]
 }
 
 model EmailVerificationToken {
@@ -151,8 +152,8 @@ model Product {
   unit          String      @default("piece")
   imageUrl             String?
   approved             Boolean     @default(false)
-  // Set instead of deleting once a product has history (orders, reviews,
-  // crop logs) that still references it. Archived products are hidden
+  // Set instead of deleting once a product has history (orders, reviews)
+  // that still references it. Archived products are hidden
   // everywhere a live product appears (shop, farmer and staff lists,
   // checkout) but stay in order history and revenue reports.
   archivedAt           DateTime?
@@ -170,11 +171,6 @@ model Product {
   createdAt            DateTime    @default(now())
   updatedAt            DateTime    @updatedAt
 
-  plantingDate         DateTime?
-  expectedHarvestDate  DateTime?
-  growthStage          String?
-  readyForHarvest      Boolean     @default(false)
-
   farmerId      Int
   farmer        User        @relation(fields: [farmerId], references: [id])
 
@@ -183,7 +179,7 @@ model Product {
 
   orderItems    OrderItem[]
   reviews       Review[]
-  cropLogs      CropLog[]
+  plantings     Planting[]
   notices       Notice[]
 
   @@index([farmerId])
@@ -193,17 +189,81 @@ model Product {
   @@index([suspendedAt])
 }
 
-model CropLog {
-  id        Int      @id @default(autoincrement())
-  type      String
-  note      String
-  createdAt DateTime @default(now())
+// A crop the cooperative grows, with how long it typically takes. Staff
+// manage the list; the figures are approximate and drive each planting's
+// growth stage and expected harvest window (src/lib/planting.ts).
+model CropType {
+  id               Int        @id @default(autoincrement())
+  name             String     @unique
+  // Typical range of days from planting to harvest.
+  daysToHarvestMin Int
+  daysToHarvestMax Int
+  // Day each growth stage starts; null for a stage the crop doesn't go
+  // through (leafy vegetables are harvested before flowering).
+  vegetativeDay    Int
+  floweringDay     Int?
+  fruitingDay      Int?
+  createdAt        DateTime   @default(now())
 
-  productId Int
-  product   Product  @relation(fields: [productId], references: [id])
+  plantings        Planting[]
+}
 
+// One planting of one crop by one farmer: a season. Replanting is a new row,
+// so past seasons stay comparable. Optionally tied to the listing its
+// harvest is sold under.
+model Planting {
+  id                   Int        @id @default(autoincrement())
+  // Calendar dates (no time of day), in Philippine time.
+  plantedOn            DateTime   @db.Date
+  // Copied from the crop type when the planting is recorded, then the
+  // farmer's to adjust. Kept as columns so supply queries can filter on them.
+  harvestStart         DateTime   @db.Date
+  harvestEnd           DateTime   @db.Date
+  areaSqm              Float?
+  // Kilograms.
+  expectedYield        Float?
+  // growing | harvested | failed
+  status               String     @default("growing")
+  harvestedOn          DateTime?  @db.Date
+  actualYield          Float?
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+
+  farmerId             Int
+  farmer               User       @relation(fields: [farmerId], references: [id])
+
+  cropTypeId           Int
+  cropType             CropType   @relation(fields: [cropTypeId], references: [id])
+
+  productId            Int?
+  product              Product?   @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  logs                 CropLog[]
+
+  @@index([farmerId, status])
+  @@index([status, harvestStart])
+  @@index([cropTypeId])
   @@index([productId])
-  @@index([createdAt])
+}
+
+model CropLog {
+  id         Int      @id @default(autoincrement())
+  // weather_impact | pest_disease | damage | note
+  type       String
+  note       String
+  // When it was seen in the field, which may be before it was entered.
+  observedOn DateTime @db.Date
+  // low | medium | high; null for general notes.
+  severity   String?
+  // One of CROP_PESTS (src/validators/crop.ts), for pest_disease entries.
+  pest       String?
+  createdAt  DateTime @default(now())
+
+  plantingId Int
+  planting   Planting @relation(fields: [plantingId], references: [id], onDelete: Cascade)
+
+  @@index([plantingId])
+  @@index([observedOn])
 }
 
 model Order {

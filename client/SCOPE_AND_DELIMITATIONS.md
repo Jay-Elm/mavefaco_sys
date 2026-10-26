@@ -1,7 +1,7 @@
 # Scope and Delimitations
 
 **System:** MaVeFaCo Marketplace — the online marketplace of the Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo)
-**As of:** 2026-10-26 · checked against the code on `master` (last code change 1355189, 2026-10-15) · deployed at https://mavefaco-sys.vercel.app
+**As of:** 2026-10-26 · checked against the code on `master`, including the crop monitoring redesign of 2026-10-26 · deployed at https://mavefaco-sys.vercel.app
 
 This document states what the system covers (**scope**) and the boundaries it deliberately stays within (**delimitations**). The scope is measured against the four use-case documents written at the start of the project — [`ADMIN_USE_CASE.md`](ADMIN_USE_CASE.md), [`MANAGER_USE_CASE.md`](MANAGER_USE_CASE.md), [`FARMER_USE_CASE.md`](FARMER_USE_CASE.md) and [`CUSTOMER_USE_CASE.md`](CUSTOMER_USE_CASE.md) — which describe the full long-term vision. The implemented system covers the core marketplace workflow end to end; the remaining items are documented below as outside the current scope.
 
@@ -22,11 +22,11 @@ This document states what the system covers (**scope**) and the boundaries it de
 |---|---|---|---|---|
 | Customer | 32 | 23 | 3 | 6 |
 | Farmer | 51 | 31 | 7 | 13 |
-| Manager | 17 | 5 | 5 | 7 |
+| Manager | 17 | 6 | 6 | 5 |
 | Administrator | 29 | 20 | 5 | 4 |
-| **Total** | **129** | **79** | **20** | **30** |
+| **Total** | **129** | **80** | **21** | **28** |
 
-The system fully supports the cooperative's core workflow: farmers list produce, staff review it, customers buy it, farmers and staff fulfil orders, and staff monitor the cooperative through reports and an audit log. The 30 items outside the scope fall into seven areas (see [section 4](#4-outside-the-current-scope)): payments, market intelligence, planning, customer convenience, farmer convenience, administration and localization.
+The system fully supports the cooperative's core workflow: farmers list produce, staff review it, customers buy it, farmers and staff fulfil orders, and staff monitor the cooperative through reports and an audit log. The 28 items outside the scope fall into seven areas (see [section 4](#4-outside-the-current-scope)): payments, market intelligence, planning, customer convenience, farmer convenience, administration and localization.
 
 ## 2. Scope by role
 
@@ -90,24 +90,24 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | **Crop/product management** | | |
 | Add crop listing | Implemented | Reviewed by staff before going live |
 | Edit crop listing | Implemented | Changing what customers see sends the listing back for review; stock-only changes don't |
-| Delete crop listing | Implemented | Listings with order, review or crop-log history are archived instead, preserving records |
+| Delete crop listing | Implemented | Listings with order or review history are archived instead, preserving records |
 | Upload crop images | Implemented | PNG, JPEG or WEBP, up to 4 MB |
 | Set price per kilo/unit | Implemented | Price per chosen unit: piece, kg, gram, bundle, pack, bag, tray, dozen, liter, sack or bottle |
 | Set available quantity | Implemented | |
-| Set harvest date for "coming soon" products | Partial | The expected harvest date is recorded in the crop monitor but not shown to customers as "coming soon" |
+| Set harvest date for "coming soon" products | Partial | Each planting has an expected harvest window, but it isn't shown to customers as "coming soon" |
 | Set crop category | Implemented | |
 | Spoilage alerts | Not implemented | |
 | Low stock alerts | Implemented | Dashboard warning at 5 units or fewer |
 | Out of stock alerts | Implemented | Dashboard warning at zero stock |
 | **Crop monitoring** | | |
-| Update crop growth stage | Implemented | Seedling → vegetative → flowering → fruiting → harvest-ready → harvested |
-| Input planting date | Implemented | |
-| Input expected harvest date | Implemented | |
-| Record weather impact | Implemented | Crop log entry |
-| Record pest/disease issues | Implemented | Crop log entry |
-| Record damaged crops | Implemented | Crop log entry |
-| Mark ready for harvest | Implemented | |
-| Local pest/disease advisory, AI-translated from members' records | Partial | A shared advisory lists up to 50 pest, weather and damage logs from the last 30 days on approved products, as written; no AI translation or summary |
+| Update crop growth stage | Implemented | Worked out automatically from the planting date and the crop's typical growing times: seedling → vegetative → flowering → fruiting → harvest-ready (leafy crops skip flowering and fruiting) |
+| Input planting date | Implemented | One record per planting, so each season is kept separately, with optional area and expected yield |
+| Input expected harvest date | Implemented | Calculated from the crop type as a harvest window; the farmer can adjust it |
+| Record weather impact | Implemented | Crop log entry with the date seen and severity |
+| Record pest/disease issues | Implemented | Crop log entry naming the pest or disease from a list, with severity |
+| Record damaged crops | Implemented | Crop log entry with the date seen and severity |
+| Mark ready for harvest | Implemented | Flagged automatically when the harvest window opens; recording the harvest saves the yield and can add it to the linked listing's stock |
+| Local pest/disease advisory, AI-translated from members' records | Partial | A shared advisory lists up to 50 pest, weather and damage reports from the last 30 days by crop type, with the pest and severity, as written; no AI translation or summary |
 | Weather alerts API (Albay) | Partial | Current temperature, humidity and wind for Tabaco City from Open-Meteo; no alerts or forecasts |
 | **Market features** | | |
 | View current market prices (Albay) | Not implemented | No external market-price data source |
@@ -146,13 +146,13 @@ The system has four roles, from most to least privileged: Administrator, Manager
 |---|---|---|
 | **Strategic monitoring** | | |
 | View farmer performance | Implemented | Products, orders and revenue per farmer |
-| View crop supply forecast | Not implemented | |
+| View crop supply forecast | Implemented | Upcoming Supply: expected harvest per crop for each of the next 8 weeks, from farmers' plantings and yield estimates |
 | View total cooperative sales | Implemented | Reports page |
 | View seasonal demand trends | Partial | Sales by month and by category; no forecasting |
 | **Decision making** | | |
 | Recommend crops to farmers | Not implemented | |
 | Set pricing guidance | Not implemented | |
-| Plan harvest scheduling | Not implemented | |
+| Plan harvest scheduling | Partial | Upcoming Supply flags weeks when 3 or more farms harvest the same crop; nothing is scheduled |
 | Approve farmer membership | Implemented | Managers verify farmers' submitted IDs |
 | **Reports** | | |
 | Print executive reports | Implemented | Print view of the reports page |
@@ -167,7 +167,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | View regional statistics | Not implemented | |
 | Evaluate inactive members | Partial | Farmer performance shows activity per farmer; inactive members aren't flagged |
 
-Beyond the use cases, managers also approve, view and suspend product listings (and delete suspended ones early), restore archived products, move orders through their lifecycle (including cancelling), manage categories and announcements, and suspend customers and farmers. Managers cannot act on admin or other manager accounts, reset passwords, delete accounts, or edit banners, FAQs and site content.
+Beyond the use cases, managers also approve, view and suspend product listings (and delete suspended ones early), restore archived products, move orders through their lifecycle (including cancelling), manage categories, crop types and announcements, and suspend customers and farmers. Managers cannot act on admin or other manager accounts, reset passwords, delete accounts, or edit banners, FAQs and site content.
 
 ### 2.4 Administrator
 
@@ -236,14 +236,16 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 - Every product needs **staff approval** before it is visible to customers.
 - **One photo per product**: PNG, JPEG or WEBP, up to 4 MB.
 - Stock is a single quantity per product in its selling unit; there are no variants, batches or expiry tracking.
-- Products with any order, review or crop-log history are **archived, never deleted**, so order records stay complete.
+- Products with any order or review history are **archived, never deleted**, so order records stay complete.
 - Staff **don't edit listings**. A listing that needs fixing is **suspended** with one or more reasons: it is hidden from customers at once, orders already placed carry on, and the farmer has **7 days** to edit and resubmit it before it is removed automatically (by a daily job, so up to a day later). A listing with an order still in progress is removed only once those orders finish.
 
 ### 3.4 Geography, weather and market data
 
 - The cooperative operates in **Albay, Philippines**. The weather widget shows current conditions for one fixed location, **Tabaco City, Albay** (from Open-Meteo); it provides no alerts or forecasts.
 - **No external agricultural data** is used: no market prices, price trends, supply or demand data. All reports are computed from the system's own orders, products and users.
-- The pest and weather advisory shares up to 50 of members' own crop logs from the last 30 days, as written; it is not AI-generated or translated.
+- The pest and weather advisory shares up to 50 of members' own crop reports from the last 30 days, under the crop type's name only, as written; it is not AI-generated or translated.
+- **Crop growing times are approximate.** Each crop type's days to harvest and stage start days were set from general figures and can be corrected by staff; growth stages and harvest windows are calculated from them, not observed.
+- **Expected yields are farmers' own estimates**, in kilograms. Upcoming Supply spreads each planting's expected yield evenly across the rest of its harvest window and looks 8 weeks ahead; plantings without an estimate are counted as farms, not kilograms.
 
 ### 3.5 Communication and notifications
 
@@ -261,7 +263,7 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 ### 3.7 Data and privacy
 
 - Government ID images are kept in private storage, viewable by staff only through links that expire after 5 minutes, and **deleted automatically 30 days after verification** (Data Privacy Act of 2012, RA 10173).
-- **Deleting an account anonymizes it**: name, email, password, two-factor setup, ID image, reviews and messages are removed; orders and audit-log entries remain, attributed to "Deleted user", and a farmer's products are archived. Deletion is blocked while the account has an active order.
+- **Deleting an account anonymizes it**: name, email, password, two-factor setup, ID image, reviews, messages, and a farmer's plantings and crop logs are removed; orders and audit-log entries remain, attributed to "Deleted user", and a farmer's products are archived. Deletion is blocked while the account has an active order.
 - Text fields have maximum lengths (for example 100 characters for names, 2,000 for messages and product descriptions, and 1,000 for reviews).
 - Reports count **delivered orders only** as sales and group months by **Philippine time**.
 
@@ -272,8 +274,8 @@ The following capabilities from the use-case documents are not implemented. They
 | Area | Items |
 |---|---|
 | Payments | Online payment and payment confirmation, invoices and receipts |
-| Market intelligence | Market prices and trends, demand and supply alerts, crop recommendations, supply and demand forecasting, regional statistics, yearly growth comparison |
-| Planning | Pricing guidance, harvest scheduling, meeting and training scheduling, promotion approval |
+| Market intelligence | Market prices and trends, demand and supply alerts, crop recommendations, demand forecasting, regional statistics, yearly growth comparison |
+| Planning | Pricing guidance, meeting and training scheduling, promotion approval |
 | Customer convenience | Product comparison, pre-orders, favorites, reorder, problem reports, order notifications |
 | Farmer convenience | Spoilage alerts, buyer search, order-history filters, sales receipts, notification settings, chat with staff |
 | Administration | Dispute and complaint handling, buyer approval, automated anomaly detection, in-app database backup and restore |
