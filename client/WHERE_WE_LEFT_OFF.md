@@ -169,7 +169,7 @@ src/components/
   ProductCard.tsx                       ← farmer name links to /sellers/[id]
   ReviewForm.tsx                        ← interactive star picker + comment textarea
   ReviewsSection.tsx                    ← avg rating + form + review cards
-  WeatherWidget.tsx                     ← Open-Meteo, Legazpi City (lat=13.1391, lon=123.7438)
+  WeatherWidget.tsx                     ← Open-Meteo, Tabaco City (lat=13.3594, lon=123.7331)
   MessageThread.tsx                     ← shared thread: opens at first unread, 8s polling
   AddToCartButton.tsx                   ← hidden for farmers and staff
   NavBadge.tsx                          ← useNavBadges(), NavBadge, refreshNavBadges()

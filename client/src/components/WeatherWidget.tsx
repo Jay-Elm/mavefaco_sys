@@ -21,9 +21,9 @@ function getWeatherInfo(code: number): { label: string; Icon: React.ElementType;
   return                                     { label: 'Cloudy',           Icon: Cloud,          color: 'text-gray-400' }
 }
 
-// Legazpi City, Albay — coordinates
-const LAT = 13.1391
-const LON = 123.7438
+// Tabaco City, Albay — coordinates
+const LAT = 13.3594
+const LON = 123.7331
 
 export default function WeatherWidget() {
   const [weather, setWeather] = useState<WeatherData | null>(null)
@@ -67,7 +67,7 @@ export default function WeatherWidget() {
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
       <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-        Weather · Legazpi City, Albay
+        Weather · Tabaco City, Albay
       </p>
       <div className="flex items-center gap-4">
         <Icon size={36} className={color} />

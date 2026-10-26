@@ -108,7 +108,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Record damaged crops | Implemented | Crop log entry |
 | Mark ready for harvest | Implemented | |
 | Local pest/disease advisory, AI-translated from members' records | Partial | A shared advisory lists up to 50 pest, weather and damage logs from the last 30 days on approved products, as written; no AI translation or summary |
-| Weather alerts API (Albay) | Partial | Current temperature, humidity and wind for Legazpi City from Open-Meteo; no alerts or forecasts |
+| Weather alerts API (Albay) | Partial | Current temperature, humidity and wind for Tabaco City from Open-Meteo; no alerts or forecasts |
 | **Market features** | | |
 | View current market prices (Albay) | Not implemented | No external market-price data source |
 | View price trends (Albay) | Not implemented | |
@@ -241,7 +241,7 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 
 ### 3.4 Geography, weather and market data
 
-- The cooperative operates in **Albay, Philippines**. The weather widget shows current conditions for one fixed location, **Legazpi City, Albay** (from Open-Meteo); it provides no alerts or forecasts.
+- The cooperative operates in **Albay, Philippines**. The weather widget shows current conditions for one fixed location, **Tabaco City, Albay** (from Open-Meteo); it provides no alerts or forecasts.
 - **No external agricultural data** is used: no market prices, price trends, supply or demand data. All reports are computed from the system's own orders, products and users.
 - The pest and weather advisory shares up to 50 of members' own crop logs from the last 30 days, as written; it is not AI-generated or translated.
 

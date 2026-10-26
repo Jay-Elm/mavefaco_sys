@@ -118,7 +118,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 ### Farmer Dashboard (`/farmer/`) — farmer role only
 - `layout.tsx` — green-accent sidebar (184px), auth guard, isolated scroll; red count badges on Messages (unread messages + notices), Orders (new), My Products (suspended), Crop Monitor (overdue harvests), Profile (no ID submitted)
-- `page.tsx` — product count, orders, revenue; **stock alerts** (out of stock + low stock); **weather widget** (Legazpi City, Albay via Open-Meteo); **community advisory** (recent pest/disease/damage logs from all farmers, last 30 days)
+- `page.tsx` — product count, orders, revenue; **stock alerts** (out of stock + low stock); **weather widget** (Tabaco City, Albay via Open-Meteo); **community advisory** (recent pest/disease/damage logs from all farmers, last 30 days)
 - `products/` — table with stock badges (Out of Stock / Low / normal) and status (Approved / Pending / Suspended with its deletion date and reasons); alert banners for stock problems and suspended listings; Edit ("Fix & resubmit" when suspended)/Delete; CSV export
 - `products/new/` — create product form; requires `verified: true`
 - `products/[id]/edit/` — pre-filled edit form; content edits reset `approved: false`; on a suspended listing shows the reasons and deadline, saving a content change resubmits it; Delete button
@@ -252,7 +252,7 @@ After every `prisma migrate dev`, run `prisma generate` separately. The generate
 `MessageThread` component polls `/api/messages/[userId]` every 8 seconds via `setInterval`. Not real-time but functional for a capstone. A thread opens at the earliest message that was unread (under a "New messages" line), or at the latest; new messages scroll into view only while the reader is at the bottom. Fetching a thread marks its incoming messages read, so nothing else should fetch it before `MessageThread` does (the conversation pages take the other person's name from it via `onOtherName`).
 
 ### Weather widget
-`WeatherWidget` calls Open-Meteo API client-side for Legazpi City (lat=13.1391, lon=123.7438). No API key required. Shown on farmer overview page.
+`WeatherWidget` calls Open-Meteo API client-side for Tabaco City (lat=13.3594, lon=123.7331). No API key required. Shown on farmer overview page.
 
 ### Community advisory
 `/api/farmer/advisory` returns the 50 most recent crop logs of type `pest_disease`, `weather_impact`, or `damage` from ALL farmers in the last 30 days. Shown (top 5) on farmer overview page.
