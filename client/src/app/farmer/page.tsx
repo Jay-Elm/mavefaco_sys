@@ -3,12 +3,15 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, ShoppingCart, TrendingUp, Plus, AlertTriangle, Bug } from 'lucide-react'
+import { Loader2, Package, ShoppingCart, TrendingUp, Plus, AlertTriangle, Bug, Megaphone } from 'lucide-react'
 import WeatherWidget from '@/components/WeatherWidget'
 import AdvisoryList from '@/components/AdvisoryList'
+import AnnouncementList, { type AnnouncementItem } from '@/components/AnnouncementList'
 import type { AdvisoryGroup } from '@/lib/advisory'
 
 const LOW_STOCK_THRESHOLD = 5
+/** Announcements shown before "Show all". */
+const ANNOUNCEMENTS_SHOWN = 3
 
 interface Stats {
   productCount: number
@@ -23,9 +26,17 @@ export default function FarmerOverviewPage() {
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
   const [advisory, setAdvisory] = useState<AdvisoryGroup[]>([])
+  const [announcements, setAnnouncements] = useState<AnnouncementItem[]>([])
+  const [showAllAnnouncements, setShowAllAnnouncements] = useState(false)
 
   useEffect(() => {
     if (!token || !user) return
+
+    // Staff announcements appear on the home page, which farmers don't see,
+    // so the overview shows them here.
+    fetch('/api/announcements')
+      .then((r) => r.json())
+      .then((d) => { if (Array.isArray(d)) setAnnouncements(d) })
 
     fetch('/api/farmer/advisory', { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => r.json())
@@ -116,6 +127,27 @@ export default function FarmerOverviewPage() {
               <a href="/farmer/products" className="underline hover:no-underline">Go to My Products</a> to restock.
             </p>
           </div>
+        </div>
+      )}
+
+      {/* Announcements from the cooperative */}
+      {announcements.length > 0 && (
+        <div className="mb-6 bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+          <div className="flex items-center gap-2 mb-3">
+            <h2 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+              <Megaphone size={15} className="text-forest" /> Announcements
+            </h2>
+            {announcements.length > ANNOUNCEMENTS_SHOWN && (
+              <button
+                type="button"
+                onClick={() => setShowAllAnnouncements((v) => !v)}
+                className="ml-auto text-xs font-medium text-forest hover:underline"
+              >
+                {showAllAnnouncements ? 'Show fewer' : `Show all ${announcements.length}`}
+              </button>
+            )}
+          </div>
+          <AnnouncementList announcements={showAllAnnouncements ? announcements : announcements.slice(0, ANNOUNCEMENTS_SHOWN)} />
         </div>
       )}
 

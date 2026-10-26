@@ -4,7 +4,8 @@ import ProductCard from "@/components/ProductCard";
 import { redirectRoles } from "@/lib/serverSession";
 import HomeHeroActions from "@/components/HomeHeroActions";
 import HomeBottomCTAButtons from "@/components/HomeBottomCTAButtons";
-import { ShoppingBag, Leaf, ArrowRight, Info, AlertTriangle, Package, Users, CheckCircle, Star } from "lucide-react";
+import { ShoppingBag, ArrowRight, Package, Users, CheckCircle, Star } from "lucide-react";
+import AnnouncementList from "@/components/AnnouncementList";
 import { isSafeUrl } from "@/lib/url";
 import { withComingSoon } from "@/lib/comingSoon";
 
@@ -58,12 +59,6 @@ const BANNER_BG: Record<string, string> = {
   purple: "bg-gradient-to-r from-purple-600 to-purple-800",
   teal:   "bg-gradient-to-r from-teal-600 to-teal-800",
 };
-
-const ANNOUNCEMENT_STYLES = {
-  info:     { bar: "bg-blue-500",   bg: "bg-blue-50",   border: "border-blue-200",   text: "text-blue-800",   icon: Info },
-  alert:    { bar: "bg-amber-500",  bg: "bg-amber-50",  border: "border-amber-200",  text: "text-amber-800",  icon: AlertTriangle },
-  advisory: { bar: "bg-green-600",  bg: "bg-green-50",  border: "border-green-200",  text: "text-green-800",  icon: Leaf },
-} as const;
 
 const CATEGORY_COLORS = [
   "bg-green-50 text-green-800 border border-green-200 hover:bg-green-100",
@@ -200,26 +195,8 @@ export default async function HomePage() {
       {/* ── ANNOUNCEMENTS ─────────────────────────────────── */}
       {announcements.length > 0 && (
         <section className="py-6 px-6 bg-white border-b border-gray-100">
-          <div className="max-w-4xl mx-auto space-y-3">
-            {announcements.map((a) => {
-              const style = ANNOUNCEMENT_STYLES[a.type as keyof typeof ANNOUNCEMENT_STYLES] ?? ANNOUNCEMENT_STYLES.info;
-              const Icon = style.icon;
-              return (
-                <div key={a.id} className={`flex rounded-xl border ${style.border} ${style.bg} overflow-hidden`}>
-                  <div className={`w-1 shrink-0 ${style.bar}`} />
-                  <div className="py-3 px-4">
-                    <div className={`flex items-center gap-2 font-semibold text-sm ${style.text} mb-0.5`}>
-                      <Icon size={13} />
-                      {a.title}
-                    </div>
-                    <p className={`text-sm ${style.text} opacity-90`}>{a.body}</p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {new Date(a.createdAt).toLocaleDateString("en-PH", { dateStyle: "medium" })}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="max-w-4xl mx-auto">
+            <AnnouncementList announcements={announcements} />
           </div>
         </section>
       )}

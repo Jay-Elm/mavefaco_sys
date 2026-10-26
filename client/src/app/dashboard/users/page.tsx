@@ -209,7 +209,9 @@ export default function UsersPage() {
   }
 
   const isSelf     = (u: UserRow) => u.id === currentUser?.id
-  const canSuspend = (u: UserRow) => !isSelf(u) && u.role !== 'admin'
+  // Managers can only act on farmers and customers (see the PATCH route).
+  const canSuspend = (u: UserRow) =>
+    !isSelf(u) && u.role !== 'admin' && (currentUser?.role === 'admin' || u.role !== 'manager')
   const canDelete  = (u: UserRow) => currentUser?.role === 'admin' && !isSelf(u) && u.role !== 'admin'
   // Another admin's password can't be reset here (see the PATCH route's
   // guard) — they use forgot-password. Their 2FA can, for lost-device recovery.
@@ -584,7 +586,7 @@ export default function UsersPage() {
               value={newPw}
               onChange={(e) => setNewPw(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleResetPassword()}
-              placeholder="New password (min 6 characters)"
+              placeholder="New password (12–128 characters)"
               autoFocus
               className="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
             />

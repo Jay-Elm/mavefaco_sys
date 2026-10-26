@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { useDialog } from '@/contexts/DialogContext'
 import { Star, Trash2, Loader2, MessageSquare } from 'lucide-react'
 import ReviewForm from './ReviewForm'
 
@@ -29,6 +30,7 @@ function StarDisplay({ rating, size = 14 }: { rating: number; size?: number }) {
 
 export default function ReviewsSection({ productId }: { productId: number }) {
   const { user, token } = useAuth()
+  const dialog = useDialog()
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<number | null>(null)
@@ -45,17 +47,30 @@ export default function ReviewsSection({ productId }: { productId: number }) {
     ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
     : 0
 
-  async function handleDelete(reviewId: number) {
+  async function handleDelete(r: Review) {
     if (!token) return
-    setDeletingId(reviewId)
+    const own = r.customer.id === user?.id
+    if (!(await dialog.confirm({
+      title: own ? 'Delete your review?' : `Delete ${r.customer.name}'s review?`,
+      message: 'This cannot be undone.',
+      confirmLabel: 'Delete review',
+      tone: 'danger',
+    }))) return
+    setDeletingId(r.id)
     try {
-      await fetch(`/api/products/${productId}/reviews/${reviewId}`, {
+      const res = await fetch(`/api/products/${productId}/reviews/${r.id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       })
-      setReviews((prev) => prev.filter((r) => r.id !== reviewId))
-    } catch {}
-    finally { setDeletingId(null) }
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        await dialog.alert({ title: "Couldn't delete the review", message: data.error ?? 'Please try again.' })
+        return
+      }
+      setReviews((prev) => prev.filter((x) => x.id !== r.id))
+    } catch {
+      await dialog.alert({ title: "Couldn't delete the review", message: 'Please check your connection and try again.' })
+    } finally { setDeletingId(null) }
   }
 
   const canDelete = (r: Review) =>
@@ -95,7 +110,7 @@ export default function ReviewsSection({ productId }: { productId: number }) {
         </div>
       ) : reviews.length === 0 ? (
         <p className="text-sm text-gray-400 text-center py-8">
-          No reviews yet. Be the first to review this product!
+          {user?.role === 'customer' || !user ? 'No reviews yet. Be the first to review this product!' : 'No reviews yet.'}
         </p>
       ) : (
         <div className="space-y-4">
@@ -119,7 +134,7 @@ export default function ReviewsSection({ productId }: { productId: number }) {
                 </div>
                 {canDelete(r) && (
                   <button
-                    onClick={() => handleDelete(r.id)}
+                    onClick={() => handleDelete(r)}
                     disabled={deletingId === r.id}
                     className="shrink-0 p-1.5 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-40"
                     title="Delete review"

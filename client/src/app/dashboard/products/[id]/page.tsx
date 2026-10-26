@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { ArrowLeft, Loader2, Package, AlertTriangle } from 'lucide-react'
 import { reasonLabels, suspensionDeadline } from '@/validators/productSuspension'
+import ReviewsSection from '@/components/ReviewsSection'
 
 interface Product {
   id: number
@@ -110,6 +111,9 @@ export default function DashboardProductViewPage() {
           </dl>
         </div>
       )}
+
+      {/* Staff can remove reviews here; the storefront product page is for shoppers. */}
+      {product && <ReviewsSection productId={product.id} />}
     </div>
   )
 }
