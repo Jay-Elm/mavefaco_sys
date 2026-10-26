@@ -19,8 +19,15 @@ export async function GET(req: NextRequest) {
         email: true,
         role: true,
         suspended: true,
-        idImagePath: true,
         verified: true,
+        verifiedInPersonAt: true,
+        // The latest ID submission's status, for the Verification column.
+        idSubmissions: {
+          where: { status: { not: "replaced" } },
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: { status: true },
+        },
         totpEnabled: true,
         createdAt: true,
         _count: { select: { products: true, orders: true } },
@@ -28,15 +35,11 @@ export async function GET(req: NextRequest) {
       orderBy: { createdAt: "desc" },
     });
 
-    // The storage path is an internal detail — the list view only needs to
-    // know whether an ID was submitted; viewing it goes through the
-    // separate signed-URL endpoint, scoped to one user at a time.
-    const withHasIdImage = users.map(({ idImagePath, ...rest }) => ({
-      ...rest,
-      hasIdImage: idImagePath !== null,
-    }));
-
-    return NextResponse.json(withHasIdImage);
+    // Viewing the ID itself goes through /api/admin/users/[id]/id-submission,
+    // one farmer at a time.
+    return NextResponse.json(
+      users.map(({ idSubmissions, ...rest }) => ({ ...rest, idStatus: idSubmissions[0]?.status ?? null })),
+    );
   } catch {
     return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
   }

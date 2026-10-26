@@ -1,7 +1,7 @@
 import { randomBytes } from "crypto";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-import { deleteIdImage } from "@/lib/idImageStorage";
+import { deleteIdImages } from "@/lib/idImageStorage";
 
 const ACTIVE_STATUSES = ["pending", "confirmed", "shipped"];
 
@@ -20,8 +20,8 @@ export type DeleteAccountResult =
  * audit log of what a staff member did — and deleting the row used to
  * mean deleting those records with it. Instead:
  *   - personal data goes: name, email, password, MFA, ID image, the
- *     user's own reviews, messages and notices, a farmer's plantings and
- *     crop logs, outstanding tokens and backup codes
+ *     user's own reviews, messages and notices, a farmer's plantings, crop
+ *     logs and ID submissions, outstanding tokens and backup codes
  *   - shared history stays: orders and order items (on both the buyer's
  *     and the seller's side), audit-log entries, announcements
  *   - a farmer's products are archived, so they leave the shop but past
@@ -54,13 +54,17 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
     };
   }
 
-  const target = await prisma.user.findUnique({ where: { id: userId }, select: { idImagePath: true, deletedAt: true } });
+  const target = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { deletedAt: true, idSubmissions: { select: { frontPath: true, backPath: true, selfiePath: true } } },
+  });
   if (!target || target.deletedAt) return { ok: false, status: 404, error: "User not found" };
 
-  // Remove the stored government ID first: once the row is scrubbed nothing
-  // would reference the file, so a failed delete would leave it in storage
-  // for good.
-  if (target.idImagePath && !(await deleteIdImage(target.idImagePath))) {
+  // Remove the stored government ID images first: once the submissions are
+  // deleted nothing would reference the files, so a failed delete would
+  // leave them in storage for good.
+  const idImages = target.idSubmissions.flatMap((s) => [s.frontPath, s.backPath, s.selfiePath]);
+  if (!(await deleteIdImages(idImages))) {
     return {
       ok: false,
       status: 502,
@@ -83,6 +87,7 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
     prisma.totpBackupCode.deleteMany({ where: { userId } }),
     // A farmer's own crop records (their logs go with them).
     prisma.planting.deleteMany({ where: { farmerId: userId } }),
+    prisma.idSubmission.deleteMany({ where: { userId } }),
     prisma.product.updateMany({ where: { farmerId: userId, archivedAt: null }, data: { archivedAt: now } }),
     prisma.user.update({
       where: { id: userId },
@@ -95,9 +100,9 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
         password: unusablePassword,
         suspended: true,
         tokenVersion: { increment: 1 },
-        idImagePath: null,
         verified: false,
         verifiedAt: null,
+        verifiedInPersonAt: null,
         emailVerifiedAt: null,
         totpEnabled: false,
         totpSecret: null,

@@ -24,8 +24,8 @@ The app has four roles, from most to least privileged: **Admin**, **Manager**, *
 | Role | What they can do |
 |---|---|
 | **Customer** | Browse, search, and filter the shop, including out-of-stock produce marked "coming soon" with its expected harvest; view farmer profiles; keep a cart; check out (choose cash on delivery, GCash, or bank transfer — payment is settled outside the app — and pickup or delivery); track, cancel, and confirm orders; review products from delivered orders; message farmers |
-| **Farmer** | Submit their ID for verification; list products (each reviewed by staff before going live); fix and resubmit, or delete, a listing staff suspended; manage stock and prices; fulfil orders; record each planting and follow its growth stage and harvest window, record harvests straight into stock, and log pests, weather and damage; see a shared pest and weather advisory and a local weather widget |
-| **Manager** | Approve listings; view a listing and suspend it with reasons (the farmer gets a notice and an email, and has 7 days to resubmit before it is deleted), or delete a suspended one early; restore archived listings; move orders through their lifecycle; manage categories, crop types and announcements; see upcoming supply by crop and week; verify farmer IDs; suspend customers and farmers; view reports and farmer performance |
+| **Farmer** | Verify their identity with a government ID (front, back and a selfie holding it, taken with the in-app camera); list products (each reviewed by staff before going live); fix and resubmit, or delete, a listing staff suspended; manage stock and prices; fulfil orders; record each planting and follow its growth stage and harvest window, record harvests straight into stock, and log pests, weather and damage; see a shared pest and weather advisory and a local weather widget |
+| **Manager** | Approve listings; view a listing and suspend it with reasons (the farmer gets a notice and an email, and has 7 days to resubmit before it is deleted), or delete a suspended one early; restore archived listings; move orders through their lifecycle; manage categories, crop types and announcements; see upcoming supply by crop and week; review farmers' ID submissions and approve or reject them with reasons, or verify a farmer in person; suspend customers and farmers; view reports and farmer performance |
 | **Admin** | Everything a manager can do, plus deleting accounts, resetting passwords and two-factor authentication, overriding order status, the audit log, homepage banners, FAQs, and site content |
 
 Admin and manager accounts must use an authenticator app (two-factor authentication) to sign in.
@@ -67,12 +67,13 @@ DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/capstone_db"
 DIRECT_URL="postgresql://USER:PASSWORD@localhost:5432/capstone_db"
 JWT_SECRET="<at least 32 random characters>"
 TOTP_ENCRYPTION_KEY="<at least 32 random characters>"
+ID_NUMBER_HASH_KEY="<at least 32 random characters>"  # optional locally; derived from JWT_SECRET if unset
 
 # Optional locally — the related features fail gracefully without them
 BREVO_API_KEY=""              # emails (verification, password reset)
 SUPABASE_URL=""               # image uploads and ID verification
 SUPABASE_SERVICE_ROLE_KEY=""
-CRON_SECRET=""                # the ID-image purge job
+CRON_SECRET=""                # the ID-photo and suspended-listing cleanup jobs
 ```
 
 Generate random secrets with:

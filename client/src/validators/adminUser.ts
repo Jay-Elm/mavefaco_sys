@@ -1,11 +1,15 @@
 import { z } from "zod";
 import { MAX, tooLong } from "./limits";
 
-// PATCH /api/admin/users/[id] — at least one of these three must be present.
+// PATCH /api/admin/users/[id] — at least one of these must be present.
 export const adminUserPatchSchema = z
   .object({
     suspended: z.boolean().optional(),
-    verified: z.boolean().optional(),
+    // Only `false` (revoke). A farmer is verified by approving their ID
+    // submission, or in person with `verifiedInPerson`.
+    verified: z.literal(false, { error: () => "Approve the farmer's ID submission, or mark them verified in person" }).optional(),
+    // Staff checked the farmer's ID at the cooperative office.
+    verifiedInPerson: z.literal(true).optional(),
     newPassword: z.string().trim().min(12, "New password must be at least 12 characters").max(MAX.newPassword, tooLong("New password", MAX.newPassword)).optional(),
     // Admin-assisted recovery for a locked-out admin/manager (lost device,
     // exhausted backup codes): clears their TOTP enrollment so they go
@@ -17,9 +21,10 @@ export const adminUserPatchSchema = z
     (data) =>
       data.suspended !== undefined ||
       data.verified !== undefined ||
+      data.verifiedInPerson !== undefined ||
       data.newPassword !== undefined ||
       data.resetMfa !== undefined,
-    { message: "suspended, verified, newPassword, or resetMfa must be provided" },
+    { message: "suspended, verified, verifiedInPerson, newPassword, or resetMfa must be provided" },
   );
 
 export type AdminUserPatchInput = z.infer<typeof adminUserPatchSchema>;

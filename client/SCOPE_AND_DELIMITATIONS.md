@@ -1,7 +1,7 @@
 # Scope and Delimitations
 
 **System:** MaVeFaCo Marketplace — the online marketplace of the Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo)
-**As of:** 2026-10-26 · checked against the code on `master`, including the crop monitoring redesign, grouped advisory and "coming soon" listings of 2026-10-26 · deployed at https://mavefaco-sys.vercel.app
+**As of:** 2026-10-26 · checked against the code on `master`, including the crop monitoring redesign, grouped advisory and "coming soon" listings of 2026-10-26 and the stronger ID verification of 2026-10-27 · deployed at https://mavefaco-sys.vercel.app
 
 This document states what the system covers (**scope**) and the boundaries it deliberately stays within (**delimitations**). The scope is measured against the four use-case documents written at the start of the project — [`ADMIN_USE_CASE.md`](ADMIN_USE_CASE.md), [`MANAGER_USE_CASE.md`](MANAGER_USE_CASE.md), [`FARMER_USE_CASE.md`](FARMER_USE_CASE.md) and [`CUSTOMER_USE_CASE.md`](CUSTOMER_USE_CASE.md) — which describe the full long-term vision. The implemented system covers the core marketplace workflow end to end; the remaining items are documented below as outside the current scope.
 
@@ -87,7 +87,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Logout | Implemented | |
 | Reset password | Implemented | |
 | Update personal profile | Implemented | |
-| Upload valid ID | Implemented | Stored privately; staff verify it before the farmer can list products |
+| Upload valid ID | Implemented | Choice of 10 government ID types (RSBSA listed first). Front, back (not for a passport) and a selfie holding the ID, taken with the in-app camera inside an ID-shaped frame, with blur and lighting checks; a photo is uploaded only when no camera is available. Stored privately; staff approve or reject it with reasons |
 | **Crop/product management** | | |
 | Add crop listing | Implemented | Reviewed by staff before going live |
 | Edit crop listing | Implemented | Changing what customers see sends the listing back for review; stock-only changes don't |
@@ -154,7 +154,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Recommend crops to farmers | Not implemented | |
 | Set pricing guidance | Not implemented | |
 | Plan harvest scheduling | Partial | Upcoming Supply flags weeks when 3 or more farms harvest the same crop; nothing is scheduled |
-| Approve farmer membership | Implemented | Managers verify farmers' submitted IDs |
+| Approve farmer membership | Implemented | Managers review ID submissions (front, back and selfie side by side) and approve or reject them with reasons, or mark a farmer verified in person |
 | **Reports** | | |
 | Print executive reports | Implemented | Print view of the reports page |
 | Export annual analytics | Partial | Full report as CSV (all time, with a monthly breakdown); not per year |
@@ -175,7 +175,7 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 | Use-case item | Status | How it is covered |
 |---|---|---|
 | **User management** | | |
-| Approve farmer registrations | Implemented | Farmer ID verification gates product listing |
+| Approve farmer registrations | Implemented | An approved ID submission, or in-person verification at the cooperative office, gates product listing |
 | Approve buyer registrations | Not implemented | Customers are verified by email only |
 | Suspend accounts | Implemented | Customers, farmers and managers; not other administrators |
 | Delete fake users | Implemented | Accounts are anonymized; their order and audit history is kept |
@@ -202,7 +202,7 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 | Generate crop demand reports | Partial | Top products and sales by category; no demand forecasting |
 | **Security** | | |
 | Audit logs | Implemented | Administrators only; product, order, user and content changes, searchable, with paging and CSV export |
-| Monitor suspicious activity | Partial | Audit log, security emails (MFA and email changes), rate limiting and CSP violation logs; no automated anomaly detection |
+| Monitor suspicious activity | Partial | Audit log, security emails (MFA and email changes), rate limiting and CSP violation logs; the same ID number can't verify two accounts and is flagged to staff; no automated anomaly detection |
 | Backup database | Not implemented | Relies on the database host's (Supabase) backups |
 | Restore records | Partial | Archived products can be restored; no general record restore |
 | **Minor actions** | | |
@@ -219,7 +219,8 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 - **Four roles** with fixed permissions: Administrator, Manager, Farmer, Customer. Roles are not configurable.
 - **Only customers buy.** Farmers, managers and administrators have no cart and cannot place orders; managers and administrators don't see the storefront.
 - Sign-up is open to **customers and farmers only**. Staff accounts are created by promoting an existing account in the database (see the README).
-- A farmer can list products only after staff **verify the farmer's government ID**. Customers need only a verified email address.
+- A farmer can list products only after staff **approve the farmer's ID submission** (front, back and a selfie holding the ID) or **verify them in person** at the cooperative office. Customers need only a verified email address.
+- **IDs are checked by eye.** Staff compare the photos; the system doesn't check IDs against government records, read them automatically (OCR) or verify the PhilSys QR code, and its ID-number format checks are approximate. A photo is uploaded from the device only when no camera is available, and staff are shown that it was.
 - **Two-factor authentication** (authenticator app) is mandatory for staff and not offered to customers or farmers.
 - Passwords must be **12 to 128 characters**.
 
@@ -251,7 +252,7 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 
 ### 3.5 Communication and notifications
 
-- **Email** (via Brevo) is used only for account and security events (verification, password reset, email change, two-factor changes) and to tell a farmer a listing was suspended.
+- **Email** (via Brevo) is used only for account and security events (verification, password reset, email change, two-factor changes), to tell a farmer a listing was suspended, and to tell a farmer their ID was approved or rejected.
 - There are **no order-status notifications**, in-app notifications, SMS or push notifications, and no notification settings.
 - Messaging is **one-to-one between customers and farmers**; staff have no inbox. The system sends farmers one-way **notices** (listing suspensions), shown in Messages without a reply box.
 - The interface is **in English only**.
@@ -264,8 +265,8 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 
 ### 3.7 Data and privacy
 
-- Government ID images are kept in private storage, viewable by staff only through links that expire after 5 minutes, and **deleted automatically 30 days after verification** (Data Privacy Act of 2012, RA 10173).
-- **Deleting an account anonymizes it**: name, email, password, two-factor setup, ID image, reviews, messages, and a farmer's plantings and crop logs are removed; orders and audit-log entries remain, attributed to "Deleted user", and a farmer's products are archived. Deletion is blocked while the account has an active order.
+- Government ID photos and selfies are kept in private storage, viewable by staff only through links that expire after 5 minutes, and **deleted automatically 30 days after review** (a replaced submission's straight away) (Data Privacy Act of 2012, RA 10173). ID numbers are stored only as a keyed fingerprint and their last 4 characters.
+- **Deleting an account anonymizes it**: name, email, password, two-factor setup, ID submissions and photos, reviews, messages, and a farmer's plantings and crop logs are removed; orders and audit-log entries remain, attributed to "Deleted user", and a farmer's products are archived. Deletion is blocked while the account has an active order.
 - Text fields have maximum lengths (for example 100 characters for names, 2,000 for messages and product descriptions, and 1,000 for reviews).
 - Reports count **delivered orders only** as sales and group months by **Philippine time**.
 
@@ -280,7 +281,7 @@ The following capabilities from the use-case documents are not implemented. They
 | Planning | Pricing guidance, meeting and training scheduling, promotion approval |
 | Customer convenience | Product comparison, pre-orders, favorites, reorder, problem reports, order notifications |
 | Farmer convenience | Spoilage alerts, buyer search, order-history filters, sales receipts, notification settings, chat with staff |
-| Administration | Dispute and complaint handling, buyer approval, automated anomaly detection, in-app database backup and restore |
+| Administration | Dispute and complaint handling, buyer approval, automated anomaly detection, automatic ID checks (reading ID details, PhilSys QR verification), in-app database backup and restore |
 | Localization | Languages other than English; AI translation of advisories |
 
 ## 5. Thesis text
@@ -297,9 +298,9 @@ The system has four user roles, listed from most to least privileged: Administra
 
 **Customer.** Customers can register with email verification, log in, reset their password, and update their profile. They can browse staff-approved products, search by product name, and filter by category and price range. Out-of-stock produce with a harvest on the way is marked "coming soon" with its expected harvest dates. They can view each farmer's public seller page and keep a cart stored in their browser. At checkout, customers choose a payment method (cash on delivery, GCash, or bank transfer) and either pickup or delivery. They can track an order through its statuses and cancel it while it is still pending. They can also confirm receipt of a shipped order, review products from delivered orders, and message farmers within the system.
 
-**Farmer.** Farmers can register, upload a valid government-issued ID for verification, and manage their profile. Once verified, they can create, edit, and delete product listings. Each listing has a photo, category, price per unit, and available quantity, and must be approved by staff before it goes live. The farmer dashboard warns when a product has five units or fewer left or is out of stock. Farmers can accept, reject, and update orders, and they can message customers. They can view sales history and an earnings summary and export their orders and products to CSV. Farmers record each planting of a crop as its own season, with the planting date and, optionally, the area planted and the expected yield. The system works out each planting's growth stage and expected harvest window from the crop's typical growing time, flags plantings that are ready to harvest or overdue, and lets the farmer record the harvest and add it directly to a listing's stock. Farmers also log pest, disease, weather, and damage problems with their severity, and see a community advisory that groups members' reports by crop and problem and shows how many farms reported each and a widget showing current weather in Tabaco City, Albay.
+**Farmer.** Farmers can register and manage their profile, and verify their identity with one of ten accepted government IDs, such as the RSBSA ID. They take photos of the front and back of the ID and a selfie holding it with the in-app camera, which checks each photo for blur and lighting before it is sent. The ID number is kept only as a fingerprint and its last four characters, so the same ID cannot verify two accounts. Once verified, they can create, edit, and delete product listings. Each listing has a photo, category, price per unit, and available quantity, and must be approved by staff before it goes live. The farmer dashboard warns when a product has five units or fewer left or is out of stock. Farmers can accept, reject, and update orders, and they can message customers. They can view sales history and an earnings summary and export their orders and products to CSV. Farmers record each planting of a crop as its own season, with the planting date and, optionally, the area planted and the expected yield. The system works out each planting's growth stage and expected harvest window from the crop's typical growing time, flags plantings that are ready to harvest or overdue, and lets the farmer record the harvest and add it directly to a listing's stock. Farmers also log pest, disease, weather, and damage problems with their severity, and see a community advisory that groups members' reports by crop and problem and shows how many farms reported each and a widget showing current weather in Tabaco City, Albay.
 
-**Manager.** Managers review and approve product listings. They can suspend a listing with stated reasons, which notifies the farmer and gives them seven days to correct and resubmit it, and they can restore archived listings. Managers move orders through the order lifecycle and verify farmers' submitted IDs. They also manage product categories and announcements, including alerts and advisories, and suspend customer and farmer accounts. They maintain the list of crop types and their typical growing times, and view the expected supply of each crop for the next eight weeks, with weeks flagged when many farms will harvest the same crop. They can view and print sales reports, farmer-performance summaries, and sales by month and by category, and export the reports to CSV.
+**Manager.** Managers review and approve product listings. They can suspend a listing with stated reasons, which notifies the farmer and gives them seven days to correct and resubmit it, and they can restore archived listings. Managers move orders through the order lifecycle. They review farmers' ID submissions, comparing the selfie with the ID, and approve them or reject them with stated reasons, which notifies the farmer; they can also mark a farmer as verified after checking the ID in person at the cooperative office. They also manage product categories and announcements, including alerts and advisories, and suspend customer and farmer accounts. They maintain the list of crop types and their typical growing times, and view the expected supply of each crop for the next eight weeks, with weeks flagged when many farms will harvest the same crop. They can view and print sales reports, farmer-performance summaries, and sales by month and by category, and export the reports to CSV.
 
 **Administrator.** Administrators have all manager functions. They can also delete user accounts, reset users' passwords and two-factor authentication, and override order statuses. They have access to the audit log of product, order, user, and content changes. They also manage homepage banners, frequently asked questions, contact details, and the cooperative's profile information.
 
@@ -309,7 +310,7 @@ The system includes several security measures:
 - email verification and time-limited password-reset links
 - role-based access control enforced on the server
 - rate limiting on sign-in and similar actions
-- private storage of government ID images
+- private storage of ID photos and selfies, viewable by staff only through short-lived links
 - an audit trail of administrative actions
 
 Measured against the use-case requirements gathered at the start of the project, the system covers 129 use-case items. Eighty-one (81) are fully implemented, twenty (20) are partially implemented, and twenty-eight (28) are outside the scope of the current version.
@@ -320,7 +321,7 @@ Measured against the use-case requirements gathered at the start of the project,
 
 The study is limited to the following boundaries.
 
-**Users and access.** The system serves only one cooperative, MaVeFaCo, and its customers. It is not a multi-cooperative or general-purpose marketplace. The four roles have fixed permissions that cannot be reconfigured. Only customers can place orders. Public sign-up is limited to customers and farmers. Staff accounts are created by promoting an existing account. Two-factor authentication is required for staff only; customers and farmers are not offered it. Passwords must be 12 to 128 characters.
+**Users and access.** The system serves only one cooperative, MaVeFaCo, and its customers. It is not a multi-cooperative or general-purpose marketplace. The four roles have fixed permissions that cannot be reconfigured. Only customers can place orders. Public sign-up is limited to customers and farmers. Staff accounts are created by promoting an existing account. Two-factor authentication is required for staff only; customers and farmers are not offered it. Passwords must be 12 to 128 characters. Farmers' IDs are checked by staff from the photos; the system does not confirm them against government records, read them automatically, or verify the PhilSys QR code. A photo is uploaded from the device only when no camera is available, and staff are told when this happens.
 
 **Transactions and payments.** The system does not process online payments. The customer's chosen payment method is recorded on the order, but payment happens outside the system and is not confirmed by it. Prices are in Philippine pesos only. The system does not handle taxes, service fees, discounts, or vouchers. Each order can contain products from only one farmer. The cart is stored in the customer's browser, so it does not carry over to another device. Pickup and delivery are arranged outside the system. There is no courier integration, delivery scheduling, or location tracking. Order statuses are fixed: pending, confirmed, shipped, delivered, and cancelled. Customers can cancel an order only while it is pending. A "coming soon" product cannot be ordered or reserved until the farmer restocks it.
 
@@ -330,11 +331,11 @@ The study is limited to the following boundaries.
 
 **Crop monitoring.** Growth stages and harvest windows are estimated from approximate growing times for each crop, not observed in the field, and staff can correct those times. Expected yields are the farmers' own estimates in kilograms, and the expected harvest dates shown to customers are estimates. The supply outlook covers only the next eight weeks and only the plantings farmers have recorded. It flags possible oversupply but does not schedule harvests or recommend what to plant.
 
-**Communication and notifications.** Email is used only for account and security events (account verification, password reset, email change, and two-factor authentication changes) and for notifying farmers of suspended listings. The system has no order-status notifications, in-app or push notifications, SMS, or notification settings. In-system messaging is limited to one-to-one conversations between customers and farmers, and staff have no messaging inbox. The interface is in English only.
+**Communication and notifications.** Email is used only for account and security events (account verification, password reset, email change, and two-factor authentication changes) and for notifying farmers of suspended listings and of the outcome of their ID review. The system has no order-status notifications, in-app or push notifications, SMS, or notification settings. In-system messaging is limited to one-to-one conversations between customers and farmers, and staff have no messaging inbox. The interface is in English only.
 
 **Platform.** The system is a responsive web application used through a modern web browser on desktop or mobile devices. It has no native mobile application and no offline mode. It is hosted on Vercel (application) and Supabase (database and file storage), so its availability, capacity, and data backups depend on those providers. Rate limits on sign-in, registration, password reset, and uploads are tracked per server instance. They are therefore not strictly enforced across simultaneous instances.
 
-**Data privacy.** Following the Data Privacy Act of 2012 (Republic Act No. 10173), farmers' government ID images are visible to staff only through links that expire after five minutes. The images are deleted automatically 30 days after verification. Deleting an account anonymizes the user's personal information, while order and audit records are kept for accountability. When a farmer's account is deleted, their products are archived and their plantings and crop logs are deleted. An account cannot be deleted while it has an active order. Sales reports count only delivered orders and group monthly figures by Philippine Standard Time.
+**Data privacy.** Following the Data Privacy Act of 2012 (Republic Act No. 10173), farmers' ID photos and selfies are visible to staff only through links that expire after five minutes, and are deleted automatically 30 days after they are reviewed. ID numbers are stored only as a keyed fingerprint and their last four characters. Deleting an account anonymizes the user's personal information, while order and audit records are kept for accountability. When a farmer's account is deleted, their products are archived and their plantings, crop logs, and ID submissions are deleted. An account cannot be deleted while it has an active order. Sales reports count only delivered orders and group monthly figures by Philippine Standard Time.
 
 **Features outside the current scope.** The following features appeared in the initial use-case requirements but are not part of this study. They are recommended for future development:
 
@@ -344,5 +345,6 @@ The study is limited to the following boundaries.
 - customer and farmer conveniences, such as product comparison, pre-orders, favorite sellers, reordering, and notification settings
 - dispute and complaint handling
 - automated detection of suspicious activity
+- automatic reading of ID details and checking IDs against government records, such as the PhilSys QR code
 - in-system database backup and restore
 - languages other than English

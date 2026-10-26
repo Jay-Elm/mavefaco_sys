@@ -43,7 +43,7 @@ export async function PATCH(
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
-    const { suspended, verified, newPassword, resetMfa } = parsed.data;
+    const { suspended, verified, verifiedInPerson, newPassword, resetMfa } = parsed.data;
 
     // The only thing one admin can do to another is reset their two-factor
     // authentication, so a peer can recover an admin who lost their
@@ -51,11 +51,14 @@ export async function PATCH(
     // keeps their password, is emailed, and re-enrolls at next login.
     // Suspending, verifying or resetting another admin's password stays
     // blocked; password plus MFA reset together would be a full takeover.
-    if (target.role === ROLES.ADMIN && (suspended !== undefined || verified !== undefined || newPassword !== undefined))
+    if (target.role === ROLES.ADMIN && (suspended !== undefined || verified !== undefined || verifiedInPerson !== undefined || newPassword !== undefined))
       return NextResponse.json(
         { error: "Admins can only reset another admin's two-factor authentication" },
         { status: 403 },
       );
+
+    if ((verified !== undefined || verifiedInPerson) && target.role !== ROLES.FARMER)
+      return NextResponse.json({ error: "Only farmers are verified" }, { status: 400 });
 
     if (newPassword !== undefined && actor.role !== ROLES.ADMIN)
       return NextResponse.json({ error: "Only admins can reset passwords" }, { status: 403 });
@@ -71,7 +74,8 @@ export async function PATCH(
       where: { id: target.id },
       data: {
         ...(typeof suspended === "boolean" && { suspended }),
-        ...(typeof verified === "boolean" && { verified, verifiedAt: verified ? new Date() : null }),
+        ...(verified === false && { verified: false, verifiedAt: null, verifiedInPersonAt: null }),
+        ...(verifiedInPerson && { verified: true, verifiedAt: new Date(), verifiedInPersonAt: new Date() }),
         ...(hashed && { password: hashed, tokenVersion: { increment: 1 } }),
         // Forces a full re-enrollment (new QR code, new backup codes) at
         // next login rather than just disabling the check — an old secret
@@ -83,7 +87,7 @@ export async function PATCH(
           tokenVersion: { increment: 1 },
         }),
       },
-      select: { id: true, name: true, email: true, role: true, suspended: true, verified: true, totpEnabled: true },
+      select: { id: true, name: true, email: true, role: true, suspended: true, verified: true, verifiedInPersonAt: true, totpEnabled: true },
     });
 
     if (resetMfa) {
@@ -104,9 +108,11 @@ export async function PATCH(
       ? "RESET_MFA"
       : typeof newPassword === "string"
         ? "RESET_PASSWORD"
-        : typeof verified === "boolean"
-          ? (verified ? "VERIFY_USER" : "UNVERIFY_USER")
-          : (suspended ? "SUSPEND_USER" : "UNSUSPEND_USER");
+        : verifiedInPerson
+          ? "VERIFY_IN_PERSON"
+          : verified === false
+            ? "UNVERIFY_USER"
+            : (suspended ? "SUSPEND_USER" : "UNSUSPEND_USER");
 
     await prisma.auditLog.create({
       data: {

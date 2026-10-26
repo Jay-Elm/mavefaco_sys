@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { GET } from "./route";
 import { GET as stats } from "@/app/api/admin/stats/route";
 import { prisma } from "@/lib/prisma";
-import { createPlanting, createProduct, createUser, request, type SessionUser } from "@/test-utils/integration/helpers";
+import { createIdSubmission, createPlanting, createProduct, createUser, request, type SessionUser } from "@/test-utils/integration/helpers";
 import { placedOrder } from "@/test-utils/integration/orders";
 
 // A date this many days from today in Philippine time, as "YYYY-MM-DD".
@@ -44,7 +44,7 @@ describe("GET /api/nav-badges", () => {
     await prisma.order.update({ where: { id: order.id }, data: { status: "confirmed" } });
     await createPlanting(farmer.id, { harvestStart: daysFromToday(-20), harvestEnd: daysFromToday(-5), status: "harvested" });
     await createPlanting(farmer.id, { harvestStart: daysFromToday(-20), harvestEnd: daysFromToday(-5), status: "failed" });
-    await prisma.user.update({ where: { id: farmer.id }, data: { idImagePath: `${farmer.id}/id.jpg` } }); // submitted, awaiting review
+    await createIdSubmission(farmer.id); // submitted, awaiting review
 
     expect(await badges(farmer)).toEqual({
       "/farmer/messages": 0, "/farmer/orders": 0, "/farmer/products": 0, "/farmer/crops": 0, "/farmer/profile": 0,
@@ -56,9 +56,11 @@ describe("GET /api/nav-badges", () => {
     await createProduct(farmer.id, { approved: false });
     await suspend((await createProduct(farmer.id)).id);
     await createProduct(farmer.id); // approved
-    await prisma.user.update({ where: { id: farmer.id }, data: { idImagePath: `${farmer.id}/id.jpg` } });
+    await createIdSubmission(farmer.id);
     const verified = await createUser({ role: "farmer" });
-    await prisma.user.update({ where: { id: verified.id }, data: { idImagePath: "x.jpg", verified: true } });
+    await createIdSubmission(verified.id, { status: "approved", reviewedAt: new Date() });
+    await prisma.user.update({ where: { id: verified.id }, data: { verified: true } });
+    await createIdSubmission((await createUser({ role: "farmer" })).id, { status: "rejected", reviewedAt: new Date() });
 
     for (const role of ["manager", "admin"] as const) {
       expect(await badges(await createUser({ role }))).toEqual({ "/dashboard/products": 1, "/dashboard/users": 1 });

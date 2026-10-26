@@ -14,20 +14,14 @@ model User {
   password    String
   role        String      @default("customer")
   suspended   Boolean     @default(false)
-  // Path inside the private "id-verification" Supabase Storage bucket, not
-  // a public URL — access is only via short-lived signed URLs (see
-  // /api/admin/users/[id]/id-image). Renamed from idImageUrl when ID
-  // verification moved off a farmer-supplied free-text link.
-  idImagePath String?
-  // Farmer ID-document verification (admin-reviewed) — unrelated to
-  // whether the account's email address has been confirmed.
+  // Farmer verification — unrelated to whether the account's email address
+  // has been confirmed. Granted by staff approving an IdSubmission, or by
+  // checking the farmer's ID in person at the cooperative office.
   verified    Boolean     @default(false)
-  // When `verified` last flipped true. Drives the auto-purge retention
-  // clock for idImagePath (see /api/cron/purge-id-images) — cleared back
-  // to null on unverify so a re-review has to restart the clock. Not the
-  // same as "when the ID was submitted": a stale, never-reviewed
-  // submission is deliberately never auto-purged.
+  // When `verified` last flipped true; cleared on revoke.
   verifiedAt  DateTime?
+  // Set when staff verified the farmer in person; cleared on revoke.
+  verifiedInPersonAt DateTime?
   // Null until the address is confirmed via the emailed link. Existing
   // accounts are backfilled to non-null at migration time (see
   // 20260908120000_add_email_verification) so this gate only applies to
@@ -69,6 +63,7 @@ model User {
   totpBackupCodes          TotpBackupCode[]
   notices                  Notice[]
   plantings                Planting[]
+  idSubmissions            IdSubmission[]
 }
 
 model EmailVerificationToken {
@@ -411,4 +406,44 @@ model AuditLog {
   user          User       @relation(fields: [userId], references: [id])
 
   @@index([userId])
+}
+
+// A farmer's government ID, submitted for verification: the ID type, front,
+// back (not for a passport) and a selfie holding the ID, kept in the private
+// "id-verification" bucket and only ever viewed through short-lived signed
+// URLs. Staff approve or reject it with reasons. Images are deleted 30 days
+// after review (/api/cron/purge-id-images); a pending one is kept.
+model IdSubmission {
+  id               Int       @id @default(autoincrement())
+  // One of ID_TYPES (src/lib/idVerification.ts); "unspecified" for IDs
+  // uploaded before ID types existed.
+  idType           String
+  // HMAC of the normalized ID number (ID_NUMBER_HASH_KEY), to spot the same
+  // ID on two accounts without storing the number; plus its last 4 digits
+  // for staff. Null for IDs uploaded before numbers were asked for.
+  numberHash       String?
+  numberLast4      String?
+  // Storage paths; null once purged (or, for the back, not required).
+  frontPath        String?
+  backPath         String?
+  selfiePath       String?
+  // camera | upload (no camera available) | legacy (before this flow)
+  captureMethod    String
+  // pending | approved | rejected | replaced (by a newer pending one; its
+  // images are deleted straight away)
+  status           String    @default("pending")
+  rejectionReasons String[]  @default([])
+  rejectionNote    String?
+  // The reviewing staff member: a plain id, for attribution only.
+  reviewedById     Int?
+  reviewedAt       DateTime?
+  imagesPurgedAt   DateTime?
+  createdAt        DateTime  @default(now())
+
+  userId           Int
+  user             User      @relation(fields: [userId], references: [id])
+
+  @@index([userId, status])
+  @@index([numberHash])
+  @@index([status, reviewedAt])
 }

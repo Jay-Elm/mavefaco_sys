@@ -127,9 +127,9 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   role: 'role',
   suspended: 'suspended',
-  idImagePath: 'idImagePath',
   verified: 'verified',
   verifiedAt: 'verifiedAt',
+  verifiedInPersonAt: 'verifiedInPersonAt',
   emailVerifiedAt: 'emailVerifiedAt',
   tokenVersion: 'tokenVersion',
   deletedAt: 'deletedAt',
@@ -332,6 +332,25 @@ exports.Prisma.AuditLogScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.IdSubmissionScalarFieldEnum = {
+  id: 'id',
+  idType: 'idType',
+  numberHash: 'numberHash',
+  numberLast4: 'numberLast4',
+  frontPath: 'frontPath',
+  backPath: 'backPath',
+  selfiePath: 'selfiePath',
+  captureMethod: 'captureMethod',
+  status: 'status',
+  rejectionReasons: 'rejectionReasons',
+  rejectionNote: 'rejectionNote',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  imagesPurgedAt: 'imagesPurgedAt',
+  createdAt: 'createdAt',
+  userId: 'userId'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -368,7 +387,8 @@ exports.Prisma.ModelName = {
   Review: 'Review',
   Message: 'Message',
   Notice: 'Notice',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  IdSubmission: 'IdSubmission'
 };
 
 /**

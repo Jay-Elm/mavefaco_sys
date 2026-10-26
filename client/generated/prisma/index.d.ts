@@ -113,6 +113,11 @@ export type Notice = $Result.DefaultSelection<Prisma.$NoticePayload>
  * 
  */
 export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
+/**
+ * Model IdSubmission
+ * 
+ */
+export type IdSubmission = $Result.DefaultSelection<Prisma.$IdSubmissionPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -434,6 +439,16 @@ export class PrismaClient<
     * ```
     */
   get auditLog(): Prisma.AuditLogDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.idSubmission`: Exposes CRUD operations for the **IdSubmission** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IdSubmissions
+    * const idSubmissions = await prisma.idSubmission.findMany()
+    * ```
+    */
+  get idSubmission(): Prisma.IdSubmissionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -900,7 +915,8 @@ export namespace Prisma {
     Review: 'Review',
     Message: 'Message',
     Notice: 'Notice',
-    AuditLog: 'AuditLog'
+    AuditLog: 'AuditLog',
+    IdSubmission: 'IdSubmission'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -916,7 +932,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "emailChangeToken" | "totpBackupCode" | "category" | "product" | "cropType" | "planting" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "notice" | "auditLog"
+      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "emailChangeToken" | "totpBackupCode" | "category" | "product" | "cropType" | "planting" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "notice" | "auditLog" | "idSubmission"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2400,6 +2416,80 @@ export namespace Prisma {
           }
         }
       }
+      IdSubmission: {
+        payload: Prisma.$IdSubmissionPayload<ExtArgs>
+        fields: Prisma.IdSubmissionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IdSubmissionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdSubmissionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IdSubmissionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdSubmissionPayload>
+          }
+          findFirst: {
+            args: Prisma.IdSubmissionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdSubmissionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IdSubmissionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdSubmissionPayload>
+          }
+          findMany: {
+            args: Prisma.IdSubmissionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdSubmissionPayload>[]
+          }
+          create: {
+            args: Prisma.IdSubmissionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdSubmissionPayload>
+          }
+          createMany: {
+            args: Prisma.IdSubmissionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IdSubmissionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdSubmissionPayload>[]
+          }
+          delete: {
+            args: Prisma.IdSubmissionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdSubmissionPayload>
+          }
+          update: {
+            args: Prisma.IdSubmissionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdSubmissionPayload>
+          }
+          deleteMany: {
+            args: Prisma.IdSubmissionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IdSubmissionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.IdSubmissionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdSubmissionPayload>[]
+          }
+          upsert: {
+            args: Prisma.IdSubmissionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdSubmissionPayload>
+          }
+          aggregate: {
+            args: Prisma.IdSubmissionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIdSubmission>
+          }
+          groupBy: {
+            args: Prisma.IdSubmissionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IdSubmissionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IdSubmissionCountArgs<ExtArgs>
+            result: $Utils.Optional<IdSubmissionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2543,6 +2633,7 @@ export namespace Prisma {
     message?: MessageOmit
     notice?: NoticeOmit
     auditLog?: AuditLogOmit
+    idSubmission?: IdSubmissionOmit
   }
 
   /* Types for Logging */
@@ -2636,6 +2727,7 @@ export namespace Prisma {
     totpBackupCodes: number
     notices: number
     plantings: number
+    idSubmissions: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2652,6 +2744,7 @@ export namespace Prisma {
     totpBackupCodes?: boolean | UserCountOutputTypeCountTotpBackupCodesArgs
     notices?: boolean | UserCountOutputTypeCountNoticesArgs
     plantings?: boolean | UserCountOutputTypeCountPlantingsArgs
+    idSubmissions?: boolean | UserCountOutputTypeCountIdSubmissionsArgs
   }
 
   // Custom InputTypes
@@ -2754,6 +2847,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountPlantingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PlantingWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountIdSubmissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IdSubmissionWhereInput
   }
 
 
@@ -2974,9 +3074,9 @@ export namespace Prisma {
     password: string | null
     role: string | null
     suspended: boolean | null
-    idImagePath: string | null
     verified: boolean | null
     verifiedAt: Date | null
+    verifiedInPersonAt: Date | null
     emailVerifiedAt: Date | null
     tokenVersion: number | null
     deletedAt: Date | null
@@ -2994,9 +3094,9 @@ export namespace Prisma {
     password: string | null
     role: string | null
     suspended: boolean | null
-    idImagePath: string | null
     verified: boolean | null
     verifiedAt: Date | null
+    verifiedInPersonAt: Date | null
     emailVerifiedAt: Date | null
     tokenVersion: number | null
     deletedAt: Date | null
@@ -3014,9 +3114,9 @@ export namespace Prisma {
     password: number
     role: number
     suspended: number
-    idImagePath: number
     verified: number
     verifiedAt: number
+    verifiedInPersonAt: number
     emailVerifiedAt: number
     tokenVersion: number
     deletedAt: number
@@ -3048,9 +3148,9 @@ export namespace Prisma {
     password?: true
     role?: true
     suspended?: true
-    idImagePath?: true
     verified?: true
     verifiedAt?: true
+    verifiedInPersonAt?: true
     emailVerifiedAt?: true
     tokenVersion?: true
     deletedAt?: true
@@ -3068,9 +3168,9 @@ export namespace Prisma {
     password?: true
     role?: true
     suspended?: true
-    idImagePath?: true
     verified?: true
     verifiedAt?: true
+    verifiedInPersonAt?: true
     emailVerifiedAt?: true
     tokenVersion?: true
     deletedAt?: true
@@ -3088,9 +3188,9 @@ export namespace Prisma {
     password?: true
     role?: true
     suspended?: true
-    idImagePath?: true
     verified?: true
     verifiedAt?: true
+    verifiedInPersonAt?: true
     emailVerifiedAt?: true
     tokenVersion?: true
     deletedAt?: true
@@ -3195,9 +3295,9 @@ export namespace Prisma {
     password: string
     role: string
     suspended: boolean
-    idImagePath: string | null
     verified: boolean
     verifiedAt: Date | null
+    verifiedInPersonAt: Date | null
     emailVerifiedAt: Date | null
     tokenVersion: number
     deletedAt: Date | null
@@ -3234,9 +3334,9 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     suspended?: boolean
-    idImagePath?: boolean
     verified?: boolean
     verifiedAt?: boolean
+    verifiedInPersonAt?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
     deletedAt?: boolean
@@ -3258,6 +3358,7 @@ export namespace Prisma {
     totpBackupCodes?: boolean | User$totpBackupCodesArgs<ExtArgs>
     notices?: boolean | User$noticesArgs<ExtArgs>
     plantings?: boolean | User$plantingsArgs<ExtArgs>
+    idSubmissions?: boolean | User$idSubmissionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3268,9 +3369,9 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     suspended?: boolean
-    idImagePath?: boolean
     verified?: boolean
     verifiedAt?: boolean
+    verifiedInPersonAt?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
     deletedAt?: boolean
@@ -3288,9 +3389,9 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     suspended?: boolean
-    idImagePath?: boolean
     verified?: boolean
     verifiedAt?: boolean
+    verifiedInPersonAt?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
     deletedAt?: boolean
@@ -3308,9 +3409,9 @@ export namespace Prisma {
     password?: boolean
     role?: boolean
     suspended?: boolean
-    idImagePath?: boolean
     verified?: boolean
     verifiedAt?: boolean
+    verifiedInPersonAt?: boolean
     emailVerifiedAt?: boolean
     tokenVersion?: boolean
     deletedAt?: boolean
@@ -3321,7 +3422,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "idImagePath" | "verified" | "verifiedAt" | "emailVerifiedAt" | "tokenVersion" | "deletedAt" | "totpSecret" | "totpEnabled" | "totpLastStep" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "verified" | "verifiedAt" | "verifiedInPersonAt" | "emailVerifiedAt" | "tokenVersion" | "deletedAt" | "totpSecret" | "totpEnabled" | "totpLastStep" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | User$productsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -3336,6 +3437,7 @@ export namespace Prisma {
     totpBackupCodes?: boolean | User$totpBackupCodesArgs<ExtArgs>
     notices?: boolean | User$noticesArgs<ExtArgs>
     plantings?: boolean | User$plantingsArgs<ExtArgs>
+    idSubmissions?: boolean | User$idSubmissionsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3357,6 +3459,7 @@ export namespace Prisma {
       totpBackupCodes: Prisma.$TotpBackupCodePayload<ExtArgs>[]
       notices: Prisma.$NoticePayload<ExtArgs>[]
       plantings: Prisma.$PlantingPayload<ExtArgs>[]
+      idSubmissions: Prisma.$IdSubmissionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3365,9 +3468,9 @@ export namespace Prisma {
       password: string
       role: string
       suspended: boolean
-      idImagePath: string | null
       verified: boolean
       verifiedAt: Date | null
+      verifiedInPersonAt: Date | null
       emailVerifiedAt: Date | null
       tokenVersion: number
       deletedAt: Date | null
@@ -3783,6 +3886,7 @@ export namespace Prisma {
     totpBackupCodes<T extends User$totpBackupCodesArgs<ExtArgs> = {}>(args?: Subset<T, User$totpBackupCodesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TotpBackupCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notices<T extends User$noticesArgs<ExtArgs> = {}>(args?: Subset<T, User$noticesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     plantings<T extends User$plantingsArgs<ExtArgs> = {}>(args?: Subset<T, User$plantingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlantingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    idSubmissions<T extends User$idSubmissionsArgs<ExtArgs> = {}>(args?: Subset<T, User$idSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3818,9 +3922,9 @@ export namespace Prisma {
     readonly password: FieldRef<"User", 'String'>
     readonly role: FieldRef<"User", 'String'>
     readonly suspended: FieldRef<"User", 'Boolean'>
-    readonly idImagePath: FieldRef<"User", 'String'>
     readonly verified: FieldRef<"User", 'Boolean'>
     readonly verifiedAt: FieldRef<"User", 'DateTime'>
+    readonly verifiedInPersonAt: FieldRef<"User", 'DateTime'>
     readonly emailVerifiedAt: FieldRef<"User", 'DateTime'>
     readonly tokenVersion: FieldRef<"User", 'Int'>
     readonly deletedAt: FieldRef<"User", 'DateTime'>
@@ -4531,6 +4635,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PlantingScalarFieldEnum | PlantingScalarFieldEnum[]
+  }
+
+  /**
+   * User.idSubmissions
+   */
+  export type User$idSubmissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionInclude<ExtArgs> | null
+    where?: IdSubmissionWhereInput
+    orderBy?: IdSubmissionOrderByWithRelationInput | IdSubmissionOrderByWithRelationInput[]
+    cursor?: IdSubmissionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IdSubmissionScalarFieldEnum | IdSubmissionScalarFieldEnum[]
   }
 
   /**
@@ -26137,6 +26265,1250 @@ export namespace Prisma {
 
 
   /**
+   * Model IdSubmission
+   */
+
+  export type AggregateIdSubmission = {
+    _count: IdSubmissionCountAggregateOutputType | null
+    _avg: IdSubmissionAvgAggregateOutputType | null
+    _sum: IdSubmissionSumAggregateOutputType | null
+    _min: IdSubmissionMinAggregateOutputType | null
+    _max: IdSubmissionMaxAggregateOutputType | null
+  }
+
+  export type IdSubmissionAvgAggregateOutputType = {
+    id: number | null
+    reviewedById: number | null
+    userId: number | null
+  }
+
+  export type IdSubmissionSumAggregateOutputType = {
+    id: number | null
+    reviewedById: number | null
+    userId: number | null
+  }
+
+  export type IdSubmissionMinAggregateOutputType = {
+    id: number | null
+    idType: string | null
+    numberHash: string | null
+    numberLast4: string | null
+    frontPath: string | null
+    backPath: string | null
+    selfiePath: string | null
+    captureMethod: string | null
+    status: string | null
+    rejectionNote: string | null
+    reviewedById: number | null
+    reviewedAt: Date | null
+    imagesPurgedAt: Date | null
+    createdAt: Date | null
+    userId: number | null
+  }
+
+  export type IdSubmissionMaxAggregateOutputType = {
+    id: number | null
+    idType: string | null
+    numberHash: string | null
+    numberLast4: string | null
+    frontPath: string | null
+    backPath: string | null
+    selfiePath: string | null
+    captureMethod: string | null
+    status: string | null
+    rejectionNote: string | null
+    reviewedById: number | null
+    reviewedAt: Date | null
+    imagesPurgedAt: Date | null
+    createdAt: Date | null
+    userId: number | null
+  }
+
+  export type IdSubmissionCountAggregateOutputType = {
+    id: number
+    idType: number
+    numberHash: number
+    numberLast4: number
+    frontPath: number
+    backPath: number
+    selfiePath: number
+    captureMethod: number
+    status: number
+    rejectionReasons: number
+    rejectionNote: number
+    reviewedById: number
+    reviewedAt: number
+    imagesPurgedAt: number
+    createdAt: number
+    userId: number
+    _all: number
+  }
+
+
+  export type IdSubmissionAvgAggregateInputType = {
+    id?: true
+    reviewedById?: true
+    userId?: true
+  }
+
+  export type IdSubmissionSumAggregateInputType = {
+    id?: true
+    reviewedById?: true
+    userId?: true
+  }
+
+  export type IdSubmissionMinAggregateInputType = {
+    id?: true
+    idType?: true
+    numberHash?: true
+    numberLast4?: true
+    frontPath?: true
+    backPath?: true
+    selfiePath?: true
+    captureMethod?: true
+    status?: true
+    rejectionNote?: true
+    reviewedById?: true
+    reviewedAt?: true
+    imagesPurgedAt?: true
+    createdAt?: true
+    userId?: true
+  }
+
+  export type IdSubmissionMaxAggregateInputType = {
+    id?: true
+    idType?: true
+    numberHash?: true
+    numberLast4?: true
+    frontPath?: true
+    backPath?: true
+    selfiePath?: true
+    captureMethod?: true
+    status?: true
+    rejectionNote?: true
+    reviewedById?: true
+    reviewedAt?: true
+    imagesPurgedAt?: true
+    createdAt?: true
+    userId?: true
+  }
+
+  export type IdSubmissionCountAggregateInputType = {
+    id?: true
+    idType?: true
+    numberHash?: true
+    numberLast4?: true
+    frontPath?: true
+    backPath?: true
+    selfiePath?: true
+    captureMethod?: true
+    status?: true
+    rejectionReasons?: true
+    rejectionNote?: true
+    reviewedById?: true
+    reviewedAt?: true
+    imagesPurgedAt?: true
+    createdAt?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type IdSubmissionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IdSubmission to aggregate.
+     */
+    where?: IdSubmissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IdSubmissions to fetch.
+     */
+    orderBy?: IdSubmissionOrderByWithRelationInput | IdSubmissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IdSubmissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IdSubmissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IdSubmissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IdSubmissions
+    **/
+    _count?: true | IdSubmissionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: IdSubmissionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: IdSubmissionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IdSubmissionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IdSubmissionMaxAggregateInputType
+  }
+
+  export type GetIdSubmissionAggregateType<T extends IdSubmissionAggregateArgs> = {
+        [P in keyof T & keyof AggregateIdSubmission]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIdSubmission[P]>
+      : GetScalarType<T[P], AggregateIdSubmission[P]>
+  }
+
+
+
+
+  export type IdSubmissionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IdSubmissionWhereInput
+    orderBy?: IdSubmissionOrderByWithAggregationInput | IdSubmissionOrderByWithAggregationInput[]
+    by: IdSubmissionScalarFieldEnum[] | IdSubmissionScalarFieldEnum
+    having?: IdSubmissionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IdSubmissionCountAggregateInputType | true
+    _avg?: IdSubmissionAvgAggregateInputType
+    _sum?: IdSubmissionSumAggregateInputType
+    _min?: IdSubmissionMinAggregateInputType
+    _max?: IdSubmissionMaxAggregateInputType
+  }
+
+  export type IdSubmissionGroupByOutputType = {
+    id: number
+    idType: string
+    numberHash: string | null
+    numberLast4: string | null
+    frontPath: string | null
+    backPath: string | null
+    selfiePath: string | null
+    captureMethod: string
+    status: string
+    rejectionReasons: string[]
+    rejectionNote: string | null
+    reviewedById: number | null
+    reviewedAt: Date | null
+    imagesPurgedAt: Date | null
+    createdAt: Date
+    userId: number
+    _count: IdSubmissionCountAggregateOutputType | null
+    _avg: IdSubmissionAvgAggregateOutputType | null
+    _sum: IdSubmissionSumAggregateOutputType | null
+    _min: IdSubmissionMinAggregateOutputType | null
+    _max: IdSubmissionMaxAggregateOutputType | null
+  }
+
+  type GetIdSubmissionGroupByPayload<T extends IdSubmissionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IdSubmissionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IdSubmissionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IdSubmissionGroupByOutputType[P]>
+            : GetScalarType<T[P], IdSubmissionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IdSubmissionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    idType?: boolean
+    numberHash?: boolean
+    numberLast4?: boolean
+    frontPath?: boolean
+    backPath?: boolean
+    selfiePath?: boolean
+    captureMethod?: boolean
+    status?: boolean
+    rejectionReasons?: boolean
+    rejectionNote?: boolean
+    reviewedById?: boolean
+    reviewedAt?: boolean
+    imagesPurgedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["idSubmission"]>
+
+  export type IdSubmissionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    idType?: boolean
+    numberHash?: boolean
+    numberLast4?: boolean
+    frontPath?: boolean
+    backPath?: boolean
+    selfiePath?: boolean
+    captureMethod?: boolean
+    status?: boolean
+    rejectionReasons?: boolean
+    rejectionNote?: boolean
+    reviewedById?: boolean
+    reviewedAt?: boolean
+    imagesPurgedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["idSubmission"]>
+
+  export type IdSubmissionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    idType?: boolean
+    numberHash?: boolean
+    numberLast4?: boolean
+    frontPath?: boolean
+    backPath?: boolean
+    selfiePath?: boolean
+    captureMethod?: boolean
+    status?: boolean
+    rejectionReasons?: boolean
+    rejectionNote?: boolean
+    reviewedById?: boolean
+    reviewedAt?: boolean
+    imagesPurgedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["idSubmission"]>
+
+  export type IdSubmissionSelectScalar = {
+    id?: boolean
+    idType?: boolean
+    numberHash?: boolean
+    numberLast4?: boolean
+    frontPath?: boolean
+    backPath?: boolean
+    selfiePath?: boolean
+    captureMethod?: boolean
+    status?: boolean
+    rejectionReasons?: boolean
+    rejectionNote?: boolean
+    reviewedById?: boolean
+    reviewedAt?: boolean
+    imagesPurgedAt?: boolean
+    createdAt?: boolean
+    userId?: boolean
+  }
+
+  export type IdSubmissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "idType" | "numberHash" | "numberLast4" | "frontPath" | "backPath" | "selfiePath" | "captureMethod" | "status" | "rejectionReasons" | "rejectionNote" | "reviewedById" | "reviewedAt" | "imagesPurgedAt" | "createdAt" | "userId", ExtArgs["result"]["idSubmission"]>
+  export type IdSubmissionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type IdSubmissionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type IdSubmissionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $IdSubmissionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IdSubmission"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      idType: string
+      numberHash: string | null
+      numberLast4: string | null
+      frontPath: string | null
+      backPath: string | null
+      selfiePath: string | null
+      captureMethod: string
+      status: string
+      rejectionReasons: string[]
+      rejectionNote: string | null
+      reviewedById: number | null
+      reviewedAt: Date | null
+      imagesPurgedAt: Date | null
+      createdAt: Date
+      userId: number
+    }, ExtArgs["result"]["idSubmission"]>
+    composites: {}
+  }
+
+  type IdSubmissionGetPayload<S extends boolean | null | undefined | IdSubmissionDefaultArgs> = $Result.GetResult<Prisma.$IdSubmissionPayload, S>
+
+  type IdSubmissionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<IdSubmissionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: IdSubmissionCountAggregateInputType | true
+    }
+
+  export interface IdSubmissionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IdSubmission'], meta: { name: 'IdSubmission' } }
+    /**
+     * Find zero or one IdSubmission that matches the filter.
+     * @param {IdSubmissionFindUniqueArgs} args - Arguments to find a IdSubmission
+     * @example
+     * // Get one IdSubmission
+     * const idSubmission = await prisma.idSubmission.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IdSubmissionFindUniqueArgs>(args: SelectSubset<T, IdSubmissionFindUniqueArgs<ExtArgs>>): Prisma__IdSubmissionClient<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one IdSubmission that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {IdSubmissionFindUniqueOrThrowArgs} args - Arguments to find a IdSubmission
+     * @example
+     * // Get one IdSubmission
+     * const idSubmission = await prisma.idSubmission.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IdSubmissionFindUniqueOrThrowArgs>(args: SelectSubset<T, IdSubmissionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IdSubmissionClient<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IdSubmission that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdSubmissionFindFirstArgs} args - Arguments to find a IdSubmission
+     * @example
+     * // Get one IdSubmission
+     * const idSubmission = await prisma.idSubmission.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IdSubmissionFindFirstArgs>(args?: SelectSubset<T, IdSubmissionFindFirstArgs<ExtArgs>>): Prisma__IdSubmissionClient<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IdSubmission that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdSubmissionFindFirstOrThrowArgs} args - Arguments to find a IdSubmission
+     * @example
+     * // Get one IdSubmission
+     * const idSubmission = await prisma.idSubmission.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IdSubmissionFindFirstOrThrowArgs>(args?: SelectSubset<T, IdSubmissionFindFirstOrThrowArgs<ExtArgs>>): Prisma__IdSubmissionClient<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more IdSubmissions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdSubmissionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IdSubmissions
+     * const idSubmissions = await prisma.idSubmission.findMany()
+     * 
+     * // Get first 10 IdSubmissions
+     * const idSubmissions = await prisma.idSubmission.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const idSubmissionWithIdOnly = await prisma.idSubmission.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IdSubmissionFindManyArgs>(args?: SelectSubset<T, IdSubmissionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a IdSubmission.
+     * @param {IdSubmissionCreateArgs} args - Arguments to create a IdSubmission.
+     * @example
+     * // Create one IdSubmission
+     * const IdSubmission = await prisma.idSubmission.create({
+     *   data: {
+     *     // ... data to create a IdSubmission
+     *   }
+     * })
+     * 
+     */
+    create<T extends IdSubmissionCreateArgs>(args: SelectSubset<T, IdSubmissionCreateArgs<ExtArgs>>): Prisma__IdSubmissionClient<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many IdSubmissions.
+     * @param {IdSubmissionCreateManyArgs} args - Arguments to create many IdSubmissions.
+     * @example
+     * // Create many IdSubmissions
+     * const idSubmission = await prisma.idSubmission.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IdSubmissionCreateManyArgs>(args?: SelectSubset<T, IdSubmissionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IdSubmissions and returns the data saved in the database.
+     * @param {IdSubmissionCreateManyAndReturnArgs} args - Arguments to create many IdSubmissions.
+     * @example
+     * // Create many IdSubmissions
+     * const idSubmission = await prisma.idSubmission.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IdSubmissions and only return the `id`
+     * const idSubmissionWithIdOnly = await prisma.idSubmission.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IdSubmissionCreateManyAndReturnArgs>(args?: SelectSubset<T, IdSubmissionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a IdSubmission.
+     * @param {IdSubmissionDeleteArgs} args - Arguments to delete one IdSubmission.
+     * @example
+     * // Delete one IdSubmission
+     * const IdSubmission = await prisma.idSubmission.delete({
+     *   where: {
+     *     // ... filter to delete one IdSubmission
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IdSubmissionDeleteArgs>(args: SelectSubset<T, IdSubmissionDeleteArgs<ExtArgs>>): Prisma__IdSubmissionClient<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one IdSubmission.
+     * @param {IdSubmissionUpdateArgs} args - Arguments to update one IdSubmission.
+     * @example
+     * // Update one IdSubmission
+     * const idSubmission = await prisma.idSubmission.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IdSubmissionUpdateArgs>(args: SelectSubset<T, IdSubmissionUpdateArgs<ExtArgs>>): Prisma__IdSubmissionClient<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more IdSubmissions.
+     * @param {IdSubmissionDeleteManyArgs} args - Arguments to filter IdSubmissions to delete.
+     * @example
+     * // Delete a few IdSubmissions
+     * const { count } = await prisma.idSubmission.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IdSubmissionDeleteManyArgs>(args?: SelectSubset<T, IdSubmissionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IdSubmissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdSubmissionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IdSubmissions
+     * const idSubmission = await prisma.idSubmission.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IdSubmissionUpdateManyArgs>(args: SelectSubset<T, IdSubmissionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IdSubmissions and returns the data updated in the database.
+     * @param {IdSubmissionUpdateManyAndReturnArgs} args - Arguments to update many IdSubmissions.
+     * @example
+     * // Update many IdSubmissions
+     * const idSubmission = await prisma.idSubmission.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more IdSubmissions and only return the `id`
+     * const idSubmissionWithIdOnly = await prisma.idSubmission.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends IdSubmissionUpdateManyAndReturnArgs>(args: SelectSubset<T, IdSubmissionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one IdSubmission.
+     * @param {IdSubmissionUpsertArgs} args - Arguments to update or create a IdSubmission.
+     * @example
+     * // Update or create a IdSubmission
+     * const idSubmission = await prisma.idSubmission.upsert({
+     *   create: {
+     *     // ... data to create a IdSubmission
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IdSubmission we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IdSubmissionUpsertArgs>(args: SelectSubset<T, IdSubmissionUpsertArgs<ExtArgs>>): Prisma__IdSubmissionClient<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of IdSubmissions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdSubmissionCountArgs} args - Arguments to filter IdSubmissions to count.
+     * @example
+     * // Count the number of IdSubmissions
+     * const count = await prisma.idSubmission.count({
+     *   where: {
+     *     // ... the filter for the IdSubmissions we want to count
+     *   }
+     * })
+    **/
+    count<T extends IdSubmissionCountArgs>(
+      args?: Subset<T, IdSubmissionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IdSubmissionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IdSubmission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdSubmissionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IdSubmissionAggregateArgs>(args: Subset<T, IdSubmissionAggregateArgs>): Prisma.PrismaPromise<GetIdSubmissionAggregateType<T>>
+
+    /**
+     * Group by IdSubmission.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdSubmissionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IdSubmissionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IdSubmissionGroupByArgs['orderBy'] }
+        : { orderBy?: IdSubmissionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IdSubmissionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIdSubmissionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IdSubmission model
+   */
+  readonly fields: IdSubmissionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IdSubmission.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IdSubmissionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the IdSubmission model
+   */
+  interface IdSubmissionFieldRefs {
+    readonly id: FieldRef<"IdSubmission", 'Int'>
+    readonly idType: FieldRef<"IdSubmission", 'String'>
+    readonly numberHash: FieldRef<"IdSubmission", 'String'>
+    readonly numberLast4: FieldRef<"IdSubmission", 'String'>
+    readonly frontPath: FieldRef<"IdSubmission", 'String'>
+    readonly backPath: FieldRef<"IdSubmission", 'String'>
+    readonly selfiePath: FieldRef<"IdSubmission", 'String'>
+    readonly captureMethod: FieldRef<"IdSubmission", 'String'>
+    readonly status: FieldRef<"IdSubmission", 'String'>
+    readonly rejectionReasons: FieldRef<"IdSubmission", 'String[]'>
+    readonly rejectionNote: FieldRef<"IdSubmission", 'String'>
+    readonly reviewedById: FieldRef<"IdSubmission", 'Int'>
+    readonly reviewedAt: FieldRef<"IdSubmission", 'DateTime'>
+    readonly imagesPurgedAt: FieldRef<"IdSubmission", 'DateTime'>
+    readonly createdAt: FieldRef<"IdSubmission", 'DateTime'>
+    readonly userId: FieldRef<"IdSubmission", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IdSubmission findUnique
+   */
+  export type IdSubmissionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionInclude<ExtArgs> | null
+    /**
+     * Filter, which IdSubmission to fetch.
+     */
+    where: IdSubmissionWhereUniqueInput
+  }
+
+  /**
+   * IdSubmission findUniqueOrThrow
+   */
+  export type IdSubmissionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionInclude<ExtArgs> | null
+    /**
+     * Filter, which IdSubmission to fetch.
+     */
+    where: IdSubmissionWhereUniqueInput
+  }
+
+  /**
+   * IdSubmission findFirst
+   */
+  export type IdSubmissionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionInclude<ExtArgs> | null
+    /**
+     * Filter, which IdSubmission to fetch.
+     */
+    where?: IdSubmissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IdSubmissions to fetch.
+     */
+    orderBy?: IdSubmissionOrderByWithRelationInput | IdSubmissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IdSubmissions.
+     */
+    cursor?: IdSubmissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IdSubmissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IdSubmissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IdSubmissions.
+     */
+    distinct?: IdSubmissionScalarFieldEnum | IdSubmissionScalarFieldEnum[]
+  }
+
+  /**
+   * IdSubmission findFirstOrThrow
+   */
+  export type IdSubmissionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionInclude<ExtArgs> | null
+    /**
+     * Filter, which IdSubmission to fetch.
+     */
+    where?: IdSubmissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IdSubmissions to fetch.
+     */
+    orderBy?: IdSubmissionOrderByWithRelationInput | IdSubmissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IdSubmissions.
+     */
+    cursor?: IdSubmissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IdSubmissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IdSubmissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IdSubmissions.
+     */
+    distinct?: IdSubmissionScalarFieldEnum | IdSubmissionScalarFieldEnum[]
+  }
+
+  /**
+   * IdSubmission findMany
+   */
+  export type IdSubmissionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionInclude<ExtArgs> | null
+    /**
+     * Filter, which IdSubmissions to fetch.
+     */
+    where?: IdSubmissionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IdSubmissions to fetch.
+     */
+    orderBy?: IdSubmissionOrderByWithRelationInput | IdSubmissionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IdSubmissions.
+     */
+    cursor?: IdSubmissionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IdSubmissions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IdSubmissions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IdSubmissions.
+     */
+    distinct?: IdSubmissionScalarFieldEnum | IdSubmissionScalarFieldEnum[]
+  }
+
+  /**
+   * IdSubmission create
+   */
+  export type IdSubmissionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IdSubmission.
+     */
+    data: XOR<IdSubmissionCreateInput, IdSubmissionUncheckedCreateInput>
+  }
+
+  /**
+   * IdSubmission createMany
+   */
+  export type IdSubmissionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IdSubmissions.
+     */
+    data: IdSubmissionCreateManyInput | IdSubmissionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IdSubmission createManyAndReturn
+   */
+  export type IdSubmissionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * The data used to create many IdSubmissions.
+     */
+    data: IdSubmissionCreateManyInput | IdSubmissionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IdSubmission update
+   */
+  export type IdSubmissionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IdSubmission.
+     */
+    data: XOR<IdSubmissionUpdateInput, IdSubmissionUncheckedUpdateInput>
+    /**
+     * Choose, which IdSubmission to update.
+     */
+    where: IdSubmissionWhereUniqueInput
+  }
+
+  /**
+   * IdSubmission updateMany
+   */
+  export type IdSubmissionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IdSubmissions.
+     */
+    data: XOR<IdSubmissionUpdateManyMutationInput, IdSubmissionUncheckedUpdateManyInput>
+    /**
+     * Filter which IdSubmissions to update
+     */
+    where?: IdSubmissionWhereInput
+    /**
+     * Limit how many IdSubmissions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * IdSubmission updateManyAndReturn
+   */
+  export type IdSubmissionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * The data used to update IdSubmissions.
+     */
+    data: XOR<IdSubmissionUpdateManyMutationInput, IdSubmissionUncheckedUpdateManyInput>
+    /**
+     * Filter which IdSubmissions to update
+     */
+    where?: IdSubmissionWhereInput
+    /**
+     * Limit how many IdSubmissions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IdSubmission upsert
+   */
+  export type IdSubmissionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IdSubmission to update in case it exists.
+     */
+    where: IdSubmissionWhereUniqueInput
+    /**
+     * In case the IdSubmission found by the `where` argument doesn't exist, create a new IdSubmission with this data.
+     */
+    create: XOR<IdSubmissionCreateInput, IdSubmissionUncheckedCreateInput>
+    /**
+     * In case the IdSubmission was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IdSubmissionUpdateInput, IdSubmissionUncheckedUpdateInput>
+  }
+
+  /**
+   * IdSubmission delete
+   */
+  export type IdSubmissionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionInclude<ExtArgs> | null
+    /**
+     * Filter which IdSubmission to delete.
+     */
+    where: IdSubmissionWhereUniqueInput
+  }
+
+  /**
+   * IdSubmission deleteMany
+   */
+  export type IdSubmissionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IdSubmissions to delete
+     */
+    where?: IdSubmissionWhereInput
+    /**
+     * Limit how many IdSubmissions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * IdSubmission without action
+   */
+  export type IdSubmissionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdSubmission
+     */
+    select?: IdSubmissionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdSubmission
+     */
+    omit?: IdSubmissionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdSubmissionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -26157,9 +27529,9 @@ export namespace Prisma {
     password: 'password',
     role: 'role',
     suspended: 'suspended',
-    idImagePath: 'idImagePath',
     verified: 'verified',
     verifiedAt: 'verifiedAt',
+    verifiedInPersonAt: 'verifiedInPersonAt',
     emailVerifiedAt: 'emailVerifiedAt',
     tokenVersion: 'tokenVersion',
     deletedAt: 'deletedAt',
@@ -26422,6 +27794,28 @@ export namespace Prisma {
   export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
 
 
+  export const IdSubmissionScalarFieldEnum: {
+    id: 'id',
+    idType: 'idType',
+    numberHash: 'numberHash',
+    numberLast4: 'numberLast4',
+    frontPath: 'frontPath',
+    backPath: 'backPath',
+    selfiePath: 'selfiePath',
+    captureMethod: 'captureMethod',
+    status: 'status',
+    rejectionReasons: 'rejectionReasons',
+    rejectionNote: 'rejectionNote',
+    reviewedById: 'reviewedById',
+    reviewedAt: 'reviewedAt',
+    imagesPurgedAt: 'imagesPurgedAt',
+    createdAt: 'createdAt',
+    userId: 'userId'
+  };
+
+  export type IdSubmissionScalarFieldEnum = (typeof IdSubmissionScalarFieldEnum)[keyof typeof IdSubmissionScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -26541,9 +27935,9 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     role?: StringFilter<"User"> | string
     suspended?: BoolFilter<"User"> | boolean
-    idImagePath?: StringNullableFilter<"User"> | string | null
     verified?: BoolFilter<"User"> | boolean
     verifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    verifiedInPersonAt?: DateTimeNullableFilter<"User"> | Date | string | null
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     tokenVersion?: IntFilter<"User"> | number
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
@@ -26565,6 +27959,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeListRelationFilter
     notices?: NoticeListRelationFilter
     plantings?: PlantingListRelationFilter
+    idSubmissions?: IdSubmissionListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -26574,9 +27969,9 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     suspended?: SortOrder
-    idImagePath?: SortOrderInput | SortOrder
     verified?: SortOrder
     verifiedAt?: SortOrderInput | SortOrder
+    verifiedInPersonAt?: SortOrderInput | SortOrder
     emailVerifiedAt?: SortOrderInput | SortOrder
     tokenVersion?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -26598,6 +27993,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeOrderByRelationAggregateInput
     notices?: NoticeOrderByRelationAggregateInput
     plantings?: PlantingOrderByRelationAggregateInput
+    idSubmissions?: IdSubmissionOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -26610,9 +28006,9 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     role?: StringFilter<"User"> | string
     suspended?: BoolFilter<"User"> | boolean
-    idImagePath?: StringNullableFilter<"User"> | string | null
     verified?: BoolFilter<"User"> | boolean
     verifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
+    verifiedInPersonAt?: DateTimeNullableFilter<"User"> | Date | string | null
     emailVerifiedAt?: DateTimeNullableFilter<"User"> | Date | string | null
     tokenVersion?: IntFilter<"User"> | number
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
@@ -26634,6 +28030,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeListRelationFilter
     notices?: NoticeListRelationFilter
     plantings?: PlantingListRelationFilter
+    idSubmissions?: IdSubmissionListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -26643,9 +28040,9 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     suspended?: SortOrder
-    idImagePath?: SortOrderInput | SortOrder
     verified?: SortOrder
     verifiedAt?: SortOrderInput | SortOrder
+    verifiedInPersonAt?: SortOrderInput | SortOrder
     emailVerifiedAt?: SortOrderInput | SortOrder
     tokenVersion?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -26671,9 +28068,9 @@ export namespace Prisma {
     password?: StringWithAggregatesFilter<"User"> | string
     role?: StringWithAggregatesFilter<"User"> | string
     suspended?: BoolWithAggregatesFilter<"User"> | boolean
-    idImagePath?: StringNullableWithAggregatesFilter<"User"> | string | null
     verified?: BoolWithAggregatesFilter<"User"> | boolean
     verifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+    verifiedInPersonAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     emailVerifiedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     tokenVersion?: IntWithAggregatesFilter<"User"> | number
     deletedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -27996,15 +29393,127 @@ export namespace Prisma {
     userId?: IntWithAggregatesFilter<"AuditLog"> | number
   }
 
+  export type IdSubmissionWhereInput = {
+    AND?: IdSubmissionWhereInput | IdSubmissionWhereInput[]
+    OR?: IdSubmissionWhereInput[]
+    NOT?: IdSubmissionWhereInput | IdSubmissionWhereInput[]
+    id?: IntFilter<"IdSubmission"> | number
+    idType?: StringFilter<"IdSubmission"> | string
+    numberHash?: StringNullableFilter<"IdSubmission"> | string | null
+    numberLast4?: StringNullableFilter<"IdSubmission"> | string | null
+    frontPath?: StringNullableFilter<"IdSubmission"> | string | null
+    backPath?: StringNullableFilter<"IdSubmission"> | string | null
+    selfiePath?: StringNullableFilter<"IdSubmission"> | string | null
+    captureMethod?: StringFilter<"IdSubmission"> | string
+    status?: StringFilter<"IdSubmission"> | string
+    rejectionReasons?: StringNullableListFilter<"IdSubmission">
+    rejectionNote?: StringNullableFilter<"IdSubmission"> | string | null
+    reviewedById?: IntNullableFilter<"IdSubmission"> | number | null
+    reviewedAt?: DateTimeNullableFilter<"IdSubmission"> | Date | string | null
+    imagesPurgedAt?: DateTimeNullableFilter<"IdSubmission"> | Date | string | null
+    createdAt?: DateTimeFilter<"IdSubmission"> | Date | string
+    userId?: IntFilter<"IdSubmission"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type IdSubmissionOrderByWithRelationInput = {
+    id?: SortOrder
+    idType?: SortOrder
+    numberHash?: SortOrderInput | SortOrder
+    numberLast4?: SortOrderInput | SortOrder
+    frontPath?: SortOrderInput | SortOrder
+    backPath?: SortOrderInput | SortOrder
+    selfiePath?: SortOrderInput | SortOrder
+    captureMethod?: SortOrder
+    status?: SortOrder
+    rejectionReasons?: SortOrder
+    rejectionNote?: SortOrderInput | SortOrder
+    reviewedById?: SortOrderInput | SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    imagesPurgedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type IdSubmissionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: IdSubmissionWhereInput | IdSubmissionWhereInput[]
+    OR?: IdSubmissionWhereInput[]
+    NOT?: IdSubmissionWhereInput | IdSubmissionWhereInput[]
+    idType?: StringFilter<"IdSubmission"> | string
+    numberHash?: StringNullableFilter<"IdSubmission"> | string | null
+    numberLast4?: StringNullableFilter<"IdSubmission"> | string | null
+    frontPath?: StringNullableFilter<"IdSubmission"> | string | null
+    backPath?: StringNullableFilter<"IdSubmission"> | string | null
+    selfiePath?: StringNullableFilter<"IdSubmission"> | string | null
+    captureMethod?: StringFilter<"IdSubmission"> | string
+    status?: StringFilter<"IdSubmission"> | string
+    rejectionReasons?: StringNullableListFilter<"IdSubmission">
+    rejectionNote?: StringNullableFilter<"IdSubmission"> | string | null
+    reviewedById?: IntNullableFilter<"IdSubmission"> | number | null
+    reviewedAt?: DateTimeNullableFilter<"IdSubmission"> | Date | string | null
+    imagesPurgedAt?: DateTimeNullableFilter<"IdSubmission"> | Date | string | null
+    createdAt?: DateTimeFilter<"IdSubmission"> | Date | string
+    userId?: IntFilter<"IdSubmission"> | number
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type IdSubmissionOrderByWithAggregationInput = {
+    id?: SortOrder
+    idType?: SortOrder
+    numberHash?: SortOrderInput | SortOrder
+    numberLast4?: SortOrderInput | SortOrder
+    frontPath?: SortOrderInput | SortOrder
+    backPath?: SortOrderInput | SortOrder
+    selfiePath?: SortOrderInput | SortOrder
+    captureMethod?: SortOrder
+    status?: SortOrder
+    rejectionReasons?: SortOrder
+    rejectionNote?: SortOrderInput | SortOrder
+    reviewedById?: SortOrderInput | SortOrder
+    reviewedAt?: SortOrderInput | SortOrder
+    imagesPurgedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+    _count?: IdSubmissionCountOrderByAggregateInput
+    _avg?: IdSubmissionAvgOrderByAggregateInput
+    _max?: IdSubmissionMaxOrderByAggregateInput
+    _min?: IdSubmissionMinOrderByAggregateInput
+    _sum?: IdSubmissionSumOrderByAggregateInput
+  }
+
+  export type IdSubmissionScalarWhereWithAggregatesInput = {
+    AND?: IdSubmissionScalarWhereWithAggregatesInput | IdSubmissionScalarWhereWithAggregatesInput[]
+    OR?: IdSubmissionScalarWhereWithAggregatesInput[]
+    NOT?: IdSubmissionScalarWhereWithAggregatesInput | IdSubmissionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"IdSubmission"> | number
+    idType?: StringWithAggregatesFilter<"IdSubmission"> | string
+    numberHash?: StringNullableWithAggregatesFilter<"IdSubmission"> | string | null
+    numberLast4?: StringNullableWithAggregatesFilter<"IdSubmission"> | string | null
+    frontPath?: StringNullableWithAggregatesFilter<"IdSubmission"> | string | null
+    backPath?: StringNullableWithAggregatesFilter<"IdSubmission"> | string | null
+    selfiePath?: StringNullableWithAggregatesFilter<"IdSubmission"> | string | null
+    captureMethod?: StringWithAggregatesFilter<"IdSubmission"> | string
+    status?: StringWithAggregatesFilter<"IdSubmission"> | string
+    rejectionReasons?: StringNullableListFilter<"IdSubmission">
+    rejectionNote?: StringNullableWithAggregatesFilter<"IdSubmission"> | string | null
+    reviewedById?: IntNullableWithAggregatesFilter<"IdSubmission"> | number | null
+    reviewedAt?: DateTimeNullableWithAggregatesFilter<"IdSubmission"> | Date | string | null
+    imagesPurgedAt?: DateTimeNullableWithAggregatesFilter<"IdSubmission"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"IdSubmission"> | Date | string
+    userId?: IntWithAggregatesFilter<"IdSubmission"> | number
+  }
+
   export type UserCreateInput = {
     name: string
     email: string
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -28026,6 +29535,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -28035,9 +29545,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -28059,6 +29569,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -28067,9 +29578,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28091,6 +29602,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -28100,9 +29612,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28124,6 +29636,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -28133,9 +29646,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -28152,9 +29665,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28172,9 +29685,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29486,6 +30999,135 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
   }
 
+  export type IdSubmissionCreateInput = {
+    idType: string
+    numberHash?: string | null
+    numberLast4?: string | null
+    frontPath?: string | null
+    backPath?: string | null
+    selfiePath?: string | null
+    captureMethod: string
+    status?: string
+    rejectionReasons?: IdSubmissionCreaterejectionReasonsInput | string[]
+    rejectionNote?: string | null
+    reviewedById?: number | null
+    reviewedAt?: Date | string | null
+    imagesPurgedAt?: Date | string | null
+    createdAt?: Date | string
+    user: UserCreateNestedOneWithoutIdSubmissionsInput
+  }
+
+  export type IdSubmissionUncheckedCreateInput = {
+    id?: number
+    idType: string
+    numberHash?: string | null
+    numberLast4?: string | null
+    frontPath?: string | null
+    backPath?: string | null
+    selfiePath?: string | null
+    captureMethod: string
+    status?: string
+    rejectionReasons?: IdSubmissionCreaterejectionReasonsInput | string[]
+    rejectionNote?: string | null
+    reviewedById?: number | null
+    reviewedAt?: Date | string | null
+    imagesPurgedAt?: Date | string | null
+    createdAt?: Date | string
+    userId: number
+  }
+
+  export type IdSubmissionUpdateInput = {
+    idType?: StringFieldUpdateOperationsInput | string
+    numberHash?: NullableStringFieldUpdateOperationsInput | string | null
+    numberLast4?: NullableStringFieldUpdateOperationsInput | string | null
+    frontPath?: NullableStringFieldUpdateOperationsInput | string | null
+    backPath?: NullableStringFieldUpdateOperationsInput | string | null
+    selfiePath?: NullableStringFieldUpdateOperationsInput | string | null
+    captureMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    rejectionReasons?: IdSubmissionUpdaterejectionReasonsInput | string[]
+    rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    imagesPurgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutIdSubmissionsNestedInput
+  }
+
+  export type IdSubmissionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    idType?: StringFieldUpdateOperationsInput | string
+    numberHash?: NullableStringFieldUpdateOperationsInput | string | null
+    numberLast4?: NullableStringFieldUpdateOperationsInput | string | null
+    frontPath?: NullableStringFieldUpdateOperationsInput | string | null
+    backPath?: NullableStringFieldUpdateOperationsInput | string | null
+    selfiePath?: NullableStringFieldUpdateOperationsInput | string | null
+    captureMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    rejectionReasons?: IdSubmissionUpdaterejectionReasonsInput | string[]
+    rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    imagesPurgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type IdSubmissionCreateManyInput = {
+    id?: number
+    idType: string
+    numberHash?: string | null
+    numberLast4?: string | null
+    frontPath?: string | null
+    backPath?: string | null
+    selfiePath?: string | null
+    captureMethod: string
+    status?: string
+    rejectionReasons?: IdSubmissionCreaterejectionReasonsInput | string[]
+    rejectionNote?: string | null
+    reviewedById?: number | null
+    reviewedAt?: Date | string | null
+    imagesPurgedAt?: Date | string | null
+    createdAt?: Date | string
+    userId: number
+  }
+
+  export type IdSubmissionUpdateManyMutationInput = {
+    idType?: StringFieldUpdateOperationsInput | string
+    numberHash?: NullableStringFieldUpdateOperationsInput | string | null
+    numberLast4?: NullableStringFieldUpdateOperationsInput | string | null
+    frontPath?: NullableStringFieldUpdateOperationsInput | string | null
+    backPath?: NullableStringFieldUpdateOperationsInput | string | null
+    selfiePath?: NullableStringFieldUpdateOperationsInput | string | null
+    captureMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    rejectionReasons?: IdSubmissionUpdaterejectionReasonsInput | string[]
+    rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    imagesPurgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IdSubmissionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    idType?: StringFieldUpdateOperationsInput | string
+    numberHash?: NullableStringFieldUpdateOperationsInput | string | null
+    numberLast4?: NullableStringFieldUpdateOperationsInput | string | null
+    frontPath?: NullableStringFieldUpdateOperationsInput | string | null
+    backPath?: NullableStringFieldUpdateOperationsInput | string | null
+    selfiePath?: NullableStringFieldUpdateOperationsInput | string | null
+    captureMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    rejectionReasons?: IdSubmissionUpdaterejectionReasonsInput | string[]
+    rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    imagesPurgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: IntFieldUpdateOperationsInput | number
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -29517,6 +31159,17 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type StringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -29530,17 +31183,6 @@ export namespace Prisma {
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type DateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type IntNullableFilter<$PrismaModel = never> = {
@@ -29637,6 +31279,12 @@ export namespace Prisma {
     none?: PlantingWhereInput
   }
 
+  export type IdSubmissionListRelationFilter = {
+    every?: IdSubmissionWhereInput
+    some?: IdSubmissionWhereInput
+    none?: IdSubmissionWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -29690,6 +31338,10 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type IdSubmissionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -29697,9 +31349,9 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     suspended?: SortOrder
-    idImagePath?: SortOrder
     verified?: SortOrder
     verifiedAt?: SortOrder
+    verifiedInPersonAt?: SortOrder
     emailVerifiedAt?: SortOrder
     tokenVersion?: SortOrder
     deletedAt?: SortOrder
@@ -29723,9 +31375,9 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     suspended?: SortOrder
-    idImagePath?: SortOrder
     verified?: SortOrder
     verifiedAt?: SortOrder
+    verifiedInPersonAt?: SortOrder
     emailVerifiedAt?: SortOrder
     tokenVersion?: SortOrder
     deletedAt?: SortOrder
@@ -29743,9 +31395,9 @@ export namespace Prisma {
     password?: SortOrder
     role?: SortOrder
     suspended?: SortOrder
-    idImagePath?: SortOrder
     verified?: SortOrder
     verifiedAt?: SortOrder
+    verifiedInPersonAt?: SortOrder
     emailVerifiedAt?: SortOrder
     tokenVersion?: SortOrder
     deletedAt?: SortOrder
@@ -29804,6 +31456,20 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -29820,20 +31486,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -30811,6 +32463,73 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
+  export type IdSubmissionCountOrderByAggregateInput = {
+    id?: SortOrder
+    idType?: SortOrder
+    numberHash?: SortOrder
+    numberLast4?: SortOrder
+    frontPath?: SortOrder
+    backPath?: SortOrder
+    selfiePath?: SortOrder
+    captureMethod?: SortOrder
+    status?: SortOrder
+    rejectionReasons?: SortOrder
+    rejectionNote?: SortOrder
+    reviewedById?: SortOrder
+    reviewedAt?: SortOrder
+    imagesPurgedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type IdSubmissionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    reviewedById?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type IdSubmissionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    idType?: SortOrder
+    numberHash?: SortOrder
+    numberLast4?: SortOrder
+    frontPath?: SortOrder
+    backPath?: SortOrder
+    selfiePath?: SortOrder
+    captureMethod?: SortOrder
+    status?: SortOrder
+    rejectionNote?: SortOrder
+    reviewedById?: SortOrder
+    reviewedAt?: SortOrder
+    imagesPurgedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type IdSubmissionMinOrderByAggregateInput = {
+    id?: SortOrder
+    idType?: SortOrder
+    numberHash?: SortOrder
+    numberLast4?: SortOrder
+    frontPath?: SortOrder
+    backPath?: SortOrder
+    selfiePath?: SortOrder
+    captureMethod?: SortOrder
+    status?: SortOrder
+    rejectionNote?: SortOrder
+    reviewedById?: SortOrder
+    reviewedAt?: SortOrder
+    imagesPurgedAt?: SortOrder
+    createdAt?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type IdSubmissionSumOrderByAggregateInput = {
+    id?: SortOrder
+    reviewedById?: SortOrder
+    userId?: SortOrder
+  }
+
   export type ProductCreateNestedManyWithoutFarmerInput = {
     create?: XOR<ProductCreateWithoutFarmerInput, ProductUncheckedCreateWithoutFarmerInput> | ProductCreateWithoutFarmerInput[] | ProductUncheckedCreateWithoutFarmerInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutFarmerInput | ProductCreateOrConnectWithoutFarmerInput[]
@@ -30900,6 +32619,13 @@ export namespace Prisma {
     connectOrCreate?: PlantingCreateOrConnectWithoutFarmerInput | PlantingCreateOrConnectWithoutFarmerInput[]
     createMany?: PlantingCreateManyFarmerInputEnvelope
     connect?: PlantingWhereUniqueInput | PlantingWhereUniqueInput[]
+  }
+
+  export type IdSubmissionCreateNestedManyWithoutUserInput = {
+    create?: XOR<IdSubmissionCreateWithoutUserInput, IdSubmissionUncheckedCreateWithoutUserInput> | IdSubmissionCreateWithoutUserInput[] | IdSubmissionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: IdSubmissionCreateOrConnectWithoutUserInput | IdSubmissionCreateOrConnectWithoutUserInput[]
+    createMany?: IdSubmissionCreateManyUserInputEnvelope
+    connect?: IdSubmissionWhereUniqueInput | IdSubmissionWhereUniqueInput[]
   }
 
   export type ProductUncheckedCreateNestedManyWithoutFarmerInput = {
@@ -30993,16 +32719,19 @@ export namespace Prisma {
     connect?: PlantingWhereUniqueInput | PlantingWhereUniqueInput[]
   }
 
+  export type IdSubmissionUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<IdSubmissionCreateWithoutUserInput, IdSubmissionUncheckedCreateWithoutUserInput> | IdSubmissionCreateWithoutUserInput[] | IdSubmissionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: IdSubmissionCreateOrConnectWithoutUserInput | IdSubmissionCreateOrConnectWithoutUserInput[]
+    createMany?: IdSubmissionCreateManyUserInputEnvelope
+    connect?: IdSubmissionWhereUniqueInput | IdSubmissionWhereUniqueInput[]
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -31015,6 +32744,10 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -31211,6 +32944,20 @@ export namespace Prisma {
     deleteMany?: PlantingScalarWhereInput | PlantingScalarWhereInput[]
   }
 
+  export type IdSubmissionUpdateManyWithoutUserNestedInput = {
+    create?: XOR<IdSubmissionCreateWithoutUserInput, IdSubmissionUncheckedCreateWithoutUserInput> | IdSubmissionCreateWithoutUserInput[] | IdSubmissionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: IdSubmissionCreateOrConnectWithoutUserInput | IdSubmissionCreateOrConnectWithoutUserInput[]
+    upsert?: IdSubmissionUpsertWithWhereUniqueWithoutUserInput | IdSubmissionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: IdSubmissionCreateManyUserInputEnvelope
+    set?: IdSubmissionWhereUniqueInput | IdSubmissionWhereUniqueInput[]
+    disconnect?: IdSubmissionWhereUniqueInput | IdSubmissionWhereUniqueInput[]
+    delete?: IdSubmissionWhereUniqueInput | IdSubmissionWhereUniqueInput[]
+    connect?: IdSubmissionWhereUniqueInput | IdSubmissionWhereUniqueInput[]
+    update?: IdSubmissionUpdateWithWhereUniqueWithoutUserInput | IdSubmissionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: IdSubmissionUpdateManyWithWhereWithoutUserInput | IdSubmissionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: IdSubmissionScalarWhereInput | IdSubmissionScalarWhereInput[]
+  }
+
   export type ProductUncheckedUpdateManyWithoutFarmerNestedInput = {
     create?: XOR<ProductCreateWithoutFarmerInput, ProductUncheckedCreateWithoutFarmerInput> | ProductCreateWithoutFarmerInput[] | ProductUncheckedCreateWithoutFarmerInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutFarmerInput | ProductCreateOrConnectWithoutFarmerInput[]
@@ -31391,6 +33138,20 @@ export namespace Prisma {
     update?: PlantingUpdateWithWhereUniqueWithoutFarmerInput | PlantingUpdateWithWhereUniqueWithoutFarmerInput[]
     updateMany?: PlantingUpdateManyWithWhereWithoutFarmerInput | PlantingUpdateManyWithWhereWithoutFarmerInput[]
     deleteMany?: PlantingScalarWhereInput | PlantingScalarWhereInput[]
+  }
+
+  export type IdSubmissionUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<IdSubmissionCreateWithoutUserInput, IdSubmissionUncheckedCreateWithoutUserInput> | IdSubmissionCreateWithoutUserInput[] | IdSubmissionUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: IdSubmissionCreateOrConnectWithoutUserInput | IdSubmissionCreateOrConnectWithoutUserInput[]
+    upsert?: IdSubmissionUpsertWithWhereUniqueWithoutUserInput | IdSubmissionUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: IdSubmissionCreateManyUserInputEnvelope
+    set?: IdSubmissionWhereUniqueInput | IdSubmissionWhereUniqueInput[]
+    disconnect?: IdSubmissionWhereUniqueInput | IdSubmissionWhereUniqueInput[]
+    delete?: IdSubmissionWhereUniqueInput | IdSubmissionWhereUniqueInput[]
+    connect?: IdSubmissionWhereUniqueInput | IdSubmissionWhereUniqueInput[]
+    update?: IdSubmissionUpdateWithWhereUniqueWithoutUserInput | IdSubmissionUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: IdSubmissionUpdateManyWithWhereWithoutUserInput | IdSubmissionUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: IdSubmissionScalarWhereInput | IdSubmissionScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutEmailVerificationTokensInput = {
@@ -32060,6 +33821,29 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAuditLogsInput, UserUpdateWithoutAuditLogsInput>, UserUncheckedUpdateWithoutAuditLogsInput>
   }
 
+  export type IdSubmissionCreaterejectionReasonsInput = {
+    set: string[]
+  }
+
+  export type UserCreateNestedOneWithoutIdSubmissionsInput = {
+    create?: XOR<UserCreateWithoutIdSubmissionsInput, UserUncheckedCreateWithoutIdSubmissionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutIdSubmissionsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type IdSubmissionUpdaterejectionReasonsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type UserUpdateOneRequiredWithoutIdSubmissionsNestedInput = {
+    create?: XOR<UserCreateWithoutIdSubmissionsInput, UserUncheckedCreateWithoutIdSubmissionsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutIdSubmissionsInput
+    upsert?: UserUpsertWithoutIdSubmissionsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutIdSubmissionsInput, UserUpdateWithoutIdSubmissionsInput>, UserUncheckedUpdateWithoutIdSubmissionsInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -32090,6 +33874,17 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -32102,17 +33897,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedIntNullableFilter<$PrismaModel = never> = {
@@ -32189,6 +33973,20 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -32204,20 +34002,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -32703,6 +34487,51 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type IdSubmissionCreateWithoutUserInput = {
+    idType: string
+    numberHash?: string | null
+    numberLast4?: string | null
+    frontPath?: string | null
+    backPath?: string | null
+    selfiePath?: string | null
+    captureMethod: string
+    status?: string
+    rejectionReasons?: IdSubmissionCreaterejectionReasonsInput | string[]
+    rejectionNote?: string | null
+    reviewedById?: number | null
+    reviewedAt?: Date | string | null
+    imagesPurgedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type IdSubmissionUncheckedCreateWithoutUserInput = {
+    id?: number
+    idType: string
+    numberHash?: string | null
+    numberLast4?: string | null
+    frontPath?: string | null
+    backPath?: string | null
+    selfiePath?: string | null
+    captureMethod: string
+    status?: string
+    rejectionReasons?: IdSubmissionCreaterejectionReasonsInput | string[]
+    rejectionNote?: string | null
+    reviewedById?: number | null
+    reviewedAt?: Date | string | null
+    imagesPurgedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type IdSubmissionCreateOrConnectWithoutUserInput = {
+    where: IdSubmissionWhereUniqueInput
+    create: XOR<IdSubmissionCreateWithoutUserInput, IdSubmissionUncheckedCreateWithoutUserInput>
+  }
+
+  export type IdSubmissionCreateManyUserInputEnvelope = {
+    data: IdSubmissionCreateManyUserInput | IdSubmissionCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProductUpsertWithWhereUniqueWithoutFarmerInput = {
     where: ProductWhereUniqueInput
     update: XOR<ProductUpdateWithoutFarmerInput, ProductUncheckedUpdateWithoutFarmerInput>
@@ -33078,15 +34907,53 @@ export namespace Prisma {
     productId?: IntNullableFilter<"Planting"> | number | null
   }
 
+  export type IdSubmissionUpsertWithWhereUniqueWithoutUserInput = {
+    where: IdSubmissionWhereUniqueInput
+    update: XOR<IdSubmissionUpdateWithoutUserInput, IdSubmissionUncheckedUpdateWithoutUserInput>
+    create: XOR<IdSubmissionCreateWithoutUserInput, IdSubmissionUncheckedCreateWithoutUserInput>
+  }
+
+  export type IdSubmissionUpdateWithWhereUniqueWithoutUserInput = {
+    where: IdSubmissionWhereUniqueInput
+    data: XOR<IdSubmissionUpdateWithoutUserInput, IdSubmissionUncheckedUpdateWithoutUserInput>
+  }
+
+  export type IdSubmissionUpdateManyWithWhereWithoutUserInput = {
+    where: IdSubmissionScalarWhereInput
+    data: XOR<IdSubmissionUpdateManyMutationInput, IdSubmissionUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type IdSubmissionScalarWhereInput = {
+    AND?: IdSubmissionScalarWhereInput | IdSubmissionScalarWhereInput[]
+    OR?: IdSubmissionScalarWhereInput[]
+    NOT?: IdSubmissionScalarWhereInput | IdSubmissionScalarWhereInput[]
+    id?: IntFilter<"IdSubmission"> | number
+    idType?: StringFilter<"IdSubmission"> | string
+    numberHash?: StringNullableFilter<"IdSubmission"> | string | null
+    numberLast4?: StringNullableFilter<"IdSubmission"> | string | null
+    frontPath?: StringNullableFilter<"IdSubmission"> | string | null
+    backPath?: StringNullableFilter<"IdSubmission"> | string | null
+    selfiePath?: StringNullableFilter<"IdSubmission"> | string | null
+    captureMethod?: StringFilter<"IdSubmission"> | string
+    status?: StringFilter<"IdSubmission"> | string
+    rejectionReasons?: StringNullableListFilter<"IdSubmission">
+    rejectionNote?: StringNullableFilter<"IdSubmission"> | string | null
+    reviewedById?: IntNullableFilter<"IdSubmission"> | number | null
+    reviewedAt?: DateTimeNullableFilter<"IdSubmission"> | Date | string | null
+    imagesPurgedAt?: DateTimeNullableFilter<"IdSubmission"> | Date | string | null
+    createdAt?: DateTimeFilter<"IdSubmission"> | Date | string
+    userId?: IntFilter<"IdSubmission"> | number
+  }
+
   export type UserCreateWithoutEmailVerificationTokensInput = {
     name: string
     email: string
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -33107,6 +34974,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEmailVerificationTokensInput = {
@@ -33116,9 +34984,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -33139,6 +35007,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEmailVerificationTokensInput = {
@@ -33163,9 +35032,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33186,6 +35055,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailVerificationTokensInput = {
@@ -33195,9 +35065,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33218,6 +35088,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutPasswordResetTokensInput = {
@@ -33226,9 +35097,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -33249,6 +35120,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -33258,9 +35130,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -33281,6 +35153,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -33305,9 +35178,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33328,6 +35201,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -33337,9 +35211,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33360,6 +35234,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutEmailChangeTokensInput = {
@@ -33368,9 +35243,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -33391,6 +35266,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutEmailChangeTokensInput = {
@@ -33400,9 +35276,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -33423,6 +35299,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutEmailChangeTokensInput = {
@@ -33447,9 +35324,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33470,6 +35347,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailChangeTokensInput = {
@@ -33479,9 +35357,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33502,6 +35380,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutTotpBackupCodesInput = {
@@ -33510,9 +35389,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -33533,6 +35412,7 @@ export namespace Prisma {
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutTotpBackupCodesInput = {
@@ -33542,9 +35422,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -33565,6 +35445,7 @@ export namespace Prisma {
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutTotpBackupCodesInput = {
@@ -33589,9 +35470,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33612,6 +35493,7 @@ export namespace Prisma {
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTotpBackupCodesInput = {
@@ -33621,9 +35503,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33644,6 +35526,7 @@ export namespace Prisma {
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductCreateWithoutCategoryInput = {
@@ -33723,9 +35606,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -33746,6 +35629,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutProductsInput = {
@@ -33755,9 +35639,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -33778,6 +35662,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutProductsInput = {
@@ -33940,9 +35825,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33963,6 +35848,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProductsInput = {
@@ -33972,9 +35858,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33995,6 +35881,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CategoryUpsertWithoutProductsInput = {
@@ -34159,9 +36046,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -34182,6 +36069,7 @@ export namespace Prisma {
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPlantingsInput = {
@@ -34191,9 +36079,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -34214,6 +36102,7 @@ export namespace Prisma {
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPlantingsInput = {
@@ -34343,9 +36232,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -34366,6 +36255,7 @@ export namespace Prisma {
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPlantingsInput = {
@@ -34375,9 +36265,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -34398,6 +36288,7 @@ export namespace Prisma {
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CropTypeUpsertWithoutPlantingsInput = {
@@ -34606,9 +36497,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -34629,6 +36520,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -34638,9 +36530,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -34661,6 +36553,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -34708,9 +36601,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -34731,6 +36624,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -34740,9 +36634,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -34763,6 +36657,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -34947,9 +36842,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -34970,6 +36865,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAnnouncementsInput = {
@@ -34979,9 +36875,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -35002,6 +36898,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAnnouncementsInput = {
@@ -35026,9 +36923,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35049,6 +36946,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAnnouncementsInput = {
@@ -35058,9 +36956,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35081,6 +36979,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutReviewsInput = {
@@ -35089,9 +36988,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -35112,6 +37011,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -35121,9 +37021,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -35144,6 +37044,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -35218,9 +37119,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35241,6 +37142,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -35250,9 +37152,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35273,6 +37175,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductUpsertWithoutReviewsInput = {
@@ -35337,9 +37240,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -35360,6 +37263,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -35369,9 +37273,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -35392,6 +37296,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -35405,9 +37310,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -35428,6 +37333,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutReceivedMessagesInput = {
@@ -35437,9 +37343,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -35460,6 +37366,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutReceivedMessagesInput = {
@@ -35484,9 +37391,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35507,6 +37414,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -35516,9 +37424,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35539,6 +37447,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserUpsertWithoutReceivedMessagesInput = {
@@ -35558,9 +37467,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35581,6 +37490,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
@@ -35590,9 +37500,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35613,6 +37523,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutNoticesInput = {
@@ -35621,9 +37532,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -35644,6 +37555,7 @@ export namespace Prisma {
     emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNoticesInput = {
@@ -35653,9 +37565,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -35676,6 +37588,7 @@ export namespace Prisma {
     emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNoticesInput = {
@@ -35750,9 +37663,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35773,6 +37686,7 @@ export namespace Prisma {
     emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNoticesInput = {
@@ -35782,9 +37696,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35805,6 +37719,7 @@ export namespace Prisma {
     emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductUpsertWithoutNoticesInput = {
@@ -35869,9 +37784,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -35892,6 +37807,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -35901,9 +37817,9 @@ export namespace Prisma {
     password: string
     role?: string
     suspended?: boolean
-    idImagePath?: string | null
     verified?: boolean
     verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
     emailVerifiedAt?: Date | string | null
     tokenVersion?: number
     deletedAt?: Date | string | null
@@ -35924,6 +37840,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -35948,9 +37865,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35971,6 +37888,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -35980,9 +37898,9 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     suspended?: BoolFieldUpdateOperationsInput | boolean
-    idImagePath?: NullableStringFieldUpdateOperationsInput | string | null
     verified?: BoolFieldUpdateOperationsInput | boolean
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tokenVersion?: IntFieldUpdateOperationsInput | number
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35993,6 +37911,153 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    announcements?: AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
+    plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutIdSubmissionsInput = {
+    name: string
+    email: string
+    password: string
+    role?: string
+    suspended?: boolean
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
+    emailVerifiedAt?: Date | string | null
+    tokenVersion?: number
+    deletedAt?: Date | string | null
+    totpSecret?: string | null
+    totpEnabled?: boolean
+    totpLastStep?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductCreateNestedManyWithoutFarmerInput
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    announcements?: AnnouncementCreateNestedManyWithoutAuthorInput
+    reviews?: ReviewCreateNestedManyWithoutCustomerInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
+    plantings?: PlantingCreateNestedManyWithoutFarmerInput
+  }
+
+  export type UserUncheckedCreateWithoutIdSubmissionsInput = {
+    id?: number
+    name: string
+    email: string
+    password: string
+    role?: string
+    suspended?: boolean
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
+    emailVerifiedAt?: Date | string | null
+    tokenVersion?: number
+    deletedAt?: Date | string | null
+    totpSecret?: string | null
+    totpEnabled?: boolean
+    totpLastStep?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    announcements?: AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
+    plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+  }
+
+  export type UserCreateOrConnectWithoutIdSubmissionsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutIdSubmissionsInput, UserUncheckedCreateWithoutIdSubmissionsInput>
+  }
+
+  export type UserUpsertWithoutIdSubmissionsInput = {
+    update: XOR<UserUpdateWithoutIdSubmissionsInput, UserUncheckedUpdateWithoutIdSubmissionsInput>
+    create: XOR<UserCreateWithoutIdSubmissionsInput, UserUncheckedCreateWithoutIdSubmissionsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutIdSubmissionsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutIdSubmissionsInput, UserUncheckedUpdateWithoutIdSubmissionsInput>
+  }
+
+  export type UserUpdateWithoutIdSubmissionsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUpdateManyWithoutFarmerNestedInput
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    announcements?: AnnouncementUpdateManyWithoutAuthorNestedInput
+    reviews?: ReviewUpdateManyWithoutCustomerNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
+    plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutIdSubmissionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     announcements?: AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
     sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -36130,6 +38195,24 @@ export namespace Prisma {
     updatedAt?: Date | string
     cropTypeId: number
     productId?: number | null
+  }
+
+  export type IdSubmissionCreateManyUserInput = {
+    id?: number
+    idType: string
+    numberHash?: string | null
+    numberLast4?: string | null
+    frontPath?: string | null
+    backPath?: string | null
+    selfiePath?: string | null
+    captureMethod: string
+    status?: string
+    rejectionReasons?: IdSubmissionCreaterejectionReasonsInput | string[]
+    rejectionNote?: string | null
+    reviewedById?: number | null
+    reviewedAt?: Date | string | null
+    imagesPurgedAt?: Date | string | null
+    createdAt?: Date | string
   }
 
   export type ProductUpdateWithoutFarmerInput = {
@@ -36510,6 +38593,59 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cropTypeId?: IntFieldUpdateOperationsInput | number
     productId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type IdSubmissionUpdateWithoutUserInput = {
+    idType?: StringFieldUpdateOperationsInput | string
+    numberHash?: NullableStringFieldUpdateOperationsInput | string | null
+    numberLast4?: NullableStringFieldUpdateOperationsInput | string | null
+    frontPath?: NullableStringFieldUpdateOperationsInput | string | null
+    backPath?: NullableStringFieldUpdateOperationsInput | string | null
+    selfiePath?: NullableStringFieldUpdateOperationsInput | string | null
+    captureMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    rejectionReasons?: IdSubmissionUpdaterejectionReasonsInput | string[]
+    rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    imagesPurgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IdSubmissionUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    idType?: StringFieldUpdateOperationsInput | string
+    numberHash?: NullableStringFieldUpdateOperationsInput | string | null
+    numberLast4?: NullableStringFieldUpdateOperationsInput | string | null
+    frontPath?: NullableStringFieldUpdateOperationsInput | string | null
+    backPath?: NullableStringFieldUpdateOperationsInput | string | null
+    selfiePath?: NullableStringFieldUpdateOperationsInput | string | null
+    captureMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    rejectionReasons?: IdSubmissionUpdaterejectionReasonsInput | string[]
+    rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    imagesPurgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IdSubmissionUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    idType?: StringFieldUpdateOperationsInput | string
+    numberHash?: NullableStringFieldUpdateOperationsInput | string | null
+    numberLast4?: NullableStringFieldUpdateOperationsInput | string | null
+    frontPath?: NullableStringFieldUpdateOperationsInput | string | null
+    backPath?: NullableStringFieldUpdateOperationsInput | string | null
+    selfiePath?: NullableStringFieldUpdateOperationsInput | string | null
+    captureMethod?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    rejectionReasons?: IdSubmissionUpdaterejectionReasonsInput | string[]
+    rejectionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    reviewedById?: NullableIntFieldUpdateOperationsInput | number | null
+    reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    imagesPurgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ProductCreateManyCategoryInput = {

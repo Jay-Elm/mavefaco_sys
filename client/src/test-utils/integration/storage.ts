@@ -6,7 +6,7 @@ export type StorageCall = { method: string; url: string; paths?: string[] };
  * Replaces global fetch with a fake Supabase Storage for the current test
  * (undo with vi.unstubAllGlobals / vi.unstubAllEnvs). `deleteOk` decides,
  * per object path, whether a DELETE succeeds; `uploadOk` does the same for
- * uploads. Returns the list of calls made, for assertions.
+ * uploads. Signing a path always succeeds. Returns the list of calls made, for assertions.
  */
 export function fakeStorage({
   deleteOk = () => true,
@@ -31,6 +31,9 @@ export function fakeStorage({
           : new Response("storage unavailable", { status: 503 });
       }
       calls.push({ method, url });
+      // A signed view link, as Supabase returns it (relative to /storage/v1).
+      const signed = url.match(/\/object\/sign\/(.+)$/);
+      if (signed) return new Response(JSON.stringify({ signedURL: `/object/sign/${signed[1]}?token=t` }), { status: 200 });
       return new Response("{}", { status: uploadOk ? 200 : 500 });
     }),
   );

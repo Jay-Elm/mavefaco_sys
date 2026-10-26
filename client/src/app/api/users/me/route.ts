@@ -8,6 +8,7 @@ import { rateLimit, getClientIp } from "@/lib/rateLimit";
 import { ROLES } from "@/lib/roles";
 import { emailHtml, sendEmail } from "@/lib/email";
 import { generateToken, EMAIL_CHANGE_TTL_MS } from "@/lib/token";
+import { submissionSummary } from "@/lib/idVerification";
 
 export async function GET(req: NextRequest) {
   try {
@@ -16,15 +17,17 @@ export async function GET(req: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { id: actor.id },
-      select: { id: true, name: true, email: true, role: true, idImagePath: true, verified: true, createdAt: true },
+      select: {
+        id: true, name: true, email: true, role: true, verified: true, verifiedInPersonAt: true, createdAt: true,
+        idSubmissions: { where: { status: { not: "replaced" } }, orderBy: { createdAt: "desc" }, take: 1 },
+      },
     });
 
     if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
-    // The storage path is an internal detail — the client only needs to
-    // know whether an ID has been submitted, never the raw path itself.
-    const { idImagePath, ...rest } = user;
-    return NextResponse.json({ ...rest, hasIdImage: idImagePath !== null });
+    // The latest ID submission, without its storage paths or number fingerprint.
+    const { idSubmissions, ...rest } = user;
+    return NextResponse.json({ ...rest, idSubmission: idSubmissions[0] ? submissionSummary(idSubmissions[0]) : null });
   } catch {
     return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
   }

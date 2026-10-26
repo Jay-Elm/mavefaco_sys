@@ -6,11 +6,12 @@ import { refreshNavBadges } from '@/components/NavBadge'
 import {
   Loader2, Shield, User, Leaf, ShoppingBag,
   Ban, CheckCircle, Trash2, AlertTriangle, ShieldCheck,
-  ExternalLink, KeyRound, X, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download,
+  IdCard, UserCheck, KeyRound, X, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download,
   ShieldAlert, ShieldOff,
 } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
 import { useDialog } from '@/contexts/DialogContext'
+import IdReviewPanel from '@/components/idVerification/IdReviewPanel'
 
 interface UserRow {
   id: number
@@ -18,8 +19,10 @@ interface UserRow {
   email: string
   role: string
   suspended: boolean
-  hasIdImage: boolean
+  // Status of the latest ID submission, if any.
+  idStatus: 'pending' | 'approved' | 'rejected' | null
   verified: boolean
+  verifiedInPersonAt: string | null
   totpEnabled: boolean
   createdAt: string
   _count: { products: number; orders: number }
@@ -58,6 +61,7 @@ export default function UsersPage() {
   const [actionId, setActionId]   = useState<number | null>(null)
   const [actionError, setActionError] = useState<{ id: number; msg: string } | null>(null)
   const [resetTarget, setResetTarget] = useState<UserRow | null>(null)
+  const [reviewing, setReviewing] = useState<UserRow | null>(null)
   const [newPw, setNewPw]         = useState('')
   const [resetError, setResetError] = useState('')
   const [resetSuccess, setResetSuccess] = useState<number | null>(null)
@@ -126,39 +130,23 @@ export default function UsersPage() {
     } finally { setActionId(null) }
   }
 
-  async function handleViewId(u: UserRow) {
+  async function handleVerification(u: UserRow) {
     if (!token) return
-    setActionId(u.id); setActionError(null)
-    try {
-      const res = await fetch(`/api/admin/users/${u.id}/id-image`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      const data = await res.json()
-      if (!res.ok) { setActionError({ id: u.id, msg: data.error ?? 'Failed to load ID' }); return }
-      // A new tab opened directly from the click handler (not after an
-      // await) can get blocked as a pop-up by some browsers, but the
-      // signed URL is short-lived — better a rare pop-up block, caught by
-      // the empty-window fallback below, than eagerly fetching every row's
-      // link up front.
-      const win = window.open(data.url, '_blank', 'noopener,noreferrer')
-      if (!win) setActionError({ id: u.id, msg: 'Pop-up blocked — allow pop-ups to view the ID' })
-    } catch {
-      setActionError({ id: u.id, msg: 'Request failed' })
-    } finally { setActionId(null) }
-  }
-
-  async function handleVerify(u: UserRow) {
-    if (!token) return
+    const revoke = u.verified
+    const ok = await dialog.confirm(revoke
+      ? { title: `Revoke ${u.name}'s verification?`, message: "They won't be able to list new products until they're verified again.", confirmLabel: 'Revoke', tone: 'danger' }
+      : { title: `Mark ${u.name} as verified in person?`, message: "Use this after checking their government ID at the cooperative office. They'll be able to list products.", confirmLabel: 'Verified in person' })
+    if (!ok) return
     setActionId(u.id); setActionError(null)
     try {
       const res = await fetch(`/api/admin/users/${u.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ verified: !u.verified }),
+        body: JSON.stringify(revoke ? { verified: false } : { verifiedInPerson: true }),
       })
       const data = await res.json()
       if (!res.ok) { setActionError({ id: u.id, msg: data.error }); return }
-      setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, verified: !u.verified } : x)))
+      setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, verified: data.verified, verifiedInPersonAt: data.verifiedInPersonAt } : x)))
       refreshNavBadges()
     } catch {
       setActionError({ id: u.id, msg: 'Request failed' })
@@ -408,21 +396,18 @@ export default function UsersPage() {
                       {u.role === 'farmer' ? (
                         u.verified ? (
                           <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
-                            <ShieldCheck size={11} /> Verified
+                            <ShieldCheck size={11} /> {u.verifiedInPersonAt ? 'In person' : 'Verified'}
                           </span>
-                        ) : u.hasIdImage ? (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
-                            Pending
-                            <button
-                              type="button"
-                              onClick={() => handleViewId(u)}
-                              disabled={actionId === u.id}
-                              className="hover:text-amber-900 ml-0.5 disabled:opacity-50"
-                              title="View submitted ID"
-                            >
-                              <ExternalLink size={10} />
-                            </button>
-                          </span>
+                        ) : u.idStatus === 'pending' ? (
+                          <button
+                            type="button"
+                            onClick={() => setReviewing(u)}
+                            className="inline-flex items-center gap-1 text-xs font-semibold text-amber-800 bg-amber-100 hover:bg-amber-200 px-2 py-0.5 rounded-full"
+                          >
+                            <IdCard size={11} /> Review
+                          </button>
+                        ) : u.idStatus === 'rejected' ? (
+                          <span className="text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-full">Rejected</span>
                         ) : (
                           <span className="text-xs text-gray-400">No ID</span>
                         )
@@ -453,19 +438,30 @@ export default function UsersPage() {
                           <Loader2 size={14} className="animate-spin text-gray-400" />
                         )}
 
-                        {/* Verify / Unverify (farmer with submitted ID) */}
-                        {u.role === 'farmer' && u.hasIdImage && (
+                        {/* ID submission */}
+                        {u.role === 'farmer' && u.idStatus && (
                           <button
-                            onClick={() => handleVerify(u)}
+                            onClick={() => setReviewing(u)}
+                            title="View ID submission"
+                            className="p-1.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                          >
+                            <IdCard size={14} />
+                          </button>
+                        )}
+
+                        {/* Verified in person / revoke */}
+                        {u.role === 'farmer' && (
+                          <button
+                            onClick={() => handleVerification(u)}
                             disabled={actionId === u.id}
-                            title={u.verified ? 'Revoke verification' : 'Verify farmer'}
+                            title={u.verified ? 'Revoke verification' : 'Mark verified in person'}
                             className={`p-1.5 rounded-lg transition-colors disabled:opacity-40 ${
                               u.verified
                                 ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                                 : 'bg-green-100 text-green-700 hover:bg-green-200'
                             }`}
                           >
-                            <ShieldCheck size={14} />
+                            {u.verified ? <ShieldOff size={14} /> : <UserCheck size={14} />}
                           </button>
                         )}
 
@@ -554,6 +550,19 @@ export default function UsersPage() {
       </p>
 
       {/* Reset Password Modal */}
+      {reviewing && token && (
+        <IdReviewPanel
+          token={token}
+          userId={reviewing.id}
+          onClose={() => setReviewing(null)}
+          onReviewed={(status) => {
+            setUsers((prev) => prev.map((x) => (x.id === reviewing.id ? { ...x, idStatus: status, verified: status === 'approved', verifiedInPersonAt: status === 'approved' ? x.verifiedInPersonAt : null } : x)))
+            setReviewing(null)
+            refreshNavBadges()
+          }}
+        />
+      )}
+
       {resetTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={() => { setResetTarget(null); setNewPw(''); setResetError('') }} />

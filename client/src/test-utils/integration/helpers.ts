@@ -169,3 +169,25 @@ export async function createPlanting(
     },
   });
 }
+
+/** An ID submission with front, back and selfie stored under `${userId}/`; pending unless overridden. */
+export async function createIdSubmission(
+  userId: number,
+  overrides: Partial<{ status: string; reviewedAt: Date | null; numberHash: string | null; idType: string; backPath: string | null; captureMethod: string }> = {},
+) {
+  seq++;
+  return prisma.idSubmission.create({
+    data: {
+      userId,
+      idType: overrides.idType ?? "umid",
+      numberHash: overrides.numberHash === undefined ? `hash-${seq}` : overrides.numberHash,
+      numberLast4: "5678",
+      frontPath: `${userId}/${seq}-front.jpg`,
+      backPath: overrides.backPath === undefined ? `${userId}/${seq}-back.jpg` : overrides.backPath,
+      selfiePath: `${userId}/${seq}-selfie.jpg`,
+      captureMethod: overrides.captureMethod ?? "camera",
+      status: overrides.status ?? "pending",
+      reviewedAt: overrides.reviewedAt ?? null,
+    },
+  });
+}

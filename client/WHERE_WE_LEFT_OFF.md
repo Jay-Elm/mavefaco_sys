@@ -1,6 +1,6 @@
 # Where We Left Off
 
-_Updated: 2026-10-26_
+_Updated: 2026-10-27_
 
 ## Current state
 
@@ -30,7 +30,8 @@ Feature-complete for the capstone scope and through three structured hardening p
    - Next.js 16.4.3 (critical advisory) and `npm audit fix`: `npm audit` reports 0 vulnerabilities.
    - Weather widget moved to Tabaco City.
    - **Crop monitoring redesign**: plantings are their own records (`Planting`, one per season) instead of fields on products; a staff-managed `CropType` list with approximate growing times drives computed growth stages and harvest windows; "Needs attention" view, record harvest (adds to the linked listing's stock), structured crop logs (pest from a list, severity, date seen); the advisory names crops, not listings; Dashboard → **Supply** shows expected kg per crop per week for 8 weeks with oversupply flags; Dashboard → **Crop Types**. Migration `add_plantings` carries existing crop data over. Then: the community advisory groups reports by crop and problem (`/farmer/advisory`), and out-of-stock listings with a growing linked planting show **Coming soon** with the expected harvest window to customers.
-6. **Scope** is documented item by item in `SCOPE_AND_DELIMITATIONS.md` (129 use-case items: 81 implemented, 20 partial, 28 not implemented).
+6. **Changes 2026-10-27 — stronger ID verification:** farmers choose one of 10 ID types and take the front, back and a selfie holding the ID with the in-app camera (ID-shaped frame, blur/lighting checks; upload only without a camera, tagged for staff); the ID number is kept as an HMAC fingerprint + last 4, and one ID can't verify two accounts; staff review the photos side by side and approve or reject with reasons (notice + email), or mark a farmer verified in person. New `IdSubmission` model (migration `add_id_submissions` moves existing uploads over). **Needs `ID_NUMBER_HASH_KEY` in Vercel** (Production and Preview, separate values).
+7. **Scope** is documented item by item in `SCOPE_AND_DELIMITATIONS.md` (129 use-case items: 81 implemented, 20 partial, 28 not implemented).
 
 ---
 
@@ -76,7 +77,7 @@ src/app/
   dashboard/                            ← admin + manager
     layout.tsx
     page.tsx                            ← stat cards + farmer performance (manager)
-    users/page.tsx                      ← includes signed-URL ID image view
+    users/page.tsx                      ← ID review panel, verified in person, suspend, reset, delete
     categories/page.tsx
     products/page.tsx                   ← approve/view/suspend/delete-suspended/restore + CSV export
     products/[id]/page.tsx              ← read-only listing view (staff don't edit)
@@ -109,7 +110,7 @@ src/app/
     advisory/page.tsx                   ← community advisory, grouped by crop and problem
     messages/page.tsx                   ← farmer inbox
     messages/[userId]/page.tsx          ← message thread
-    profile/page.tsx                    ← edit info + real ID-image upload + password change
+    profile/page.tsx                    ← edit info + ID verification (camera flow) + password change
 
   api/
     auth/login/route.ts                 ← branches into MFA pending-cookie flow for admin/manager
@@ -131,7 +132,7 @@ src/app/
     categories/route.ts
     categories/[id]/route.ts
     users/me/route.ts                   ← GET, PATCH, DELETE (self-service account deletion)
-    users/me/id-image/route.ts          ← POST/DELETE, private bucket upload
+    users/me/id-submission/route.ts     ← POST (ID type, number, front/back/selfie), DELETE (withdraw)
     upload/route.ts                     ← shared image-upload endpoint
     orders/route.ts                     ← POST (place order)
     customer/orders/route.ts            ← GET
@@ -139,7 +140,8 @@ src/app/
     admin/stats/route.ts
     admin/users/route.ts
     admin/users/[id]/route.ts
-    admin/users/[id]/id-image/route.ts  ← signed-URL view of a user's ID image
+    admin/users/[id]/id-submission/route.ts ← staff view: signed photo URLs, same-number accounts
+    admin/id-submissions/[id]/review/route.ts ← approve / reject with reasons
     admin/orders/route.ts
     admin/orders/[id]/route.ts
     admin/products/route.ts
@@ -202,7 +204,10 @@ src/lib/
   productRemoval.ts                     ← removeListing(): delete or archive, resolves notices
   mfaToken.ts / totp.ts / totpCrypto.ts / backupCodes.ts
   deleteAccount.ts                      ← anonymizes accounts (self-delete + admin-delete), keeps order/audit history
-  idImageStorage.ts                     ← deleteIdImage(): confirmed deletes from the private ID bucket
+  idImageStorage.ts                     ← upload, sign, confirmed deletes in the private ID bucket
+  idVerification.ts                     ← ID types, number formats, rejection reasons
+  idNumberHash.ts                       ← HMAC fingerprint of ID numbers (ID_NUMBER_HASH_KEY)
+  photoQuality.ts                       ← blur / brightness checks for ID photos
   audit.ts                              ← logAudit()
   csp.ts                                ← the Content-Security-Policy (nonce per request)
   email.ts                              ← Brevo wrapper (fails soft) + emailHtml escaping template

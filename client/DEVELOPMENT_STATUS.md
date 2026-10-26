@@ -35,8 +35,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - **Lost authenticator recovery:** an admin can reset any other admin's or manager's TOTP (`PATCH /api/admin/users/[id]` with `resetMfa`) — clears the secret and backup codes, revokes sessions, emails the target, and forces re-enrollment at next login. It never touches the password; one admin can't reset another admin's password, suspend, verify or delete them (they use forgot-password), since password + MFA reset together would be a full takeover.
 - Registration requires clicking an emailed verification link (`EmailVerificationToken`, Brevo) before login is allowed; existing pre-feature accounts were backfilled so nobody already-registered got locked out.
 - Password reset (`PasswordResetToken`) follows the same anti-enumeration pattern as registration: identical response whether or not the email is registered.
-- ID verification is a real file upload (`POST /api/users/me/id-image`) into a **private** Supabase bucket, served to admins only via 5-minute signed URLs (`GET /api/admin/users/[id]/id-image`) — never a public link or pasted URL.
-- `GET /api/cron/purge-id-images` (Vercel Cron, daily, `CRON_SECRET`-gated) auto-deletes a verified user's stored ID image 30 days after `verifiedAt`; pending/unreviewed submissions are never touched.
+- ID verification (`POST /api/users/me/id-submission`): ID type, number (stored only as an HMAC fingerprint keyed by `ID_NUMBER_HASH_KEY` plus the last 4 characters), front, back and a selfie holding the ID, taken with the in-app camera, into a **private** Supabase bucket. Staff view them only via 5-minute signed URLs (`GET /api/admin/users/[id]/id-submission`) and approve or reject with reasons. The same ID number can't be pending/approved on two accounts (checked under a per-number advisory lock).
+- `GET /api/cron/purge-id-images` (Vercel Cron, daily, `CRON_SECRET`-gated) deletes the photos of submissions approved or rejected over 30 days ago, and of replaced submissions at once; pending submissions are never touched.
 
 **Cart:** Scoped per user via `cart_${user.id}` in localStorage (cart contents themselves are fine client-side — only the auth token isn't). Guests see an empty cart. Switching users loads the correct cart automatically. Multi-farmer carts blocked at both client (conflict dialog) and server (400 on checkout).
 
@@ -50,7 +50,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 18 models. `generated/prisma` is a custom client output path — **always run `npx prisma generate` after `npx prisma migrate dev`**, it does not auto-update. Use the Bash tool (not PowerShell) for Prisma CLI commands.
 
-- `User` — id, name, email, password, role, suspended, `idImagePath` (private storage path, not a URL), `verified`, `verifiedAt` (drives ID-image auto-purge), `emailVerifiedAt`, `tokenVersion`, `totpSecret` (encrypted), `totpEnabled`, createdAt, updatedAt
+- `User` — id, name, email, password, role, suspended, `verified`, `verifiedAt`, `verifiedInPersonAt`, `emailVerifiedAt`, `tokenVersion`, `totpSecret` (encrypted), `totpEnabled`, createdAt, updatedAt
 - `EmailVerificationToken` / `PasswordResetToken` — id, `tokenHash` (SHA-256, never the raw token), expiresAt, usedAt, userId
 - `EmailChangeToken` — id, `tokenHash`, newEmail, expiresAt, usedAt, userId (a pending email change, confirmed from the new address)
 - `TotpBackupCode` — id, `codeHash` (bcrypt — low-entropy human-typed codes need the slow hash), usedAt, userId
@@ -70,7 +70,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `Message` — id, content, read, createdAt, senderId, receiverId
 - `Notice` — id, title, body, read, createdAt, recipientId, productId (set null if the listing is deleted), resolvedAt, resolution (`resubmitted` | `removed`) — one-way system notices, e.g. a listing suspension
 
-**Migrations applied (28, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`).
+**Migrations applied (29, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`) → `add_id_submissions` (moves `User.idImagePath` into `IdSubmission`).
 
 **Infra note:** `DIRECT_URL` cannot use Supabase's true direct-connection endpoint (`db.<ref>.supabase.co:5432`) — neither locally nor from Vercel's build infra can reach it (`P1001`), almost certainly Supabase's IPv6-only requirement for that endpoint. Fixed by pointing `DIRECT_URL` at the **Session pooler** instead (distinct from the Transaction pooler `DATABASE_URL` uses) — still holds `prisma migrate deploy`'s advisory lock, and is IPv4-compatible.
 
@@ -105,7 +105,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 ### Admin Dashboard (`/dashboard/`) — admin + manager roles
 - `layout.tsx` — dark sidebar (184px), auth guard, isolated scroll; red count badges on Products (listings to review) and Users (IDs to verify) from `GET /api/nav-badges`
 - `page.tsx` — stat cards: Users, Products, Orders, Revenue; Farmer Performance table (admin + manager)
-- `users/` — suspend/verify (via signed-URL ID image view)/reset password/delete; inline modals
+- `users/` — Review ID (photos side by side, approve / reject with reasons), mark verified in person / revoke, suspend, reset password, delete; inline modals
 - `categories/` — list with product count; inline add/delete
 - `products/` — all products; Approve (pending) / View / Suspend with reasons / Delete (suspended only) / Restore (archived); Suspended status filter; sorting + filtering + CSV export
 - `products/[id]` — read-only listing view, with suspension reasons and deadline
@@ -131,7 +131,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `crops/new/` — record a planting (crop type, date, optional area, expected yield, linked listing); previews the harvest window
 - `crops/[id]/` — planting detail: growth timeline, record harvest (optionally adding to the linked listing's stock) or mark failed, edit details/harvest window, structured crop log (pest from a list, severity, date seen), delete
 - `messages/` — conversation inbox with unread counts, plus a "MaVeFaCo notices" entry; `/farmer/messages/notices` — one-way system notices (no reply); an open suspension notice links to the listing's edit page, and once resolved (`Notice.resolvedAt`/`resolution`: resubmitted, or removed by a delete or the 7-day cleanup) it shows that outcome instead; `/farmer/messages/[userId]` — message thread
-- `profile/` — edit name/email; real ID-image file upload for verification; change password
+- `profile/` — edit name/email; ID verification status and the camera capture flow (`components/idVerification/`); change password
 
 ### Customer Pages
 - `/customer/orders` — full order lifecycle (cancel pending, confirm received)
@@ -146,10 +146,10 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - Only customers can place orders (`POST /api/orders` returns 403 for farmers and staff); staff don't see the storefront or a cart, farmers have no cart
 
 ### User Verification System
-- Farmers submit a real ID image file (uploaded to a private Supabase bucket) via the profile page
-- Admin verifies via dashboard users page, viewing the image through a short-lived signed URL
-- Verified status required before farmer can list products
-- Verified images are auto-purged 30 days after verification (`/api/cron/purge-id-images`)
+- `IdSubmission` — idType (one of `ID_TYPES` in `src/lib/idVerification.ts`, or `unspecified` for pre-2026-10-27 uploads), numberHash, numberLast4, front/back/selfie paths, captureMethod (camera/upload/legacy), status (pending/approved/rejected/replaced), rejectionReasons, rejectionNote, reviewedById, reviewedAt, imagesPurgedAt
+- Farmer profile → "Verify my ID": choose the ID type, then front, back (not for a passport) and a selfie holding the ID through `IdCamera` (getUserMedia, ID-shaped frame, crop + resize + JPEG re-encode on the phone; blur and brightness checks in `src/lib/photoQuality.ts`). File upload appears only when no camera can be used, and is tagged for staff. `Permissions-Policy` allows `camera=(self)`.
+- Staff → Users → Review: the three photos side by side, capture method, last 4 digits, other accounts with the same number, earlier rejections; Approve (verifies) or Reject with reasons — the farmer gets a notice and an email. "Mark verified in person" (`verifiedInPerson: true`) for IDs checked at the cooperative office; `verified: false` revokes.
+- Verified status required before a farmer can list products
 
 ---
 
@@ -180,9 +180,10 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | DELETE | `/api/categories/[id]` | admin/manager | blocked if products exist |
 | GET | `/api/admin/stats` | admin/manager | |
 | GET | `/api/admin/users` | admin/manager | |
-| PATCH | `/api/admin/users/[id]` | admin/manager | suspend/verify/reset password |
-| DELETE | `/api/admin/users/[id]` | admin only | blocked if active orders; also deletes their stored ID image |
-| GET | `/api/admin/users/[id]/id-image` | admin/manager | mints a 5-minute signed URL for the private ID image |
+| PATCH | `/api/admin/users/[id]` | admin/manager | suspend, `verifiedInPerson: true`, `verified: false` (revoke), reset password/MFA |
+| DELETE | `/api/admin/users/[id]` | admin only | blocked if active orders; also deletes their ID photos |
+| GET | `/api/admin/users/[id]/id-submission` | admin/manager | a farmer's pending (else latest) ID submission with 5-minute signed photo URLs, same-number accounts, earlier rejections |
+| POST | `/api/admin/id-submissions/[id]/review` | admin/manager | `{ decision: approve }` or `{ decision: reject, reasons[], note }`; pending only; notice + email; audit `APPROVE_ID` / `REJECT_ID` |
 | GET | `/api/admin/orders` | admin/manager | all orders |
 | PATCH | `/api/admin/orders/[id]` | admin/manager | manager: state machine; admin: free override |
 | GET | `/api/admin/products` | admin/manager | all products, no approval filter |
@@ -233,10 +234,10 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | POST | `/api/auth/confirm-email-change` | public (token) | applies a requested email change, logs out every session, notifies the previous address |
 | POST | `/api/csp-report` | public (browsers) | receives Content-Security-Policy violation reports and logs a one-line summary; rate-limited, stores nothing |
 | DELETE | `/api/users/me` | authenticated (customer/farmer only) | self-service account deletion, password-gated, blocked while an active order exists |
-| POST | `/api/users/me/id-image` | farmer | uploads ID image into private bucket; resets `verified` to false |
-| DELETE | `/api/users/me/id-image` | farmer | removes the submitted ID image |
+| POST | `/api/users/me/id-submission` | farmer (unverified) | multipart: idType, idNumber, captureMethod, front, back, selfie (≤1.5 MB each, ≥480 px); replaces a pending one |
+| DELETE | `/api/users/me/id-submission` | farmer | withdraws a pending submission once its photos are deleted |
 | POST | `/api/upload` | authenticated | shared image-upload endpoint (magic-byte sniffed, rate-limited) |
-| GET | `/api/cron/purge-id-images` | `CRON_SECRET` header | daily Vercel Cron job; purges ID images 30 days post-verification |
+| GET | `/api/cron/purge-id-images` | `CRON_SECRET` header | daily Vercel Cron job; deletes ID photos 30 days after review (replaced ones at once) |
 | GET | `/api/cron/purge-suspended-products` | `CRON_SECRET` header | daily Vercel Cron job; removes listings suspended over 7 days ago and not resubmitted (archives if they have history, skips if an order is in progress) |
 
 ---
@@ -296,7 +297,7 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 
 **MFA secret encryption key:** `src/lib/totpCrypto.ts` encrypts with `TOTP_ENCRYPTION_KEY` and decrypts by trying it, then `TOTP_ENCRYPTION_KEY_PREVIOUS`, then the legacy `JWT_SECRET`-derived key; a secret found under an older key is re-encrypted on the user's next successful TOTP login. `/api/auth/mfa/verify` still accepts backup codes when a secret can't be decrypted. (Before this, rotating `JWT_SECRET` would have locked out every admin and manager.)
 
-**ID-image deletion:** all deletes go through `deleteIdImage()` in `src/lib/idImageStorage.ts`, which reports success only when Supabase confirms. Callers keep the database path on failure: the purge cron retries next run (and answers 500), withdrawing an ID returns 502, replacing one rolls back the new upload, and account deletion is refused until the image is gone.
+**ID-image deletion:** all deletes go through `deleteIdImage()`/`deleteIdImages()` in `src/lib/idImageStorage.ts`, which report success only when Supabase confirms. Callers keep the database paths on failure: the purge cron retries next run (and answers 500), withdrawing returns 502, a replaced submission keeps its paths (status `replaced`) until the cron deletes them, a failed submission deletes what it uploaded, and account deletion is refused until every photo is gone.
 
 **Preview builds don't migrate:** `npm run build` runs `scripts/migrate.mjs`, which skips `prisma migrate deploy` when `VERCEL_ENV=preview`.
 

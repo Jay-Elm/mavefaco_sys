@@ -44,7 +44,7 @@ Nothing to change. `next.config.ts` is already production-ready: it sets the sec
 
 ## Step 4 — Generate secrets
 
-Run this in your terminal three times, once each for `JWT_SECRET`, `TOTP_ENCRYPTION_KEY` and `CRON_SECRET` (each a separate random 64-character value):
+Run this in your terminal four times, once each for `JWT_SECRET`, `TOTP_ENCRYPTION_KEY`, `ID_NUMBER_HASH_KEY` and `CRON_SECRET` (each a separate random 64-character value):
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
@@ -70,7 +70,7 @@ After changing `prisma/schema.prisma` locally, create the migration with `npx pr
 2. Click **Add New → Project**.
 3. Import your GitHub repository.
 4. Set the **Root Directory** to `client` (since the Next.js app lives in `client/`, not the repo root).
-5. Under **Environment Variables**, add every variable in the [reference below](#environment-variables-reference) for the **Production** environment: the two connection strings from Step 2, `JWT_SECRET` and `TOTP_ENCRYPTION_KEY` (generated as in Step 4), `BREVO_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` and `CRON_SECRET`. Give Preview its own database and keys (see "Preview deployments" below).
+5. Under **Environment Variables**, add every variable in the [reference below](#environment-variables-reference) for the **Production** environment: the two connection strings from Step 2, `JWT_SECRET`, `TOTP_ENCRYPTION_KEY` and `ID_NUMBER_HASH_KEY` (generated as in Step 4), `BREVO_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` and `CRON_SECRET`. Give Preview its own database and keys (see "Preview deployments" below).
 
 6. Click **Deploy**.
 7. Wait for the build to complete (~2–3 minutes).
@@ -134,6 +134,7 @@ The full list of what's in and out of scope is in [`SCOPE_AND_DELIMITATIONS.md`]
 | `BREVO_API_KEY` | Yes | Transactional email (verification, password reset, security notices) |
 | `SUPABASE_URL` | Yes | Supabase project URL, for product images and ID storage |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Server-side Storage access; never expose to the browser |
+| `ID_NUMBER_HASH_KEY` | Yes | Keys the fingerprint of farmers' ID numbers (used to stop one ID verifying two accounts); at least 32 random characters. Never change it once set: existing fingerprints would stop matching |
 | `CRON_SECRET` | Yes | Authenticates Vercel Cron calls to `/api/cron/purge-id-images` and `/api/cron/purge-suspended-products` |
 
 Generate random values with `node -e "console.log(require('crypto').randomBytes(48).toString('base64'))"`.

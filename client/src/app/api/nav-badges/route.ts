@@ -28,15 +28,19 @@ export async function GET(req: NextRequest) {
         prisma.planting.count({
           where: { farmerId: actor.id, status: "growing", harvestStart: { lte: fromDateString(todayPH()) } },
         }),
-        prisma.user.findUnique({ where: { id: actor.id }, select: { verified: true, idImagePath: true } }),
+        prisma.user.findUnique({
+          where: { id: actor.id },
+          select: { verified: true, idSubmissions: { where: { status: "pending" }, select: { id: true }, take: 1 } },
+        }),
       ]);
       return NextResponse.json({
         "/farmer/messages": unreadMessages + unreadNotices,
         "/farmer/orders": pendingOrders,
         "/farmer/products": suspendedProducts,
         "/farmer/crops": cropsToHarvest,
-        // Not verified and no ID uploaded: they can't list products yet
-        "/farmer/profile": me && !me.verified && !me.idImagePath ? 1 : 0,
+        // Not verified and no ID waiting for review (none sent, or rejected):
+        // they can't list products yet
+        "/farmer/profile": me && !me.verified && me.idSubmissions.length === 0 ? 1 : 0,
       });
     }
 
@@ -44,9 +48,9 @@ export async function GET(req: NextRequest) {
       const [pendingProducts, idsToVerify] = await Promise.all([
         // Listings waiting for review (a suspended one waits on its farmer instead)
         prisma.product.count({ where: { approved: false, archivedAt: null, suspendedAt: null } }),
-        // Farmers who uploaded an ID that nobody has verified yet
-        prisma.user.count({
-          where: { role: ROLES.FARMER, verified: false, idImagePath: { not: null }, deletedAt: null },
+        // ID submissions waiting for review
+        prisma.idSubmission.count({
+          where: { status: "pending", user: { role: ROLES.FARMER, deletedAt: null } },
         }),
       ]);
       return NextResponse.json({

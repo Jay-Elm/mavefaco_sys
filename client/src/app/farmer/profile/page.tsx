@@ -1,15 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, CheckCircle, ShieldCheck, ShieldAlert, X, KeyRound, Mail, AlertTriangle } from 'lucide-react'
+import { Loader2, CheckCircle, KeyRound, Mail, AlertTriangle } from 'lucide-react'
 import { useDialog } from '@/contexts/DialogContext'
+import IdVerificationSection from '@/components/idVerification/IdVerificationSection'
 
-interface ProfileData {
-  hasIdImage: boolean
-  verified: boolean
-}
 
 export default function FarmerProfilePage() {
   const { token, user, login, logout } = useAuth()
@@ -26,11 +23,6 @@ export default function FarmerProfilePage() {
   const [emailError, setEmailError] = useState('')
   const [emailSuccess, setEmailSuccess] = useState(false)
 
-  const [profileData, setProfileData] = useState<ProfileData>({ hasIdImage: false, verified: false })
-  const idFileRef = useRef<HTMLInputElement>(null)
-  const [savingId, setSavingId] = useState(false)
-  const [idSuccess, setIdSuccess] = useState(false)
-  const [idError, setIdError] = useState('')
 
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
@@ -42,17 +34,6 @@ export default function FarmerProfilePage() {
   const [deletePassword, setDeletePassword] = useState('')
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
-
-  useEffect(() => {
-    if (!token) return
-    fetch('/api/users/me', { headers: { Authorization: `Bearer ${token}` } })
-      .then(r => r.json())
-      .then(data => {
-        if (data.hasIdImage !== undefined) {
-          setProfileData({ hasIdImage: data.hasIdImage, verified: data.verified })
-        }
-      })
-  }, [token])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -99,53 +80,6 @@ export default function FarmerProfilePage() {
       setEmailError('Request failed')
     } finally {
       setEmailSubmitting(false)
-    }
-  }
-
-  async function handleUploadId(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0]
-    if (!file || !token) return
-    setIdError('')
-    setIdSuccess(false)
-    setSavingId(true)
-    try {
-      const body = new FormData()
-      body.append('file', file)
-      const res = await fetch('/api/users/me/id-image', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-        body,
-      })
-      const data = await res.json()
-      if (!res.ok) { setIdError(data.error ?? 'Upload failed'); return }
-      setProfileData({ hasIdImage: true, verified: false })
-      setIdSuccess(true)
-    } catch {
-      setIdError('Request failed')
-    } finally {
-      setSavingId(false)
-      if (idFileRef.current) idFileRef.current.value = ''
-    }
-  }
-
-  async function handleRemoveId() {
-    if (!token) return
-    if (!(await dialog.confirm({ title: 'Remove your submitted ID?', message: 'You will need to upload a new one to be verified again.', confirmLabel: 'Remove ID', tone: 'danger' }))) return
-    setIdError('')
-    setIdSuccess(false)
-    setSavingId(true)
-    try {
-      const res = await fetch('/api/users/me/id-image', {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      const data = await res.json()
-      if (!res.ok) { setIdError(data.error ?? 'Failed to remove'); return }
-      setProfileData({ hasIdImage: false, verified: false })
-    } catch {
-      setIdError('Request failed')
-    } finally {
-      setSavingId(false)
     }
   }
 
@@ -299,62 +233,7 @@ export default function FarmerProfilePage() {
 
       {/* ID Verification */}
       <div className="border-t border-gray-200 pt-8">
-        <div className="flex items-center gap-2 mb-1">
-          <h2 className="text-lg font-semibold text-gray-900">ID Verification</h2>
-          {profileData.verified ? (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
-              <ShieldCheck size={12} /> Verified
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
-              <ShieldAlert size={12} /> {profileData.hasIdImage ? 'Pending review' : 'Not submitted'}
-            </span>
-          )}
-        </div>
-        <p className="text-sm text-gray-500 mb-4">
-          Upload a photo of your valid government-issued ID. It&apos;s stored privately — only an admin reviewing your account can view it. An admin will review and verify your account.
-        </p>
-
-        {idError && <div className="mb-3 text-red-600 text-sm">{idError}</div>}
-        {idSuccess && (
-          <div className="mb-3 flex items-center gap-2 text-green-700 text-sm">
-            <CheckCircle size={16} /> ID submitted for review
-          </div>
-        )}
-
-        {profileData.hasIdImage && (
-          <div className="mb-3 flex items-center gap-2 text-sm text-gray-600 bg-gray-50 rounded-lg px-3 py-2">
-            <span className="flex-1">ID on file, awaiting admin review</span>
-          </div>
-        )}
-
-        <input
-          ref={idFileRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleUploadId}
-        />
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => idFileRef.current?.click()}
-            disabled={savingId}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
-          >
-            {savingId && <Loader2 size={14} className="animate-spin" />}
-            {savingId ? 'Uploading…' : profileData.hasIdImage ? 'Replace ID photo' : 'Upload ID photo'}
-          </button>
-          {profileData.hasIdImage && !savingId && (
-            <button
-              type="button"
-              onClick={handleRemoveId}
-              className="text-sm text-red-500 hover:text-red-700 flex items-center gap-1 transition-colors"
-            >
-              <X size={13} /> Remove
-            </button>
-          )}
-        </div>
+        {token && <IdVerificationSection token={token} />}
       </div>
 
       {/* Change Password */}

@@ -8,53 +8,47 @@ datasource db {
 }
 
 model User {
-  id              Int       @id @default(autoincrement())
-  name            String
-  email           String    @unique
-  password        String
-  role            String    @default("customer")
-  suspended       Boolean   @default(false)
-  // Path inside the private "id-verification" Supabase Storage bucket, not
-  // a public URL — access is only via short-lived signed URLs (see
-  // /api/admin/users/[id]/id-image). Renamed from idImageUrl when ID
-  // verification moved off a farmer-supplied free-text link.
-  idImagePath     String?
-  // Farmer ID-document verification (admin-reviewed) — unrelated to
-  // whether the account's email address has been confirmed.
-  verified        Boolean   @default(false)
-  // When `verified` last flipped true. Drives the auto-purge retention
-  // clock for idImagePath (see /api/cron/purge-id-images) — cleared back
-  // to null on unverify so a re-review has to restart the clock. Not the
-  // same as "when the ID was submitted": a stale, never-reviewed
-  // submission is deliberately never auto-purged.
-  verifiedAt      DateTime?
+  id                 Int       @id @default(autoincrement())
+  name               String
+  email              String    @unique
+  password           String
+  role               String    @default("customer")
+  suspended          Boolean   @default(false)
+  // Farmer verification — unrelated to whether the account's email address
+  // has been confirmed. Granted by staff approving an IdSubmission, or by
+  // checking the farmer's ID in person at the cooperative office.
+  verified           Boolean   @default(false)
+  // When `verified` last flipped true; cleared on revoke.
+  verifiedAt         DateTime?
+  // Set when staff verified the farmer in person; cleared on revoke.
+  verifiedInPersonAt DateTime?
   // Null until the address is confirmed via the emailed link. Existing
   // accounts are backfilled to non-null at migration time (see
   // 20260908120000_add_email_verification) so this gate only applies to
   // accounts created after this feature shipped — nobody already-registered
   // gets locked out.
-  emailVerifiedAt DateTime?
-  tokenVersion    Int       @default(0)
+  emailVerifiedAt    DateTime?
+  tokenVersion       Int       @default(0)
   // Set when the account is deleted. Deleted accounts are anonymized, not
   // removed: orders, order items and audit-log entries that reference the
   // row stay intact, while name, email and credentials are scrubbed (see
   // src/lib/deleteAccount.ts). Every user-facing list skips these rows.
-  deletedAt       DateTime?
+  deletedAt          DateTime?
   // AES-256-GCM ciphertext of the TOTP secret (never stored in the clear),
   // keyed off JWT_SECRET — see src/lib/totpCrypto.ts. Present as soon as an
   // admin/manager starts enrollment; `totpEnabled` is what actually gates
   // login, so a secret alone (enrollment started but never confirmed)
   // grants nothing.
-  totpSecret      String?
-  totpEnabled     Boolean   @default(false)
+  totpSecret         String?
+  totpEnabled        Boolean   @default(false)
   // The TOTP time-step (30s counter) of the last code this account
   // successfully authenticated with — rejects a replay of that same code
   // within its still-valid window. Cleared to null whenever the secret is
   // (re)generated (setup, admin reset), since a step number only makes
   // sense relative to the secret it was verified against.
-  totpLastStep    Int?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  totpLastStep       Int?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   products                Product[]
   orders                  Order[]
@@ -69,6 +63,7 @@ model User {
   totpBackupCodes         TotpBackupCode[]
   notices                 Notice[]
   plantings               Planting[]
+  idSubmissions           IdSubmission[]
 }
 
 model EmailVerificationToken {
@@ -410,4 +405,44 @@ model AuditLog {
   user   User @relation(fields: [userId], references: [id])
 
   @@index([userId])
+}
+
+// A farmer's government ID, submitted for verification: the ID type, front,
+// back (not for a passport) and a selfie holding the ID, kept in the private
+// "id-verification" bucket and only ever viewed through short-lived signed
+// URLs. Staff approve or reject it with reasons. Images are deleted 30 days
+// after review (/api/cron/purge-id-images); a pending one is kept.
+model IdSubmission {
+  id               Int       @id @default(autoincrement())
+  // One of ID_TYPES (src/lib/idVerification.ts); "unspecified" for IDs
+  // uploaded before ID types existed.
+  idType           String
+  // HMAC of the normalized ID number (ID_NUMBER_HASH_KEY), to spot the same
+  // ID on two accounts without storing the number; plus its last 4 digits
+  // for staff. Null for IDs uploaded before numbers were asked for.
+  numberHash       String?
+  numberLast4      String?
+  // Storage paths; null once purged (or, for the back, not required).
+  frontPath        String?
+  backPath         String?
+  selfiePath       String?
+  // camera | upload (no camera available) | legacy (before this flow)
+  captureMethod    String
+  // pending | approved | rejected | replaced (by a newer pending one; its
+  // images are deleted straight away)
+  status           String    @default("pending")
+  rejectionReasons String[]  @default([])
+  rejectionNote    String?
+  // The reviewing staff member: a plain id, for attribution only.
+  reviewedById     Int?
+  reviewedAt       DateTime?
+  imagesPurgedAt   DateTime?
+  createdAt        DateTime  @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  @@index([userId, status])
+  @@index([numberHash])
+  @@index([status, reviewedAt])
 }
