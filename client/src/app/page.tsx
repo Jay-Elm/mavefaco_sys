@@ -6,6 +6,7 @@ import HomeHeroActions from "@/components/HomeHeroActions";
 import HomeBottomCTAButtons from "@/components/HomeBottomCTAButtons";
 import { ShoppingBag, Leaf, ArrowRight, Info, AlertTriangle, Package, Users, CheckCircle, Star } from "lucide-react";
 import { isSafeUrl } from "@/lib/url";
+import { withComingSoon } from "@/lib/comingSoon";
 
 async function getFeaturedProducts() {
   const products = await prisma.product.findMany({
@@ -17,7 +18,7 @@ async function getFeaturedProducts() {
       farmer: { select: { id: true, name: true, email: true } },
     },
   });
-  return products.map((p) => ({ ...p, price: Number(p.price) }));
+  return withComingSoon(products.map((p) => ({ ...p, price: Number(p.price) })));
 }
 
 async function getBanners() {

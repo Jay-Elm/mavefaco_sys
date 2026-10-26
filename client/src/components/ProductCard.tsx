@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Tag, Leaf } from 'lucide-react'
+import { Tag, Leaf, Sprout } from 'lucide-react'
+import { fmtWindow } from '@/components/cropDisplay'
 
 export interface Product {
   id: number
@@ -12,6 +13,8 @@ export interface Product {
   imageUrl: string | null
   category: { id: number; name: string }
   farmer: { id: number; name: string; email: string }
+  // Out of stock, with a harvest on the way (src/lib/comingSoon.ts).
+  comingSoon?: { harvestStart: string; harvestEnd: string } | null
 }
 
 export type ProductCardSize = 'small' | 'medium' | 'large'
@@ -78,7 +81,12 @@ export default function ProductCard({ product, size = 'large' }: { product: Prod
           )}
 
           {/* Stock badge */}
-          {product.stock === 0 && (
+          {product.stock === 0 && product.comingSoon && (
+            <span className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-amber-400 text-amber-950 text-[9px] sm:text-xs font-semibold px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full z-10 flex items-center gap-1">
+              <Sprout size={11} className="hidden sm:block" /> Coming Soon
+            </span>
+          )}
+          {product.stock === 0 && !product.comingSoon && (
             <span className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-red-500 text-white text-[9px] sm:text-xs font-semibold px-1.5 py-0.5 sm:px-2.5 sm:py-1 rounded-full z-10">
               Out of Stock
             </span>
@@ -123,7 +131,9 @@ export default function ProductCard({ product, size = 'large' }: { product: Prod
           </Link>
           {size === 'large' && (
             <span className="shrink-0 text-[10px] sm:text-xs text-gray-500">
-              {parseFloat(product.stock.toFixed(2))} {product.unit} left
+              {product.stock === 0 && product.comingSoon
+                ? `Expected ${fmtWindow(product.comingSoon.harvestStart, product.comingSoon.harvestEnd).replace(/, \d{4}$/, '')}`
+                : `${parseFloat(product.stock.toFixed(2))} ${product.unit} left`}
             </span>
           )}
         </div>

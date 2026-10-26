@@ -122,7 +122,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 ### Farmer Dashboard (`/farmer/`) — farmer role only
 - `layout.tsx` — green-accent sidebar (184px), auth guard, isolated scroll; red count badges on Messages (unread messages + notices), Orders (new), My Products (suspended), Crop Monitor (plantings whose harvest window has opened), Profile (no ID submitted)
-- `page.tsx` — product count, orders, revenue; **stock alerts** (out of stock + low stock); **weather widget** (Tabaco City, Albay via Open-Meteo); **community advisory** (recent pest/weather/damage reports from all farmers, last 30 days, by crop type with pest and severity)
+- `page.tsx` — product count, orders, revenue; **stock alerts** (out of stock + low stock); **weather widget** (Tabaco City, Albay via Open-Meteo); **community advisory** (top 5 groups of members' pest/weather/damage reports by crop and problem, last 30 days; "See all" → `advisory/`)
 - `products/` — table with stock badges (Out of Stock / Low / normal) and status (Approved / Pending / Suspended with its deletion date and reasons); alert banners for stock problems and suspended listings; Edit ("Fix & resubmit" when suspended)/Delete; CSV export
 - `products/new/` — create product form; requires `verified: true`
 - `products/[id]/edit/` — pre-filled edit form; content edits reset `approved: false`; on a suspended listing shows the reasons and deadline, saving a content change resubmits it; Delete button
@@ -221,7 +221,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | POST | `/api/farmer/plantings/[id]/harvest` | farmer | growing → harvested once (conditional update), optional `addToStock` to the linked listing in the same transaction |
 | POST | `/api/farmer/plantings/[id]/logs` | farmer | structured entry: type, note, observedOn, severity, pest |
 | DELETE | `/api/farmer/plantings/[id]/logs/[logId]` | farmer | |
-| GET | `/api/farmer/advisory` | farmer | recent pest/weather/damage reports from all farmers (30 days), crop type name only |
+| GET | `/api/farmer/advisory` | farmer | last 30 days of pest/weather/damage reports from all farmers, grouped by crop and problem (farm counts, no names) |
 | GET | `/api/crop-types` | farmer/manager/admin | crop list |
 | POST | `/api/crop-types` · PUT/DELETE `/api/crop-types/[id]` | admin/manager | manage crop types; audit `CREATE/UPDATE/DELETE_CROP_TYPE` |
 | GET | `/api/admin/supply` | admin/manager | expected kg per crop per week (8 weeks), possible-oversupply flags, overdue plantings |
@@ -266,7 +266,10 @@ After every `prisma migrate dev`, run `prisma generate` separately. The generate
 `WeatherWidget` calls Open-Meteo API client-side for Tabaco City (lat=13.3594, lon=123.7331). No API key required. Shown on farmer overview page.
 
 ### Community advisory
-`/api/farmer/advisory` returns the 50 most recent crop logs of type `pest_disease`, `weather_impact`, or `damage` (by date observed) from ALL farmers in the last 30 days, named by crop type only — never the farmer or their listing. Shown (top 5) on farmer overview page.
+`/api/farmer/advisory` groups crop logs of type `pest_disease`, `weather_impact`, or `damage` observed in the last 30 days (all farmers) by crop type and problem (`groupAdvisory()` in `src/lib/advisory.ts`): distinct farms, reports, high-severity count, latest date and the 5 newest notes — never the farmer or their listing. Top 5 groups on the farmer overview; all on `/farmer/advisory`.
+
+### Coming soon
+`withComingSoon()` (`src/lib/comingSoon.ts`) adds `comingSoon: { harvestStart, harvestEnd } | null` to storefront products: an out-of-stock listing gets the window of its earliest growing linked planting whose window hasn't closed. Used by the home page, `/products`, `/products/[id]` and `/sellers/[id]`; `ProductCard` shows a "Coming Soon" badge and the expected dates instead of "Out of Stock".
 
 ### Crop monitoring
 A `Planting` is one season of one crop. Its harvest window is copied from the `CropType` when recorded and is then the farmer's to adjust; the growth stage, "needs attention" flag and progress are computed per request in `src/lib/planting.ts` (`serializePlanting`), not stored. All planting dates are calendar dates in Philippine time (`todayPH()`), passed as `YYYY-MM-DD`. `expectedSupply()` spreads each growing planting's expected yield evenly over the remaining days of its window and sums by crop and Monday-to-Sunday week; `CLASH_FARMS` (3) farms in one week flags possible oversupply. Crop growing times are approximate seed values staff can correct on Dashboard → Crop Types.

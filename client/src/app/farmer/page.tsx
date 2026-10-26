@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, ShoppingCart, TrendingUp, Plus, AlertTriangle, CloudRain, Bug, Flame } from 'lucide-react'
+import { Loader2, Package, ShoppingCart, TrendingUp, Plus, AlertTriangle, Bug } from 'lucide-react'
 import WeatherWidget from '@/components/WeatherWidget'
-import { PEST_LABELS } from '@/validators/crop'
+import AdvisoryList from '@/components/AdvisoryList'
+import type { AdvisoryGroup } from '@/lib/advisory'
 
 const LOW_STOCK_THRESHOLD = 5
 
@@ -17,27 +18,11 @@ interface Stats {
   lowStock: number
 }
 
-interface AdvisoryLog {
-  id: number
-  type: string
-  note: string
-  observedOn: string
-  severity: string | null
-  pest: string | null
-  cropType: string
-}
-
-const LOG_TYPE_INFO: Record<string, { label: string; icon: React.ElementType; cls: string }> = {
-  weather_impact: { label: 'Weather', icon: CloudRain, cls: 'text-blue-500' },
-  pest_disease:   { label: 'Pest/Disease', icon: Bug,       cls: 'text-red-500' },
-  damage:         { label: 'Damage',   icon: Flame,     cls: 'text-orange-500' },
-}
-
 export default function FarmerOverviewPage() {
   const { token, user } = useAuth()
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
-  const [advisory, setAdvisory] = useState<AdvisoryLog[]>([])
+  const [advisory, setAdvisory] = useState<AdvisoryGroup[]>([])
 
   useEffect(() => {
     if (!token || !user) return
@@ -142,32 +127,17 @@ export default function FarmerOverviewPage() {
       {/* Community advisory */}
       {advisory.length > 0 && (
         <div className="mb-6 bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-          <h2 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-            <Bug size={15} className="text-red-500" /> Community Advisory (last 30 days)
-          </h2>
-          <div className="space-y-2">
-            {advisory.slice(0, 5).map((log) => {
-              const info = LOG_TYPE_INFO[log.type]
-              const Icon = info?.icon ?? Bug
-              return (
-                <div key={log.id} className="flex items-start gap-2 text-sm">
-                  <Icon size={14} className={`shrink-0 mt-0.5 ${info?.cls ?? 'text-gray-500'}`} />
-                  <div>
-                    <span className="font-medium text-gray-700">{log.cropType}</span>
-                    {log.pest && <span className="text-gray-700"> · {PEST_LABELS[log.pest as keyof typeof PEST_LABELS] ?? log.pest}</span>}
-                    {log.severity === 'high' && (
-                      <span className="ml-1.5 text-[11px] font-semibold uppercase text-red-600">High</span>
-                    )}
-                    <span className="text-gray-500 mx-1">—</span>
-                    <span className="text-gray-600">{log.note}</span>
-                    <span className="text-xs text-gray-400 ml-2">
-                      {new Date(`${log.observedOn}T00:00:00Z`).toLocaleDateString('en-PH', { dateStyle: 'medium', timeZone: 'UTC' })}
-                    </span>
-                  </div>
-                </div>
-              )
-            })}
+          <div className="flex items-center gap-2 mb-1">
+            <h2 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+              <Bug size={15} className="text-red-500" /> Community Advisory (last 30 days)
+            </h2>
+            {advisory.length > 5 && (
+              <Link href="/farmer/advisory" className="ml-auto text-xs font-medium text-forest hover:underline">
+                See all {advisory.length}
+              </Link>
+            )}
           </div>
+          <AdvisoryList groups={advisory.slice(0, 5)} />
         </div>
       )}
 

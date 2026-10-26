@@ -1,12 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { addDays, fromDateString, toDateString, todayPH } from "@/lib/planting";
+import { groupAdvisory } from "@/lib/advisory";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * GET /api/farmer/advisory — pest, weather and damage reports from all
- * members over the last 30 days, newest first. Shown with the crop type
- * (a staff-maintained name), never the farmer or their listing.
+ * GET /api/farmer/advisory — members' pest, weather and damage reports from
+ * the last 30 days, grouped by crop and problem with how many farms saw it.
+ * Named by crop type only: never the farmer or their listing.
  */
 export async function GET(req: NextRequest) {
   const actor = await getActiveAuthUser(req);
@@ -18,6 +19,7 @@ export async function GET(req: NextRequest) {
       where: {
         type: { in: ["pest_disease", "weather_impact", "damage"] },
         observedOn: { gte: fromDateString(addDays(todayPH(), -30)) },
+        planting: { farmer: { deletedAt: null } },
       },
       select: {
         id: true,
@@ -26,18 +28,19 @@ export async function GET(req: NextRequest) {
         observedOn: true,
         severity: true,
         pest: true,
-        planting: { select: { cropType: { select: { name: true } } } },
+        planting: { select: { farmerId: true, cropType: { select: { id: true, name: true } } } },
       },
-      orderBy: [{ observedOn: "desc" }, { id: "desc" }],
-      take: 50,
     });
 
     return NextResponse.json(
-      logs.map(({ planting, observedOn, ...log }) => ({
-        ...log,
-        observedOn: toDateString(observedOn),
-        cropType: planting.cropType.name,
-      })),
+      groupAdvisory(
+        logs.map(({ planting, observedOn, ...log }) => ({
+          ...log,
+          observedOn: toDateString(observedOn),
+          farmerId: planting.farmerId,
+          cropType: planting.cropType,
+        })),
+      ),
     );
   } catch {
     return NextResponse.json({ error: "Failed to fetch advisory" }, { status: 500 });

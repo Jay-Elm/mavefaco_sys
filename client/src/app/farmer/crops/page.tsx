@@ -63,9 +63,12 @@ export default function CropsPage() {
       <div className="flex flex-wrap items-center gap-3 mb-6">
         <Sprout size={22} className="text-forest" />
         <h1 className="font-serif text-2xl font-bold text-gray-900">Crop Monitor</h1>
+        <Link href="/farmer/advisory" className="ml-auto text-sm text-forest hover:underline">
+          Community advisory
+        </Link>
         <Link
           href="/farmer/crops/new"
-          className="ml-auto inline-flex items-center gap-1.5 bg-forest hover:bg-forest-mid text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          className="inline-flex items-center gap-1.5 bg-forest hover:bg-forest-mid text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
         >
           <Plus size={15} /> Record planting
         </Link>

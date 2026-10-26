@@ -2,10 +2,12 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { prisma } from '@/lib/prisma'
-import { Package, ArrowLeft, Tag, User, CalendarDays } from 'lucide-react'
+import { Package, ArrowLeft, Tag, User, CalendarDays, Sprout } from 'lucide-react'
 import AddToCartButton from '@/components/AddToCartButton'
 import ReviewsSection from '@/components/ReviewsSection'
 import { redirectRoles } from '@/lib/serverSession'
+import { withComingSoon } from '@/lib/comingSoon'
+import { fmtWindow } from '@/components/cropDisplay'
 
 export default async function ProductDetailPage({
   params,
@@ -28,6 +30,7 @@ export default async function ProductDetailPage({
   })
 
   if (!product || !product.approved || product.archivedAt) notFound()
+  const [{ comingSoon }] = await withComingSoon([product])
 
   const price = Number(product.price)
 
@@ -95,6 +98,12 @@ export default async function ProductDetailPage({
                     : 'Out of stock'}
                 </span>
               </div>
+              {comingSoon && (
+                <div className="flex justify-between gap-3 rounded-lg bg-amber-50 border border-amber-200 -mx-1 px-3 py-2">
+                  <span className="text-amber-800 font-medium flex items-center gap-1"><Sprout size={14} /> Coming soon</span>
+                  <span className="text-amber-900 text-right">Expected harvest {fmtWindow(comingSoon.harvestStart, comingSoon.harvestEnd)}</span>
+                </div>
+              )}
               <div className="flex justify-between items-center">
                 <span className="text-gray-500 flex items-center gap-1">
                   <User size={14} /> Farmer

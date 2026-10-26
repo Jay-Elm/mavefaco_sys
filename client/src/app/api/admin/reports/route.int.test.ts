@@ -98,7 +98,7 @@ describe("farmer advisory (L10)", () => {
     const res = await advisory(request("/api/farmer/advisory", { as: await createUser({ role: "farmer" }) }));
     const body = await res.text();
 
-    expect(JSON.parse(body)).toMatchObject([{ cropType: "Eggplant", pest: "fruit-and-shoot-borer", severity: "high", note: "Fruit borer" }]);
+    expect(JSON.parse(body)).toMatchObject([{ cropType: "Eggplant", pest: "fruit-and-shoot-borer", farms: 1, high: 1, notes: [{ note: "Fruit borer" }] }]);
     expect(body).not.toContain("Secret new variety");
     expect(body).not.toContain("Juan Farmer");
   });

@@ -5,6 +5,7 @@ import ProductCard from '@/components/ProductCard'
 import { ShieldCheck, ShieldAlert, User, CalendarDays, Package, ArrowLeft, Star } from 'lucide-react'
 import { redirectRoles } from '@/lib/serverSession'
 import MessageFarmerLink from '@/components/MessageFarmerLink'
+import { withComingSoon } from '@/lib/comingSoon'
 
 export default async function SellerPage({
   params,
@@ -110,7 +111,7 @@ export default async function SellerPage({
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {farmer.products.map((product) => (
+          {(await withComingSoon(farmer.products)).map((product) => (
             <ProductCard key={product.id} product={{ ...product, price: Number(product.price) }} />
           ))}
         </div>

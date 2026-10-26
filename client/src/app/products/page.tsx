@@ -4,6 +4,7 @@ import ProductFilters from '@/components/ProductFilters'
 import { Package } from 'lucide-react'
 import { Suspense } from 'react'
 import { redirectRoles } from '@/lib/serverSession'
+import { withComingSoon } from '@/lib/comingSoon'
 
 export default async function ProductsPage({
   searchParams,
@@ -61,7 +62,7 @@ export default async function ProductsPage({
           <p className="text-sm mt-1">Try adjusting your search or filters.</p>
         </div>
       ) : (
-        <ProductGrid products={products.map((p) => ({ ...p, price: Number(p.price) }))} />
+        <ProductGrid products={await withComingSoon(products.map((p) => ({ ...p, price: Number(p.price) })))} />
       )}
     </div>
   )

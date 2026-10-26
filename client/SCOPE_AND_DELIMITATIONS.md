@@ -1,7 +1,7 @@
 # Scope and Delimitations
 
 **System:** MaVeFaCo Marketplace — the online marketplace of the Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo)
-**As of:** 2026-10-26 · checked against the code on `master`, including the crop monitoring redesign of 2026-10-26 · deployed at https://mavefaco-sys.vercel.app
+**As of:** 2026-10-26 · checked against the code on `master`, including the crop monitoring redesign, grouped advisory and "coming soon" listings of 2026-10-26 · deployed at https://mavefaco-sys.vercel.app
 
 This document states what the system covers (**scope**) and the boundaries it deliberately stays within (**delimitations**). The scope is measured against the four use-case documents written at the start of the project — [`ADMIN_USE_CASE.md`](ADMIN_USE_CASE.md), [`MANAGER_USE_CASE.md`](MANAGER_USE_CASE.md), [`FARMER_USE_CASE.md`](FARMER_USE_CASE.md) and [`CUSTOMER_USE_CASE.md`](CUSTOMER_USE_CASE.md) — which describe the full long-term vision. The implemented system covers the core marketplace workflow end to end; the remaining items are documented below as outside the current scope.
 
@@ -21,10 +21,10 @@ This document states what the system covers (**scope**) and the boundaries it de
 | Role | Use-case items | Implemented | Partial | Not implemented |
 |---|---|---|---|---|
 | Customer | 32 | 23 | 3 | 6 |
-| Farmer | 51 | 31 | 7 | 13 |
+| Farmer | 51 | 32 | 6 | 13 |
 | Manager | 17 | 6 | 6 | 5 |
 | Administrator | 29 | 20 | 5 | 4 |
-| **Total** | **129** | **80** | **21** | **28** |
+| **Total** | **129** | **81** | **20** | **28** |
 
 The system fully supports the cooperative's core workflow: farmers list produce, staff review it, customers buy it, farmers and staff fulfil orders, and staff monitor the cooperative through reports and an audit log. The 28 items outside the scope fall into seven areas (see [section 4](#4-outside-the-current-scope)): payments, market intelligence, planning, customer convenience, farmer convenience, administration and localization.
 
@@ -94,7 +94,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Upload crop images | Implemented | PNG, JPEG or WEBP, up to 4 MB |
 | Set price per kilo/unit | Implemented | Price per chosen unit: piece, kg, gram, bundle, pack, bag, tray, dozen, liter, sack or bottle |
 | Set available quantity | Implemented | |
-| Set harvest date for "coming soon" products | Partial | Each planting has an expected harvest window, but it isn't shown to customers as "coming soon" |
+| Set harvest date for "coming soon" products | Implemented | An out-of-stock listing linked to a growing planting shows "Coming soon" with the expected harvest window on the shop, seller and product pages |
 | Set crop category | Implemented | |
 | Spoilage alerts | Not implemented | |
 | Low stock alerts | Implemented | Dashboard warning at 5 units or fewer |
@@ -107,7 +107,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Record pest/disease issues | Implemented | Crop log entry naming the pest or disease from a list, with severity |
 | Record damaged crops | Implemented | Crop log entry with the date seen and severity |
 | Mark ready for harvest | Implemented | Flagged automatically when the harvest window opens; recording the harvest saves the yield and can add it to the linked listing's stock |
-| Local pest/disease advisory, AI-translated from members' records | Partial | A shared advisory lists up to 50 pest, weather and damage reports from the last 30 days by crop type, with the pest and severity, as written; no AI translation or summary |
+| Local pest/disease advisory, AI-translated from members' records | Partial | A shared advisory groups the last 30 days of members' pest, weather and damage reports by crop and problem, with how many farms reported it, how many were high severity, and the latest notes; no AI translation or written summary |
 | Weather alerts API (Albay) | Partial | Current temperature, humidity and wind for Tabaco City from Open-Meteo; no alerts or forecasts |
 | **Market features** | | |
 | View current market prices (Albay) | Not implemented | No external market-price data source |
@@ -229,6 +229,7 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 - **One farmer per order.** A cart can only hold products from one farmer.
 - Order statuses are fixed: pending → confirmed → shipped → delivered, or cancelled. **Pickup and delivery are arranged outside the system**; there is no courier integration, delivery scheduling or location tracking.
 - Customers can cancel only while an order is pending.
+- A "coming soon" listing can't be ordered or reserved until the farmer restocks it; the expected harvest window shown is an estimate.
 - The cart is **stored in the browser** per account, so it does not follow the customer to another device.
 
 ### 3.3 Products and inventory
@@ -243,7 +244,7 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 
 - The cooperative operates in **Albay, Philippines**. The weather widget shows current conditions for one fixed location, **Tabaco City, Albay** (from Open-Meteo); it provides no alerts or forecasts.
 - **No external agricultural data** is used: no market prices, price trends, supply or demand data. All reports are computed from the system's own orders, products and users.
-- The pest and weather advisory shares up to 50 of members' own crop reports from the last 30 days, under the crop type's name only, as written; it is not AI-generated or translated.
+- The pest and weather advisory groups members' crop reports from the last 30 days by crop and problem, counting farms without naming them, and shows the farmers' notes as written; it is not AI-generated or translated.
 - **Crop growing times are approximate.** Each crop type's days to harvest and stage start days were set from general figures and can be corrected by staff; growth stages and harvest windows are calculated from them, not observed.
 - **Expected yields are farmers' own estimates**, in kilograms. Upcoming Supply spreads each planting's expected yield evenly across the rest of its harvest window and looks 8 weeks ahead; plantings without an estimate are counted as farms, not kilograms.
 
