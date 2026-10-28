@@ -113,7 +113,7 @@ function downloadFullReport(data: ReportData) {
 // ─── Bar row component ────────────────────────────────────────────────────────
 
 function BarRow({
-  label, value, max, format, color = 'bg-green-500',
+  label, value, max, format, color = 'bg-paddy',
 }: {
   label: string
   value: number
@@ -144,13 +144,13 @@ const STATUS_COLORS: Record<string, string> = {
   pending:   'bg-yellow-400',
   confirmed: 'bg-blue-400',
   shipped:   'bg-purple-400',
-  delivered: 'bg-green-500',
+  delivered: 'bg-paddy',
   cancelled: 'bg-red-400',
 }
 
 const ROLE_COLORS: Record<string, string> = {
   customer: 'bg-blue-400',
-  farmer:   'bg-green-500',
+  farmer:   'bg-paddy',
   manager:  'bg-purple-400',
   admin:    'bg-red-400',
 }
@@ -159,9 +159,9 @@ const ROLE_COLORS: Record<string, string> = {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-gray-100">
-        <h2 className="font-semibold text-gray-900">{title}</h2>
+        <h2 className="font-semibold text-soil">{title}</h2>
       </div>
       <div className="px-6 py-5">{children}</div>
     </div>
@@ -195,7 +195,7 @@ export default function ReportsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -219,7 +219,7 @@ export default function ReportsPage() {
     <div className="p-4 sm:p-8">
       {/* Header */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 mr-auto">Reports</h1>
+        <h1 className="text-2xl font-bold text-soil mr-auto">Reports</h1>
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => downloadFullReport(data)}
@@ -240,13 +240,13 @@ export default function ReportsPage() {
 
       {/* Tabs */}
       <div className="overflow-x-auto mb-6">
-      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 w-fit">
+      <div className="flex gap-1 bg-gray-100 rounded-lg p-1 w-fit">
         {TABS.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
             onClick={() => setTab(id)}
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              tab === id ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              tab === id ? 'bg-white text-soil shadow-sm' : 'text-gray-500 hover:text-gray-700'
             }`}
           >
             <Icon size={14} />
@@ -267,10 +267,10 @@ export default function ReportsPage() {
               { label: 'Avg Order Value', value: peso(avgOrderValue), sub: 'per order placed' },
               { label: 'Delivery Rate', value: `${deliveryRate.toFixed(1)}%`, sub: `${deliveredCount} delivered` },
             ].map(({ label, value, sub }) => (
-              <div key={label} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-                <p className="text-2xl font-bold text-gray-900">{value}</p>
+              <div key={label} className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
+                <p className="text-2xl font-bold text-soil">{value}</p>
                 <p className="text-sm font-medium text-gray-700 mt-0.5">{label}</p>
-                <p className="text-xs text-gray-400 mt-0.5">{sub}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{sub}</p>
               </div>
             ))}
           </div>
@@ -291,11 +291,11 @@ export default function ReportsPage() {
             </div>
 
             {salesByMonth.length === 0 ? (
-              <p className="text-center text-gray-400 py-6">No order data yet</p>
+              <p className="text-center text-gray-500 py-6">No order data yet</p>
             ) : (
               <div className="overflow-x-auto">
               <div className="min-w-[420px]">
-                <div className="grid grid-cols-[8rem_4rem_8rem_1fr] gap-4 pb-2 border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                <div className="grid grid-cols-[8rem_4rem_8rem_1fr] gap-4 pb-2 border-b border-gray-100 text-xs font-semibold text-gray-600">
                   <span>Month</span>
                   <span className="text-center">Orders</span>
                   <span className="text-right">Revenue</span>
@@ -310,11 +310,11 @@ export default function ReportsPage() {
                     >
                       <span className="text-sm text-gray-700">{formatMonth(row.month)}</span>
                       <span className="text-sm text-center text-gray-600">{row.orders}</span>
-                      <span className="text-sm text-right font-semibold text-green-700">{peso(row.revenue)}</span>
+                      <span className="text-sm text-right font-semibold text-paddy">{peso(row.revenue)}</span>
                       <div className="bg-gray-100 rounded-full h-4">
                         {pct > 0 && (
                           <div
-                            className="bg-green-500 h-4 rounded-full"
+                            className="bg-paddy h-4 rounded-full"
                             style={{ width: `${Math.max(pct, 2)}%` }}
                           />
                         )}
@@ -342,7 +342,7 @@ export default function ReportsPage() {
               </button>
             </div>
             {ordersByStatus.length === 0 ? (
-              <p className="text-center text-gray-400 py-6">No orders yet</p>
+              <p className="text-center text-gray-500 py-6">No orders yet</p>
             ) : (
               <div className="space-y-1">
                 {ordersByStatus.map((row) => (
@@ -379,12 +379,12 @@ export default function ReportsPage() {
             </div>
 
             {topProducts.length === 0 ? (
-              <p className="text-center text-gray-400 py-6">No order data yet</p>
+              <p className="text-center text-gray-500 py-6">No order data yet</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <tr className="border-b border-gray-100 text-xs font-semibold text-gray-600">
                       <th className="pb-3 text-left w-8">#</th>
                       <th className="pb-3 text-left">Product</th>
                       <th className="pb-3 text-left">Category</th>
@@ -396,16 +396,16 @@ export default function ReportsPage() {
                   <tbody className="divide-y divide-gray-50">
                     {topProducts.map((p, i) => (
                       <tr key={p.name} className="hover:bg-gray-50 transition-colors">
-                        <td className="py-3 text-gray-400 font-mono text-xs">{i + 1}</td>
-                        <td className="py-3 font-medium text-gray-900">{p.name}</td>
+                        <td className="py-3 text-gray-500 font-mono text-xs">{i + 1}</td>
+                        <td className="py-3 font-medium text-soil">{p.name}</td>
                         <td className="py-3">
-                          <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">
+                          <span className="bg-shoot text-paddy-deep text-xs font-medium px-2 py-0.5 rounded-full">
                             {p.category}
                           </span>
                         </td>
                         <td className="py-3 text-gray-600">{p.farmer}</td>
                         <td className="py-3 text-right font-semibold text-gray-800">{p.unitsSold}</td>
-                        <td className="py-3 text-right font-semibold text-green-700">{peso(p.revenue)}</td>
+                        <td className="py-3 text-right font-semibold text-paddy">{peso(p.revenue)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -429,7 +429,7 @@ export default function ReportsPage() {
               </button>
             </div>
             {salesByCategory.length === 0 ? (
-              <p className="text-center text-gray-400 py-6">No order data yet</p>
+              <p className="text-center text-gray-500 py-6">No order data yet</p>
             ) : (
               <div className="space-y-1">
                 {salesByCategory.map((row) => (
@@ -457,8 +457,8 @@ export default function ReportsPage() {
               { label: 'Total Products', value: summary.totalProducts },
               { label: 'Approved',       value: summary.approvedProducts },
             ].map(({ label, value }) => (
-              <div key={label} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
-                <p className="text-2xl font-bold text-gray-900">{value.toLocaleString()}</p>
+              <div key={label} className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
+                <p className="text-2xl font-bold text-soil">{value.toLocaleString()}</p>
                 <p className="text-sm font-medium text-gray-700 mt-0.5">{label}</p>
               </div>
             ))}
@@ -479,7 +479,7 @@ export default function ReportsPage() {
             </div>
 
             {usersByRole.length === 0 ? (
-              <p className="text-center text-gray-400 py-6">No users yet</p>
+              <p className="text-center text-gray-500 py-6">No users yet</p>
             ) : (
               <div className="space-y-1">
                 {usersByRole.map((row) => (
@@ -515,12 +515,12 @@ export default function ReportsPage() {
             </div>
 
             {farmerPerformance.length === 0 ? (
-              <p className="text-center text-gray-400 py-6">No farmers registered yet</p>
+              <p className="text-center text-gray-500 py-6">No farmers registered yet</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-gray-100 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                    <tr className="border-b border-gray-100 text-xs font-semibold text-gray-600">
                       <th className="pb-3 text-left">Farmer</th>
                       <th className="pb-3 text-center">Products</th>
                       <th className="pb-3 text-center">Units Sold</th>
@@ -535,17 +535,17 @@ export default function ReportsPage() {
                       return (
                         <tr key={f.id} className="hover:bg-gray-50 transition-colors">
                           <td className="py-3">
-                            <p className="font-medium text-gray-900">{f.name}</p>
-                            <p className="text-xs text-gray-400">{f.email}</p>
+                            <p className="font-medium text-soil">{f.name}</p>
+                            <p className="text-xs text-gray-500">{f.email}</p>
                           </td>
                           <td className="py-3 text-center text-gray-600">{f.productCount}</td>
                           <td className="py-3 text-center text-gray-600">{f.unitsSold}</td>
-                          <td className="py-3 text-right font-semibold text-green-700">{peso(f.revenue)}</td>
+                          <td className="py-3 text-right font-semibold text-paddy">{peso(f.revenue)}</td>
                           <td className="py-3 pl-4">
                             <div className="w-32 bg-gray-100 rounded-full h-3">
                               {pct > 0 && (
                                 <div
-                                  className="bg-green-500 h-3 rounded-full"
+                                  className="bg-paddy h-3 rounded-full"
                                   style={{ width: `${Math.max(pct, 2)}%` }}
                                 />
                               )}

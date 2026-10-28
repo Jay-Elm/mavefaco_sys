@@ -80,7 +80,7 @@ export default function FarmerProductsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -89,7 +89,7 @@ export default function FarmerProductsPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">My Products</h1>
+        <h1 className="text-2xl font-bold text-soil">My Products</h1>
         <div className="flex items-center gap-2">
           <button
             onClick={() => downloadCSV(
@@ -120,7 +120,7 @@ export default function FarmerProductsPage() {
 
       {/* Suspended listings: hidden from customers until edited and resubmitted */}
       {products.some((p) => p.suspendedAt) && (
-        <div className="mb-5 bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+        <div className="mb-5 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
           <Ban size={18} className="text-red-600 shrink-0 mt-0.5" />
           <div className="text-sm text-red-800">
             <p className="font-semibold">Some of your listings were suspended by MaVeFaCo staff</p>
@@ -138,7 +138,7 @@ export default function FarmerProductsPage() {
         const lowStock   = products.filter((p) => p.stock > 0 && p.stock <= LOW_STOCK_THRESHOLD)
         if (outOfStock.length === 0 && lowStock.length === 0) return null
         return (
-          <div className="mb-5 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+          <div className="mb-5 bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
             <AlertTriangle size={16} className="text-amber-500 shrink-0 mt-0.5" />
             <div className="text-sm text-amber-800 space-y-1">
               {outOfStock.length > 0 && (
@@ -158,7 +158,7 @@ export default function FarmerProductsPage() {
         )
       })()}
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
         <table className="w-full text-sm min-w-[560px]">
           <thead className="bg-gray-50 border-b border-gray-200">
@@ -174,7 +174,7 @@ export default function FarmerProductsPage() {
           <tbody className="divide-y divide-gray-50">
             {products.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center py-12 text-gray-400">
+                <td colSpan={6} className="text-center py-12 text-gray-500">
                   <Package size={32} className="mx-auto mb-2" />
                   No products yet
                 </td>
@@ -184,8 +184,8 @@ export default function FarmerProductsPage() {
                 <React.Fragment key={p.id}>
                   <tr className="hover:bg-gray-50 transition-colors">
                     <td className="px-5 py-3">
-                      <p className="font-medium text-gray-900">{p.name}</p>
-                      <p className="text-xs text-gray-400">
+                      <p className="font-medium text-soil">{p.name}</p>
+                      <p className="text-xs text-gray-500">
                         {new Date(p.createdAt).toLocaleDateString('en-PH')}
                       </p>
                       {p.suspendedAt && (
@@ -193,11 +193,11 @@ export default function FarmerProductsPage() {
                       )}
                     </td>
                     <td className="px-5 py-3">
-                      <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">
+                      <span className="bg-shoot text-paddy-deep text-xs font-medium px-2 py-0.5 rounded-full">
                         {p.category.name}
                       </span>
                     </td>
-                    <td className="px-5 py-3 text-right font-semibold text-green-700">
+                    <td className="px-5 py-3 text-right font-semibold text-paddy">
                       ₱{p.price.toFixed(2)}
                     </td>
                     <td className="px-5 py-3 text-center">
@@ -210,7 +210,7 @@ export default function FarmerProductsPage() {
                           <span className="font-normal">deleted {fmtDate(suspensionDeadline(p.suspendedAt))}</span>
                         </span>
                       ) : p.approved ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-paddy bg-shoot px-2 py-0.5 rounded-full">
                           <CheckCircle size={11} /> Approved
                         </span>
                       ) : (
@@ -222,7 +222,7 @@ export default function FarmerProductsPage() {
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
                         {deletingId === p.id && (
-                          <Loader2 size={14} className="animate-spin text-gray-400" />
+                          <Loader2 size={14} className="animate-spin text-gray-500" />
                         )}
                         <Link
                           href={`/farmer/products/${p.id}/edit`}

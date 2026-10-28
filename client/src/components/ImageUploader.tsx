@@ -42,7 +42,7 @@ export default function ImageUploader({ value, onChange, token }: Props) {
   return (
     <div className="space-y-2">
       <div
-        className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border-2 border-dashed border-gray-200 bg-gray-50 cursor-pointer hover:border-paddy transition-colors flex items-center justify-center"
+        className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border-2 border-dashed border-gray-200 bg-gray-50 cursor-pointer hover:border-paddy transition-colors flex items-center justify-center"
         onClick={() => !uploading && inputRef.current?.click()}
       >
         {value ? (
@@ -50,14 +50,14 @@ export default function ImageUploader({ value, onChange, token }: Props) {
         ) : (
           <div className="flex flex-col items-center gap-2 text-gray-300 select-none">
             <Leaf size={40} strokeWidth={1.5} />
-            <span className="text-sm text-gray-400">Click to upload a photo</span>
-            <span className="text-xs text-gray-300">JPG, PNG, WEBP — max 4 MB</span>
+            <span className="text-sm text-gray-500">Click to upload a photo</span>
+            <span className="text-xs text-gray-500">JPG, PNG, WEBP — max 4 MB</span>
           </div>
         )}
 
         {uploading && (
           <div className="absolute inset-0 bg-white/70 flex items-center justify-center">
-            <Loader2 size={28} className="animate-spin text-green-600" />
+            <Loader2 size={28} className="animate-spin text-paddy" />
           </div>
         )}
 

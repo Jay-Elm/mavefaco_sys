@@ -10,7 +10,7 @@ type Row = CropType & { _count: { plantings: number } }
 type Form = { name: string; daysToHarvestMin: string; daysToHarvestMax: string; vegetativeDay: string; floweringDay: string; fruitingDay: string }
 
 const EMPTY: Form = { name: '', daysToHarvestMin: '', daysToHarvestMax: '', vegetativeDay: '', floweringDay: '', fruitingDay: '' }
-const CELL_INPUT = 'w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500'
+const CELL_INPUT = 'w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-paddy'
 
 const toForm = (c: CropType): Form => ({
   name: c.name,
@@ -99,7 +99,7 @@ export default function CropTypesPage() {
   }
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64 text-gray-400">
+    <div className="flex items-center justify-center h-64 text-gray-500">
       <Loader2 size={28} className="animate-spin" />
     </div>
   )
@@ -132,7 +132,7 @@ export default function CropTypesPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-2">
-        <h1 className="text-2xl font-bold text-gray-900">Crop Types</h1>
+        <h1 className="text-2xl font-bold text-soil">Crop Types</h1>
         <span className="text-sm text-gray-500">{rows.length} crops</span>
       </div>
       <p className="text-sm text-gray-500 mb-6 max-w-2xl">
@@ -143,7 +143,7 @@ export default function CropTypesPage() {
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 mb-6">
         <h2 className="text-sm font-semibold text-gray-700 mb-3">Add a crop</h2>
         <form onSubmit={add} className="grid grid-cols-2 md:grid-cols-6 gap-3 items-end">
           <div className="col-span-2 md:col-span-1">
@@ -164,7 +164,7 @@ export default function CropTypesPage() {
         </form>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[720px] text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
@@ -178,7 +178,7 @@ export default function CropTypesPage() {
             </thead>
             <tbody className="divide-y divide-gray-100">
               {rows.length === 0 ? (
-                <tr><td colSpan={5} className="text-center py-12 text-gray-400"><Sprout size={32} className="mx-auto mb-2" />No crops yet</td></tr>
+                <tr><td colSpan={5} className="text-center py-12 text-gray-500"><Sprout size={32} className="mx-auto mb-2" />No crops yet</td></tr>
               ) : rows.map((r) => editingId === r.id ? (
                 <tr key={r.id} className="bg-field">
                   <td colSpan={5} className="px-4 py-4">
@@ -201,7 +201,7 @@ export default function CropTypesPage() {
                 </tr>
               ) : (
                 <tr key={r.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium text-gray-900">{r.name}</td>
+                  <td className="px-4 py-3 font-medium text-soil">{r.name}</td>
                   <td className="px-4 py-3 text-gray-700 tabular-nums">{r.daysToHarvestMin}–{r.daysToHarvestMax}</td>
                   <td className="px-4 py-3 text-gray-600 text-xs">
                     Vegetative {r.vegetativeDay}

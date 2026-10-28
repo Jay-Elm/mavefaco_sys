@@ -70,7 +70,7 @@ export default function NewPlantingPage() {
   }
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64 text-gray-400">
+    <div className="flex items-center justify-center h-64 text-gray-500">
       <Loader2 size={28} className="animate-spin" />
     </div>
   )
@@ -82,10 +82,10 @@ export default function NewPlantingPage() {
       </Link>
       <div className="flex items-center gap-3 mb-6">
         <Sprout size={20} className="text-paddy" />
-        <h1 className="text-2xl font-bold text-gray-900">Record a planting</h1>
+        <h1 className="text-2xl font-bold text-soil">Record a planting</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-5">
         <div>
           <label htmlFor="crop" className="block text-xs font-medium text-gray-600 mb-1">Crop</label>
           <select id="crop" required value={cropTypeId} onChange={(e) => setCropTypeId(e.target.value)} className={INPUT}>
@@ -112,18 +112,18 @@ export default function NewPlantingPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="area" className="block text-xs font-medium text-gray-600 mb-1">Area planted (m²) <span className="text-gray-400">optional</span></label>
+            <label htmlFor="area" className="block text-xs font-medium text-gray-600 mb-1">Area planted (m²) <span className="text-gray-500">optional</span></label>
             <input id="area" type="number" min="0" step="any" inputMode="decimal" value={areaSqm} onChange={(e) => setAreaSqm(e.target.value)} className={INPUT} />
           </div>
           <div>
-            <label htmlFor="yield" className="block text-xs font-medium text-gray-600 mb-1">Expected yield (kg) <span className="text-gray-400">optional</span></label>
+            <label htmlFor="yield" className="block text-xs font-medium text-gray-600 mb-1">Expected yield (kg) <span className="text-gray-500">optional</span></label>
             <input id="yield" type="number" min="0" step="any" inputMode="decimal" value={expectedYield} onChange={(e) => setExpectedYield(e.target.value)} className={INPUT} />
           </div>
         </div>
         <p className="text-xs text-gray-500 -mt-2">Your expected yield helps the cooperative plan for upcoming supply.</p>
 
         <div>
-          <label htmlFor="listing" className="block text-xs font-medium text-gray-600 mb-1">Sold as <span className="text-gray-400">optional</span></label>
+          <label htmlFor="listing" className="block text-xs font-medium text-gray-600 mb-1">Sold as <span className="text-gray-500">optional</span></label>
           <select id="listing" value={productId} onChange={(e) => setProductId(e.target.value)} className={INPUT}>
             <option value="">Not linked to a listing yet</option>
             {listings.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}
@@ -142,7 +142,7 @@ export default function NewPlantingPage() {
             {saving && <Loader2 size={14} className="animate-spin" />}
             Record planting
           </button>
-          <Link href="/farmer/crops" className="px-4 py-2 text-sm text-gray-600 hover:text-gray-900">Cancel</Link>
+          <Link href="/farmer/crops" className="px-4 py-2 text-sm text-gray-600 hover:text-soil">Cancel</Link>
         </div>
       </form>
     </div>

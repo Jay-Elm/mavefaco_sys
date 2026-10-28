@@ -94,7 +94,7 @@ export default function IdCamera({ facing, frameAspect, prompt, onCapture, onUna
     <div>
       <p className="text-center text-sm font-medium text-gray-800 mb-2">{prompt}</p>
       <div
-        className="relative w-full max-w-xl mx-auto overflow-hidden rounded-xl bg-black"
+        className="relative w-full max-w-xl mx-auto overflow-hidden rounded-lg bg-black"
         style={{ aspectRatio: size ? `${size.w} / ${size.h}` : '4 / 3' }}
       >
         <video

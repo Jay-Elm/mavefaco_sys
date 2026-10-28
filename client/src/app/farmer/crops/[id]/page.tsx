@@ -76,7 +76,7 @@ export default function PlantingPage() {
   }
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64 text-gray-400">
+    <div className="flex items-center justify-center h-64 text-gray-500">
       <Loader2 size={28} className="animate-spin" />
     </div>
   )
@@ -97,7 +97,7 @@ export default function PlantingPage() {
       <div className="flex flex-wrap items-start gap-3 mb-6">
         <Sprout size={20} className="text-paddy shrink-0 mt-1.5" />
         <div className="min-w-0">
-          <h1 className="text-2xl font-bold text-gray-900">{p.cropType.name}</h1>
+          <h1 className="text-2xl font-bold text-soil">{p.cropType.name}</h1>
           <p className="text-sm text-gray-500">
             Planted {fmtDate(p.plantedOn)}
             {p.areaSqm !== null && ` · ${p.areaSqm.toLocaleString('en-PH')} m²`}
@@ -115,7 +115,7 @@ export default function PlantingPage() {
           <HarvestPanel planting={p} send={send} onDone={applyUpdate} onFail={() => changeStatus('failed')} />
         </>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6 flex flex-wrap items-center gap-x-8 gap-y-3">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 mb-6 flex flex-wrap items-center gap-x-8 gap-y-3">
           {p.status === 'harvested' ? (
             <>
               <Fact label="Harvested" value={fmtDate(p.harvestedOn)} />
@@ -149,7 +149,7 @@ function Fact({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="text-xs text-gray-500">{label}</p>
-      <p className="text-sm font-semibold text-gray-900">{value}</p>
+      <p className="text-sm font-semibold text-soil">{value}</p>
     </div>
   )
 }
@@ -171,11 +171,11 @@ function Timeline({ planting: p }: { planting: Planting }) {
   ]
   const todayPct = Math.min(100, Math.max(0, (p.day / total) * 100))
   const COLORS: Record<string, string> = {
-    seedling: 'bg-lime-300', vegetative: 'bg-green-400', flowering: 'bg-pink-300', fruiting: 'bg-orange-300', 'harvest-ready': 'bg-amber-400',
+    seedling: 'bg-lime-300', vegetative: 'bg-paddy/70', flowering: 'bg-pink-300', fruiting: 'bg-orange-300', 'harvest-ready': 'bg-amber-400',
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6">
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 mb-6">
       <div className="flex flex-wrap items-baseline justify-between gap-2 mb-4">
         <h2 className="text-sm font-semibold text-gray-700">Growth timeline</h2>
         <p className={`text-sm ${p.attention === 'overdue' ? 'text-red-600 font-medium' : 'text-gray-600'}`}>
@@ -199,12 +199,12 @@ function Timeline({ planting: p }: { planting: Planting }) {
           {segments.map((s) => (
             <span key={s.key} className="inline-flex items-center gap-1.5 text-xs text-gray-600">
               <span className={`w-2.5 h-2.5 rounded-sm ${COLORS[s.key]}`} />
-              {STAGE_STYLES[s.key].label} <span className="text-gray-400">{fmtDate(addDays(p.plantedOn, s.day))}</span>
+              {STAGE_STYLES[s.key].label} <span className="text-gray-500">{fmtDate(addDays(p.plantedOn, s.day))}</span>
             </span>
           ))}
         </div>
       </div>
-      <p className="text-xs text-gray-400 mt-3">Stages are worked out from typical growing times for {p.cropType.name}; they&apos;re approximate.</p>
+      <p className="text-xs text-gray-500 mt-3">Stages are worked out from typical growing times for {p.cropType.name}; they&apos;re approximate.</p>
     </div>
   )
 }
@@ -232,11 +232,11 @@ function HarvestPanel({ planting: p, send, onDone, onFail }: { planting: Plantin
   }
 
   return (
-    <div className={`rounded-xl border shadow-sm p-5 mb-6 ${p.attention ? 'bg-amber-50 border-amber-200' : 'bg-white border-gray-200'}`}>
+    <div className={`rounded-lg border shadow-sm p-5 mb-6 ${p.attention ? 'bg-amber-50 border-amber-200' : 'bg-white border-gray-200'}`}>
       <div className="flex flex-wrap items-center gap-3">
         <Wheat size={18} className="text-amber-700" />
         <div>
-          <p className="text-sm font-semibold text-gray-900">
+          <p className="text-sm font-semibold text-soil">
             {p.attention === 'overdue' ? 'The harvest window has passed' : p.attention === 'harvest-now' ? 'Ready to harvest' : 'Harvest'}
           </p>
           <p className="text-xs text-gray-600">Record the harvest when it&apos;s in, or mark the planting failed if the crop was lost.</p>
@@ -265,7 +265,7 @@ function HarvestPanel({ planting: p, send, onDone, onFail }: { planting: Plantin
           </div>
           <div>
             <label htmlFor="addToStock" className="block text-xs font-medium text-gray-600 mb-1">
-              Add to stock {listing && <span className="text-gray-400">({listing.unit})</span>}
+              Add to stock {listing && <span className="text-gray-500">({listing.unit})</span>}
             </label>
             <input id="addToStock" type="number" min="0" step="any" inputMode="decimal" disabled={!listing} value={addToStock} onChange={(e) => setAddToStock(e.target.value)} className={`${INPUT} bg-white disabled:bg-gray-100`} />
             <p className="text-[11px] text-gray-500 mt-1">
@@ -329,7 +329,7 @@ function DetailsForm({ planting: p, listings, send, onSaved }: { planting: Plant
   const options = p.product && !listings.some((l) => l.id === p.product!.id) ? [...listings, p.product] : listings
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6">
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 mb-6">
       <h2 className="text-sm font-semibold text-gray-700 mb-4">Planting details</h2>
       <form onSubmit={submit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -366,7 +366,7 @@ function DetailsForm({ planting: p, listings, send, onSaved }: { planting: Plant
           <button type="submit" disabled={saving} className="inline-flex items-center gap-2 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg">
             {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Save changes
           </button>
-          {saved && <span className="text-green-600 text-xs inline-flex items-center gap-1"><CheckCircle2 size={13} /> Saved</span>}
+          {saved && <span className="text-paddy text-xs inline-flex items-center gap-1"><CheckCircle2 size={13} /> Saved</span>}
         </div>
       </form>
     </div>
@@ -408,7 +408,7 @@ function LogSection({ planting: p, send, onChange }: { planting: Detail; send: S
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
       <h2 className="text-sm font-semibold text-gray-700 mb-1">Crop log</h2>
       <p className="text-xs text-gray-500 mb-4">Pest, weather and damage reports are shared with other members in the community advisory, under the crop&apos;s name only.</p>
 
@@ -486,7 +486,7 @@ function LogSection({ planting: p, send, onChange }: { planting: Detail; send: S
       </form>
 
       {p.logs.length === 0 ? (
-        <p className="text-sm text-gray-400 text-center py-6">No log entries yet.</p>
+        <p className="text-sm text-gray-500 text-center py-6">No log entries yet.</p>
       ) : (
         <div className="space-y-3">
           {p.logs.map((log) => {
@@ -502,13 +502,13 @@ function LogSection({ planting: p, send, onChange }: { planting: Detail; send: S
                     {sev && <span className={`px-1.5 py-px rounded text-[10px] font-semibold ${sev.cls}`}>{sev.label}</span>}
                   </p>
                   <p className="text-sm text-gray-800 whitespace-pre-wrap">{log.note}</p>
-                  <p className="text-xs text-gray-400 mt-1">Seen {fmtDate(log.observedOn)}</p>
+                  <p className="text-xs text-gray-500 mt-1">Seen {fmtDate(log.observedOn)}</p>
                 </div>
                 <button
                   onClick={() => remove(log.id)}
                   disabled={deletingId === log.id}
                   aria-label="Delete entry"
-                  className="shrink-0 p-1 text-gray-400 hover:text-red-500 disabled:opacity-40"
+                  className="shrink-0 p-1 text-gray-500 hover:text-red-500 disabled:opacity-40"
                 >
                   {deletingId === log.id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
                 </button>

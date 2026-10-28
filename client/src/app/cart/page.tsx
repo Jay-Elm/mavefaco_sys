@@ -182,7 +182,7 @@ export default function CartPage() {
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gray-900 truncate">{item.name}</p>
+                <p className="font-semibold text-soil truncate">{item.name}</p>
                 <p className="text-sm text-gray-500 mt-0.5">₱{item.price.toFixed(2)} / {item.unit}</p>
 
                 <div className="flex items-center gap-3 mt-3">
@@ -210,7 +210,7 @@ export default function CartPage() {
                       <Plus size={14} />
                     </button>
                   </div>
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-gray-500">
                     of {parseFloat(item.stock.toFixed(2))} {item.unit} available
                   </span>
                 </div>
@@ -220,7 +220,7 @@ export default function CartPage() {
                 <p className="font-bold text-paddy">₱{(item.price * item.quantity).toFixed(2)}</p>
                 <button
                   onClick={() => removeItem(item.productId)}
-                  className="text-gray-400 hover:text-red-500 transition-colors"
+                  className="text-gray-500 hover:text-red-500 transition-colors"
                 >
                   <Trash2 size={16} />
                 </button>
@@ -232,7 +232,7 @@ export default function CartPage() {
         {/* Order summary */}
         <div className="lg:col-span-1">
           <div className="bg-white border border-gray-200 rounded-card p-4 sm:p-6 shadow-sm sticky top-6 space-y-5">
-            <h2 className="font-display text-lg font-bold text-gray-900">Order Summary</h2>
+            <h2 className="font-display text-lg font-bold text-soil">Order Summary</h2>
 
             <div className="space-y-2 text-sm text-gray-600">
               {items.map(item => (
@@ -247,7 +247,7 @@ export default function CartPage() {
 
             <div className="border-t border-gray-200 pt-4">
               <div className="flex justify-between items-center">
-                <span className="font-semibold text-gray-900">Total</span>
+                <span className="font-semibold text-soil">Total</span>
                 <span className="text-xl font-bold text-paddy">₱{totalAmount.toFixed(2)}</span>
               </div>
             </div>
@@ -257,7 +257,7 @@ export default function CartPage() {
               <label className="flex items-center gap-1.5 text-sm font-medium text-gray-700 mb-1.5">
                 <Wallet size={14} /> Payment Method
               </label>
-              <select
+              <select aria-label="Payment Method"
                 value={paymentMethod}
                 onChange={e => setPaymentMethod(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"

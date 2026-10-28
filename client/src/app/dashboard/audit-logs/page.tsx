@@ -18,7 +18,7 @@ interface AuditLog {
 const PAGE_SIZE = 100
 
 const ACTION_COLORS: Record<string, string> = {
-  CREATE_PRODUCT:      'bg-green-100 text-green-800',
+  CREATE_PRODUCT:      'bg-shoot text-paddy-deep',
   DELETE_PRODUCT:      'bg-red-100 text-red-800',
   SUSPEND_PRODUCT:     'bg-red-100 text-red-800',
   AUTO_DELETE_PRODUCT: 'bg-red-100 text-red-800',
@@ -88,7 +88,7 @@ export default function AuditLogsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -99,7 +99,7 @@ export default function AuditLogsPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Audit Logs</h1>
+        <h1 className="text-2xl font-bold text-soil">Audit Logs</h1>
         <span className="text-sm text-gray-500">{logs.length} most recent entries</span>
       </div>
 
@@ -108,29 +108,31 @@ export default function AuditLogsPage() {
       {/* Filters toolbar */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <div className="relative flex-1 min-w-48">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-          <input
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+          <input aria-label="Search by action, user, or entity"
             type="text"
             placeholder="Search by action, user, or entity…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy"
           />
         </div>
 
         <select
+          aria-label="Filter by action"
           value={filterAction}
           onChange={(e) => setFilterAction(e.target.value)}
-          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy"
         >
           <option value="">All actions</option>
           {actions.map((a) => <option key={a} value={a}>{a}</option>)}
         </select>
 
         <select
+          aria-label="Filter by entity type"
           value={filterEntity}
           onChange={(e) => setFilterEntity(e.target.value)}
-          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy"
         >
           <option value="">All entities</option>
           {entityTypes.map((e) => <option key={e} value={e}>{e}</option>)}
@@ -145,7 +147,7 @@ export default function AuditLogsPage() {
           </button>
         )}
 
-        <span className="ml-auto text-xs text-gray-400">
+        <span className="ml-auto text-xs text-gray-500">
           {filtered.length} of {logs.length} entries
         </span>
         <button
@@ -164,7 +166,7 @@ export default function AuditLogsPage() {
         </button>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
         <table className="w-full min-w-[520px] text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
@@ -178,7 +180,7 @@ export default function AuditLogsPage() {
           <tbody className="divide-y divide-gray-50">
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={4} className="text-center py-12 text-gray-400">
+                <td colSpan={4} className="text-center py-12 text-gray-500">
                   <ScrollText size={32} className="mx-auto mb-2" />
                   {logs.length === 0 ? 'No audit logs yet' : 'No logs match your filters'}
                 </td>
@@ -197,8 +199,8 @@ export default function AuditLogsPage() {
                     {log.entityType} #{log.entityId}
                   </td>
                   <td className="px-5 py-3">
-                    <p className="font-medium text-gray-900">{log.user.name}</p>
-                    <p className="text-xs text-gray-400 capitalize">{log.user.role}</p>
+                    <p className="font-medium text-soil">{log.user.name}</p>
+                    <p className="text-xs text-gray-500 capitalize">{log.user.role}</p>
                   </td>
                   <td className="px-5 py-3 text-gray-500 text-xs">
                     {new Intl.DateTimeFormat('en-PH', {

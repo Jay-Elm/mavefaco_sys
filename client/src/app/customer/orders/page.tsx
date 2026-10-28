@@ -99,7 +99,7 @@ export default function CustomerOrdersPage() {
 
   if (loading || fetching) {
     return (
-      <div className="flex items-center justify-center py-20 text-gray-400">
+      <div className="flex items-center justify-center py-20 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -152,8 +152,8 @@ export default function CustomerOrdersPage() {
               >
                 <div className="flex items-center gap-4 text-left">
                   <div>
-                    <p className="font-semibold text-gray-900 text-sm">Order #{order.id}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{date}</p>
+                    <p className="font-semibold text-soil text-sm">Order #{order.id}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">{date}</p>
                   </div>
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full capitalize ${STATUS_COLORS[order.status] ?? 'bg-gray-100 text-gray-700'}`}>
                     {order.status}
@@ -161,7 +161,7 @@ export default function CustomerOrdersPage() {
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0 ml-4">
                   <span className="font-bold text-paddy">₱{order.totalAmount.toFixed(2)}</span>
-                  {isOpen ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
+                  {isOpen ? <ChevronUp size={16} className="text-gray-500" /> : <ChevronDown size={16} className="text-gray-500" />}
                 </div>
               </button>
 
@@ -178,14 +178,14 @@ export default function CustomerOrdersPage() {
                           >
                             {item.product.name}
                           </Link>
-                          <span className="text-gray-400">× {parseFloat(item.quantity.toFixed(2))} {item.product.unit}</span>
+                          <span className="text-gray-500">× {parseFloat(item.quantity.toFixed(2))} {item.product.unit}</span>
                         </div>
                         <span className="text-gray-700 font-medium">
                           ₱{(item.price * item.quantity).toFixed(2)}
                         </span>
                       </div>
                     ))}
-                    <div className="border-t border-gray-100 pt-2 flex justify-between text-sm font-semibold text-gray-900">
+                    <div className="border-t border-gray-100 pt-2 flex justify-between text-sm font-semibold text-soil">
                       <span>Total</span>
                       <span className="text-paddy">₱{order.totalAmount.toFixed(2)}</span>
                     </div>

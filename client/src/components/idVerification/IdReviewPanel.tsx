@@ -72,24 +72,24 @@ export default function IdReviewPanel({ token, userId, onClose, onReviewed }: {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-start sm:items-center justify-center p-2 sm:p-6 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="id-review-title">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl my-4">
+      <div className="bg-white rounded-card shadow-xl w-full max-w-4xl my-4">
         <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
-          <h2 id="id-review-title" className="font-semibold text-gray-900">ID review{data ? `: ${data.farmer.name}` : ''}</h2>
-          <button onClick={onClose} aria-label="Close" className="ml-auto p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-700"><X size={18} /></button>
+          <h2 id="id-review-title" className="font-semibold text-soil">ID review{data ? `: ${data.farmer.name}` : ''}</h2>
+          <button onClick={onClose} aria-label="Close" className="ml-auto p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-700"><X size={18} /></button>
         </div>
 
         <div className="p-5">
-          {!data && !error && <div className="py-12 flex justify-center text-gray-400"><Loader2 size={24} className="animate-spin" /></div>}
+          {!data && !error && <div className="py-12 flex justify-center text-gray-500"><Loader2 size={24} className="animate-spin" /></div>}
           {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
           {data && !s && <p className="text-sm text-gray-500">This farmer hasn&apos;t submitted an ID.</p>}
 
           {s && (
             <>
               <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm mb-4">
-                <span><span className="text-gray-500">ID:</span> <span className="font-medium text-gray-900">{idTypeLabel(s.idType)}</span></span>
-                {s.numberLast4 && <span><span className="text-gray-500">Number ends in</span> <span className="font-mono font-medium text-gray-900">{s.numberLast4}</span></span>}
+                <span><span className="text-gray-500">ID:</span> <span className="font-medium text-soil">{idTypeLabel(s.idType)}</span></span>
+                {s.numberLast4 && <span><span className="text-gray-500">Number ends in</span> <span className="font-mono font-medium text-soil">{s.numberLast4}</span></span>}
                 <span><span className="text-gray-500">Submitted</span> {fmt(s.createdAt)}</span>
-                <span className={`inline-flex items-center gap-1 ${s.captureMethod === 'camera' ? 'text-green-700' : 'text-amber-700'}`}>
+                <span className={`inline-flex items-center gap-1 ${s.captureMethod === 'camera' ? 'text-paddy' : 'text-amber-700'}`}>
                   {s.captureMethod === 'camera' ? <Camera size={14} /> : <ImageUp size={14} />}
                   {s.captureMethod === 'camera' ? 'Taken with the in-app camera' : s.captureMethod === 'upload' ? 'Uploaded, not taken with the camera' : 'Uploaded before the camera flow'}
                 </span>
@@ -117,7 +117,7 @@ export default function IdReviewPanel({ token, userId, onClose, onReviewed }: {
                           <img src={url} alt={label} className="w-full aspect-[4/3] object-contain bg-gray-100 rounded-lg border border-gray-200" />
                         </a>
                       ) : (
-                        <div className="w-full aspect-[4/3] rounded-lg border border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-400">Not provided</div>
+                        <div className="w-full aspect-[4/3] rounded-lg border border-dashed border-gray-300 flex items-center justify-center text-xs text-gray-500">Not provided</div>
                       )}
                       <figcaption className="text-xs text-gray-600 mt-1">{label}</figcaption>
                     </figure>
@@ -127,8 +127,8 @@ export default function IdReviewPanel({ token, userId, onClose, onReviewed }: {
 
               {s.status === 'pending' ? (
                 rejecting ? (
-                  <div className="rounded-xl border border-gray-200 p-4">
-                    <p className="text-sm font-medium text-gray-900 mb-2">Why isn&apos;t it approved?</p>
+                  <div className="rounded-lg border border-gray-200 p-4">
+                    <p className="text-sm font-medium text-soil mb-2">Why isn&apos;t it approved?</p>
                     <div className="grid gap-1.5 sm:grid-cols-2">
                       {REASONS.map(([key, label]) => (
                         <label key={key} className="flex items-start gap-2 text-sm text-gray-700">
@@ -147,7 +147,7 @@ export default function IdReviewPanel({ token, userId, onClose, onReviewed }: {
                       onChange={(e) => setNote(e.target.value)}
                       rows={2}
                       placeholder={reasons.includes('other') ? 'Explain the other reason (required)' : 'Note to the farmer (optional)'}
-                      className="mt-3 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+                      className="mt-3 w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy resize-none"
                       aria-label="Note to the farmer"
                     />
                     <div className="flex gap-3 mt-3">
@@ -158,7 +158,7 @@ export default function IdReviewPanel({ token, userId, onClose, onReviewed }: {
                       >
                         {saving ? <Loader2 size={14} className="animate-spin" /> : <XCircle size={14} />} Reject and notify farmer
                       </button>
-                      <button onClick={() => setRejecting(false)} className="text-sm text-gray-600 hover:text-gray-900">Back</button>
+                      <button onClick={() => setRejecting(false)} className="text-sm text-gray-600 hover:text-soil">Back</button>
                     </div>
                   </div>
                 ) : (

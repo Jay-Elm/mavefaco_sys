@@ -51,7 +51,7 @@ export default function DashboardProductViewPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -66,7 +66,7 @@ export default function DashboardProductViewPage() {
       {error || !product ? (
         <div className="text-red-600 text-sm">{error || 'Product not found'}</div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
           {product.suspendedAt && (
             <div className="bg-red-50 border-b border-red-200 px-5 py-4 text-sm text-red-800">
               <p className="flex items-center gap-2 font-semibold">
@@ -90,24 +90,24 @@ export default function DashboardProductViewPage() {
             </div>
             <div className="p-5">
               <div className="flex flex-wrap items-center gap-2 mb-2">
-                <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">{product.category.name}</span>
+                <span className="bg-shoot text-paddy-deep text-xs font-medium px-2 py-0.5 rounded-full">{product.category.name}</span>
                 <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
-                  product.suspendedAt ? 'bg-red-100 text-red-700' : product.approved ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                  product.suspendedAt ? 'bg-red-100 text-red-700' : product.approved ? 'bg-shoot text-paddy' : 'bg-yellow-100 text-yellow-700'
                 }`}>
                   {product.suspendedAt ? 'Suspended' : product.approved ? 'Approved' : 'Pending'}
                 </span>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
+              <h1 className="text-2xl font-bold text-soil">{product.name}</h1>
               <p className="text-gray-600 text-sm mt-2 whitespace-pre-line">{product.description || 'No description'}</p>
             </div>
           </div>
 
           <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 px-5 py-4 border-t border-gray-100 text-sm">
-            <div><dt className="text-gray-500">Price</dt><dd className="font-semibold text-green-700">₱{product.price.toFixed(2)} per {product.unit}</dd></div>
-            <div><dt className="text-gray-500">Stock</dt><dd className="text-gray-900">{product.stock} {product.unit}</dd></div>
-            <div><dt className="text-gray-500">Farmer</dt><dd className="text-gray-900">{product.farmer.name} <span className="text-gray-400">({product.farmer.email})</span></dd></div>
-            <div><dt className="text-gray-500">Listed</dt><dd className="text-gray-900">{fmtDate(product.createdAt)}</dd></div>
-            <div><dt className="text-gray-500">Last updated</dt><dd className="text-gray-900">{fmtDate(product.updatedAt)}</dd></div>
+            <div><dt className="text-gray-500">Price</dt><dd className="font-semibold text-paddy">₱{product.price.toFixed(2)} per {product.unit}</dd></div>
+            <div><dt className="text-gray-500">Stock</dt><dd className="text-soil">{product.stock} {product.unit}</dd></div>
+            <div><dt className="text-gray-500">Farmer</dt><dd className="text-soil">{product.farmer.name} <span className="text-gray-500">({product.farmer.email})</span></dd></div>
+            <div><dt className="text-gray-500">Listed</dt><dd className="text-soil">{fmtDate(product.createdAt)}</dd></div>
+            <div><dt className="text-gray-500">Last updated</dt><dd className="text-soil">{fmtDate(product.updatedAt)}</dd></div>
           </dl>
         </div>
       )}

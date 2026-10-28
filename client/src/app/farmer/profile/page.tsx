@@ -142,11 +142,11 @@ export default function FarmerProfilePage() {
   return (
     <div className="p-8 max-w-lg space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Profile</h1>
+        <h1 className="text-2xl font-bold text-soil mb-6">Profile</h1>
 
         {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
         {success && (
-          <div className="mb-4 flex items-center gap-2 text-green-700 text-sm">
+          <div className="mb-4 flex items-center gap-2 text-paddy text-sm">
             <CheckCircle size={16} />
             Name updated successfully
           </div>
@@ -155,15 +155,15 @@ export default function FarmerProfilePage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-            <input
+            <input aria-label="Name"
               value={name} onChange={(e) => setName(e.target.value)} required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-            <input
+            <input aria-label="Role"
               value={user?.role ?? ''} disabled
               className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 text-gray-500 capitalize"
             />
@@ -185,7 +185,7 @@ export default function FarmerProfilePage() {
       <div className="border-t border-gray-200 pt-8">
         <div className="flex items-center gap-2 mb-1">
           <Mail size={18} className="text-gray-600" />
-          <h2 className="text-lg font-semibold text-gray-900">Change Email</h2>
+          <h2 className="text-lg font-semibold text-soil">Change Email</h2>
         </div>
         <p className="text-sm text-gray-500 mb-4">
           Currently: <span className="font-medium text-gray-700">{user?.email}</span>. Changing your email requires your current password and will sign you out.
@@ -193,7 +193,7 @@ export default function FarmerProfilePage() {
 
         {emailError && <div className="mb-3 text-red-600 text-sm">{emailError}</div>}
         {emailSuccess && (
-          <div className="mb-3 flex items-center gap-2 text-green-700 text-sm">
+          <div className="mb-3 flex items-center gap-2 text-paddy text-sm">
             <CheckCircle size={16} /> Check {newEmail.trim().toLowerCase()} for a confirmation link. Your email won&apos;t change until you click it.
           </div>
         )}
@@ -201,22 +201,22 @@ export default function FarmerProfilePage() {
         <form onSubmit={handleEmailChange} className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">New Email</label>
-            <input
+            <input aria-label="New Email"
               type="email"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-            <input
+            <input aria-label="Current Password"
               type="password"
               value={emailPassword}
               onChange={(e) => setEmailPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
             />
           </div>
           <div className="pt-1">
@@ -240,7 +240,7 @@ export default function FarmerProfilePage() {
       <div className="border-t border-gray-200 pt-8">
         <div className="flex items-center gap-2 mb-1">
           <KeyRound size={18} className="text-gray-600" />
-          <h2 className="text-lg font-semibold text-gray-900">Change Password</h2>
+          <h2 className="text-lg font-semibold text-soil">Change Password</h2>
         </div>
         <p className="text-sm text-gray-500 mb-4">
           Leave blank if you don&apos;t want to change your password.
@@ -248,7 +248,7 @@ export default function FarmerProfilePage() {
 
         {pwError && <div className="mb-3 text-red-600 text-sm">{pwError}</div>}
         {pwSuccess && (
-          <div className="mb-3 flex items-center gap-2 text-green-700 text-sm">
+          <div className="mb-3 flex items-center gap-2 text-paddy text-sm">
             <CheckCircle size={16} /> Password changed successfully
           </div>
         )}
@@ -256,33 +256,33 @@ export default function FarmerProfilePage() {
         <form onSubmit={handleChangePassword} className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-            <input
+            <input aria-label="Current Password"
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-            <input
+            <input aria-label="New Password"
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
               minLength={12}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-            <input
+            <input aria-label="Confirm New Password"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
             />
           </div>
           <div className="pt-1">
@@ -313,7 +313,7 @@ export default function FarmerProfilePage() {
         <form onSubmit={handleDeleteAccount} className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-            <input
+            <input aria-label="Current Password"
               type="password"
               value={deletePassword}
               onChange={(e) => setDeletePassword(e.target.value)}

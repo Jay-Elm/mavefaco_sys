@@ -28,7 +28,7 @@ const MANAGER_ACTIONS: Record<string, { label: string; next: string; style: stri
     { label: 'Cancel',         next: 'cancelled', style: 'bg-red-100 text-red-700 hover:bg-red-200' },
   ],
   shipped: [
-    { label: 'Mark Delivered', next: 'delivered', style: 'bg-green-100 text-green-700 hover:bg-green-200' },
+    { label: 'Mark Delivered', next: 'delivered', style: 'bg-shoot text-paddy hover:bg-shoot' },
     { label: 'Cancel',         next: 'cancelled', style: 'bg-red-100 text-red-700 hover:bg-red-200' },
   ],
   delivered: [],
@@ -39,7 +39,7 @@ const STATUS_COLORS: Record<string, string> = {
   pending:   'bg-yellow-100 text-yellow-800',
   confirmed: 'bg-blue-100 text-blue-800',
   shipped:   'bg-purple-100 text-purple-800',
-  delivered: 'bg-green-100 text-green-800',
+  delivered: 'bg-shoot text-paddy-deep',
   cancelled: 'bg-red-100 text-red-800',
 }
 
@@ -135,7 +135,7 @@ export default function OrdersPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -146,27 +146,28 @@ export default function OrdersPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
+        <h1 className="text-2xl font-bold text-soil">Orders</h1>
         <span className="text-sm text-gray-500">{orders.length} total</span>
       </div>
 
       {/* Filters toolbar */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
-        <div className="relative flex-1 min-w-0 sm:min-w-48">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-          <input
+        <div className="relative basis-full sm:basis-0 flex-1 sm:min-w-48">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+          <input aria-label="Search by customer or order ID"
             type="text"
             placeholder="Search by customer or order ID…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy"
           />
         </div>
 
         <select
+          aria-label="Filter by status"
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 capitalize"
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy capitalize"
         >
           <option value="">All statuses</option>
           {STATUSES.map((s) => (
@@ -183,7 +184,7 @@ export default function OrdersPage() {
           </button>
         )}
 
-        <span className="ml-auto text-xs text-gray-400">
+        <span className="ml-auto text-xs text-gray-500">
           {displayed.length} of {orders.length} orders
         </span>
         <button
@@ -204,7 +205,7 @@ export default function OrdersPage() {
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
         <table className="w-full text-sm min-w-[560px]">
           <thead className="bg-gray-50 border-b border-gray-200">
@@ -240,7 +241,7 @@ export default function OrdersPage() {
           <tbody className="divide-y divide-gray-50">
             {displayed.length === 0 ? (
               <tr>
-                <td colSpan={6} className="text-center py-12 text-gray-400">
+                <td colSpan={6} className="text-center py-12 text-gray-500">
                   <ShoppingCart size={32} className="mx-auto mb-2" />
                   {orders.length === 0 ? 'No orders yet' : 'No orders match your filters'}
                 </td>
@@ -265,17 +266,17 @@ export default function OrdersPage() {
                   >
                     <td className="px-5 py-3 font-mono text-gray-500">#{order.id}</td>
                     <td className="px-5 py-3">
-                      <p className="font-medium text-gray-900">{order.customer.name}</p>
-                      <p className="text-xs text-gray-400">{order.customer.email}</p>
+                      <p className="font-medium text-soil">{order.customer.name}</p>
+                      <p className="text-xs text-gray-500">{order.customer.email}</p>
                     </td>
-                    <td className="px-5 py-3 text-right font-semibold text-green-700">
+                    <td className="px-5 py-3 text-right font-semibold text-paddy">
                       ₱{order.totalAmount.toFixed(2)}
                     </td>
                     <td className="px-5 py-3 text-center" onClick={(e) => e.stopPropagation()}>
                       {isManager ? (
                         <div className="flex items-center justify-center gap-1 flex-wrap">
                           {updatingId === order.id && (
-                            <Loader2 size={12} className="animate-spin text-gray-400" />
+                            <Loader2 size={12} className="animate-spin text-gray-500" />
                           )}
                           <span className={`text-xs font-semibold px-2 py-0.5 rounded-full capitalize ${STATUS_COLORS[order.status] ?? 'bg-gray-100 text-gray-600'}`}>
                             {order.status}
@@ -294,16 +295,17 @@ export default function OrdersPage() {
                       ) : (
                         <div className="flex items-center justify-center gap-1">
                           {updatingId === order.id && (
-                            <Loader2 size={12} className="animate-spin text-gray-400" />
+                            <Loader2 size={12} className="animate-spin text-gray-500" />
                           )}
                           <select
+                            aria-label={`Status of order #${order.id}`}
                             value={order.status}
                             onChange={(e) => handleStatusChange(order.id, e.target.value)}
                             disabled={updatingId === order.id}
                             className={`text-xs font-medium px-2 py-1 rounded-full border-0 cursor-pointer capitalize ${STATUS_COLORS[order.status] ?? 'bg-gray-100 text-gray-600'}`}
                           >
                             {STATUSES.map((s) => (
-                              <option key={s} value={s} className="bg-white text-gray-900">
+                              <option key={s} value={s} className="bg-white text-soil">
                                 {s}
                               </option>
                             ))}

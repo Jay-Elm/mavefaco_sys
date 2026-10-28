@@ -28,7 +28,7 @@ interface Supply {
 
 // One-hue sequential ramp (light = little, dark = a lot), in the portal's green.
 const RAMP = ['#e3f1e8', '#bfe0ca', '#8fc6a0', '#5ea477', '#2e6649']
-const INK_ON = ['text-gray-900', 'text-gray-900', 'text-gray-900', 'text-white', 'text-white']
+const INK_ON = ['text-soil', 'text-soil', 'text-soil', 'text-white', 'text-white']
 
 const weekLabel = (start: string) =>
   new Date(`${start}T00:00:00Z`).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', timeZone: 'UTC' })
@@ -54,7 +54,7 @@ export default function SupplyPage() {
   const step = (kg: number) => (kg <= 0 || maxKg === 0 ? -1 : Math.min(RAMP.length - 1, Math.ceil((kg / maxKg) * RAMP.length) - 1))
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64 text-gray-400">
+    <div className="flex items-center justify-center h-64 text-gray-500">
       <Loader2 size={28} className="animate-spin" />
     </div>
   )
@@ -77,10 +77,10 @@ export default function SupplyPage() {
     <div className="p-4 sm:p-8">
       <div className="flex flex-wrap items-center gap-3 mb-2">
         <CalendarRange size={22} className="text-paddy" />
-        <h1 className="text-2xl font-bold text-gray-900">Upcoming Supply</h1>
+        <h1 className="text-2xl font-bold text-soil">Upcoming Supply</h1>
         <button
           onClick={exportCsv}
-          className="ml-auto inline-flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-900 border border-gray-300 rounded-lg px-3 py-1.5"
+          className="ml-auto inline-flex items-center gap-1.5 text-xs text-gray-600 hover:text-soil border border-gray-300 rounded-lg px-3 py-1.5"
         >
           <Download size={12} /> Export CSV
         </button>
@@ -99,11 +99,11 @@ export default function SupplyPage() {
       </div>
 
       {data.crops.length === 0 ? (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm text-center py-14 text-gray-500 text-sm">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm text-center py-14 text-gray-500 text-sm">
           No harvests expected in the next {data.weeks.length} weeks. Farmers record plantings in their Crop Monitor.
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-3">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden mb-3">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[820px] text-sm border-separate border-spacing-0">
               <caption className="sr-only">Expected harvest in kilograms by crop and week</caption>
@@ -123,7 +123,7 @@ export default function SupplyPage() {
                 {data.crops.map((c) => (
                   <Fragment key={c.cropType.id}>
                     <tr>
-                      <th scope="row" className="px-4 py-1.5 text-left font-medium text-gray-900 border-b border-gray-100">
+                      <th scope="row" className="px-4 py-1.5 text-left font-medium text-soil border-b border-gray-100">
                         <button
                           onClick={() => setOpen(open === c.cropType.id ? null : c.cropType.id)}
                           aria-expanded={open === c.cropType.id}
@@ -131,7 +131,7 @@ export default function SupplyPage() {
                         >
                           {open === c.cropType.id ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                           {c.cropType.name}
-                          <span className="text-xs font-normal text-gray-400 ml-1">{c.plantings.length}</span>
+                          <span className="text-xs font-normal text-gray-500 ml-1">{c.plantings.length}</span>
                         </button>
                       </th>
                       {c.weekly.map((w, i) => {
@@ -161,8 +161,8 @@ export default function SupplyPage() {
                           </td>
                         )
                       })}
-                      <td className="px-4 py-1.5 text-right font-semibold text-gray-900 tabular-nums border-b border-gray-100">
-                        {c.totalKg > 0 ? fmtKg(c.totalKg) : <span className="font-normal text-gray-400">No estimate</span>}
+                      <td className="px-4 py-1.5 text-right font-semibold text-soil tabular-nums border-b border-gray-100">
+                        {c.totalKg > 0 ? fmtKg(c.totalKg) : <span className="font-normal text-gray-500">No estimate</span>}
                       </td>
                     </tr>
                     {open === c.cropType.id && (
@@ -195,8 +195,8 @@ export default function SupplyPage() {
       )}
 
       {clashes.length > 0 && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8 text-sm">
-          <p className="font-semibold text-gray-900 flex items-center gap-2 mb-1">
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-8 text-sm">
+          <p className="font-semibold text-soil flex items-center gap-2 mb-1">
             <AlertTriangle size={15} className="text-amber-600" /> Possible oversupply
           </p>
           <ul className="text-gray-700 space-y-0.5">
@@ -214,7 +214,7 @@ export default function SupplyPage() {
         <section>
           <h2 className="text-sm font-semibold text-gray-700 mb-1">Harvest window passed, not yet recorded</h2>
           <p className="text-xs text-gray-500 mb-3">Not counted above. The farmer may have harvested without recording it, or the crop may be late.</p>
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+          <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
             <PlantingTable plantings={data.overdue} showCrop />
           </div>
         </section>
@@ -238,13 +238,13 @@ export default function SupplyPage() {
 
 function Tile({ label, value, note, warn }: { label: string; value: string; note?: string; warn?: boolean }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
       <p className="text-xs text-gray-500">{label}</p>
-      <p className="text-2xl font-bold text-gray-900 mt-1 tabular-nums flex items-center gap-2">
+      <p className="text-2xl font-bold text-soil mt-1 tabular-nums flex items-center gap-2">
         {value}
         {warn && <AlertTriangle size={16} className="text-amber-600" aria-label="Needs follow-up" />}
       </p>
-      {note && <p className="text-[11px] text-gray-400 mt-0.5">{note}</p>}
+      {note && <p className="text-[11px] text-gray-500 mt-0.5">{note}</p>}
     </div>
   )
 }
@@ -266,7 +266,7 @@ function PlantingTable({ plantings, showCrop = false }: { plantings: SupplyPlant
         <tbody className="divide-y divide-gray-200/70">
           {plantings.map((p) => (
             <tr key={p.id} className="text-gray-700">
-              <td className="py-1.5 pr-3 font-medium text-gray-900">{p.farmer.name}</td>
+              <td className="py-1.5 pr-3 font-medium text-soil">{p.farmer.name}</td>
               {showCrop && <td className="py-1.5 pr-3">{p.cropType.name}</td>}
               <td className="py-1.5 pr-3">{fmtDate(p.plantedOn)}</td>
               <td className="py-1.5 pr-3">{fmtWindow(p.harvestStart, p.harvestEnd)}</td>

@@ -125,7 +125,7 @@ export default function CategoriesPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -134,22 +134,22 @@ export default function CategoriesPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Categories</h1>
+        <h1 className="text-2xl font-bold text-soil">Categories</h1>
         <span className="text-sm text-gray-500">{categories.length} total</span>
       </div>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
       {/* Add category */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-6">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 mb-6">
         <h2 className="text-sm font-semibold text-gray-700 mb-3">Add New Category</h2>
         <form onSubmit={handleAdd} className="flex gap-2">
-          <input
+          <input aria-label="Category name"
             ref={inputRef}
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             placeholder="Category name"
-            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
           />
           <button
             type="submit"
@@ -170,13 +170,13 @@ export default function CategoriesPage() {
       {/* Search */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <div className="relative flex-1 min-w-48 max-w-sm">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-          <input
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+          <input aria-label="Search categories"
             type="text"
             placeholder="Search categories…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy"
           />
         </div>
 
@@ -189,7 +189,7 @@ export default function CategoriesPage() {
           </button>
         )}
 
-        <span className="ml-auto text-xs text-gray-400">
+        <span className="ml-auto text-xs text-gray-500">
           {displayed.length} of {categories.length} categories
         </span>
         <button
@@ -208,7 +208,7 @@ export default function CategoriesPage() {
       </div>
 
       {/* Category list */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
         <table className="w-full min-w-[400px] text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
@@ -237,7 +237,7 @@ export default function CategoriesPage() {
           <tbody className="divide-y divide-gray-50">
             {displayed.length === 0 ? (
               <tr>
-                <td colSpan={4} className="text-center py-12 text-gray-400">
+                <td colSpan={4} className="text-center py-12 text-gray-500">
                   <Tag size={32} className="mx-auto mb-2" />
                   {categories.length === 0 ? 'No categories yet' : 'No categories match your search'}
                 </td>
@@ -245,7 +245,7 @@ export default function CategoriesPage() {
             ) : (
               displayed.map((cat) => (
                 <tr key={cat.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-5 py-3 font-medium text-gray-900">{cat.name}</td>
+                  <td className="px-5 py-3 font-medium text-soil">{cat.name}</td>
                   <td className="px-5 py-3 text-center text-gray-600">{cat._count.products}</td>
                   <td className="px-5 py-3 text-gray-500">
                     {new Date(cat.createdAt).toLocaleDateString('en-PH')}

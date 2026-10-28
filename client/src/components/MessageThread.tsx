@@ -117,7 +117,7 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
   }
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64 text-gray-400">
+    <div className="flex items-center justify-center h-64 text-gray-500">
       <Loader2 size={24} className="animate-spin" />
     </div>
   )
@@ -126,13 +126,13 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
     <div className="flex flex-col h-full min-h-0">
       {/* Header */}
       <div className="px-5 py-3 border-b border-gray-200 bg-white">
-        <p className="font-semibold text-gray-900 text-sm">{otherName}</p>
+        <p className="font-semibold text-soil text-sm">{otherName}</p>
       </div>
 
       {/* Messages */}
       <div ref={scrollRef} className="relative flex-1 min-h-0 overflow-y-auto px-5 py-4 space-y-3 bg-gray-50">
         {messages.length === 0 ? (
-          <p className="text-center text-sm text-gray-400 py-8">No messages yet. Say hello!</p>
+          <p className="text-center text-sm text-gray-500 py-8">No messages yet. Say hello!</p>
         ) : (
           messages.map((m) => {
             const isMe = m.sender.id === user?.id
@@ -152,7 +152,7 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
                       : 'bg-white border border-gray-200 text-gray-800 rounded-bl-sm'
                   }`}>
                     <p>{m.content}</p>
-                    <p className={`text-xs mt-1 ${isMe ? 'text-shoot' : 'text-gray-400'}`}>
+                    <p className={`text-xs mt-1 ${isMe ? 'text-shoot' : 'text-gray-500'}`}>
                       {new Date(m.createdAt).toLocaleTimeString('en-PH', { timeStyle: 'short' })}
                     </p>
                   </div>
@@ -169,7 +169,7 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
 
       {/* Input */}
       <form onSubmit={handleSend} className="px-4 py-3 border-t border-gray-200 bg-white flex gap-2">
-        <input
+        <input aria-label="Type a message"
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Type a message…"

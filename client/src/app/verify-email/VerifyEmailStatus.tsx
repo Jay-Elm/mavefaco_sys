@@ -46,16 +46,16 @@ export default function VerifyEmailStatus() {
   }, [])
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 text-center space-y-3">
+    <div className="bg-white rounded-card shadow-sm border border-gray-200 p-6 text-center space-y-3">
       {status === 'verifying' && (
         <>
-          <Loader2 size={32} className="mx-auto text-green-600 animate-spin" />
+          <Loader2 size={32} className="mx-auto text-paddy animate-spin" />
           <p className="text-sm text-gray-600">Verifying your email…</p>
         </>
       )}
       {status === 'success' && (
         <>
-          <CheckCircle size={32} className="mx-auto text-green-600" />
+          <CheckCircle size={32} className="mx-auto text-paddy" />
           <p className="text-sm text-gray-700">{message}</p>
           <Link href="/login" className="inline-block text-sm text-paddy font-medium hover:underline">
             Sign in

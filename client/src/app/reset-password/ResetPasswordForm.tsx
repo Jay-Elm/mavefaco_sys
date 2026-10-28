@@ -56,7 +56,7 @@ export default function ResetPasswordForm() {
 
   if (!token) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 text-center space-y-3">
+      <div className="bg-white rounded-card shadow-sm border border-gray-200 p-6 text-center space-y-3">
         <p className="text-sm text-red-600">This reset link is missing its token.</p>
         <Link href="/forgot-password" className="text-sm text-paddy font-medium hover:underline">
           Request a new link
@@ -67,15 +67,15 @@ export default function ResetPasswordForm() {
 
   if (success) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 text-center space-y-3">
-        <CheckCircle size={32} className="mx-auto text-green-600" />
+      <div className="bg-white rounded-card shadow-sm border border-gray-200 p-6 text-center space-y-3">
+        <CheckCircle size={32} className="mx-auto text-paddy" />
         <p className="text-sm text-gray-700">Password reset successfully. Redirecting you to sign in…</p>
       </div>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-card shadow-sm border border-gray-200 p-6 space-y-4">
       {serverError && (
         <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-lg border border-red-200">
           {serverError}
@@ -91,7 +91,7 @@ export default function ResetPasswordForm() {
           type="password"
           autoComplete="new-password"
           {...register('newPassword')}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy focus:border-transparent"
           placeholder="••••••••••••"
         />
         {errors.newPassword && (
@@ -108,7 +108,7 @@ export default function ResetPasswordForm() {
           type="password"
           autoComplete="new-password"
           {...register('confirmPassword')}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy focus:border-transparent"
           placeholder="••••••••••••"
         />
         {errors.confirmPassword && (

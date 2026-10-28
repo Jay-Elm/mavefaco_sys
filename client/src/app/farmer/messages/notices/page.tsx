@@ -46,7 +46,7 @@ export default function FarmerNoticesPage() {
   }, [token])
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64 text-gray-400">
+    <div className="flex items-center justify-center h-64 text-gray-500">
       <Loader2 size={28} className="animate-spin" />
     </div>
   )
@@ -58,25 +58,25 @@ export default function FarmerNoticesPage() {
       </Link>
       <div className="flex items-center gap-3 mb-6">
         <Bell size={22} className="text-paddy" />
-        <h1 className="text-2xl font-bold text-gray-900">MaVeFaCo notices</h1>
+        <h1 className="text-2xl font-bold text-soil">MaVeFaCo notices</h1>
       </div>
 
       {notices.length === 0 ? (
-        <p className="text-center py-16 text-gray-400">No notices.</p>
+        <p className="text-center py-16 text-gray-500">No notices.</p>
       ) : (
         <div className="space-y-4">
           {notices.map((n) => (
-            <div key={n.id} className={`bg-white rounded-xl border shadow-sm p-5 ${n.read ? 'border-gray-200' : 'border-red-300'}`}>
+            <div key={n.id} className={`bg-white rounded-lg border shadow-sm p-5 ${n.read ? 'border-gray-200' : 'border-red-300'}`}>
               <div className="flex items-start justify-between gap-3">
-                <p className="font-semibold text-gray-900 text-sm">{n.title}</p>
-                <p className="text-xs text-gray-400 shrink-0">
+                <p className="font-semibold text-soil text-sm">{n.title}</p>
+                <p className="text-xs text-gray-500 shrink-0">
                   {new Date(n.createdAt).toLocaleString('en-PH', { dateStyle: 'medium', timeStyle: 'short' })}
                 </p>
               </div>
               <p className="text-sm text-gray-700 mt-2 whitespace-pre-line">{n.body}</p>
               {/* Resolved notices show what happened instead of an action. */}
               {n.resolution === 'resubmitted' && n.resolvedAt ? (
-                <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-green-700 bg-green-50 px-3 py-1.5 rounded-lg">
+                <p className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-paddy bg-shoot/40 px-3 py-1.5 rounded-lg">
                   <CheckCircle size={14} />
                   Resubmitted on {fmtDate(n.resolvedAt)}: {afterResubmit(n.product)}
                 </p>
@@ -94,7 +94,7 @@ export default function FarmerNoticesPage() {
                   Edit or delete this listing
                 </Link>
               ) : (
-                <p className="mt-3 text-xs text-gray-400">This listing has since been removed.</p>
+                <p className="mt-3 text-xs text-gray-500">This listing has since been removed.</p>
               )}
             </div>
           ))}

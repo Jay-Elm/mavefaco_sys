@@ -197,7 +197,7 @@ export default function DashboardProductsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -210,7 +210,7 @@ export default function DashboardProductsPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-y-3 mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Products</h1>
+        <h1 className="text-2xl font-bold text-soil">Products</h1>
         <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
           {pending > 0 && (
             <span className="bg-yellow-100 text-yellow-800 font-semibold px-2.5 py-1 rounded-full">
@@ -229,29 +229,31 @@ export default function DashboardProductsPage() {
       {/* Filters toolbar */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
         <div className="relative flex-1 min-w-48">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-          <input
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+          <input aria-label="Search by product or farmer"
             type="text"
             placeholder="Search by product or farmer…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy"
           />
         </div>
 
         <select
+          aria-label="Filter by category"
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
-          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy"
         >
           <option value="">All categories</option>
           {categories.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
 
         <select
+          aria-label="Filter by status"
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value as StatusFilter)}
-          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy"
         >
           <option value="all">All statuses</option>
           <option value="approved">Approved</option>
@@ -269,7 +271,7 @@ export default function DashboardProductsPage() {
           </button>
         )}
 
-        <span className="ml-auto text-xs text-gray-400">
+        <span className="ml-auto text-xs text-gray-500">
           {displayed.length} of {source.length} {showingArchived ? 'archived ' : ''}products
         </span>
         <button
@@ -291,7 +293,7 @@ export default function DashboardProductsPage() {
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
         <table className="w-full min-w-[780px] text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
@@ -329,7 +331,7 @@ export default function DashboardProductsPage() {
           <tbody className="divide-y divide-gray-50">
             {displayed.length === 0 ? (
               <tr>
-                <td colSpan={8} className="text-center py-12 text-gray-400">
+                <td colSpan={8} className="text-center py-12 text-gray-500">
                   <Package size={32} className="mx-auto mb-2" />
                   {showingArchived && archivedProducts === null
                     ? 'Loading archived products…'
@@ -343,18 +345,18 @@ export default function DashboardProductsPage() {
                 <React.Fragment key={p.id}>
                   <tr className="hover:bg-gray-50 transition-colors">
                     <td className="px-5 py-3">
-                      <p className="font-medium text-gray-900">{p.name}</p>
-                      <p className="text-xs text-gray-400">
+                      <p className="font-medium text-soil">{p.name}</p>
+                      <p className="text-xs text-gray-500">
                         {new Date(p.createdAt).toLocaleDateString('en-PH')}
                       </p>
                     </td>
                     <td className="px-5 py-3">
-                      <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full">
+                      <span className="bg-shoot text-paddy-deep text-xs font-medium px-2 py-0.5 rounded-full">
                         {p.category.name}
                       </span>
                     </td>
                     <td className="px-5 py-3 text-gray-600">{p.farmer.name}</td>
-                    <td className="px-5 py-3 text-right font-semibold text-green-700">
+                    <td className="px-5 py-3 text-right font-semibold text-paddy">
                       ₱{p.price.toFixed(2)}
                     </td>
                     <td className="px-5 py-3 text-center">
@@ -382,7 +384,7 @@ export default function DashboardProductsPage() {
                           <span className="font-normal">until {fmtDate(suspensionDeadline(p.suspendedAt))}</span>
                         </span>
                       ) : p.approved ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-paddy bg-shoot px-2 py-0.5 rounded-full">
                           <CheckCircle size={11} /> Approved
                         </span>
                       ) : (
@@ -394,13 +396,13 @@ export default function DashboardProductsPage() {
                     <td className="px-5 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
                         {actingId === p.id && (
-                          <Loader2 size={14} className="animate-spin text-gray-400" />
+                          <Loader2 size={14} className="animate-spin text-gray-500" />
                         )}
                         {p.archivedAt ? (
                           <button
                             onClick={() => handleRestore(p.id)}
                             disabled={actingId === p.id}
-                            title={p.approved ? 'Restore — goes straight back into the shop' : 'Restore — returns to pending review'}
+                            title={p.approved ? 'Restore — goes straight back into the shop' : 'Restore — returns to pending review'} aria-label={p.approved ? 'Restore — goes straight back into the shop' : 'Restore — returns to pending review'}
                             className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-field text-paddy hover:bg-paddy/10 transition-colors disabled:opacity-40"
                           >
                             <ArchiveRestore size={12} />
@@ -411,7 +413,7 @@ export default function DashboardProductsPage() {
                           <button
                             onClick={() => handleApprove(p.id)}
                             disabled={actingId === p.id}
-                            className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition-colors disabled:opacity-40"
+                            className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-shoot text-paddy hover:bg-shoot transition-colors disabled:opacity-40"
                           >
                             <CheckCircle size={12} />
                             Approve

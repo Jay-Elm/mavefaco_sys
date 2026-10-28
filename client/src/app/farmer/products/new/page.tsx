@@ -92,25 +92,25 @@ export default function NewProductPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-xl">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Add Product</h1>
+      <h1 className="text-2xl font-bold text-soil mb-6">Add Product</h1>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-          <input
+          <input aria-label="Name"
             name="name" value={form.name} onChange={handleChange} required
             placeholder="e.g. Pechay, Sweet Potato, Bangus"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description <span className="text-gray-400">(optional)</span></label>
-          <textarea
+          <label className="block text-sm font-medium text-gray-700 mb-1">Description <span className="text-gray-500">(optional)</span></label>
+          <textarea aria-label="Description"
             name="description" value={form.description} onChange={handleChange} rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy resize-none"
           />
         </div>
 
@@ -120,9 +120,9 @@ export default function NewProductPage() {
             {showUnitSuggestion && (
               <SuggestionBanner label={unitSuggestion!} onApply={applyUnitSuggestion} onDismiss={() => { setUnitSuggestion(null); setUnitSuggestionDismissed(true) }} />
             )}
-            <select
+            <select aria-label="Unit"
               name="unit" value={form.unit} onChange={handleChange} required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy bg-white"
             >
               <option value="piece">piece</option>
               <option value="kg">kg</option>
@@ -139,18 +139,18 @@ export default function NewProductPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Price per {form.unit || 'unit'} (₱)</label>
-            <input
+            <input aria-label="Price per unit (₱)"
               name="price" type="number" min="0" step="0.01" value={form.price} onChange={handleChange} required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
             />
           </div>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Stock (in {form.unit || 'units'})</label>
-          <input
+          <input aria-label="Stock"
             name="stock" type="number" min="0" step="0.01" value={form.stock} onChange={handleChange} required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
           />
         </div>
 
@@ -159,9 +159,9 @@ export default function NewProductPage() {
           {showSuggestion && (
             <SuggestionBanner label={suggestion!.name} onApply={applySuggestion} onDismiss={() => { setSuggestion(null); setSuggestionDismissed(true) }} />
           )}
-          <select
+          <select aria-label="Category"
             name="categoryId" value={form.categoryId} onChange={handleChange} required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
           >
             <option value="">Select a category</option>
             {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -169,7 +169,7 @@ export default function NewProductPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Product Photo <span className="text-gray-400">(optional)</span></label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Product Photo <span className="text-gray-500">(optional)</span></label>
           <ImageUploader value={form.imageUrl} onChange={(url) => setForm(prev => ({ ...prev, imageUrl: url }))} token={token} />
         </div>
 

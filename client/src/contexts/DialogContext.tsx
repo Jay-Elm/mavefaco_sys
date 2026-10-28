@@ -78,15 +78,15 @@ function DialogBox({ dialog, onClose }: { dialog: OpenDialog; onClose: (ok: bool
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center px-4" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={() => onClose(false)} />
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-4">
+      <div className="relative bg-white rounded-card shadow-xl w-full max-w-sm p-6 space-y-4">
         <div className="flex items-start justify-between gap-3">
-          <h3 id="dialog-title" className="font-bold text-gray-900 flex items-center gap-2">
+          <h3 id="dialog-title" className="font-bold text-soil flex items-center gap-2">
             {danger
               ? <AlertTriangle size={18} className="text-red-600 shrink-0" />
               : <Info size={18} className="text-paddy shrink-0" />}
             {dialog.title}
           </h3>
-          <button onClick={() => onClose(false)} className="text-gray-400 hover:text-gray-600" aria-label="Close">
+          <button onClick={() => onClose(false)} className="text-gray-500 hover:text-gray-600" aria-label="Close">
             <X size={18} />
           </button>
         </div>
@@ -97,7 +97,7 @@ function DialogBox({ dialog, onClose }: { dialog: OpenDialog; onClose: (ok: bool
           <button
             ref={confirmRef}
             onClick={() => onClose(true)}
-            className={`flex-1 inline-flex items-center justify-center font-semibold py-2.5 rounded-xl text-sm text-white transition-colors ${
+            className={`flex-1 inline-flex items-center justify-center font-semibold py-2.5 rounded-lg text-sm text-white transition-colors ${
               danger ? 'bg-red-600 hover:bg-red-700' : 'bg-paddy hover:bg-paddy-deep'
             }`}
           >
@@ -107,7 +107,7 @@ function DialogBox({ dialog, onClose }: { dialog: OpenDialog; onClose: (ok: bool
             <button
               ref={cancelRef}
               onClick={() => onClose(false)}
-              className="flex-1 border border-gray-300 text-gray-600 hover:border-gray-400 font-medium py-2.5 rounded-xl text-sm transition-colors"
+              className="flex-1 border border-gray-300 text-gray-600 hover:border-gray-400 font-medium py-2.5 rounded-lg text-sm transition-colors"
             >
               {dialog.cancelLabel ?? 'Cancel'}
             </button>

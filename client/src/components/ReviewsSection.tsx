@@ -104,7 +104,7 @@ export default function ReviewsSection({ productId }: { productId: number }) {
 
       {/* Reviews list */}
       {loading ? (
-        <div className="flex justify-center py-8 text-gray-400">
+        <div className="flex justify-center py-8 text-gray-500">
           <Loader2 size={22} className="animate-spin" />
         </div>
       ) : reviews.length === 0 ? (
@@ -135,8 +135,8 @@ export default function ReviewsSection({ productId }: { productId: number }) {
                   <button
                     onClick={() => handleDelete(r)}
                     disabled={deletingId === r.id}
-                    className="shrink-0 p-1.5 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-40"
-                    title="Delete review"
+                    className="shrink-0 p-1.5 text-gray-500 hover:text-red-500 transition-colors disabled:opacity-40"
+                    title="Delete review" aria-label="Delete review"
                   >
                     {deletingId === r.id
                       ? <Loader2 size={14} className="animate-spin" />

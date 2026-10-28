@@ -15,10 +15,10 @@ export default function CustomerConversationPage() {
     // Fills the screen below the 4rem navbar, so only the message list scrolls.
     <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col h-[calc(100vh-4rem)]">
       <div className="flex items-center gap-3 mb-4">
-        <Link href="/customer/messages" className="text-gray-400 hover:text-gray-600">
+        <Link href="/customer/messages" className="text-gray-500 hover:text-gray-600">
           <ArrowLeft size={18} />
         </Link>
-        <h1 className="font-semibold text-gray-900">{otherName}</h1>
+        <h1 className="font-semibold text-soil">{otherName}</h1>
       </div>
       <div className="flex-1 min-h-0 border border-gray-200 rounded-lg overflow-hidden shadow-sm">
         <MessageThread otherId={otherId} otherName={otherName} onOtherName={setOtherName} />

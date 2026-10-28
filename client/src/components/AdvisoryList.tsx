@@ -28,14 +28,14 @@ export default function AdvisoryList({ groups }: { groups: AdvisoryGroup[] }) {
             >
               <Icon size={15} className={`shrink-0 mt-0.5 ${info.cls}`} />
               <span className="flex-1 min-w-0">
-                <span className="text-sm font-medium text-gray-900">{title} on {g.cropType}</span>
+                <span className="text-sm font-medium text-soil">{title} on {g.cropType}</span>
                 <span className="block text-xs text-gray-500 mt-0.5">
                   {g.farms} {g.farms === 1 ? 'farm' : 'farms'} · {g.reports} {g.reports === 1 ? 'report' : 'reports'}
                   {g.high > 0 && <span className="text-red-600 font-medium"> · {g.high} high severity</span>}
                   {' '}· latest {fmtDate(g.latest)}
                 </span>
               </span>
-              {isOpen ? <ChevronDown size={15} className="shrink-0 text-gray-400 mt-0.5" /> : <ChevronRight size={15} className="shrink-0 text-gray-400 mt-0.5" />}
+              {isOpen ? <ChevronDown size={15} className="shrink-0 text-gray-500 mt-0.5" /> : <ChevronRight size={15} className="shrink-0 text-gray-500 mt-0.5" />}
             </button>
             {isOpen && (
               <ul className="ml-7 mb-3 space-y-2">
@@ -45,12 +45,12 @@ export default function AdvisoryList({ groups }: { groups: AdvisoryGroup[] }) {
                     <li key={n.id} className="text-sm text-gray-700">
                       {sev && <span className={`mr-1.5 px-1.5 py-px rounded text-[10px] font-semibold ${sev.cls}`}>{sev.label}</span>}
                       {n.note}
-                      <span className="text-xs text-gray-400 ml-2">{fmtDate(n.observedOn)}</span>
+                      <span className="text-xs text-gray-500 ml-2">{fmtDate(n.observedOn)}</span>
                     </li>
                   )
                 })}
                 {g.reports > g.notes.length && (
-                  <li className="text-xs text-gray-400">and {g.reports - g.notes.length} earlier {g.reports - g.notes.length === 1 ? 'report' : 'reports'}</li>
+                  <li className="text-xs text-gray-500">and {g.reports - g.notes.length} earlier {g.reports - g.notes.length === 1 ? 'report' : 'reports'}</li>
                 )}
               </ul>
             )}

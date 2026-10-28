@@ -29,7 +29,7 @@ export default function CustomerMessagesPage() {
   }, [authLoading, isAuthenticated, token, router])
 
   if (authLoading || fetching) return (
-    <div className="flex items-center justify-center py-20 text-gray-400">
+    <div className="flex items-center justify-center py-20 text-gray-500">
       <Loader2 size={28} className="animate-spin" />
     </div>
   )
@@ -42,7 +42,7 @@ export default function CustomerMessagesPage() {
       </div>
 
       {convs.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-gray-500">
           <MessageCircle size={40} className="mx-auto mb-3" />
           <p>No messages yet.</p>
           <Link href="/products" className="mt-3 inline-block text-paddy text-sm font-medium hover:underline">
@@ -62,8 +62,8 @@ export default function CustomerMessagesPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="font-medium text-gray-900 text-sm">{c.user.name}</p>
-                  <span className="text-xs text-gray-400 capitalize">{c.user.role}</span>
+                  <p className="font-medium text-soil text-sm">{c.user.name}</p>
+                  <span className="text-xs text-gray-500 capitalize">{c.user.role}</span>
                   {c.unread > 0 && (
                     <span className="ml-auto bg-paddy text-white text-xs font-bold px-2 py-0.5 rounded-full">
                       {c.unread}
@@ -72,7 +72,7 @@ export default function CustomerMessagesPage() {
                 </div>
                 <p className="text-xs text-gray-500 truncate mt-0.5">{c.lastMessage}</p>
               </div>
-              <p className="text-xs text-gray-400 shrink-0">
+              <p className="text-xs text-gray-500 shrink-0">
                 {new Date(c.lastAt).toLocaleDateString('en-PH', { dateStyle: 'short' })}
               </p>
             </Link>

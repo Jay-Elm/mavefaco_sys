@@ -23,7 +23,7 @@ export default function AdvisoryPage() {
   }, [token])
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64 text-gray-400">
+    <div className="flex items-center justify-center h-64 text-gray-500">
       <Loader2 size={28} className="animate-spin" />
     </div>
   )
@@ -35,7 +35,7 @@ export default function AdvisoryPage() {
       </Link>
       <div className="flex items-center gap-3 mb-2">
         <Bug size={20} className="text-red-500" />
-        <h1 className="text-2xl font-bold text-gray-900">Community Advisory</h1>
+        <h1 className="text-2xl font-bold text-soil">Community Advisory</h1>
       </div>
       <p className="text-sm text-gray-500 mb-6">
         Pest, weather and damage reports from members over the last 30 days, grouped by crop and problem.
@@ -44,7 +44,7 @@ export default function AdvisoryPage() {
 
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm px-5 py-2">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm px-5 py-2">
         {groups.length === 0 && !error
           ? <p className="text-sm text-gray-500 py-6 text-center">No reports from members in the last 30 days.</p>
           : <AdvisoryList groups={groups} />}

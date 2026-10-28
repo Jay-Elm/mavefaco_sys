@@ -41,14 +41,14 @@ export interface CropLog {
 
 export const STAGE_STYLES: Record<string, { label: string; cls: string }> = {
   seedling:        { label: 'Seedling',      cls: 'bg-lime-100 text-lime-700' },
-  vegetative:      { label: 'Vegetative',    cls: 'bg-green-100 text-green-700' },
+  vegetative:      { label: 'Vegetative',    cls: 'bg-shoot text-paddy' },
   flowering:       { label: 'Flowering',     cls: 'bg-pink-100 text-pink-700' },
   fruiting:        { label: 'Fruiting',      cls: 'bg-orange-100 text-orange-700' },
   'harvest-ready': { label: 'Harvest ready', cls: 'bg-amber-100 text-amber-800' },
 }
 
 export const STATUS_STYLES: Record<string, { label: string; cls: string }> = {
-  growing:   { label: 'Growing',   cls: 'bg-green-100 text-green-700' },
+  growing:   { label: 'Growing',   cls: 'bg-shoot text-paddy' },
   harvested: { label: 'Harvested', cls: 'bg-gray-100 text-gray-700' },
   failed:    { label: 'Failed',    cls: 'bg-red-100 text-red-700' },
 }
@@ -83,4 +83,4 @@ export const fmtKg = (n: number | null) =>
   n === null ? '—' : `${n.toLocaleString('en-PH', { maximumFractionDigits: 1 })} kg`
 
 export const INPUT =
-  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500'
+  'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy'

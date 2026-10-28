@@ -20,7 +20,7 @@ const STATUS_COLORS: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-800',
   confirmed: 'bg-blue-100 text-blue-800',
   shipped: 'bg-purple-100 text-purple-800',
-  delivered: 'bg-green-100 text-green-800',
+  delivered: 'bg-shoot text-paddy-deep',
   cancelled: 'bg-red-100 text-red-600',
 }
 
@@ -35,7 +35,7 @@ const ACTIONS: Record<string, { label: string; next: string; style: string }[]> 
     { label: 'Cancel', next: 'cancelled', style: 'bg-red-100 text-red-700 hover:bg-red-200' },
   ],
   shipped: [
-    { label: 'Mark Delivered', next: 'delivered', style: 'bg-green-100 text-green-700 hover:bg-green-200' },
+    { label: 'Mark Delivered', next: 'delivered', style: 'bg-shoot text-paddy hover:bg-shoot' },
   ],
   delivered: [],
   cancelled: [],
@@ -87,7 +87,7 @@ export default function FarmerOrdersPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -96,7 +96,7 @@ export default function FarmerOrdersPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
+        <h1 className="text-2xl font-bold text-soil">Orders</h1>
         <div className="flex items-center gap-3">
           <span className="text-sm text-gray-500">{orders.length} total</span>
           <button
@@ -119,7 +119,7 @@ export default function FarmerOrdersPage() {
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
@@ -136,7 +136,7 @@ export default function FarmerOrdersPage() {
           <tbody className="divide-y divide-gray-50">
             {orders.length === 0 ? (
               <tr>
-                <td colSpan={7} className="text-center py-12 text-gray-400">
+                <td colSpan={7} className="text-center py-12 text-gray-500">
                   <ShoppingCart size={32} className="mx-auto mb-2" />
                   No orders yet
                 </td>
@@ -161,10 +161,10 @@ export default function FarmerOrdersPage() {
                   >
                     <td className="px-5 py-3 font-mono text-gray-500">#{order.id}</td>
                     <td className="px-5 py-3">
-                      <p className="font-medium text-gray-900">{order.customer.name}</p>
-                      <p className="text-xs text-gray-400">{order.customer.email}</p>
+                      <p className="font-medium text-soil">{order.customer.name}</p>
+                      <p className="text-xs text-gray-500">{order.customer.email}</p>
                     </td>
-                    <td className="px-5 py-3 text-right font-semibold text-green-700">
+                    <td className="px-5 py-3 text-right font-semibold text-paddy">
                       ₱{order.totalAmount.toFixed(2)}
                     </td>
                     <td className="px-5 py-3 text-center">
@@ -175,7 +175,7 @@ export default function FarmerOrdersPage() {
                     <td className="px-5 py-3" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-1.5">
                         {updatingId === order.id && (
-                          <Loader2 size={12} className="animate-spin text-gray-400" />
+                          <Loader2 size={12} className="animate-spin text-gray-500" />
                         )}
                         {(ACTIONS[order.status] ?? []).map((action) => (
                           <button
@@ -188,7 +188,7 @@ export default function FarmerOrdersPage() {
                           </button>
                         ))}
                         {(ACTIONS[order.status] ?? []).length === 0 && (
-                          <span className="text-xs text-gray-400 italic">—</span>
+                          <span className="text-xs text-gray-500 italic">—</span>
                         )}
                       </div>
                     </td>

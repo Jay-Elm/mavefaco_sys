@@ -153,7 +153,7 @@ export default function CustomerProfilePage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20 text-gray-400">
+      <div className="flex items-center justify-center py-20 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -188,7 +188,7 @@ export default function CustomerProfilePage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-            <input
+            <input aria-label="Name"
               value={name}
               onChange={e => setName(e.target.value)}
               required
@@ -198,7 +198,7 @@ export default function CustomerProfilePage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-            <input
+            <input aria-label="Role"
               value="Customer"
               disabled
               className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-gray-50 text-gray-500"
@@ -222,7 +222,7 @@ export default function CustomerProfilePage() {
       <div className="mt-6">
         <div className="flex items-center gap-2 mb-3">
           <Mail size={18} className="text-gray-500" />
-          <h2 className="text-lg font-semibold text-gray-900">Change Email</h2>
+          <h2 className="text-lg font-semibold text-soil">Change Email</h2>
         </div>
         <p className="text-sm text-gray-500 mb-3">
           Currently: <span className="font-medium text-gray-700">{user?.email}</span>. Changing your email requires your current password and will sign you out.
@@ -244,7 +244,7 @@ export default function CustomerProfilePage() {
           <form onSubmit={handleEmailChange} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">New Email</label>
-              <input
+              <input aria-label="New Email"
                 type="email"
                 value={newEmail}
                 onChange={e => setNewEmail(e.target.value)}
@@ -254,7 +254,7 @@ export default function CustomerProfilePage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-              <input
+              <input aria-label="Current Password"
                 type="password"
                 value={emailPassword}
                 onChange={e => setEmailPassword(e.target.value)}
@@ -280,7 +280,7 @@ export default function CustomerProfilePage() {
       <div className="mt-6">
         <div className="flex items-center gap-2 mb-3">
           <KeyRound size={18} className="text-gray-500" />
-          <h2 className="text-lg font-semibold text-gray-900">Change Password</h2>
+          <h2 className="text-lg font-semibold text-soil">Change Password</h2>
         </div>
 
         {pwError && (
@@ -299,7 +299,7 @@ export default function CustomerProfilePage() {
           <form onSubmit={handlePasswordChange} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-              <input
+              <input aria-label="Current Password"
                 type="password"
                 value={currentPassword}
                 onChange={e => setCurrentPassword(e.target.value)}
@@ -309,7 +309,7 @@ export default function CustomerProfilePage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-              <input
+              <input aria-label="New Password"
                 type="password"
                 value={newPassword}
                 onChange={e => setNewPassword(e.target.value)}
@@ -320,7 +320,7 @@ export default function CustomerProfilePage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-              <input
+              <input aria-label="Confirm New Password"
                 type="password"
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
@@ -362,7 +362,7 @@ export default function CustomerProfilePage() {
           <form onSubmit={handleDeleteAccount} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-              <input
+              <input aria-label="Current Password"
                 type="password"
                 value={deletePassword}
                 onChange={e => setDeletePassword(e.target.value)}

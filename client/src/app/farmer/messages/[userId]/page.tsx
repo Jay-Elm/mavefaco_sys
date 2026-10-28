@@ -14,10 +14,10 @@ export default function FarmerConversationPage() {
   return (
     <div className="flex flex-col h-full">
       <div className="px-8 py-4 border-b border-gray-200 flex items-center gap-3">
-        <Link href="/farmer/messages" className="text-gray-400 hover:text-gray-600">
+        <Link href="/farmer/messages" className="text-gray-500 hover:text-gray-600">
           <ArrowLeft size={18} />
         </Link>
-        <h1 className="font-semibold text-gray-900">Conversation</h1>
+        <h1 className="font-semibold text-soil">Conversation</h1>
       </div>
       <div className="flex-1 min-h-0 overflow-hidden">
         <MessageThread otherId={otherId} otherName={otherName} onOtherName={setOtherName} />

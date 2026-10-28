@@ -87,10 +87,10 @@ export default function MfaGate({ mode, onComplete }: Props) {
   // Step 3 (setup only): show the one-time backup codes before finishing login.
   if (backupCodes && pendingUser) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">
-        <div className="flex items-center gap-2 text-green-700">
+      <div className="bg-white rounded-card shadow-sm border border-gray-200 p-6 space-y-4">
+        <div className="flex items-center gap-2 text-paddy">
           <ShieldCheck size={20} />
-          <h2 className="font-bold text-gray-900">Two-factor authentication enabled</h2>
+          <h2 className="font-bold text-soil">Two-factor authentication enabled</h2>
         </div>
         <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-xs text-amber-800 flex gap-2">
           <AlertTriangle size={28} className="shrink-0" />
@@ -107,7 +107,7 @@ export default function MfaGate({ mode, onComplete }: Props) {
           onClick={handleCopyBackupCodes}
           className="w-full flex items-center justify-center gap-1.5 text-sm text-gray-600 border border-gray-300 rounded-lg py-2 hover:bg-gray-50 transition-colors"
         >
-          {copied ? <Check size={14} className="text-green-600" /> : <Copy size={14} />}
+          {copied ? <Check size={14} className="text-paddy" /> : <Copy size={14} />}
           {copied ? 'Copied' : 'Copy codes'}
         </button>
         <button
@@ -124,16 +124,16 @@ export default function MfaGate({ mode, onComplete }: Props) {
   // Step 1 (setup only): scan the QR code.
   if (mode === 'setup' && loadingSetup) {
     return (
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 flex justify-center py-12">
-        <Loader2 size={24} className="animate-spin text-gray-400" />
+      <div className="bg-white rounded-card shadow-sm border border-gray-200 p-6 flex justify-center py-12">
+        <Loader2 size={24} className="animate-spin text-gray-500" />
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">
-      <div className="flex items-center gap-2 text-gray-900">
-        <KeyRound size={18} className="text-green-700" />
+    <div className="bg-white rounded-card shadow-sm border border-gray-200 p-6 space-y-4">
+      <div className="flex items-center gap-2 text-soil">
+        <KeyRound size={18} className="text-paddy" />
         <h2 className="font-bold">Two-factor authentication</h2>
       </div>
 
@@ -147,7 +147,7 @@ export default function MfaGate({ mode, onComplete }: Props) {
             <div className="flex justify-center">
               <Image src={qrCodeDataUrl} alt="Scan with your authenticator app" width={176} height={176} unoptimized className="border border-gray-200 rounded-lg" />
             </div>
-            <p className="text-xs text-gray-400 text-center break-all">
+            <p className="text-xs text-gray-500 text-center break-all">
               Can&apos;t scan? Enter this code manually: <span className="font-mono">{secret}</span>
             </p>
           </>
@@ -163,13 +163,14 @@ export default function MfaGate({ mode, onComplete }: Props) {
       <form onSubmit={handleSubmitCode} className="space-y-3">
         <input
           type="text"
+          aria-label={mode === 'setup' ? '6-digit code' : 'Authentication or backup code'}
           inputMode={mode === 'setup' ? 'numeric' : 'text'}
           autoComplete="one-time-code"
           autoFocus
           value={code}
           onChange={(e) => setCode(e.target.value)}
           placeholder={mode === 'setup' ? '6-digit code' : '6-digit code or backup code'}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-paddy focus:border-transparent"
         />
         <button
           type="submit"

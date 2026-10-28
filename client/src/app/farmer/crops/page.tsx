@@ -53,7 +53,7 @@ export default function CropsPage() {
   }, [plantings])
 
   if (loading) return (
-    <div className="flex items-center justify-center h-64 text-gray-400">
+    <div className="flex items-center justify-center h-64 text-gray-500">
       <Loader2 size={28} className="animate-spin" />
     </div>
   )
@@ -62,7 +62,7 @@ export default function CropsPage() {
     <div className="p-4 sm:p-8 max-w-5xl">
       <div className="flex flex-wrap items-center gap-3 mb-6">
         <Sprout size={22} className="text-paddy" />
-        <h1 className="text-2xl font-bold text-gray-900">Crop Monitor</h1>
+        <h1 className="text-2xl font-bold text-soil">Crop Monitor</h1>
         <Link href="/farmer/advisory" className="ml-auto text-sm text-paddy hover:underline">
           Community advisory
         </Link>
@@ -77,7 +77,7 @@ export default function CropsPage() {
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 
       {plantings.length === 0 && !error ? (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm text-center py-16 px-6">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm text-center py-16 px-6">
           <Sprout size={40} className="mx-auto mb-3 text-gray-300" />
           <p className="font-medium text-gray-700">No plantings yet</p>
           <p className="text-sm text-gray-500 mt-1 max-w-md mx-auto">
@@ -98,16 +98,16 @@ export default function CropsPage() {
                   <Link
                     key={key}
                     href={`/farmer/crops/${planting.id}`}
-                    className={`flex items-start gap-3 rounded-xl border p-4 transition-colors ${
+                    className={`flex items-start gap-3 rounded-lg border p-4 transition-colors ${
                       tone === 'red' ? 'border-red-200 bg-red-50 hover:bg-red-100/70' : 'border-amber-200 bg-amber-50 hover:bg-amber-100/70'
                     }`}
                   >
                     <Icon size={18} className={`shrink-0 mt-0.5 ${tone === 'red' ? 'text-red-600' : 'text-amber-700'}`} />
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-gray-900">{planting.cropType.name} · {title}</p>
+                      <p className="text-sm font-semibold text-soil">{planting.cropType.name} · {title}</p>
                       <p className="text-xs text-gray-600 mt-0.5 line-clamp-2">{detail}</p>
                     </div>
-                    <ChevronRight size={16} className="shrink-0 ml-auto text-gray-400 mt-0.5" />
+                    <ChevronRight size={16} className="shrink-0 ml-auto text-gray-500 mt-0.5" />
                   </Link>
                 ))}
               </div>
@@ -115,7 +115,7 @@ export default function CropsPage() {
           )}
 
           <section className="mb-8">
-            <h2 className="text-sm font-semibold text-gray-700 mb-3">Growing <span className="text-gray-400 font-normal">({growing.length})</span></h2>
+            <h2 className="text-sm font-semibold text-gray-700 mb-3">Growing <span className="text-gray-500 font-normal">({growing.length})</span></h2>
             {growing.length === 0 ? (
               <p className="text-sm text-gray-500">Nothing growing right now.</p>
             ) : (
@@ -128,7 +128,7 @@ export default function CropsPage() {
           {history.length > 0 && (
             <section>
               <h2 className="text-sm font-semibold text-gray-700 mb-3">Past seasons</h2>
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+              <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[600px] text-sm">
                     <thead className="bg-gray-50 border-b border-gray-200">
@@ -144,7 +144,7 @@ export default function CropsPage() {
                     <tbody className="divide-y divide-gray-100">
                       {history.map((p) => (
                         <tr key={p.id} className="hover:bg-gray-50">
-                          <td className="px-4 py-3 font-medium text-gray-900">{p.cropType.name}</td>
+                          <td className="px-4 py-3 font-medium text-soil">{p.cropType.name}</td>
                           <td className="px-4 py-3 text-gray-600">{fmtDate(p.plantedOn)}</td>
                           <td className="px-4 py-3">
                             <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${STATUS_STYLES[p.status].cls}`}>
@@ -153,7 +153,7 @@ export default function CropsPage() {
                             {p.harvestedOn && <span className="text-xs text-gray-500 ml-2">{fmtDate(p.harvestedOn)}</span>}
                           </td>
                           <td className="px-4 py-3 text-right text-gray-600 tabular-nums">{fmtKg(p.expectedYield)}</td>
-                          <td className="px-4 py-3 text-right text-gray-900 tabular-nums">{fmtKg(p.actualYield)}</td>
+                          <td className="px-4 py-3 text-right text-soil tabular-nums">{fmtKg(p.actualYield)}</td>
                           <td className="px-4 py-3 text-right">
                             <Link href={`/farmer/crops/${p.id}`} className="text-xs font-medium text-paddy hover:text-paddy-deep">View</Link>
                           </td>
@@ -179,11 +179,11 @@ function GrowingCard({ planting: p }: { planting: Row }) {
   return (
     <Link
       href={`/farmer/crops/${p.id}`}
-      className="block bg-white rounded-xl border border-gray-200 shadow-sm p-4 hover:border-paddy/40 transition-colors"
+      className="block bg-white rounded-lg border border-gray-200 shadow-sm p-4 hover:border-paddy/40 transition-colors"
     >
       <div className="flex items-start gap-2">
         <div className="min-w-0">
-          <p className="font-medium text-gray-900">{p.cropType.name}</p>
+          <p className="font-medium text-soil">{p.cropType.name}</p>
           <p className="text-xs text-gray-500 truncate">
             Planted {fmtDate(p.plantedOn)}{p.product ? ` · sold as ${p.product.name}` : ''}
           </p>

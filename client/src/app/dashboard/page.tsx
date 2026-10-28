@@ -37,7 +37,7 @@ const STATUS_COLORS: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-800',
   confirmed: 'bg-blue-100 text-blue-800',
   shipped: 'bg-purple-100 text-purple-800',
-  delivered: 'bg-green-100 text-green-800',
+  delivered: 'bg-shoot text-paddy-deep',
   cancelled: 'bg-red-100 text-red-800',
 }
 
@@ -72,7 +72,7 @@ export default function DashboardOverviewPage() {
 
   if (!stats) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -80,36 +80,36 @@ export default function DashboardOverviewPage() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Overview</h1>
+      <h1 className="text-2xl font-bold text-soil mb-6">Overview</h1>
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
-        <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
-          <div className="bg-blue-500 text-white p-3 rounded-lg"><Users size={22} /></div>
+        <div className="bg-white rounded-lg border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
+          <div className="bg-shoot text-paddy-deep p-3 rounded-lg"><Users size={22} /></div>
           <div>
-            <p className="text-2xl font-bold text-gray-900">{stats.userCount}</p>
+            <p className="text-2xl font-bold text-soil">{stats.userCount}</p>
             <p className="text-sm text-gray-500">Total Users</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
-          <div className="bg-green-500 text-white p-3 rounded-lg"><Package size={22} /></div>
+        <div className="bg-white rounded-lg border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
+          <div className="bg-shoot text-paddy-deep p-3 rounded-lg"><Package size={22} /></div>
           <div>
-            <p className="text-2xl font-bold text-gray-900">{stats.approvedProductCount + stats.pendingProductCount + stats.suspendedProductCount}</p>
+            <p className="text-2xl font-bold text-soil">{stats.approvedProductCount + stats.pendingProductCount + stats.suspendedProductCount}</p>
             <p className="text-sm text-gray-500">Products</p>
             <p className="text-xs mt-0.5">
-              <span className="text-green-600 font-medium">{stats.approvedProductCount} approved</span>
-              <span className="text-gray-400"> · </span>
+              <span className="text-paddy font-medium">{stats.approvedProductCount} approved</span>
+              <span className="text-gray-500"> · </span>
               {stats.pendingProductCount > 0 ? (
                 <span className="text-amber-600 font-medium inline-flex items-center gap-0.5">
                   <AlertCircle size={10} />{stats.pendingProductCount} pending
                 </span>
               ) : (
-                <span className="text-gray-400">0 pending</span>
+                <span className="text-gray-500">0 pending</span>
               )}
               {stats.suspendedProductCount > 0 && (
                 <>
-                  <span className="text-gray-400"> · </span>
+                  <span className="text-gray-500"> · </span>
                   <span className="text-red-600 font-medium">{stats.suspendedProductCount} suspended</span>
                 </>
               )}
@@ -117,18 +117,18 @@ export default function DashboardOverviewPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
-          <div className="bg-orange-500 text-white p-3 rounded-lg"><ShoppingCart size={22} /></div>
+        <div className="bg-white rounded-lg border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
+          <div className="bg-shoot text-paddy-deep p-3 rounded-lg"><ShoppingCart size={22} /></div>
           <div>
-            <p className="text-2xl font-bold text-gray-900">{stats.orderCount}</p>
+            <p className="text-2xl font-bold text-soil">{stats.orderCount}</p>
             <p className="text-sm text-gray-500">Total Orders</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
-          <div className="bg-purple-500 text-white p-3 rounded-lg shrink-0"><TrendingUp size={22} /></div>
+        <div className="bg-white rounded-lg border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
+          <div className="bg-shoot text-paddy-deep p-3 rounded-lg shrink-0"><TrendingUp size={22} /></div>
           <div className="min-w-0">
-            <p className="text-2xl font-bold text-gray-900 break-all">₱{stats.totalRevenue.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-soil break-all">₱{stats.totalRevenue.toFixed(2)}</p>
             <p className="text-sm text-gray-500">Total Revenue</p>
           </div>
         </div>
@@ -136,13 +136,13 @@ export default function DashboardOverviewPage() {
 
       {/* Farmer Performance Table (admin + manager) */}
       {canSeeFarmerStats && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-8">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden mb-8">
           <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
             <Leaf size={18} className="text-paddy" />
-            <h2 className="font-semibold text-gray-900">Farmer Performance</h2>
+            <h2 className="font-semibold text-soil">Farmer Performance</h2>
           </div>
           {farmerStats.length === 0 ? (
-            <p className="text-center text-gray-400 py-10">No farmers registered yet</p>
+            <p className="text-center text-gray-500 py-10">No farmers registered yet</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -161,14 +161,14 @@ export default function DashboardOverviewPage() {
                   {farmerStats.map((f) => (
                     <tr key={f.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-5 py-3">
-                        <p className="font-medium text-gray-900">{f.name}</p>
-                        <p className="text-xs text-gray-400">{f.email}</p>
+                        <p className="font-medium text-soil">{f.name}</p>
+                        <p className="text-xs text-gray-500">{f.email}</p>
                       </td>
                       <td className="px-5 py-3 text-center">
                         {f.suspended ? (
                           <span className="text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-full">Suspended</span>
                         ) : f.verified ? (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-paddy bg-shoot px-2 py-0.5 rounded-full">
                             <CheckCircle size={11} /> Verified
                           </span>
                         ) : (
@@ -178,10 +178,10 @@ export default function DashboardOverviewPage() {
                         )}
                       </td>
                       <td className="px-5 py-3 text-center text-gray-700">{f.productCount}</td>
-                      <td className="px-5 py-3 text-center text-green-700 font-medium">{f.approvedCount}</td>
+                      <td className="px-5 py-3 text-center text-paddy font-medium">{f.approvedCount}</td>
                       <td className="px-5 py-3 text-center text-yellow-700 font-medium">{f.pendingCount}</td>
                       <td className="px-5 py-3 text-center text-gray-700">{f.totalOrderItems}</td>
-                      <td className="px-5 py-3 text-right font-semibold text-green-700">
+                      <td className="px-5 py-3 text-right font-semibold text-paddy">
                         ₱{f.totalRevenue.toFixed(2)}
                       </td>
                     </tr>
@@ -194,19 +194,19 @@ export default function DashboardOverviewPage() {
       )}
 
       {/* Recent orders */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100">
-          <h2 className="font-semibold text-gray-900">Recent Orders</h2>
+          <h2 className="font-semibold text-soil">Recent Orders</h2>
         </div>
         {stats.recentOrders.length === 0 ? (
-          <p className="text-center text-gray-400 py-10">No orders yet</p>
+          <p className="text-center text-gray-500 py-10">No orders yet</p>
         ) : (
           <div className="divide-y divide-gray-50">
             {stats.recentOrders.map((order) => (
               <div key={order.id} className="px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <p className="text-sm font-medium text-gray-900">{order.customer.name}</p>
-                  <p className="text-xs text-gray-400">{order.customer.email}</p>
+                  <p className="text-sm font-medium text-soil">{order.customer.name}</p>
+                  <p className="text-xs text-gray-500">{order.customer.email}</p>
                 </div>
                 <div className="text-right flex items-center gap-4">
                   <span
@@ -214,7 +214,7 @@ export default function DashboardOverviewPage() {
                   >
                     {order.status}
                   </span>
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm font-semibold text-soil">
                     ₱{order.totalAmount.toFixed(2)}
                   </span>
                 </div>

@@ -59,7 +59,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] text-gray-400">
+      <div className="flex items-center justify-center min-h-[60vh] text-gray-500">
         <Loader2 size={32} className="animate-spin" />
       </div>
     )
@@ -84,14 +84,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside
         className={`
           fixed lg:static inset-y-0 left-0 z-30
-          w-46 shrink-0 bg-paddy text-white/75 flex flex-col overflow-y-auto
+          w-46 shrink-0 bg-soil text-white/75 flex flex-col overflow-y-auto border-t border-white/10
           transition-transform duration-200
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
         <div className="px-4 py-5 border-b border-white/10">
-          <p className="text-xs font-semibold uppercase tracking-wider text-white/50">
-            {user.role === 'admin' ? 'Admin' : 'Manager'} Panel
+          <p className="text-xs text-white/60">
+            {user.role === 'admin' ? 'Administrator' : 'Manager'}
           </p>
           <p className="text-sm font-medium text-white mt-0.5 truncate">{user.name}</p>
         </div>
@@ -103,8 +103,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <Link
                 key={href}
                 href={href}
+                aria-current={active ? 'page' : undefined}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  active ? 'bg-paddy-deep text-white' : 'hover:bg-white/10 hover:text-white'
+                  active ? 'bg-white/10 text-white shadow-[inset_3px_0_0_var(--color-calamansi)]' : 'hover:bg-white/10 hover:text-white'
                 }`}
               >
                 <Icon size={16} className="shrink-0" />
@@ -132,8 +133,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <Menu size={20} />
             <MenuDot badges={badges} />
           </button>
-          <span className="text-sm font-semibold text-gray-700 capitalize">
-            {user.role === 'admin' ? 'Admin' : 'Manager'} Panel
+          <span className="text-sm font-semibold text-soil">
+            {user.role === 'admin' ? 'Administrator' : 'Manager'} dashboard
           </span>
         </div>
 

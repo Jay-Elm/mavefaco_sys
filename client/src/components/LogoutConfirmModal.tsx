@@ -28,8 +28,8 @@ export default function LogoutConfirmModal({
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={onCancel} />
       <div className="relative bg-white rounded-card shadow-xl w-full max-w-sm p-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-bold text-gray-900">Log Out</h3>
-          <button onClick={onCancel} className="text-gray-400 hover:text-gray-600" aria-label="Cancel">
+          <h3 className="font-bold text-soil">Log Out</h3>
+          <button onClick={onCancel} className="text-gray-500 hover:text-gray-600" aria-label="Cancel">
             <X size={18} />
           </button>
         </div>

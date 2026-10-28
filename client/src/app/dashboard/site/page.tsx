@@ -39,7 +39,7 @@ const COLORS = Object.fromEntries(
 
 // ── Shared input class ────────────────────────────────────────────────────────
 
-const INPUT = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500'
+const INPUT = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy'
 
 // ── Main component ────────────────────────────────────────────────────────────
 
@@ -53,7 +53,7 @@ export default function SitePage() {
     <div className="p-4 sm:p-8">
       <div className="flex items-center gap-3 mb-6">
         <Globe size={22} className="text-paddy" />
-        <h1 className="text-2xl font-bold text-gray-900">Site Content</h1>
+        <h1 className="text-2xl font-bold text-soil">Site Content</h1>
       </div>
 
       {/* Tabs */}
@@ -168,16 +168,16 @@ function BannersTab({ token }: { token: string | null }) {
       {error && <p className="text-red-600 text-sm">{error}</p>}
 
       {/* Add form */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
         <h2 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
           <Plus size={14} /> Add Banner
         </h2>
         <form onSubmit={handleAdd} className="space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title *" className={INPUT} />
-            <input value={subtitle} onChange={(e) => setSubtitle(e.target.value)} placeholder="Subtitle (optional)" className={INPUT} />
-            <input value={ctaText} onChange={(e) => setCtaText(e.target.value)} placeholder="Button label (e.g. Shop Now)" className={INPUT} />
-            <input value={ctaLink} onChange={(e) => setCtaLink(e.target.value)} placeholder="Button link (e.g. /products)" className={INPUT} />
+            <input aria-label="Title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title *" className={INPUT} />
+            <input aria-label="Subtitle" value={subtitle} onChange={(e) => setSubtitle(e.target.value)} placeholder="Subtitle (optional)" className={INPUT} />
+            <input aria-label="Button label (e.g. Shop Now)" value={ctaText} onChange={(e) => setCtaText(e.target.value)} placeholder="Button label (e.g. Shop Now)" className={INPUT} />
+            <input aria-label="Button link (e.g. /products)" value={ctaLink} onChange={(e) => setCtaLink(e.target.value)} placeholder="Button link (e.g. /products)" className={INPUT} />
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <div className="flex gap-2 items-center flex-1">
@@ -186,19 +186,19 @@ function BannersTab({ token }: { token: string | null }) {
                   key={key}
                   type="button"
                   onClick={() => setColor(key)}
-                  title={label}
+                  title={label} aria-label={label}
                   className={`w-7 h-7 rounded-full shrink-0 ${preview} transition-all ${color === key ? 'ring-2 ring-offset-2 ring-gray-400 scale-110' : 'opacity-70 hover:opacity-100'}`}
                 />
               ))}
               <span className="text-xs text-gray-500 ml-1 whitespace-nowrap">Color: {COLORS[color]?.label}</span>
             </div>
             <div className="flex gap-3 items-center">
-              <input
+              <input aria-label="Display order"
                 value={order}
                 onChange={(e) => setOrder(e.target.value)}
                 type="number"
                 placeholder="Order"
-                className="w-20 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-20 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
               />
               <button
                 type="submit"
@@ -216,21 +216,21 @@ function BannersTab({ token }: { token: string | null }) {
 
       {/* Banner list */}
       {banners.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12 text-gray-500">
           <ImageIcon size={36} className="mx-auto mb-3" />
           <p>No banners yet</p>
         </div>
       ) : (
         <div className="space-y-3">
           {banners.map((b) => (
-            <div key={b.id} className={`rounded-xl overflow-hidden border border-gray-200 shadow-sm ${!b.active ? 'opacity-50' : ''}`}>
+            <div key={b.id} className={`rounded-lg overflow-hidden border border-gray-200 shadow-sm ${!b.active ? 'opacity-50' : ''}`}>
               <div className={`${bannerStyle(b.color).surface} px-5 py-4`}>
                 <p className="font-bold">{b.title}</p>
                 {b.subtitle && <p className="text-sm opacity-80 mt-0.5">{b.subtitle}</p>}
                 {b.ctaText && <span className="mt-2 inline-block bg-white/20 text-xs px-3 py-1 rounded-full">{b.ctaText} → {b.ctaLink}</span>}
               </div>
               <div className="bg-white px-5 py-2 flex items-center justify-between">
-                <span className="text-xs text-gray-400">Order: {b.displayOrder} · {b.active ? 'Visible' : 'Hidden'}</span>
+                <span className="text-xs text-gray-500">Order: {b.displayOrder} · {b.active ? 'Visible' : 'Hidden'}</span>
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => toggleActive(b)}
@@ -242,7 +242,7 @@ function BannersTab({ token }: { token: string | null }) {
                   <button
                     onClick={() => handleDelete(b.id)}
                     disabled={deletingId === b.id}
-                    className="p-1.5 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-40"
+                    className="p-1.5 text-gray-500 hover:text-red-500 transition-colors disabled:opacity-40"
                   >
                     {deletingId === b.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                   </button>
@@ -304,12 +304,13 @@ function InfoTab({ token }: { token: string | null }) {
   if (loading) return <Spinner />
 
   return (
-    <form onSubmit={handleSave} className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4 max-w-2xl">
+    <form onSubmit={handleSave} className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-4 max-w-2xl">
       {INFO_FIELDS.map(({ key, label, placeholder, multiline }) => (
         <div key={key}>
           <label className="block text-xs font-semibold text-gray-600 mb-1">{label}</label>
           {multiline ? (
             <textarea
+              aria-label={label}
               value={info[key] ?? ''}
               onChange={(e) => setInfo((prev) => ({ ...prev, [key]: e.target.value }))}
               placeholder={placeholder}
@@ -318,6 +319,7 @@ function InfoTab({ token }: { token: string | null }) {
             />
           ) : (
             <input
+              aria-label={label}
               value={info[key] ?? ''}
               onChange={(e) => setInfo((prev) => ({ ...prev, [key]: e.target.value }))}
               placeholder={placeholder}
@@ -328,7 +330,7 @@ function InfoTab({ token }: { token: string | null }) {
       ))}
 
       {error && <p className="text-red-500 text-sm">{error}</p>}
-      {saved && <p className="text-green-600 text-sm">Saved successfully.</p>}
+      {saved && <p className="text-paddy text-sm">Saved successfully.</p>}
 
       <button
         type="submit"
@@ -397,13 +399,13 @@ function FaqsTab({ token }: { token: string | null }) {
   return (
     <div className="space-y-6">
       {/* Add form */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
         <h2 className="text-sm font-semibold text-gray-700 mb-4 flex items-center gap-2">
           <Plus size={14} /> Add FAQ
         </h2>
         <form onSubmit={handleAdd} className="space-y-3">
-          <input value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Question *" className={INPUT} />
-          <textarea
+          <input aria-label="Question" value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="Question *" className={INPUT} />
+          <textarea aria-label="Answer"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
             placeholder="Answer *"
@@ -412,12 +414,12 @@ function FaqsTab({ token }: { token: string | null }) {
           />
           {postErr && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle size={12} />{postErr}</p>}
           <div className="flex items-center gap-3 justify-end">
-            <input
+            <input aria-label="Display order"
               value={order}
               onChange={(e) => setOrder(e.target.value)}
               type="number"
               placeholder="Order"
-              className="w-20 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-20 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
             />
             <button
               type="submit"
@@ -433,24 +435,24 @@ function FaqsTab({ token }: { token: string | null }) {
 
       {/* FAQ list */}
       {faqs.length === 0 ? (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12 text-gray-500">
           <HelpCircle size={36} className="mx-auto mb-3" />
           <p>No FAQs yet</p>
         </div>
       ) : (
         <div className="space-y-3">
           {faqs.map((f) => (
-            <div key={f.id} className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+            <div key={f.id} className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
-                  <p className="font-semibold text-gray-900 text-sm">{f.question}</p>
+                  <p className="font-semibold text-soil text-sm">{f.question}</p>
                   <p className="text-sm text-gray-600 mt-1 whitespace-pre-wrap">{f.answer}</p>
-                  <p className="text-xs text-gray-400 mt-1">Order: {f.displayOrder}</p>
+                  <p className="text-xs text-gray-500 mt-1">Order: {f.displayOrder}</p>
                 </div>
                 <button
                   onClick={() => handleDelete(f.id)}
                   disabled={deletingId === f.id}
-                  className="shrink-0 p-1.5 text-gray-400 hover:text-red-500 transition-colors disabled:opacity-40"
+                  className="shrink-0 p-1.5 text-gray-500 hover:text-red-500 transition-colors disabled:opacity-40"
                 >
                   {deletingId === f.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                 </button>
@@ -465,7 +467,7 @@ function FaqsTab({ token }: { token: string | null }) {
 
 function Spinner() {
   return (
-    <div className="flex items-center justify-center h-48 text-gray-400">
+    <div className="flex items-center justify-center h-48 text-gray-500">
       <Loader2 size={28} className="animate-spin" />
     </div>
   )

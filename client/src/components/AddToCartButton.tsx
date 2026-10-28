@@ -182,7 +182,7 @@ export default function AddToCartButton({ product }: Props) {
 
             {showConflict ? (
               <div className="space-y-4">
-                <div className="border border-amber-300 bg-amber-50 rounded-xl p-4 space-y-1.5">
+                <div className="border border-amber-300 bg-amber-50 rounded-lg p-4 space-y-1.5">
                   <p className="text-amber-800 font-medium text-sm">
                     Cart has items from <strong>{cartFarmerName}</strong>
                   </p>
@@ -220,12 +220,13 @@ export default function AddToCartButton({ product }: Props) {
                     <div className="flex flex-col items-center gap-0.5">
                       <input
                         type="number"
+                        aria-label={`Quantity in ${product.unit}`}
                         min={step}
                         max={product.stock}
                         step={step}
                         value={fmtQty(quantity)}
                         onChange={e => handleQtyInput(e.target.value)}
-                        className="w-20 text-center text-2xl font-bold text-gray-900 border-b-2 border-gray-200 focus:border-paddy focus:outline-none bg-transparent tabular-nums py-0.5"
+                        className="w-20 text-center text-2xl font-bold text-soil border-b-2 border-gray-200 focus:border-paddy focus:outline-none bg-transparent tabular-nums py-0.5"
                       />
                       <span className="text-xs text-gray-600">{product.unit}</span>
                     </div>

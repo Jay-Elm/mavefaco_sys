@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import LogoutConfirmModal from '@/components/LogoutConfirmModal'
 import { MenuDot, NavBadge, useNavBadges } from '@/components/NavBadge'
-import { Loader2, LayoutDashboard, Package, ShoppingCart, User, Leaf, Sprout, MessageCircle, Menu } from 'lucide-react'
+import { Loader2, LayoutDashboard, Package, ShoppingCart, User, Sprout, MessageCircle, Menu } from 'lucide-react'
 
 const NAV = [
   { href: '/farmer', label: 'Overview', icon: LayoutDashboard, exact: true },
@@ -41,7 +41,7 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
 
   if (loading || !isAuthenticated || user?.role !== 'farmer') {
     return (
-      <div className="flex items-center justify-center h-screen text-gray-400">
+      <div className="flex items-center justify-center h-screen text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -62,13 +62,13 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
       <aside
         className={`
           fixed lg:static inset-y-0 left-0 z-30
-          w-46 bg-paddy text-white flex flex-col overflow-y-auto shrink-0
+          w-46 bg-soil text-white flex flex-col overflow-y-auto shrink-0 border-t border-white/10
           transition-transform duration-200
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
         <div className="px-5 py-4 flex items-center gap-2 border-b border-white/10">
-          <Leaf size={18} className="text-white/80" />
+          <Sprout size={18} className="text-calamansi" aria-hidden="true" />
           <span className="font-semibold">Farmer Portal</span>
         </div>
 
@@ -79,8 +79,9 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
               <Link
                 key={href}
                 href={href}
+                aria-current={active ? 'page' : undefined}
                 className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors ${
-                  active ? 'bg-paddy-deep text-white' : 'text-white/75 hover:bg-white/10 hover:text-white'
+                  active ? 'bg-white/10 text-white shadow-[inset_3px_0_0_var(--color-calamansi)]' : 'text-white/75 hover:bg-white/10 hover:text-white'
                 }`}
               >
                 <Icon size={16} className="shrink-0" />
@@ -97,13 +98,13 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
             onClick={() => setShowLogoutConfirm(true)}
             className="mt-1 text-xs text-white/60 hover:text-white transition-colors"
           >
-            Logout
+            Log out
           </button>
         </div>
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-y-auto min-w-0">
+      <div className="flex-1 overflow-y-auto min-w-0">
         {/* Mobile top bar */}
         <div className="lg:hidden flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-200 sticky top-0 z-10">
           <button
@@ -114,11 +115,11 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
             <Menu size={20} />
             <MenuDot badges={badges} />
           </button>
-          <span className="text-sm font-semibold text-gray-700">Farmer Portal</span>
+          <span className="text-sm font-semibold text-soil">Farmer Portal</span>
         </div>
 
         {children}
-      </main>
+      </div>
 
       {showLogoutConfirm && (
         <LogoutConfirmModal

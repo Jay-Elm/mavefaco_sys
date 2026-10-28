@@ -58,12 +58,12 @@ export default function IdVerificationSection({ token }: { token: string }) {
     }
   }
 
-  if (!me) return <div className="py-6 text-gray-400"><Loader2 size={20} className="animate-spin" /></div>
+  if (!me) return <div className="py-6 text-gray-500"><Loader2 size={20} className="animate-spin" /></div>
 
   const sub = me.idSubmission
   const status = me.verified ? 'verified' : sub?.status === 'pending' ? 'pending' : sub?.status === 'rejected' ? 'rejected' : 'none'
   const badge = {
-    verified: { cls: 'text-green-700 bg-green-100', icon: ShieldCheck, label: me.verifiedInPersonAt ? 'Verified in person' : 'Verified' },
+    verified: { cls: 'text-paddy bg-shoot', icon: ShieldCheck, label: me.verifiedInPersonAt ? 'Verified in person' : 'Verified' },
     pending: { cls: 'text-amber-700 bg-amber-100', icon: Clock, label: 'Pending review' },
     rejected: { cls: 'text-red-700 bg-red-100', icon: ShieldAlert, label: 'Not approved' },
     none: { cls: 'text-amber-700 bg-amber-100', icon: ShieldAlert, label: 'Not submitted' },
@@ -73,7 +73,7 @@ export default function IdVerificationSection({ token }: { token: string }) {
   return (
     <div>
       <div className="flex items-center gap-2 mb-1">
-        <h2 className="text-lg font-semibold text-gray-900">ID Verification</h2>
+        <h2 className="text-lg font-semibold text-soil">ID Verification</h2>
         <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${badge.cls}`}>
           <Badge size={12} /> {badge.label}
         </span>
@@ -90,7 +90,7 @@ export default function IdVerificationSection({ token }: { token: string }) {
       {status === 'pending' && sub && (
         <div>
           {justSubmitted && (
-            <p className="mb-3 flex items-center gap-2 text-green-700 text-sm"><CheckCircle size={16} /> ID submitted for review</p>
+            <p className="mb-3 flex items-center gap-2 text-paddy text-sm"><CheckCircle size={16} /> ID submitted for review</p>
           )}
           <div className="rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-700">
             Your {idTypeLabel(sub.idType)}{sub.numberLast4 ? ` ending in ${sub.numberLast4}` : ''} was submitted on {fmt(sub.createdAt)} and is waiting for staff review.

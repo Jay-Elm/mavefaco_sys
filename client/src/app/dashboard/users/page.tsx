@@ -31,7 +31,7 @@ interface UserRow {
 const ROLE_STYLES: Record<string, string> = {
   admin:    'bg-red-100 text-red-700',
   manager:  'bg-purple-100 text-purple-700',
-  farmer:   'bg-green-100 text-green-700',
+  farmer:   'bg-shoot text-paddy',
   customer: 'bg-blue-100 text-blue-700',
 }
 
@@ -221,7 +221,7 @@ export default function UsersPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -232,27 +232,28 @@ export default function UsersPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Users</h1>
+        <h1 className="text-2xl font-bold text-soil">Users</h1>
         <span className="text-sm text-gray-500">{users.length} total</span>
       </div>
 
       {/* Filters toolbar */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
-        <div className="relative flex-1 min-w-0 sm:min-w-48">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-          <input
+        <div className="relative basis-full sm:basis-0 flex-1 sm:min-w-48">
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
+          <input aria-label="Search by name or email"
             type="text"
             placeholder="Search by name or email…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full pl-8 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy"
           />
         </div>
 
         <select
+          aria-label="Filter by role"
           value={filterRole}
           onChange={(e) => setFilterRole(e.target.value)}
-          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy"
         >
           <option value="">All roles</option>
           <option value="admin">Admin</option>
@@ -262,9 +263,10 @@ export default function UsersPage() {
         </select>
 
         <select
+          aria-label="Filter by account status"
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value as 'all' | 'active' | 'suspended')}
-          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy"
         >
           <option value="all">All statuses</option>
           <option value="active">Active</option>
@@ -280,7 +282,7 @@ export default function UsersPage() {
           </button>
         )}
 
-        <span className="ml-auto text-xs text-gray-400">
+        <span className="ml-auto text-xs text-gray-500">
           {displayed.length} of {users.length} users
         </span>
         <button
@@ -304,7 +306,7 @@ export default function UsersPage() {
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
       {/* Table with horizontal scroll */}
-      <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-x-auto">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-x-auto">
         <table className="w-full text-sm min-w-[700px]">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
@@ -340,7 +342,7 @@ export default function UsersPage() {
           <tbody className="divide-y divide-gray-100">
             {displayed.length === 0 ? (
               <tr>
-                <td colSpan={7} className="text-center py-12 text-gray-400">
+                <td colSpan={7} className="text-center py-12 text-gray-500">
                   <User size={32} className="mx-auto mb-2" />
                   {users.length === 0 ? 'No users found' : 'No users match your filters'}
                 </td>
@@ -355,7 +357,7 @@ export default function UsersPage() {
                       <div className="flex items-start gap-2 min-w-0">
                         <div className="min-w-0">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <p className={`font-medium truncate ${u.suspended ? 'text-gray-400 line-through' : 'text-gray-900'}`}>
+                            <p className={`font-medium truncate ${u.suspended ? 'text-gray-500 line-through' : 'text-soil'}`}>
                               {u.name}
                             </p>
                             {u.suspended && (
@@ -364,15 +366,15 @@ export default function UsersPage() {
                               </span>
                             )}
                             {isSelf(u) && (
-                              <span className="text-[10px] text-gray-400 italic">(you)</span>
+                              <span className="text-[10px] text-gray-500 italic">(you)</span>
                             )}
                             {resetSuccess === u.id && (
-                              <span className="text-[10px] text-green-700 bg-green-100 px-1.5 py-0.5 rounded whitespace-nowrap">
+                              <span className="text-[10px] text-paddy bg-shoot px-1.5 py-0.5 rounded whitespace-nowrap">
                                 PW reset ✓
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-gray-400 truncate">{u.email}</p>
+                          <p className="text-xs text-gray-500 truncate">{u.email}</p>
                         </div>
                       </div>
                     </td>
@@ -386,7 +388,7 @@ export default function UsersPage() {
                       {(u.role === 'admin' || u.role === 'manager') && (
                         <span
                           title={u.totpEnabled ? '2FA enabled' : '2FA not set up yet'}
-                          className={`ml-1 inline-flex items-center ${u.totpEnabled ? 'text-green-600' : 'text-gray-300'}`}
+                          className={`ml-1 inline-flex items-center ${u.totpEnabled ? 'text-paddy' : 'text-gray-300'}`}
                         >
                           {u.totpEnabled ? <ShieldCheck size={12} /> : <ShieldAlert size={12} />}
                         </span>
@@ -397,7 +399,7 @@ export default function UsersPage() {
                     <td className="px-4 py-3 text-center whitespace-nowrap">
                       {u.role === 'farmer' ? (
                         u.verified ? (
-                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2 py-0.5 rounded-full">
+                          <span className="inline-flex items-center gap-1 text-xs font-semibold text-paddy bg-shoot px-2 py-0.5 rounded-full">
                             <ShieldCheck size={11} /> {u.verifiedInPersonAt ? 'In person' : 'Verified'}
                           </span>
                         ) : u.idStatus === 'pending' ? (
@@ -411,7 +413,7 @@ export default function UsersPage() {
                         ) : u.idStatus === 'rejected' ? (
                           <span className="text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-full">Rejected</span>
                         ) : (
-                          <span className="text-xs text-gray-400">No ID</span>
+                          <span className="text-xs text-gray-500">No ID</span>
                         )
                       ) : (
                         <span className="text-xs text-gray-300">—</span>
@@ -437,14 +439,14 @@ export default function UsersPage() {
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1.5 whitespace-nowrap">
                         {actionId === u.id && (
-                          <Loader2 size={14} className="animate-spin text-gray-400" />
+                          <Loader2 size={14} className="animate-spin text-gray-500" />
                         )}
 
                         {/* ID submission */}
                         {u.role === 'farmer' && u.idStatus && (
                           <button
                             onClick={() => setReviewing(u)}
-                            title="View ID submission"
+                            title="View ID submission" aria-label="View ID submission"
                             className="p-1.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
                           >
                             <IdCard size={14} />
@@ -456,11 +458,11 @@ export default function UsersPage() {
                           <button
                             onClick={() => handleVerification(u)}
                             disabled={actionId === u.id}
-                            title={u.verified ? 'Revoke verification' : 'Mark verified in person'}
+                            title={u.verified ? 'Revoke verification' : 'Mark verified in person'} aria-label={u.verified ? 'Revoke verification' : 'Mark verified in person'}
                             className={`p-1.5 rounded-lg transition-colors disabled:opacity-40 ${
                               u.verified
                                 ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                                : 'bg-green-100 text-green-700 hover:bg-green-200'
+                                : 'bg-shoot text-paddy-deep hover:bg-[#cbe5b0]'
                             }`}
                           >
                             {u.verified ? <ShieldOff size={14} /> : <UserCheck size={14} />}
@@ -472,10 +474,10 @@ export default function UsersPage() {
                           <button
                             onClick={() => handleSuspend(u)}
                             disabled={actionId === u.id}
-                            title={u.suspended ? 'Reactivate account' : 'Suspend account'}
+                            title={u.suspended ? 'Reactivate account' : 'Suspend account'} aria-label={u.suspended ? 'Reactivate account' : 'Suspend account'}
                             className={`p-1.5 rounded-lg transition-colors disabled:opacity-40 ${
                               u.suspended
-                                ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                                ? 'bg-shoot text-paddy-deep hover:bg-[#cbe5b0]'
                                 : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
                             }`}
                           >
@@ -488,8 +490,8 @@ export default function UsersPage() {
                           <button
                             onClick={() => { setResetTarget(u); setNewPw(''); setResetError('') }}
                             disabled={actionId === u.id}
-                            title="Reset password"
-                            className="p-1.5 rounded-lg bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition-colors disabled:opacity-40"
+                            title="Reset password" aria-label="Reset password"
+                            className="p-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors disabled:opacity-40"
                           >
                             <KeyRound size={14} />
                           </button>
@@ -500,8 +502,8 @@ export default function UsersPage() {
                           <button
                             onClick={() => handleResetMfa(u)}
                             disabled={actionId === u.id}
-                            title="Reset two-factor authentication"
-                            className="p-1.5 rounded-lg bg-orange-100 text-orange-700 hover:bg-orange-200 transition-colors disabled:opacity-40"
+                            title="Reset two-factor authentication" aria-label="Reset two-factor authentication"
+                            className="p-1.5 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors disabled:opacity-40"
                           >
                             <ShieldOff size={14} />
                           </button>
@@ -512,7 +514,7 @@ export default function UsersPage() {
                           <button
                             onClick={() => handleDelete(u)}
                             disabled={actionId === u.id}
-                            title="Delete user"
+                            title="Delete user" aria-label="Delete user"
                             className="p-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors disabled:opacity-40"
                           >
                             <Trash2 size={14} />
@@ -520,7 +522,7 @@ export default function UsersPage() {
                         )}
 
                         {isSelf(u) && !canResetPw(u) && (
-                          <span className="text-xs text-gray-400 italic">—</span>
+                          <span className="text-xs text-gray-500 italic">—</span>
                         )}
                       </div>
                     </td>
@@ -547,7 +549,7 @@ export default function UsersPage() {
         </table>
       </div>
 
-      <p className="mt-4 text-xs text-gray-400">
+      <p className="mt-4 text-xs text-gray-500">
         Hover action icons to see labels. Accounts with active orders cannot be deleted — suspend them instead.
       </p>
 
@@ -568,10 +570,10 @@ export default function UsersPage() {
       {resetTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={() => { setResetTarget(null); setNewPw(''); setResetError('') }} />
-          <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-4">
+          <div className="relative bg-white rounded-card shadow-xl w-full max-w-sm p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-bold text-gray-900">Reset Password</h3>
-              <button onClick={() => { setResetTarget(null); setNewPw(''); setResetError('') }} className="text-gray-400 hover:text-gray-600">
+              <h3 className="font-bold text-soil">Reset Password</h3>
+              <button onClick={() => { setResetTarget(null); setNewPw(''); setResetError('') }} className="text-gray-500 hover:text-gray-600">
                 <X size={18} />
               </button>
             </div>
@@ -581,27 +583,27 @@ export default function UsersPage() {
             {resetError && (
               <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{resetError}</p>
             )}
-            <input
+            <input aria-label="New password (12–128 characters)"
               type="password"
               value={newPw}
               onChange={(e) => setNewPw(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleResetPassword()}
               placeholder="New password (12–128 characters)"
               autoFocus
-              className="w-full px-3 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
             />
             <div className="flex gap-2">
               <button
                 onClick={handleResetPassword}
                 disabled={actionId === resetTarget.id || !newPw.trim()}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 bg-paddy hover:bg-paddy-deep text-white font-semibold py-2.5 rounded-lg text-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {actionId === resetTarget.id ? <Loader2 size={14} className="animate-spin" /> : <KeyRound size={14} />}
                 Set Password
               </button>
               <button
                 onClick={() => { setResetTarget(null); setNewPw(''); setResetError('') }}
-                className="flex-1 border border-gray-300 text-gray-600 hover:border-gray-400 font-medium py-2.5 rounded-xl text-sm transition-colors"
+                className="flex-1 border border-gray-300 text-gray-600 hover:border-gray-400 font-medium py-2.5 rounded-lg text-sm transition-colors"
               >
                 Cancel
               </button>

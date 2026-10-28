@@ -16,7 +16,7 @@ const PHOTO_STEPS: Record<PhotoKey, { title: string; prompt: string }> = {
   selfie: { title: 'Selfie holding your ID', prompt: 'Face in the oval, ID held up beside it' },
 }
 
-const INPUT = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500'
+const INPUT = 'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy'
 
 /**
  * Step by step: ID type, front, back (unless a passport), a selfie holding
@@ -92,7 +92,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
   }
 
   return (
-    <div className="border border-gray-200 rounded-xl p-4 sm:p-5 bg-white">
+    <div className="border border-gray-200 rounded-lg p-4 sm:p-5 bg-white">
       {/* Progress */}
       <ol className="flex items-center gap-1.5 mb-5" aria-label="Steps">
         {steps.map((s, i) => (
@@ -102,7 +102,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
 
       {step === 'type' && (
         <div>
-          <h3 className="font-semibold text-gray-900 mb-1">Which ID will you use?</h3>
+          <h3 className="font-semibold text-soil mb-1">Which ID will you use?</h3>
           <p className="text-sm text-gray-500 mb-4">You&apos;ll take photos of it and a selfie holding it. Staff check them before you can sell.</p>
           <div className="grid gap-2 sm:grid-cols-2">
             {ID_TYPES.map((t) => (
@@ -112,7 +112,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
                 onClick={() => { if (t.key !== idType) { (['front', 'back', 'selfie'] as PhotoKey[]).forEach((k) => setPhoto(k, undefined)) } setIdType(t.key); setStep('front') }}
                 className={`text-left rounded-lg border px-3 py-2.5 text-sm transition-colors ${idType === t.key ? 'border-paddy bg-field' : 'border-gray-200 hover:border-gray-400'}`}
               >
-                <span className="font-medium text-gray-900">{t.label}</span>
+                <span className="font-medium text-soil">{t.label}</span>
                 {t.hint && <span className="block text-xs text-paddy-deep">{t.hint}</span>}
                 {!t.needsBack && <span className="block text-xs text-gray-500">Photo page only</span>}
               </button>
@@ -127,7 +127,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
         const info = PHOTO_STEPS[key]
         return (
           <div>
-            <h3 className="font-semibold text-gray-900 mb-1">{info.title}</h3>
+            <h3 className="font-semibold text-soil mb-1">{info.title}</h3>
             <p className="text-sm text-gray-500 mb-4">
               {key === 'selfie'
                 ? 'Hold your ID next to your face so both are clear. This shows the ID is yours.'
@@ -137,7 +137,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
             {photo ? (
               <div>
                 {/* eslint-disable-next-line @next/next/no-img-element -- a local blob preview */}
-                <img src={photo.url} alt={`${info.title} preview`} className="w-full max-w-xl mx-auto rounded-xl border border-gray-200" />
+                <img src={photo.url} alt={`${info.title} preview`} className="w-full max-w-xl mx-auto rounded-lg border border-gray-200" />
                 {photo.problems.length > 0 && (
                   <div className="mt-3 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-sm text-amber-900 flex gap-2">
                     <AlertTriangle size={16} className="shrink-0 mt-0.5 text-amber-600" />
@@ -166,7 +166,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
                 onUnavailable={setCamera}
               />
             ) : (
-              <div className="rounded-xl border-2 border-dashed border-gray-300 p-6 text-center">
+              <div className="rounded-lg border-2 border-dashed border-gray-300 p-6 text-center">
                 <p className="text-sm text-gray-700 mb-1">
                   {camera === 'denied'
                     ? "Camera access was blocked. Allow the camera in your browser's settings and reload, or upload a photo instead."
@@ -185,7 +185,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
 
       {type && step === 'number' && (
         <div>
-          <h3 className="font-semibold text-gray-900 mb-1">ID number and review</h3>
+          <h3 className="font-semibold text-soil mb-1">ID number and review</h3>
           <p className="text-sm text-gray-500 mb-4">
             Type the number exactly as printed on your {type.label}. We keep only its last 4 characters, to stop the same ID being used on two accounts.
           </p>
@@ -213,7 +213,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
       {error && <p className="text-red-600 text-sm mt-4">{error}</p>}
 
       <div className="flex items-center gap-3 mt-6 pt-4 border-t border-gray-100">
-        <button type="button" onClick={back} disabled={submitting} className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900">
+        <button type="button" onClick={back} disabled={submitting} className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-soil">
           <ArrowLeft size={14} /> {stepIndex === 0 ? 'Cancel' : 'Back'}
         </button>
         {step === 'number' && (

@@ -62,7 +62,7 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
           >
             <Star
               size={24}
-              className={s <= display ? 'fill-amber-400 text-amber-400' : 'text-gray-300'}
+              className={s <= display ? 'fill-calamansi text-calamansi' : 'text-gray-300'}
             />
           </button>
         ))}
@@ -73,7 +73,7 @@ export default function ReviewForm({ productId, onSubmitted }: Props) {
         )}
       </div>
 
-      <textarea
+      <textarea aria-label="Share your experience (optional)"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
         placeholder="Share your experience (optional)…"

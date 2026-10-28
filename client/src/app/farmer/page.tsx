@@ -65,7 +65,7 @@ export default function FarmerOverviewPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-400">
+      <div className="flex items-center justify-center h-64 text-gray-500">
         <Loader2 size={28} className="animate-spin" />
       </div>
     )
@@ -74,33 +74,33 @@ export default function FarmerOverviewPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Welcome, {user?.name}</h1>
+        <h1 className="text-2xl font-bold text-soil">Welcome, {user?.name}</h1>
         <p className="text-sm text-gray-500 mt-1">Your farm at a glance</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-gray-500">My Products</span>
-            <Package size={18} className="text-green-600 shrink-0" />
+            <Package size={18} className="text-paddy shrink-0" />
           </div>
-          <p className="text-3xl font-bold text-gray-900">{stats?.productCount ?? 0}</p>
+          <p className="text-3xl font-bold text-soil">{stats?.productCount ?? 0}</p>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-gray-500">Orders</span>
-            <ShoppingCart size={18} className="text-blue-600 shrink-0" />
+            <ShoppingCart size={18} className="text-paddy shrink-0" />
           </div>
-          <p className="text-3xl font-bold text-gray-900">{stats?.orderCount ?? 0}</p>
+          <p className="text-3xl font-bold text-soil">{stats?.orderCount ?? 0}</p>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-gray-500 min-w-0 truncate">Total Revenue</span>
-            <TrendingUp size={18} className="text-purple-600 shrink-0 ml-2" />
+            <TrendingUp size={18} className="text-paddy shrink-0 ml-2" />
           </div>
-          <p className="text-2xl sm:text-3xl font-bold text-gray-900 break-all">
+          <p className="text-2xl sm:text-3xl font-bold text-soil break-all">
             ₱{(stats?.totalRevenue ?? 0).toFixed(2)}
           </p>
         </div>
@@ -108,7 +108,7 @@ export default function FarmerOverviewPage() {
 
       {/* Stock alerts */}
       {((stats?.outOfStock ?? 0) > 0 || (stats?.lowStock ?? 0) > 0) && (
-        <div className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+        <div className="mb-6 bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
           <AlertTriangle size={18} className="text-amber-500 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-amber-800 space-y-1">
             {(stats?.outOfStock ?? 0) > 0 && (
@@ -132,7 +132,7 @@ export default function FarmerOverviewPage() {
 
       {/* Announcements from the cooperative */}
       {announcements.length > 0 && (
-        <div className="mb-6 bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <div className="mb-6 bg-white rounded-lg border border-gray-200 shadow-sm p-5">
           <div className="flex items-center gap-2 mb-3">
             <h2 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
               <Megaphone size={15} className="text-paddy" /> Announcements
@@ -158,7 +158,7 @@ export default function FarmerOverviewPage() {
 
       {/* Community advisory */}
       {advisory.length > 0 && (
-        <div className="mb-6 bg-white rounded-xl border border-gray-200 shadow-sm p-5">
+        <div className="mb-6 bg-white rounded-lg border border-gray-200 shadow-sm p-5">
           <div className="flex items-center gap-2 mb-1">
             <h2 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
               <Bug size={15} className="text-red-500" /> Community Advisory (last 30 days)
