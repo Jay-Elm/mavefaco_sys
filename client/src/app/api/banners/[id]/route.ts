@@ -21,7 +21,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
-    const { title, subtitle, ctaText, ctaLink, color, active, displayOrder } = parsed.data;
+    const { title, subtitle, ctaText, ctaLink, color, active } = parsed.data;
 
     const banner = await prisma.banner.update({
       where: { id: bannerId },
@@ -32,7 +32,6 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
         ...(ctaLink !== undefined && { ctaLink: ctaLink || null }),
         ...(color !== undefined && { color }),
         ...(active !== undefined && { active }),
-        ...(displayOrder !== undefined && { displayOrder }),
       },
     });
     await logAudit("UPDATE_BANNER", "BANNER", bannerId, actor.id);

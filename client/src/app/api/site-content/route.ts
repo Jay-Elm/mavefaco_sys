@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const [rows, faqs] = await Promise.all([
       prisma.siteContent.findMany(),
-      prisma.faq.findMany({ orderBy: { displayOrder: "asc" } }),
+      prisma.faq.findMany({ orderBy: [{ displayOrder: "asc" }, { id: "asc" }] }),
     ]);
     const content = Object.fromEntries(rows.map((r) => [r.key, r.value]));
     return NextResponse.json({ content, faqs });

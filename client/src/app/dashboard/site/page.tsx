@@ -5,9 +5,64 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useDialog } from '@/contexts/DialogContext'
 import {
   Loader2, Plus, Trash2, AlertCircle, Save, Globe,
-  Image as ImageIcon, HelpCircle, Info,
+  Image as ImageIcon, HelpCircle, Info, ArrowUp, ArrowDown,
 } from 'lucide-react'
 import { BANNER_STYLES, bannerStyle } from '@/components/bannerStyles'
+
+// ── Ordering ─────────────────────────────────────────────────────────────────
+
+/**
+ * Move up/down for FAQs and banners: swaps two neighbours on screen right
+ * away, then saves the whole order. On failure the old order comes back.
+ */
+function useReorder<T extends { id: number }>(endpoint: string, token: string | null, setItems: (items: T[]) => void) {
+  const dialog = useDialog()
+  const [saving, setSaving] = useState(false)
+
+  async function move(items: T[], index: number, by: -1 | 1) {
+    const to = index + by
+    if (!token || saving || to < 0 || to >= items.length) return
+    const next = [...items]
+    ;[next[index], next[to]] = [next[to], next[index]]
+    setItems(next)
+    setSaving(true)
+    try {
+      const res = await fetch(endpoint, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ ids: next.map((i) => i.id) }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        setItems(items)
+        await dialog.alert({ title: "Couldn't save the new order", message: data.error ?? 'Please try again.' })
+      }
+    } catch {
+      setItems(items)
+      await dialog.alert({ title: "Couldn't save the new order", message: 'Please try again.' })
+    } finally { setSaving(false) }
+  }
+
+  return { move, saving }
+}
+
+function MoveButtons({ name, index, count, disabled, onMove }: {
+  name: string; index: number; count: number; disabled: boolean; onMove: (by: -1 | 1) => void
+}) {
+  const cls = 'p-1.5 rounded-lg text-gray-500 hover:text-paddy hover:bg-gray-100 transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-gray-500'
+  return (
+    <div className="flex items-center shrink-0">
+      <button type="button" onClick={() => onMove(-1)} disabled={disabled || index === 0}
+        className={cls} title="Move up" aria-label={`Move "${name}" up`}>
+        <ArrowUp size={14} />
+      </button>
+      <button type="button" onClick={() => onMove(1)} disabled={disabled || index === count - 1}
+        className={cls} title="Move down" aria-label={`Move "${name}" down`}>
+        <ArrowDown size={14} />
+      </button>
+    </div>
+  )
+}
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -100,11 +155,11 @@ function BannersTab({ token }: { token: string | null }) {
   const [ctaText, setCtaText]     = useState('')
   const [ctaLink, setCtaLink]     = useState('')
   const [color, setColor]         = useState('green')
-  const [order, setOrder]         = useState('0')
   const [posting, setPosting]     = useState(false)
   const [postErr, setPostErr]     = useState('')
   const [deletingId, setDeletingId] = useState<number | null>(null)
   const [togglingId, setTogglingId] = useState<number | null>(null)
+  const reorder = useReorder<Banner>('/api/admin/banners/order', token, setBanners)
 
   useEffect(() => {
     if (!token) return
@@ -126,12 +181,12 @@ function BannersTab({ token }: { token: string | null }) {
       const res = await fetch('/api/banners', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ title, subtitle, ctaText, ctaLink, color, displayOrder: Number(order) }),
+        body: JSON.stringify({ title, subtitle, ctaText, ctaLink, color }),
       })
       const data = await res.json()
       if (!res.ok) { setPostErr(data.error); return }
-      setBanners((prev) => [...prev, data].sort((a, b) => a.displayOrder - b.displayOrder))
-      setTitle(''); setSubtitle(''); setCtaText(''); setCtaLink(''); setColor('green'); setOrder('0')
+      setBanners((prev) => [...prev, data])
+      setTitle(''); setSubtitle(''); setCtaText(''); setCtaLink(''); setColor('green')
     } catch { setPostErr('Failed to add banner') }
     finally { setPosting(false) }
   }
@@ -193,13 +248,7 @@ function BannersTab({ token }: { token: string | null }) {
               <span className="text-xs text-gray-500 ml-1 whitespace-nowrap">Color: {COLORS[color]?.label}</span>
             </div>
             <div className="flex gap-3 items-center">
-              <input aria-label="Display order"
-                value={order}
-                onChange={(e) => setOrder(e.target.value)}
-                type="number"
-                placeholder="Order"
-                className="w-20 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
-              />
+              <span className="text-xs text-gray-500">Added at the end</span>
               <button
                 type="submit"
                 disabled={posting || !title.trim()}
@@ -222,7 +271,7 @@ function BannersTab({ token }: { token: string | null }) {
         </div>
       ) : (
         <div className="space-y-3">
-          {banners.map((b) => (
+          {banners.map((b, i) => (
             <div key={b.id} className={`rounded-lg overflow-hidden border border-gray-200 shadow-sm ${!b.active ? 'opacity-50' : ''}`}>
               <div className={`${bannerStyle(b.color).surface} px-5 py-4`}>
                 <p className="font-bold">{b.title}</p>
@@ -230,8 +279,10 @@ function BannersTab({ token }: { token: string | null }) {
                 {b.ctaText && <span className="mt-2 inline-block bg-white/20 text-xs px-3 py-1 rounded-full">{b.ctaText} → {b.ctaLink}</span>}
               </div>
               <div className="bg-white px-5 py-2 flex items-center justify-between">
-                <span className="text-xs text-gray-500">Order: {b.displayOrder} · {b.active ? 'Visible' : 'Hidden'}</span>
+                <span className="text-xs text-gray-500">{b.active ? 'Visible' : 'Hidden'}</span>
                 <div className="flex items-center gap-2">
+                  <MoveButtons name={b.title} index={i} count={banners.length} disabled={reorder.saving}
+                    onMove={(by) => reorder.move(banners, i, by)} />
                   <button
                     onClick={() => toggleActive(b)}
                     disabled={togglingId === b.id}
@@ -242,6 +293,7 @@ function BannersTab({ token }: { token: string | null }) {
                   <button
                     onClick={() => handleDelete(b.id)}
                     disabled={deletingId === b.id}
+                    title="Delete" aria-label={`Delete "${b.title}"`}
                     className="p-1.5 text-gray-500 hover:text-red-500 transition-colors disabled:opacity-40"
                   >
                     {deletingId === b.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
@@ -352,10 +404,10 @@ function FaqsTab({ token }: { token: string | null }) {
   const [loading, setLoading] = useState(true)
   const [question, setQuestion] = useState('')
   const [answer, setAnswer]     = useState('')
-  const [order, setOrder]       = useState('0')
   const [posting, setPosting]   = useState(false)
   const [postErr, setPostErr]   = useState('')
   const [deletingId, setDeletingId] = useState<number | null>(null)
+  const reorder = useReorder<Faq>('/api/admin/faqs/order', token, setFaqs)
 
   useEffect(() => {
     if (!token) return
@@ -374,12 +426,12 @@ function FaqsTab({ token }: { token: string | null }) {
       const res = await fetch('/api/admin/faqs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ question, answer, displayOrder: Number(order) }),
+        body: JSON.stringify({ question, answer }),
       })
       const data = await res.json()
       if (!res.ok) { setPostErr(data.error); return }
-      setFaqs((prev) => [...prev, data].sort((a, b) => a.displayOrder - b.displayOrder))
-      setQuestion(''); setAnswer(''); setOrder('0')
+      setFaqs((prev) => [...prev, data])
+      setQuestion(''); setAnswer('')
     } catch { setPostErr('Failed to add FAQ') }
     finally { setPosting(false) }
   }
@@ -414,13 +466,7 @@ function FaqsTab({ token }: { token: string | null }) {
           />
           {postErr && <p className="text-red-500 text-xs flex items-center gap-1"><AlertCircle size={12} />{postErr}</p>}
           <div className="flex items-center gap-3 justify-end">
-            <input aria-label="Display order"
-              value={order}
-              onChange={(e) => setOrder(e.target.value)}
-              type="number"
-              placeholder="Order"
-              className="w-20 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
-            />
+            <span className="text-xs text-gray-500">Added at the end</span>
             <button
               type="submit"
               disabled={posting || !question.trim() || !answer.trim()}
@@ -441,17 +487,19 @@ function FaqsTab({ token }: { token: string | null }) {
         </div>
       ) : (
         <div className="space-y-3">
-          {faqs.map((f) => (
+          {faqs.map((f, i) => (
             <div key={f.id} className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
                   <p className="font-semibold text-soil text-sm">{f.question}</p>
                   <p className="text-sm text-gray-600 mt-1 whitespace-pre-wrap">{f.answer}</p>
-                  <p className="text-xs text-gray-500 mt-1">Order: {f.displayOrder}</p>
                 </div>
+                <MoveButtons name={f.question} index={i} count={faqs.length} disabled={reorder.saving}
+                  onMove={(by) => reorder.move(faqs, i, by)} />
                 <button
                   onClick={() => handleDelete(f.id)}
                   disabled={deletingId === f.id}
+                  title="Delete" aria-label={`Delete "${f.question}"`}
                   className="shrink-0 p-1.5 text-gray-500 hover:text-red-500 transition-colors disabled:opacity-40"
                 >
                   {deletingId === f.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}

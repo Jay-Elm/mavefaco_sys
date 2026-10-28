@@ -17530,6 +17530,7 @@ export namespace Prisma {
     title: string | null
     body: string | null
     type: string | null
+    audience: string | null
     createdAt: Date | null
     authorId: number | null
   }
@@ -17539,6 +17540,7 @@ export namespace Prisma {
     title: string | null
     body: string | null
     type: string | null
+    audience: string | null
     createdAt: Date | null
     authorId: number | null
   }
@@ -17548,6 +17550,7 @@ export namespace Prisma {
     title: number
     body: number
     type: number
+    audience: number
     createdAt: number
     authorId: number
     _all: number
@@ -17569,6 +17572,7 @@ export namespace Prisma {
     title?: true
     body?: true
     type?: true
+    audience?: true
     createdAt?: true
     authorId?: true
   }
@@ -17578,6 +17582,7 @@ export namespace Prisma {
     title?: true
     body?: true
     type?: true
+    audience?: true
     createdAt?: true
     authorId?: true
   }
@@ -17587,6 +17592,7 @@ export namespace Prisma {
     title?: true
     body?: true
     type?: true
+    audience?: true
     createdAt?: true
     authorId?: true
     _all?: true
@@ -17683,6 +17689,7 @@ export namespace Prisma {
     title: string
     body: string
     type: string
+    audience: string
     createdAt: Date
     authorId: number
     _count: AnnouncementCountAggregateOutputType | null
@@ -17711,6 +17718,7 @@ export namespace Prisma {
     title?: boolean
     body?: boolean
     type?: boolean
+    audience?: boolean
     createdAt?: boolean
     authorId?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -17721,6 +17729,7 @@ export namespace Prisma {
     title?: boolean
     body?: boolean
     type?: boolean
+    audience?: boolean
     createdAt?: boolean
     authorId?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -17731,6 +17740,7 @@ export namespace Prisma {
     title?: boolean
     body?: boolean
     type?: boolean
+    audience?: boolean
     createdAt?: boolean
     authorId?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -17741,11 +17751,12 @@ export namespace Prisma {
     title?: boolean
     body?: boolean
     type?: boolean
+    audience?: boolean
     createdAt?: boolean
     authorId?: boolean
   }
 
-  export type AnnouncementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "body" | "type" | "createdAt" | "authorId", ExtArgs["result"]["announcement"]>
+  export type AnnouncementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "body" | "type" | "audience" | "createdAt" | "authorId", ExtArgs["result"]["announcement"]>
   export type AnnouncementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     author?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -17766,6 +17777,10 @@ export namespace Prisma {
       title: string
       body: string
       type: string
+      /**
+       * "everyone" (home page and farmer overview), "farmers" or "customers" (home page)
+       */
+      audience: string
       createdAt: Date
       authorId: number
     }, ExtArgs["result"]["announcement"]>
@@ -18196,6 +18211,7 @@ export namespace Prisma {
     readonly title: FieldRef<"Announcement", 'String'>
     readonly body: FieldRef<"Announcement", 'String'>
     readonly type: FieldRef<"Announcement", 'String'>
+    readonly audience: FieldRef<"Announcement", 'String'>
     readonly createdAt: FieldRef<"Announcement", 'DateTime'>
     readonly authorId: FieldRef<"Announcement", 'Int'>
   }
@@ -27702,6 +27718,7 @@ export namespace Prisma {
     title: 'title',
     body: 'body',
     type: 'type',
+    audience: 'audience',
     createdAt: 'createdAt',
     authorId: 'authorId'
   };
@@ -28901,6 +28918,7 @@ export namespace Prisma {
     title?: StringFilter<"Announcement"> | string
     body?: StringFilter<"Announcement"> | string
     type?: StringFilter<"Announcement"> | string
+    audience?: StringFilter<"Announcement"> | string
     createdAt?: DateTimeFilter<"Announcement"> | Date | string
     authorId?: IntFilter<"Announcement"> | number
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -28911,6 +28929,7 @@ export namespace Prisma {
     title?: SortOrder
     body?: SortOrder
     type?: SortOrder
+    audience?: SortOrder
     createdAt?: SortOrder
     authorId?: SortOrder
     author?: UserOrderByWithRelationInput
@@ -28924,6 +28943,7 @@ export namespace Prisma {
     title?: StringFilter<"Announcement"> | string
     body?: StringFilter<"Announcement"> | string
     type?: StringFilter<"Announcement"> | string
+    audience?: StringFilter<"Announcement"> | string
     createdAt?: DateTimeFilter<"Announcement"> | Date | string
     authorId?: IntFilter<"Announcement"> | number
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -28934,6 +28954,7 @@ export namespace Prisma {
     title?: SortOrder
     body?: SortOrder
     type?: SortOrder
+    audience?: SortOrder
     createdAt?: SortOrder
     authorId?: SortOrder
     _count?: AnnouncementCountOrderByAggregateInput
@@ -28951,6 +28972,7 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Announcement"> | string
     body?: StringWithAggregatesFilter<"Announcement"> | string
     type?: StringWithAggregatesFilter<"Announcement"> | string
+    audience?: StringWithAggregatesFilter<"Announcement"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Announcement"> | Date | string
     authorId?: IntWithAggregatesFilter<"Announcement"> | number
   }
@@ -30521,6 +30543,7 @@ export namespace Prisma {
     title: string
     body: string
     type?: string
+    audience?: string
     createdAt?: Date | string
     author: UserCreateNestedOneWithoutAnnouncementsInput
   }
@@ -30530,6 +30553,7 @@ export namespace Prisma {
     title: string
     body: string
     type?: string
+    audience?: string
     createdAt?: Date | string
     authorId: number
   }
@@ -30538,6 +30562,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
+    audience?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     author?: UserUpdateOneRequiredWithoutAnnouncementsNestedInput
   }
@@ -30547,6 +30572,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
+    audience?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     authorId?: IntFieldUpdateOperationsInput | number
   }
@@ -30556,6 +30582,7 @@ export namespace Prisma {
     title: string
     body: string
     type?: string
+    audience?: string
     createdAt?: Date | string
     authorId: number
   }
@@ -30564,6 +30591,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
+    audience?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -30572,6 +30600,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
+    audience?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     authorId?: IntFieldUpdateOperationsInput | number
   }
@@ -32164,6 +32193,7 @@ export namespace Prisma {
     title?: SortOrder
     body?: SortOrder
     type?: SortOrder
+    audience?: SortOrder
     createdAt?: SortOrder
     authorId?: SortOrder
   }
@@ -32178,6 +32208,7 @@ export namespace Prisma {
     title?: SortOrder
     body?: SortOrder
     type?: SortOrder
+    audience?: SortOrder
     createdAt?: SortOrder
     authorId?: SortOrder
   }
@@ -32187,6 +32218,7 @@ export namespace Prisma {
     title?: SortOrder
     body?: SortOrder
     type?: SortOrder
+    audience?: SortOrder
     createdAt?: SortOrder
     authorId?: SortOrder
   }
@@ -34217,6 +34249,7 @@ export namespace Prisma {
     title: string
     body: string
     type?: string
+    audience?: string
     createdAt?: Date | string
   }
 
@@ -34225,6 +34258,7 @@ export namespace Prisma {
     title: string
     body: string
     type?: string
+    audience?: string
     createdAt?: Date | string
   }
 
@@ -34652,6 +34686,7 @@ export namespace Prisma {
     title?: StringFilter<"Announcement"> | string
     body?: StringFilter<"Announcement"> | string
     type?: StringFilter<"Announcement"> | string
+    audience?: StringFilter<"Announcement"> | string
     createdAt?: DateTimeFilter<"Announcement"> | Date | string
     authorId?: IntFilter<"Announcement"> | number
   }
@@ -38111,6 +38146,7 @@ export namespace Prisma {
     title: string
     body: string
     type?: string
+    audience?: string
     createdAt?: Date | string
   }
 
@@ -38334,6 +38370,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
+    audience?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -38342,6 +38379,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
+    audience?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -38350,6 +38388,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
+    audience?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

@@ -32,9 +32,9 @@ export default function FarmerOverviewPage() {
   useEffect(() => {
     if (!token || !user) return
 
-    // Staff announcements appear on the home page, which farmers don't see,
-    // so the overview shows them here.
-    fetch('/api/announcements')
+    // Announcements for everyone or for farmers. The API picks them by the
+    // caller's role, so this request has to be signed in.
+    fetch('/api/announcements', { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => r.json())
       .then((d) => { if (Array.isArray(d)) setAnnouncements(d) })
 

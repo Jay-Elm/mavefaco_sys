@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
     const banners = await prisma.banner.findMany({
-      orderBy: { displayOrder: "asc" },
+      orderBy: [{ displayOrder: "asc" }, { id: "asc" }],
     });
     return NextResponse.json(banners);
   } catch {

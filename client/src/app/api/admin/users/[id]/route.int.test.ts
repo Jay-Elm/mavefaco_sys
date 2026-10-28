@@ -9,7 +9,7 @@ vi.mock("@/lib/email", async (importOriginal) => ({
 import { PATCH } from "./route";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/email";
-import { createUser, params, request, type SessionUser } from "@/test-utils/integration/helpers";
+import { createIdSubmission, createUser, params, request, type SessionUser } from "@/test-utils/integration/helpers";
 
 const patch = (as: SessionUser, targetId: number, body: unknown) =>
   PATCH(request(`/api/admin/users/${targetId}`, { method: "PATCH", as, body }), params({ id: String(targetId) }));
@@ -93,5 +93,34 @@ describe("PATCH /api/admin/users/[id] — unchanged rules", () => {
 
     expect((await patch(manager, customer.id, { suspended: true })).status).toBe(200);
     expect((await prisma.user.findUniqueOrThrow({ where: { id: customer.id } })).suspended).toBe(true);
+  });
+});
+
+describe("PATCH /api/admin/users/[id] — verifying in person", () => {
+  it("closes the farmer's pending ID submission, so it leaves the review queue", async () => {
+    const manager = await createUser({ role: "manager" });
+    const farmer = await createUser({ role: "farmer" });
+    const pending = await createIdSubmission(farmer.id);
+    const oldRejected = await createIdSubmission(farmer.id, { status: "rejected", reviewedAt: new Date("2026-01-01") });
+
+    const res = await patch(manager, farmer.id, { verifiedInPerson: true });
+
+    expect(res.status).toBe(200);
+    const after = await prisma.idSubmission.findUniqueOrThrow({ where: { id: pending.id } });
+    expect(after).toMatchObject({ status: "approved", reviewedById: manager.id });
+    expect(after.reviewedAt).not.toBeNull(); // starts the 30-day photo purge clock
+    // Already-reviewed submissions are left as they were.
+    expect((await prisma.idSubmission.findUniqueOrThrow({ where: { id: oldRejected.id } })).status).toBe("rejected");
+    expect(await prisma.idSubmission.count({ where: { status: "pending" } })).toBe(0);
+  });
+
+  it("revoking verification leaves submissions alone", async () => {
+    const manager = await createUser({ role: "manager" });
+    const farmer = await createUser({ role: "farmer" });
+    await prisma.user.update({ where: { id: farmer.id }, data: { verified: true, verifiedAt: new Date() } });
+    const approved = await createIdSubmission(farmer.id, { status: "approved", reviewedAt: new Date() });
+
+    expect((await patch(manager, farmer.id, { verified: false })).status).toBe(200);
+    expect((await prisma.idSubmission.findUniqueOrThrow({ where: { id: approved.id } })).status).toBe("approved");
   });
 });

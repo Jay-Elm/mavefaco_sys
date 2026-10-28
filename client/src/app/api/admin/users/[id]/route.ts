@@ -70,7 +70,7 @@ export async function PATCH(
 
     const hashed = newPassword !== undefined ? await bcrypt.hash(newPassword, 10) : undefined;
 
-    const updated = await prisma.user.update({
+    const userUpdate = prisma.user.update({
       where: { id: target.id },
       data: {
         ...(typeof suspended === "boolean" && { suspended }),
@@ -89,6 +89,18 @@ export async function PATCH(
       },
       select: { id: true, name: true, email: true, role: true, suspended: true, verified: true, verifiedInPersonAt: true, totpEnabled: true },
     });
+    // Checking the ID in person settles any ID photos still waiting for
+    // review: close the submission too, or it stays in the Users badge and
+    // its photos are never purged (the purge counts from reviewedAt).
+    const [updated] = verifiedInPerson
+      ? await prisma.$transaction([
+          userUpdate,
+          prisma.idSubmission.updateMany({
+            where: { userId: target.id, status: "pending" },
+            data: { status: "approved", reviewedById: actor.id, reviewedAt: new Date() },
+          }),
+        ])
+      : [await userUpdate];
 
     if (resetMfa) {
       await prisma.totpBackupCode.deleteMany({ where: { userId: target.id } });

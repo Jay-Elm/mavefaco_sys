@@ -299,6 +299,8 @@ model Announcement {
   title     String
   body      String
   type      String   @default("info")
+  /// "everyone" (home page and farmer overview), "farmers" or "customers" (home page)
+  audience  String   @default("everyone")
   createdAt DateTime @default(now())
 
   authorId Int

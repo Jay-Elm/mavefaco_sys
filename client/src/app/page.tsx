@@ -30,12 +30,13 @@ async function getFeaturedProducts() {
 async function getBanners() {
   return prisma.banner.findMany({
     where: { active: true },
-    orderBy: { displayOrder: "asc" },
+    orderBy: [{ displayOrder: "asc" }, { id: "asc" }],
   });
 }
 
 async function getAnnouncements() {
   return prisma.announcement.findMany({
+    where: { audience: { in: ["everyone", "customers"] } },
     orderBy: { createdAt: "desc" },
     include: { author: { select: { name: true } } },
   });

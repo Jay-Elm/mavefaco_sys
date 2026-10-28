@@ -4,11 +4,21 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
-import { announcementCreateSchema } from "@/validators/announcement";
+import { announcementCreateSchema, type AnnouncementAudience } from "@/validators/announcement";
 
-export async function GET() {
+/**
+ * GET /api/announcements — the announcements the caller may see: staff see
+ * all of them, farmers those for everyone or farmers, and customers and
+ * guests those for everyone or customers.
+ */
+export async function GET(req: NextRequest) {
   try {
+    const viewer = await getActiveAuthUser(req);
+    const isStaff = !!viewer && authorize(viewer, [ROLES.ADMIN, ROLES.MANAGER]);
+    const audiences: AnnouncementAudience[] =
+      viewer?.role === ROLES.FARMER ? ["everyone", "farmers"] : ["everyone", "customers"];
     const announcements = await prisma.announcement.findMany({
+      where: isStaff ? {} : { audience: { in: audiences } },
       orderBy: { createdAt: "desc" },
       include: { author: { select: { name: true, role: true } } },
     });
@@ -28,10 +38,10 @@ export async function POST(req: NextRequest) {
     const parsed = announcementCreateSchema.safeParse(await req.json());
     if (!parsed.success)
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
-    const { title, body, type } = parsed.data;
+    const { title, body, type, audience } = parsed.data;
 
     const announcement = await prisma.announcement.create({
-      data: { title, body, type, authorId: actor.id },
+      data: { title, body, type, audience, authorId: actor.id },
       include: { author: { select: { name: true, role: true } } },
     });
 

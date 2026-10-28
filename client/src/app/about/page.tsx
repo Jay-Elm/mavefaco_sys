@@ -5,7 +5,7 @@ import { isSafeUrl } from "@/lib/url";
 async function getSiteData() {
   const [rows, faqs] = await Promise.all([
     prisma.siteContent.findMany(),
-    prisma.faq.findMany({ orderBy: { displayOrder: "asc" } }),
+    prisma.faq.findMany({ orderBy: [{ displayOrder: "asc" }, { id: "asc" }] }),
   ]);
   const content = Object.fromEntries(rows.map((r) => [r.key, r.value]));
   return { content, faqs };

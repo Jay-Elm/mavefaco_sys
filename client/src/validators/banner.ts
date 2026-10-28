@@ -23,12 +23,12 @@ export const bannerCreateSchema = z.object({
   ctaText: z.string().trim().max(MAX.bannerCtaText, tooLong("Button text", MAX.bannerCtaText)).nullish(),
   ctaLink: ctaLinkField,
   color: z.enum(BANNER_COLORS).catch("green"),
-  displayOrder: z.coerce.number().catch(0),
 });
 
 export type BannerCreateInput = z.infer<typeof bannerCreateSchema>;
 
-// PUT /api/banners/[id] — every field optional (partial update).
+// PUT /api/banners/[id] — every field optional (partial update). Order is
+// set through /api/admin/banners/order.
 export const bannerUpdateSchema = z.object({
   title: z.string().trim().min(1).max(MAX.bannerTitle, tooLong("Title", MAX.bannerTitle)).optional(),
   subtitle: z.string().trim().max(MAX.bannerSubtitle, tooLong("Subtitle", MAX.bannerSubtitle)).nullish(),
@@ -36,7 +36,6 @@ export const bannerUpdateSchema = z.object({
   ctaLink: ctaLinkField,
   color: z.enum(BANNER_COLORS).catch("green").optional(),
   active: z.boolean().optional(),
-  displayOrder: z.coerce.number().optional(),
 });
 
 export type BannerUpdateInput = z.infer<typeof bannerUpdateSchema>;

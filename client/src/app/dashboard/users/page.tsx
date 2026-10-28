@@ -146,7 +146,13 @@ export default function UsersPage() {
       })
       const data = await res.json()
       if (!res.ok) { setActionError({ id: u.id, msg: data.error }); return }
-      setUsers((prev) => prev.map((x) => (x.id === u.id ? { ...x, verified: data.verified, verifiedInPersonAt: data.verifiedInPersonAt } : x)))
+      setUsers((prev) => prev.map((x) => (x.id === u.id ? {
+        ...x,
+        verified: data.verified,
+        verifiedInPersonAt: data.verifiedInPersonAt,
+        // Verifying in person closes a pending ID submission as approved.
+        idStatus: !revoke && x.idStatus === 'pending' ? 'approved' : x.idStatus,
+      } : x)))
       refreshNavBadges()
     } catch {
       setActionError({ id: u.id, msg: 'Request failed' })

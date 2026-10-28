@@ -4,12 +4,14 @@ import { useEffect, useState, useRef } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, Megaphone, Trash2, AlertCircle, Plus, Info, AlertTriangle, Leaf } from 'lucide-react'
 import { useDialog } from '@/contexts/DialogContext'
+import { ANNOUNCEMENT_AUDIENCES, type AnnouncementAudience } from '@/validators/announcement'
 
 interface Announcement {
   id: number
   title: string
   body: string
   type: string
+  audience: AnnouncementAudience
   createdAt: string
   author: { name: string; role: string }
 }
@@ -22,6 +24,13 @@ const TYPE_CONFIG = {
 
 type AnnouncementType = keyof typeof TYPE_CONFIG
 
+// Where each audience's announcements appear.
+const AUDIENCE_CONFIG: Record<AnnouncementAudience, { label: string; where: string }> = {
+  everyone:  { label: 'Everyone',  where: 'Home page and farmer dashboard' },
+  farmers:   { label: 'Farmers',   where: 'Farmer dashboard only' },
+  customers: { label: 'Customers', where: 'Home page only' },
+}
+
 export default function AnnouncementsPage() {
   const { token } = useAuth()
   const dialog = useDialog()
@@ -31,6 +40,7 @@ export default function AnnouncementsPage() {
   const [title, setTitle]       = useState('')
   const [body, setBody]         = useState('')
   const [type, setType]         = useState<AnnouncementType>('info')
+  const [audience, setAudience] = useState<AnnouncementAudience>('everyone')
   const [posting, setPosting]   = useState(false)
   const [postError, setPostError] = useState('')
   const [deletingId, setDeletingId] = useState<number | null>(null)
@@ -54,7 +64,7 @@ export default function AnnouncementsPage() {
       const res = await fetch('/api/announcements', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ title: title.trim(), body: body.trim(), type }),
+        body: JSON.stringify({ title: title.trim(), body: body.trim(), type, audience }),
       })
       const data = await res.json()
       if (!res.ok) { setPostError(data.error); return }
@@ -62,6 +72,7 @@ export default function AnnouncementsPage() {
       setTitle('')
       setBody('')
       setType('info')
+      setAudience('everyone')
       titleRef.current?.focus()
     } catch {
       setPostError('Failed to post announcement')
@@ -71,7 +82,7 @@ export default function AnnouncementsPage() {
   }
 
   async function handleDelete(id: number) {
-    if (!(await dialog.confirm({ title: 'Delete this announcement?', message: 'It will be removed from the home page.', confirmLabel: 'Delete', tone: 'danger' }))) return
+    if (!(await dialog.confirm({ title: 'Delete this announcement?', message: 'Nobody will see it any more.', confirmLabel: 'Delete', tone: 'danger' }))) return
     if (!token) return
     setDeletingId(id)
     try {
@@ -143,7 +154,20 @@ export default function AnnouncementsPage() {
               <AlertCircle size={12} /> {postError}
             </p>
           )}
-          <div className="flex justify-end">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <label className="flex flex-wrap items-center gap-2 text-sm text-gray-700">
+              Show to
+              <select
+                value={audience}
+                onChange={(e) => setAudience(e.target.value as AnnouncementAudience)}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
+              >
+                {ANNOUNCEMENT_AUDIENCES.map((a) => (
+                  <option key={a} value={a}>{AUDIENCE_CONFIG[a].label}</option>
+                ))}
+              </select>
+              <span className="text-xs text-gray-500">{AUDIENCE_CONFIG[audience].where}</span>
+            </label>
             <button
               type="submit"
               disabled={posting || !title.trim() || !body.trim()}
@@ -182,7 +206,7 @@ export default function AnnouncementsPage() {
                     </div>
                     <p className="text-sm text-gray-600 whitespace-pre-wrap">{a.body}</p>
                     <p className="text-xs text-gray-500 mt-2">
-                      Posted by {a.author.name} · {new Date(a.createdAt).toLocaleDateString('en-PH', { dateStyle: 'medium' })}
+                      For {(AUDIENCE_CONFIG[a.audience] ?? AUDIENCE_CONFIG.everyone).label.toLowerCase()} · Posted by {a.author.name} · {new Date(a.createdAt).toLocaleDateString('en-PH', { dateStyle: 'medium' })}
                     </p>
                   </div>
                   <button

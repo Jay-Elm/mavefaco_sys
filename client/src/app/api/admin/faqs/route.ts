@@ -5,6 +5,7 @@ import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 import { faqCreateSchema } from "@/validators/faq";
+import { nextDisplayOrder } from "@/lib/reorder";
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,7 +14,7 @@ export async function GET(req: NextRequest) {
     if (!authorize(actor, [ROLES.ADMIN]))
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    const faqs = await prisma.faq.findMany({ orderBy: { displayOrder: "asc" } });
+    const faqs = await prisma.faq.findMany({ orderBy: [{ displayOrder: "asc" }, { id: "asc" }] });
     return NextResponse.json(faqs);
   } catch {
     return NextResponse.json({ error: "Failed to fetch FAQs" }, { status: 500 });
@@ -31,7 +32,8 @@ export async function POST(req: NextRequest) {
     if (!parsed.success)
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
 
-    const faq = await prisma.faq.create({ data: parsed.data });
+    // New FAQs go to the end; the move buttons place them from there.
+    const faq = await prisma.faq.create({ data: { ...parsed.data, displayOrder: await nextDisplayOrder("faq") } });
     await logAudit("CREATE_FAQ", "FAQ", faq.id, actor.id);
     return NextResponse.json(faq, { status: 201 });
   } catch {

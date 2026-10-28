@@ -5,12 +5,13 @@ import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 import { bannerCreateSchema } from "@/validators/banner";
+import { nextDisplayOrder } from "@/lib/reorder";
 
 export async function GET() {
   try {
     const banners = await prisma.banner.findMany({
       where: { active: true },
-      orderBy: { displayOrder: "asc" },
+      orderBy: [{ displayOrder: "asc" }, { id: "asc" }],
     });
     return NextResponse.json(banners);
   } catch {
@@ -29,7 +30,7 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
-    const { title, subtitle, ctaText, ctaLink, color, displayOrder } = parsed.data;
+    const { title, subtitle, ctaText, ctaLink, color } = parsed.data;
 
     const banner = await prisma.banner.create({
       data: {
@@ -38,7 +39,8 @@ export async function POST(req: NextRequest) {
         ctaText: ctaText || null,
         ctaLink: ctaLink || null,
         color,
-        displayOrder,
+        // New banners go to the end; the move buttons place them from there.
+        displayOrder: await nextDisplayOrder("banner"),
       },
     });
     await logAudit("CREATE_BANNER", "BANNER", banner.id, actor.id);
