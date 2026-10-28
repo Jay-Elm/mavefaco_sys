@@ -125,9 +125,15 @@ export default function Navbar() {
         <div className={`${isDashboardStyle ? 'px-5' : 'max-w-[1200px] mx-auto px-6'} w-full flex items-center justify-between gap-6`}>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0" aria-label="MaVeFaCo home">
-            <Sprout size={20} className="text-calamansi" aria-hidden="true" />
-            <span className="font-display text-2xl font-extrabold leading-none">MaVeFaCo</span>
+          <Link href="/" className="flex items-center gap-2 min-w-0" aria-label="MaVeFaCo home">
+            <Sprout size={20} className="text-calamansi shrink-0" aria-hidden="true" />
+            <span className="flex flex-col min-w-0">
+              <span className="font-display text-2xl font-extrabold leading-none">MaVeFaCo</span>
+              {/* Wraps to two lines on narrow phones; one line from sm up. */}
+              <span className="mt-1 max-w-[190px] sm:max-w-none text-[11px] sm:text-xs leading-tight text-white/70">
+                Mayon Vegetable Farmers Agriculture Cooperative
+              </span>
+            </span>
           </Link>
 
           {/* Desktop nav */}
