@@ -1,6 +1,7 @@
 import Link from 'next/link'
-import { Sprout, MapPin, Mail, Phone } from 'lucide-react'
+import { MapPin, Mail, Phone } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
+import Logo from '@/components/Logo'
 
 // Contact details come from the administrator's Coop Info settings, the
 // same source as the About page, so the two never disagree.
@@ -26,7 +27,7 @@ export default async function Footer() {
       <div className="max-w-[1200px] mx-auto px-6 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-sm">
         <div>
           <div className="flex items-center gap-2 text-white">
-            <Sprout size={20} className="text-calamansi" aria-hidden="true" />
+            <Logo variant="light" height={34} />
             <span className="font-display text-2xl font-extrabold leading-none">MaVeFaCo</span>
           </div>
           <p className="mt-4 leading-relaxed max-w-[32ch]">

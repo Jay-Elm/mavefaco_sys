@@ -9,6 +9,7 @@ import {
   LayoutDashboard, Users, Tag, Package, ShoppingCart,
   ScrollText, BarChart2, Megaphone, Globe, Loader2, Menu, Sprout, CalendarRange,
 } from 'lucide-react'
+import Logo from '@/components/Logo'
 
 const ADMIN_NAV = [
   { href: '/dashboard', label: 'Overview', icon: LayoutDashboard, exact: true },
@@ -116,7 +117,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           })}
         </nav>
 
-        <div className="px-4 py-4 border-t border-white/10 text-xs text-white/40">
+        <div className="px-4 py-4 border-t border-white/10 flex items-center gap-2 text-xs text-white/40">
+          <Logo variant="light" height={16} className="opacity-70" />
           MaVeFaCo v0.1
         </div>
       </aside>

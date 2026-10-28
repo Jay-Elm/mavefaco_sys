@@ -4,8 +4,9 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { Mail, Leaf, ArrowLeft, CheckCircle } from 'lucide-react'
+import { Mail, ArrowLeft, CheckCircle } from 'lucide-react'
 import { forgotPasswordSchema, type ForgotPasswordInput as ForgotPasswordForm } from '@/validators/auth'
+import Logo from '@/components/Logo'
 
 export default function ForgotPasswordPage() {
   const [submitted, setSubmitted] = useState(false)
@@ -47,9 +48,7 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-3">
-            <div className="bg-shoot p-3 rounded-full">
-              <Leaf size={28} className="text-paddy" />
-            </div>
+            <Logo height={56} alt="MaVeFaCo" />
           </div>
           <h1 className="font-display text-4xl font-bold text-soil">Reset your password</h1>
           <p className="text-gray-500 text-sm mt-1">We&apos;ll email you a link to choose a new one</p>

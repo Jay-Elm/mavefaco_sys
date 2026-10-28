@@ -6,9 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
-import { LogIn, Leaf, Mail } from 'lucide-react'
+import { LogIn, Mail } from 'lucide-react'
 import { loginSchema, type LoginInput as LoginForm } from '@/validators/auth'
 import MfaGate from '@/components/MfaGate'
+import Logo from '@/components/Logo'
 
 function roleDest(role?: string) {
   if (role === 'admin' || role === 'manager') return '/dashboard'
@@ -87,9 +88,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-3">
-            <div className="bg-shoot p-3 rounded-full">
-              <Leaf size={28} className="text-paddy" />
-            </div>
+            <Logo height={56} alt="MaVeFaCo" />
           </div>
           <h1 className="font-display text-4xl font-bold text-soil">Welcome back</h1>
           <p className="text-gray-500 text-sm mt-1">Sign in to your MaVeFaCo account</p>

@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
-import { Leaf, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import VerifyEmailStatus from './VerifyEmailStatus'
+import Logo from '@/components/Logo'
 
 function LoadingFallback() {
   return (
@@ -16,9 +17,7 @@ export default function VerifyEmailPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-3">
-            <div className="bg-shoot p-3 rounded-full">
-              <Leaf size={28} className="text-paddy" />
-            </div>
+            <Logo height={56} alt="MaVeFaCo" />
           </div>
           <h1 className="font-display text-4xl font-bold text-soil">Verify your email</h1>
         </div>

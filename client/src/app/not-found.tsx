@@ -1,13 +1,12 @@
 import Link from 'next/link'
-import { Leaf, ArrowLeft, ShoppingBag } from 'lucide-react'
+import { ArrowLeft, ShoppingBag } from 'lucide-react'
+import Logo from '@/components/Logo'
 
 export default function NotFound() {
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-6 bg-white">
       <div className="max-w-md w-full text-center">
-        <div className="w-16 h-16 bg-[#1B3A2D] rounded-card flex items-center justify-center mx-auto mb-8">
-          <Leaf size={28} className="text-paddy/40" />
-        </div>
+        <Logo height={56} alt="MaVeFaCo" className="mx-auto mb-8" />
 
         <p className="font-display text-8xl font-bold text-gray-100 leading-none select-none mb-4">404</p>
 

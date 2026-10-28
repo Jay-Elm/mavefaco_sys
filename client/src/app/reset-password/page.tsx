@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
-import { Leaf, Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import ResetPasswordForm from './ResetPasswordForm'
+import Logo from '@/components/Logo'
 
 // useSearchParams (to read the reset token) needs a Suspense boundary
 // around the Client Component that calls it, or the production build
@@ -19,9 +20,7 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-3">
-            <div className="bg-shoot p-3 rounded-full">
-              <Leaf size={28} className="text-paddy" />
-            </div>
+            <Logo height={56} alt="MaVeFaCo" />
           </div>
           <h1 className="font-display text-4xl font-bold text-soil">Choose a new password</h1>
         </div>

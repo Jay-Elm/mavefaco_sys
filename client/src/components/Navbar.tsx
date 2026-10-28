@@ -7,10 +7,11 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
 import LogoutConfirmModal from '@/components/LogoutConfirmModal'
 import {
-  ShoppingBag, LogIn, LogOut, Sprout, ChevronDown,
+  ShoppingBag, LogIn, LogOut, ChevronDown,
   LayoutDashboard, ShoppingCart, ClipboardList, UserCircle,
   Info, MessageCircle, Menu, X,
 } from 'lucide-react'
+import Logo from '@/components/Logo'
 
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth()
@@ -126,7 +127,7 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 min-w-0" aria-label="MaVeFaCo home">
-            <Sprout size={20} className="text-calamansi shrink-0" aria-hidden="true" />
+            <Logo variant="light" height={34} priority />
             <span className="flex flex-col min-w-0">
               <span className="font-display text-2xl font-extrabold leading-none">MaVeFaCo</span>
               {/* Wraps to two lines on narrow phones; one line from sm up. */}

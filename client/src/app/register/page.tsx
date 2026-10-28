@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { UserPlus, Leaf, ShoppingBag, Mail, CheckCircle } from 'lucide-react'
 import { registerSchema, type RegisterInput as RegisterForm } from '@/validators/auth'
+import Logo from '@/components/Logo'
 
 function roleDest(role?: string) {
   if (role === 'admin' || role === 'manager') return '/dashboard'
@@ -62,9 +63,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-3">
-            <div className="bg-shoot p-3 rounded-full">
-              <Leaf size={28} className="text-paddy" />
-            </div>
+            <Logo height={56} alt="MaVeFaCo" />
           </div>
           <h1 className="font-display text-4xl font-bold text-soil">Create an account</h1>
           <p className="text-gray-500 text-sm mt-1">Join the MaVeFaCo community</p>
