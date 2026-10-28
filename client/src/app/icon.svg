@@ -1,0 +1,6 @@
+<svg role="img" aria-label="MaVeFaCo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#013B1E"/>
+  <circle cx="42" cy="24" r="9.5" fill="#CE9B30"/>
+  <path d="M30 16 C28.5 31 19 44 3 50 L61 50 C45 45.5 33 33 30 16 Z" fill="#F7F8F4"/>
+  <path d="M33.5 29 C32 38 26 46 15 50 M40.5 39.5 C38.5 44 35 47.5 29 50" fill="none" stroke="#013B1E" stroke-width="3" stroke-linecap="round"/>
+</svg>
