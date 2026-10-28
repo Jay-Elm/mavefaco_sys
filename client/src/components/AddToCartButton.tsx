@@ -122,12 +122,12 @@ export default function AddToCartButton({ product }: Props) {
   if (product.stock === 0) {
     return (
       <div className="space-y-2">
-        <button disabled className="w-full bg-gray-200 text-gray-400 font-semibold py-3 rounded-xl cursor-not-allowed text-sm">
+        <button disabled className="btn w-full bg-gray-100 text-gray-500 cursor-not-allowed">
           Out of Stock
         </button>
         <button
           onClick={handleMessageFarmer}
-          className="w-full flex items-center justify-center gap-2 text-gray-600 hover:text-forest font-medium py-2 text-sm transition-colors"
+          className="w-full flex items-center justify-center gap-2 text-gray-600 hover:text-paddy font-medium py-2 text-sm transition-colors"
         >
           <MessageCircle size={16} />
           Message Farmer
@@ -142,18 +142,14 @@ export default function AddToCartButton({ product }: Props) {
         <div className="flex gap-2">
           <button
             onClick={() => openModal('cart')}
-            className={`flex-1 font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors ${
-              cartFlash
-                ? 'bg-tint text-forest border border-forest-mid'
-                : 'bg-forest hover:bg-forest-mid text-white'
-            }`}
+            className={`btn flex-1 ${cartFlash ? 'bg-shoot text-paddy-deep' : 'btn-primary'}`}
           >
             <ShoppingCart size={16} />
             {cartFlash ? 'Added!' : 'Add to Cart'}
           </button>
           <button
             onClick={() => openModal('buy')}
-            className="flex-1 font-semibold py-3 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors border-2 border-harvest text-harvest hover:bg-harvest hover:text-white"
+            className="btn btn-outline flex-1"
           >
             <Zap size={16} />
             Buy Now
@@ -162,7 +158,7 @@ export default function AddToCartButton({ product }: Props) {
 
         <button
           onClick={handleMessageFarmer}
-          className="w-full flex items-center justify-center gap-2 text-gray-600 hover:text-forest font-medium py-2 text-sm transition-colors"
+          className="w-full flex items-center justify-center gap-2 text-gray-600 hover:text-paddy font-medium py-2 text-sm transition-colors"
         >
           <MessageCircle size={16} />
           Message Farmer
@@ -173,13 +169,13 @@ export default function AddToCartButton({ product }: Props) {
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center px-4 pb-4 sm:pb-0">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={closeModal} />
 
-          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 space-y-5">
+          <div role="dialog" aria-modal="true" aria-label={`Choose how much ${product.name}`} className="relative bg-white rounded-card shadow-2xl w-full max-w-sm p-6 space-y-5">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <h3 className="font-bold text-gray-900 text-base leading-snug">{product.name}</h3>
-                <p className="text-sm text-gray-400 mt-0.5">₱{product.price.toFixed(2)} / {product.unit}</p>
+                <h3 className="font-display text-2xl font-bold leading-tight">{product.name}</h3>
+                <p className="text-sm text-gray-600 mt-0.5 tabular">₱{product.price.toFixed(2)} / {product.unit}</p>
               </div>
-              <button onClick={closeModal} className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors mt-0.5">
+              <button onClick={closeModal} aria-label="Close" className="flex-shrink-0 text-gray-500 hover:text-soil transition-colors mt-0.5">
                 <X size={20} />
               </button>
             </div>
@@ -197,13 +193,13 @@ export default function AddToCartButton({ product }: Props) {
                 <div className="flex gap-2">
                   <button
                     onClick={handleReplaceAndConfirm}
-                    className="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
+                    className="btn btn-primary flex-1"
                   >
                     Clear &amp; Continue
                   </button>
                   <button
                     onClick={closeModal}
-                    className="flex-1 border border-gray-300 text-gray-600 hover:border-gray-400 font-medium py-2.5 rounded-xl text-sm transition-colors"
+                    className="btn flex-1 border-gray-300 text-gray-700 hover:border-gray-400"
                   >
                     Keep Cart
                   </button>
@@ -229,9 +225,9 @@ export default function AddToCartButton({ product }: Props) {
                         step={step}
                         value={fmtQty(quantity)}
                         onChange={e => handleQtyInput(e.target.value)}
-                        className="w-20 text-center text-2xl font-bold text-gray-900 border-b-2 border-gray-200 focus:border-green-500 focus:outline-none bg-transparent tabular-nums py-0.5"
+                        className="w-20 text-center text-2xl font-bold text-gray-900 border-b-2 border-gray-200 focus:border-paddy focus:outline-none bg-transparent tabular-nums py-0.5"
                       />
-                      <span className="text-xs text-gray-400">{product.unit}</span>
+                      <span className="text-xs text-gray-600">{product.unit}</span>
                     </div>
                     <button
                       onClick={() => changeQty(step)}
@@ -241,27 +237,27 @@ export default function AddToCartButton({ product }: Props) {
                       <Plus size={18} />
                     </button>
                   </div>
-                  <p className="text-xs text-gray-400">{fmtQty(product.stock)} {product.unit} available</p>
+                  <p className="text-xs text-gray-600 tabular">{fmtQty(product.stock)} {product.unit} available</p>
                 </div>
 
                 {/* Subtotal */}
-                <div className="bg-gray-50 rounded-xl px-5 py-3.5 flex items-center justify-between">
-                  <span className="text-sm text-gray-500">Subtotal</span>
-                  <span className="text-xl font-bold text-green-700">₱{subtotal.toFixed(2)}</span>
+                <div className="bg-field rounded-lg px-5 py-3.5 flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Subtotal</span>
+                  <span className="font-display text-3xl font-bold tabular">₱{subtotal.toFixed(2)}</span>
                 </div>
 
                 {/* Action buttons */}
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleConfirm('cart')}
-                    className="flex-1 flex items-center justify-center gap-1.5 bg-forest hover:bg-forest-mid text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+                    className="btn btn-primary flex-1"
                   >
                     <ShoppingCart size={15} />
                     Add to Cart
                   </button>
                   <button
                     onClick={() => handleConfirm('buy')}
-                    className="flex-1 flex items-center justify-center gap-1.5 border-2 border-harvest text-harvest hover:bg-harvest hover:text-white font-semibold py-3 rounded-xl text-sm transition-colors"
+                    className="btn btn-outline flex-1"
                   >
                     <Zap size={15} />
                     Buy Now

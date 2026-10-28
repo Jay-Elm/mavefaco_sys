@@ -121,7 +121,7 @@ export default function IdVerificationSection({ token }: { token: string }) {
           <button
             type="button"
             onClick={() => { setCapturing(true); setError('') }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-paddy text-white text-sm font-medium rounded-lg hover:bg-paddy-deep transition-colors"
           >
             {status === 'rejected' ? 'Submit your ID again' : 'Verify my ID'}
           </button>

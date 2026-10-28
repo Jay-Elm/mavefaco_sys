@@ -76,8 +76,8 @@ export default function SupplyPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex flex-wrap items-center gap-3 mb-2">
-        <CalendarRange size={22} className="text-forest" />
-        <h1 className="font-serif text-2xl font-bold text-gray-900">Upcoming Supply</h1>
+        <CalendarRange size={22} className="text-paddy" />
+        <h1 className="text-2xl font-bold text-gray-900">Upcoming Supply</h1>
         <button
           onClick={exportCsv}
           className="ml-auto inline-flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-900 border border-gray-300 rounded-lg px-3 py-1.5"
@@ -127,7 +127,7 @@ export default function SupplyPage() {
                         <button
                           onClick={() => setOpen(open === c.cropType.id ? null : c.cropType.id)}
                           aria-expanded={open === c.cropType.id}
-                          className="inline-flex items-center gap-1 hover:text-forest"
+                          className="inline-flex items-center gap-1 hover:text-paddy"
                         >
                           {open === c.cropType.id ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                           {c.cropType.name}
@@ -145,7 +145,7 @@ export default function SupplyPage() {
                               onMouseLeave={() => setHover(null)}
                               onFocus={(e) => { const r = e.currentTarget.getBoundingClientRect(); setHover({ crop: c.cropType.name, week: data.weeks[i], ...w, x: r.right, y: r.top }) }}
                               onBlur={() => setHover(null)}
-                              className={`relative h-11 rounded flex flex-col items-center justify-center text-xs tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-forest ${s >= 0 ? INK_ON[s] : w.farms > 0 ? 'text-gray-500 border border-dashed border-gray-300' : 'text-gray-300 bg-gray-50'}`}
+                              className={`relative h-11 rounded flex flex-col items-center justify-center text-xs tabular-nums outline-none focus-visible:ring-2 focus-visible:ring-paddy ${s >= 0 ? INK_ON[s] : w.farms > 0 ? 'text-gray-500 border border-dashed border-gray-300' : 'text-gray-300 bg-gray-50'}`}
                               style={s >= 0 ? { backgroundColor: RAMP[s] } : undefined}
                             >
                               {w.farms === 0 ? '—' : (

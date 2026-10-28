@@ -7,6 +7,7 @@ import {
   Loader2, Plus, Trash2, AlertCircle, Save, Globe,
   Image as ImageIcon, HelpCircle, Info,
 } from 'lucide-react'
+import { BANNER_STYLES, bannerStyle } from '@/components/bannerStyles'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -32,21 +33,9 @@ type SiteInfo = Record<string, string>
 
 // ── Color config ─────────────────────────────────────────────────────────────
 
-const COLORS: Record<string, { label: string; preview: string }> = {
-  green:  { label: 'Green',  preview: 'bg-green-600' },
-  orange: { label: 'Orange', preview: 'bg-orange-500' },
-  blue:   { label: 'Blue',   preview: 'bg-blue-600' },
-  purple: { label: 'Purple', preview: 'bg-purple-600' },
-  teal:   { label: 'Teal',   preview: 'bg-teal-600' },
-}
-
-const BANNER_BG: Record<string, string> = {
-  green:  'bg-gradient-to-r from-green-600 to-green-800',
-  orange: 'bg-gradient-to-r from-orange-500 to-orange-700',
-  blue:   'bg-gradient-to-r from-blue-600 to-blue-800',
-  purple: 'bg-gradient-to-r from-purple-600 to-purple-800',
-  teal:   'bg-gradient-to-r from-teal-600 to-teal-800',
-}
+const COLORS = Object.fromEntries(
+  Object.entries(BANNER_STYLES).map(([key, { label, swatch }]) => [key, { label, preview: swatch }]),
+)
 
 // ── Shared input class ────────────────────────────────────────────────────────
 
@@ -63,8 +52,8 @@ export default function SitePage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center gap-3 mb-6">
-        <Globe size={22} className="text-forest" />
-        <h1 className="font-serif text-2xl font-bold text-gray-900">Site Content</h1>
+        <Globe size={22} className="text-paddy" />
+        <h1 className="text-2xl font-bold text-gray-900">Site Content</h1>
       </div>
 
       {/* Tabs */}
@@ -80,7 +69,7 @@ export default function SitePage() {
               onClick={() => setTab(key)}
               className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors -mb-px whitespace-nowrap ${
                 tab === key
-                  ? 'border-forest text-forest'
+                  ? 'border-paddy text-paddy'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -214,7 +203,7 @@ function BannersTab({ token }: { token: string | null }) {
               <button
                 type="submit"
                 disabled={posting || !title.trim()}
-                className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+                className="inline-flex items-center gap-2 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
               >
                 {posting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
                 Add
@@ -235,7 +224,7 @@ function BannersTab({ token }: { token: string | null }) {
         <div className="space-y-3">
           {banners.map((b) => (
             <div key={b.id} className={`rounded-xl overflow-hidden border border-gray-200 shadow-sm ${!b.active ? 'opacity-50' : ''}`}>
-              <div className={`${BANNER_BG[b.color] ?? BANNER_BG.green} text-white px-5 py-4`}>
+              <div className={`${bannerStyle(b.color).surface} px-5 py-4`}>
                 <p className="font-bold">{b.title}</p>
                 {b.subtitle && <p className="text-sm opacity-80 mt-0.5">{b.subtitle}</p>}
                 {b.ctaText && <span className="mt-2 inline-block bg-white/20 text-xs px-3 py-1 rounded-full">{b.ctaText} → {b.ctaLink}</span>}
@@ -246,7 +235,7 @@ function BannersTab({ token }: { token: string | null }) {
                   <button
                     onClick={() => toggleActive(b)}
                     disabled={togglingId === b.id}
-                    className="text-xs px-3 py-1 rounded-full border transition-colors disabled:opacity-40 border-gray-300 hover:border-forest hover:text-forest"
+                    className="text-xs px-3 py-1 rounded-full border transition-colors disabled:opacity-40 border-gray-300 hover:border-paddy hover:text-paddy"
                   >
                     {togglingId === b.id ? <Loader2 size={12} className="animate-spin inline" /> : b.active ? 'Hide' : 'Show'}
                   </button>
@@ -344,7 +333,7 @@ function InfoTab({ token }: { token: string | null }) {
       <button
         type="submit"
         disabled={saving}
-        className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors"
+        className="inline-flex items-center gap-2 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors"
       >
         {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
         Save Changes
@@ -433,7 +422,7 @@ function FaqsTab({ token }: { token: string | null }) {
             <button
               type="submit"
               disabled={posting || !question.trim() || !answer.trim()}
-              className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
             >
               {posting ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
               Add

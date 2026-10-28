@@ -184,3 +184,30 @@ export function expectedSupply<P extends SupplyPlanting>(plantings: P[], today: 
 
   return { weeks, crops: result, withoutYield, clashFarms: CLASH_FARMS };
 }
+
+// --- Harvest board (storefront home page) ------------------------------------
+
+export interface HarvestBoardRow {
+  crop: string;
+  farms: number;
+  kg: number;
+}
+
+/**
+ * This week's expected harvest by crop, for the public home page: how many
+ * farms and roughly how many kilograms, never which farms. Next week lists
+ * the crops that only start then. Built on the same week split as the staff
+ * supply view (Monday to Sunday, Philippine dates).
+ */
+export function harvestBoard<P extends SupplyPlanting>(plantings: P[], today: string) {
+  const { crops } = expectedSupply(plantings, today, 2);
+  const thisWeek: HarvestBoardRow[] = crops
+    .filter((c) => c.weekly[0].farms > 0)
+    .map((c) => ({ crop: c.cropType.name, farms: c.weekly[0].farms, kg: c.weekly[0].kg }))
+    .sort((a, b) => b.kg - a.kg || b.farms - a.farms || a.crop.localeCompare(b.crop));
+  const nextWeek = crops
+    .filter((c) => c.weekly[0].farms === 0 && c.weekly[1].farms > 0)
+    .map((c) => c.cropType.name)
+    .sort((a, b) => a.localeCompare(b));
+  return { thisWeek, nextWeek };
+}

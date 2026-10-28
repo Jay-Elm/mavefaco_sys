@@ -77,12 +77,12 @@ export default function NewPlantingPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-2xl">
-      <Link href="/farmer/crops" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-forest mb-6">
+      <Link href="/farmer/crops" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-paddy mb-6">
         <ArrowLeft size={15} /> Back to Crop Monitor
       </Link>
       <div className="flex items-center gap-3 mb-6">
-        <Sprout size={20} className="text-forest" />
-        <h1 className="font-serif text-2xl font-bold text-gray-900">Record a planting</h1>
+        <Sprout size={20} className="text-paddy" />
+        <h1 className="text-2xl font-bold text-gray-900">Record a planting</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-5">
@@ -104,8 +104,8 @@ export default function NewPlantingPage() {
         </div>
 
         {preview && (
-          <div className="rounded-lg bg-tint border border-forest/10 px-4 py-3 text-sm text-gray-700">
-            Expected harvest: <span className="font-semibold text-forest">{fmtWindow(preview.harvestStart, preview.harvestEnd)}</span>
+          <div className="rounded-lg bg-field border border-paddy/10 px-4 py-3 text-sm text-gray-700">
+            Expected harvest: <span className="font-semibold text-paddy">{fmtWindow(preview.harvestStart, preview.harvestEnd)}</span>
             <span className="block text-xs text-gray-500 mt-0.5">You can adjust this later. Growing times are approximate.</span>
           </div>
         )}
@@ -137,7 +137,7 @@ export default function NewPlantingPage() {
           <button
             type="submit"
             disabled={saving || !cropTypeId}
-            className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
           >
             {saving && <Loader2 size={14} className="animate-spin" />}
             Record planting

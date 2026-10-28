@@ -20,7 +20,7 @@ export default function CustomerConversationPage() {
         </Link>
         <h1 className="font-semibold text-gray-900">{otherName}</h1>
       </div>
-      <div className="flex-1 min-h-0 border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+      <div className="flex-1 min-h-0 border border-gray-200 rounded-lg overflow-hidden shadow-sm">
         <MessageThread otherId={otherId} otherName={otherName} onOtherName={setOtherName} />
       </div>
     </div>

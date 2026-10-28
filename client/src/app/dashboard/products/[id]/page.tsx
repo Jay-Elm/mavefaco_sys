@@ -59,7 +59,7 @@ export default function DashboardProductViewPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl">
-      <Link href="/dashboard/products" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-forest mb-6 transition-colors">
+      <Link href="/dashboard/products" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-paddy mb-6 transition-colors">
         <ArrowLeft size={16} /> Back to Products
       </Link>
 
@@ -97,7 +97,7 @@ export default function DashboardProductViewPage() {
                   {product.suspendedAt ? 'Suspended' : product.approved ? 'Approved' : 'Pending'}
                 </span>
               </div>
-              <h1 className="font-serif text-2xl font-bold text-gray-900">{product.name}</h1>
+              <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
               <p className="text-gray-600 text-sm mt-2 whitespace-pre-line">{product.description || 'No description'}</p>
             </div>
           </div>

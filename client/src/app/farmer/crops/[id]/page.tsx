@@ -90,14 +90,14 @@ export default function PlantingPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl">
-      <Link href="/farmer/crops" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-forest mb-6">
+      <Link href="/farmer/crops" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-paddy mb-6">
         <ArrowLeft size={15} /> Back to Crop Monitor
       </Link>
 
       <div className="flex flex-wrap items-start gap-3 mb-6">
-        <Sprout size={20} className="text-forest shrink-0 mt-1.5" />
+        <Sprout size={20} className="text-paddy shrink-0 mt-1.5" />
         <div className="min-w-0">
-          <h1 className="font-serif text-2xl font-bold text-gray-900">{p.cropType.name}</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{p.cropType.name}</h1>
           <p className="text-sm text-gray-500">
             Planted {fmtDate(p.plantedOn)}
             {p.areaSqm !== null && ` · ${p.areaSqm.toLocaleString('en-PH')} m²`}
@@ -187,13 +187,13 @@ function Timeline({ planting: p }: { planting: Planting }) {
           className="absolute top-0 -translate-x-1/2 flex flex-col items-center"
           style={{ left: `${todayPct}%` }}
         >
-          <span className="text-[11px] font-semibold text-forest whitespace-nowrap">Today · day {Math.max(p.day, 0)}</span>
+          <span className="text-[11px] font-semibold text-paddy whitespace-nowrap">Today · day {Math.max(p.day, 0)}</span>
         </div>
         <div className="relative flex h-3 rounded-full overflow-hidden bg-gray-100">
           {segments.map((s) => (
             <div key={s.key} className={`${COLORS[s.key]} ${s.day / total * 100 > todayPct ? 'opacity-35' : ''}`} style={{ width: `${((s.end - s.day) / total) * 100}%` }} title={STAGE_STYLES[s.key].label} />
           ))}
-          <div className="absolute inset-y-0 w-0.5 bg-forest" style={{ left: `${todayPct}%` }} />
+          <div className="absolute inset-y-0 w-0.5 bg-paddy" style={{ left: `${todayPct}%` }} />
         </div>
         <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3">
           {segments.map((s) => (
@@ -243,7 +243,7 @@ function HarvestPanel({ planting: p, send, onDone, onFail }: { planting: Plantin
         </div>
         {!open && (
           <div className="flex gap-2 ml-auto">
-            <button onClick={() => setOpen(true)} className="inline-flex items-center gap-1.5 bg-forest hover:bg-forest-mid text-white text-xs font-medium px-3 py-2 rounded-lg">
+            <button onClick={() => setOpen(true)} className="inline-flex items-center gap-1.5 bg-paddy hover:bg-paddy-deep text-white text-xs font-medium px-3 py-2 rounded-lg">
               <CheckCircle2 size={13} /> Record harvest
             </button>
             <button onClick={onFail} className="inline-flex items-center gap-1.5 border border-gray-300 text-gray-600 hover:text-red-600 text-xs font-medium px-3 py-2 rounded-lg bg-white">
@@ -274,7 +274,7 @@ function HarvestPanel({ planting: p, send, onDone, onFail }: { planting: Plantin
           </div>
           {error && <p className="sm:col-span-3 text-red-600 text-sm">{error}</p>}
           <div className="sm:col-span-3 flex gap-3">
-            <button type="submit" disabled={saving} className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg">
+            <button type="submit" disabled={saving} className="inline-flex items-center gap-2 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg">
               {saving ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle2 size={14} />} Save harvest
             </button>
             <button type="button" onClick={onFail} className="text-sm text-gray-500 hover:text-red-600">Mark failed instead</button>
@@ -363,7 +363,7 @@ function DetailsForm({ planting: p, listings, send, onSaved }: { planting: Plant
         </div>
         {error && <p className="text-red-600 text-sm">{error}</p>}
         <div className="flex items-center gap-3">
-          <button type="submit" disabled={saving} className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg">
+          <button type="submit" disabled={saving} className="inline-flex items-center gap-2 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg">
             {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />} Save changes
           </button>
           {saved && <span className="text-green-600 text-xs inline-flex items-center gap-1"><CheckCircle2 size={13} /> Saved</span>}
@@ -421,10 +421,10 @@ function LogSection({ planting: p, send, onChange }: { planting: Detail; send: S
               onClick={() => setType(value)}
               aria-pressed={type === value}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-                type === value ? 'border-forest bg-tint text-forest' : 'border-gray-200 text-gray-500 hover:border-gray-400'
+                type === value ? 'border-paddy bg-field text-paddy' : 'border-gray-200 text-gray-500 hover:border-gray-400'
               }`}
             >
-              <Icon size={13} className={type === value ? 'text-forest' : cls} />
+              <Icon size={13} className={type === value ? 'text-paddy' : cls} />
               {label}
             </button>
           ))}
@@ -451,7 +451,7 @@ function LogSection({ planting: p, send, onChange }: { planting: Detail; send: S
                     aria-checked={severity === value}
                     onClick={() => setSeverity(value)}
                     className={`flex-1 px-2 py-2 rounded-lg text-xs font-medium border transition-colors ${
-                      severity === value ? `${s.cls} border-transparent ring-2 ring-forest/40` : 'border-gray-200 text-gray-500 hover:border-gray-400'
+                      severity === value ? `${s.cls} border-transparent ring-2 ring-paddy/40` : 'border-gray-200 text-gray-500 hover:border-gray-400'
                     }`}
                   >
                     {s.label}

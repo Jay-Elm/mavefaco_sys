@@ -37,35 +37,35 @@ export default function CustomerMessagesPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       <div className="flex items-center gap-3 mb-6">
-        <MessageCircle size={22} className="text-green-600" />
-        <h1 className="text-2xl font-bold text-gray-900">Messages</h1>
+        <MessageCircle size={22} className="text-paddy" />
+        <h1 className="font-display text-4xl font-bold text-soil">Messages</h1>
       </div>
 
       {convs.length === 0 ? (
         <div className="text-center py-16 text-gray-400">
           <MessageCircle size={40} className="mx-auto mb-3" />
           <p>No messages yet.</p>
-          <Link href="/products" className="mt-3 inline-block text-forest text-sm font-medium hover:underline">
+          <Link href="/products" className="mt-3 inline-block text-paddy text-sm font-medium hover:underline">
             Browse products and contact a farmer →
           </Link>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm divide-y divide-gray-100">
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm divide-y divide-gray-100">
           {convs.map((c) => (
             <Link
               key={c.user.id}
               href={`/customer/messages/${c.user.id}`}
               className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors"
             >
-              <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-                <User size={18} className="text-green-700" />
+              <div className="w-10 h-10 rounded-full bg-shoot flex items-center justify-center shrink-0">
+                <User size={18} className="text-paddy" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <p className="font-medium text-gray-900 text-sm">{c.user.name}</p>
                   <span className="text-xs text-gray-400 capitalize">{c.user.role}</span>
                   {c.unread > 0 && (
-                    <span className="ml-auto bg-forest text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                    <span className="ml-auto bg-paddy text-white text-xs font-bold px-2 py-0.5 rounded-full">
                       {c.unread}
                     </span>
                   )}

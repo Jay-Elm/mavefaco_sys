@@ -132,7 +132,7 @@ export default function CropTypesPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-2">
-        <h1 className="font-serif text-2xl font-bold text-gray-900">Crop Types</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Crop Types</h1>
         <span className="text-sm text-gray-500">{rows.length} crops</span>
       </div>
       <p className="text-sm text-gray-500 mb-6 max-w-2xl">
@@ -155,7 +155,7 @@ export default function CropTypesPage() {
             <button
               type="submit"
               disabled={adding}
-              className="inline-flex items-center gap-1 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg"
+              className="inline-flex items-center gap-1 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg"
             >
               {adding ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />} Add crop
             </button>
@@ -180,7 +180,7 @@ export default function CropTypesPage() {
               {rows.length === 0 ? (
                 <tr><td colSpan={5} className="text-center py-12 text-gray-400"><Sprout size={32} className="mx-auto mb-2" />No crops yet</td></tr>
               ) : rows.map((r) => editingId === r.id ? (
-                <tr key={r.id} className="bg-tint">
+                <tr key={r.id} className="bg-field">
                   <td colSpan={5} className="px-4 py-4">
                     <div className="grid grid-cols-2 md:grid-cols-6 gap-3 items-end">
                       <div className="col-span-2 md:col-span-1">
@@ -190,7 +190,7 @@ export default function CropTypesPage() {
                       {fields(editForm, setEditForm, `e${r.id}`)}
                     </div>
                     <div className="flex gap-2 mt-3">
-                      <button onClick={() => saveEdit(r.id)} disabled={saving} className="inline-flex items-center gap-1 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-xs font-medium px-3 py-1.5 rounded-lg">
+                      <button onClick={() => saveEdit(r.id)} disabled={saving} className="inline-flex items-center gap-1 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-xs font-medium px-3 py-1.5 rounded-lg">
                         {saving ? <Loader2 size={12} className="animate-spin" /> : <Check size={12} />} Save
                       </button>
                       <button onClick={() => setEditingId(null)} className="inline-flex items-center gap-1 text-xs text-gray-600 px-3 py-1.5">
@@ -210,7 +210,7 @@ export default function CropTypesPage() {
                   </td>
                   <td className="px-4 py-3 text-center text-gray-600">{r._count.plantings}</td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">
-                    <button onClick={() => { setEditingId(r.id); setEditForm(toForm(r)) }} className="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-forest mr-3">
+                    <button onClick={() => { setEditingId(r.id); setEditForm(toForm(r)) }} className="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-paddy mr-3">
                       <Pencil size={12} /> Edit
                     </button>
                     <button onClick={() => remove(r)} className="inline-flex items-center gap-1 text-xs text-red-500 hover:text-red-700">

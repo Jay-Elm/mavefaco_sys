@@ -83,7 +83,7 @@ function DialogBox({ dialog, onClose }: { dialog: OpenDialog; onClose: (ok: bool
           <h3 id="dialog-title" className="font-bold text-gray-900 flex items-center gap-2">
             {danger
               ? <AlertTriangle size={18} className="text-red-600 shrink-0" />
-              : <Info size={18} className="text-forest shrink-0" />}
+              : <Info size={18} className="text-paddy shrink-0" />}
             {dialog.title}
           </h3>
           <button onClick={() => onClose(false)} className="text-gray-400 hover:text-gray-600" aria-label="Close">
@@ -98,7 +98,7 @@ function DialogBox({ dialog, onClose }: { dialog: OpenDialog; onClose: (ok: bool
             ref={confirmRef}
             onClick={() => onClose(true)}
             className={`flex-1 inline-flex items-center justify-center font-semibold py-2.5 rounded-xl text-sm text-white transition-colors ${
-              danger ? 'bg-red-600 hover:bg-red-700' : 'bg-forest hover:bg-forest-mid'
+              danger ? 'bg-red-600 hover:bg-red-700' : 'bg-paddy hover:bg-paddy-deep'
             }`}
           >
             {dialog.confirmLabel ?? 'OK'}

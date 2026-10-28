@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addDays, attention, daysBetween, expectedSupply, growthStage, harvestWindow, progress, todayPH, weekStart, type StageSchedule } from "./planting";
+import { addDays, attention, daysBetween, expectedSupply, growthStage, harvestBoard, harvestWindow, progress, todayPH, weekStart, type StageSchedule } from "./planting";
 import { cropLogCreateSchema, cropTypeSchema, plantingUpdateSchema } from "@/validators/crop";
 
 const tomato = { vegetativeDay: 14, floweringDay: 35, fruitingDay: 50, daysToHarvestMin: 70, daysToHarvestMax: 90 };
@@ -144,5 +144,48 @@ describe("expected supply", () => {
   it("leaves out plantings harvested after the last week shown", () => {
     const { crops } = expectedSupply([planting(1, { harvestStart: "2027-01-01", harvestEnd: "2027-01-10" })], today, 8);
     expect(crops).toEqual([]);
+  });
+});
+
+describe("harvest board", () => {
+  const tomato = { id: 1, name: "Tomato" };
+  const pechay = { id: 2, name: "Pechay" };
+  const okra = { id: 3, name: "Okra" };
+  const planting = (id: number, farmerId: number, cropType: { id: number; name: string }, harvestStart: string, harvestEnd: string, expectedYield: number | null = 70) => ({
+    id, farmer: { id: farmerId, name: `Farmer ${farmerId}` }, cropType, harvestStart, harvestEnd, expectedYield,
+  });
+  const today = "2026-10-28"; // a Wednesday; this week is Oct 26 – Nov 1
+
+  it("lists this week's crops by expected kilograms, counting each farm once", () => {
+    const { thisWeek } = harvestBoard(
+      [
+        planting(1, 1, tomato, "2026-10-29", "2026-10-31", 30),
+        planting(2, 1, tomato, "2026-10-30", "2026-10-30", 10),
+        planting(3, 2, pechay, "2026-10-28", "2026-10-29", 60),
+        planting(4, 3, tomato, "2026-10-31", "2026-11-01", null),
+      ],
+      today,
+    );
+    expect(thisWeek).toEqual([
+      { crop: "Pechay", farms: 1, kg: 60 },
+      { crop: "Tomato", farms: 2, kg: 40 },
+    ]);
+  });
+
+  it("names next week's crops only when they don't also harvest this week", () => {
+    const { thisWeek, nextWeek } = harvestBoard(
+      [
+        planting(1, 1, tomato, "2026-10-30", "2026-11-04"),
+        planting(2, 2, okra, "2026-11-03", "2026-11-06"),
+        planting(3, 3, pechay, "2026-11-20", "2026-11-25"),
+      ],
+      today,
+    );
+    expect(thisWeek.map((r) => r.crop)).toEqual(["Tomato"]);
+    expect(nextWeek).toEqual(["Okra"]);
+  });
+
+  it("is empty when nothing is due in the next two weeks", () => {
+    expect(harvestBoard([planting(1, 1, tomato, "2026-12-01", "2026-12-05")], today)).toEqual({ thisWeek: [], nextWeek: [] });
   });
 });

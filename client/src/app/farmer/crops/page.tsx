@@ -61,14 +61,14 @@ export default function CropsPage() {
   return (
     <div className="p-4 sm:p-8 max-w-5xl">
       <div className="flex flex-wrap items-center gap-3 mb-6">
-        <Sprout size={22} className="text-forest" />
-        <h1 className="font-serif text-2xl font-bold text-gray-900">Crop Monitor</h1>
-        <Link href="/farmer/advisory" className="ml-auto text-sm text-forest hover:underline">
+        <Sprout size={22} className="text-paddy" />
+        <h1 className="text-2xl font-bold text-gray-900">Crop Monitor</h1>
+        <Link href="/farmer/advisory" className="ml-auto text-sm text-paddy hover:underline">
           Community advisory
         </Link>
         <Link
           href="/farmer/crops/new"
-          className="inline-flex items-center gap-1.5 bg-forest hover:bg-forest-mid text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+          className="inline-flex items-center gap-1.5 bg-paddy hover:bg-paddy-deep text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
         >
           <Plus size={15} /> Record planting
         </Link>
@@ -84,7 +84,7 @@ export default function CropsPage() {
             Record what you plant and when. The Crop Monitor works out each crop&apos;s growth stage and
             harvest window, and tells you when it&apos;s time to harvest.
           </p>
-          <Link href="/farmer/crops/new" className="mt-4 inline-block text-forest text-sm font-medium hover:underline">
+          <Link href="/farmer/crops/new" className="mt-4 inline-block text-paddy text-sm font-medium hover:underline">
             Record your first planting →
           </Link>
         </div>
@@ -155,7 +155,7 @@ export default function CropsPage() {
                           <td className="px-4 py-3 text-right text-gray-600 tabular-nums">{fmtKg(p.expectedYield)}</td>
                           <td className="px-4 py-3 text-right text-gray-900 tabular-nums">{fmtKg(p.actualYield)}</td>
                           <td className="px-4 py-3 text-right">
-                            <Link href={`/farmer/crops/${p.id}`} className="text-xs font-medium text-forest hover:text-forest-mid">View</Link>
+                            <Link href={`/farmer/crops/${p.id}`} className="text-xs font-medium text-paddy hover:text-paddy-deep">View</Link>
                           </td>
                         </tr>
                       ))}
@@ -179,7 +179,7 @@ function GrowingCard({ planting: p }: { planting: Row }) {
   return (
     <Link
       href={`/farmer/crops/${p.id}`}
-      className="block bg-white rounded-xl border border-gray-200 shadow-sm p-4 hover:border-forest/40 transition-colors"
+      className="block bg-white rounded-xl border border-gray-200 shadow-sm p-4 hover:border-paddy/40 transition-colors"
     >
       <div className="flex items-start gap-2">
         <div className="min-w-0">
@@ -194,7 +194,7 @@ function GrowingCard({ planting: p }: { planting: Row }) {
       </div>
       <div className="mt-4">
         <div className="h-2 rounded-full bg-gray-100 overflow-hidden" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Progress to harvest">
-          <div className={`h-full rounded-full ${p.attention === 'overdue' ? 'bg-red-500' : 'bg-forest-mid'}`} style={{ width: `${Math.max(pct, 3)}%` }} />
+          <div className={`h-full rounded-full ${p.attention === 'overdue' ? 'bg-red-500' : 'bg-paddy-deep'}`} style={{ width: `${Math.max(pct, 3)}%` }} />
         </div>
         <div className="flex justify-between gap-2 mt-1.5 text-xs text-gray-500">
           <span>Day {Math.max(p.day, 0)}</span>

@@ -2,30 +2,46 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #1a1a1a;
+  --foreground: #2B2622;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-plus-jakarta);
+  --font-sans: var(--font-hanken);
   --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-fraunces);
+  --font-display: var(--font-big-shoulders);
+  --font-stencil: var(--font-big-shoulders-stencil);
 
-  /* Brand tokens — the identity already used on the homepage/navbar,
-     formalized so the rest of the app can share it instead of
-     re-typing the hex values or falling back to generic Tailwind
-     greens. Semantic/status colors (stock badges, errors, price)
-     intentionally stay on the default Tailwind palette. */
-  --color-forest: #1B3A2D;
-  --color-forest-mid: #2E6649;
-  --color-tint: #F3F7F4;
-  --color-harvest: #F97316;
+  /* Brand tokens, taken from where the cooperative's produce comes from:
+     Mayon's volcanic soil, paddy and young-shoot greens, and calamansi.
+     Status colours (stock badges, errors, order states) stay on the
+     default Tailwind palette so they keep their usual meaning. */
+  --color-soil: #2B2622;      /* text and dark surfaces */
+  --color-paddy: #2F6B3A;     /* primary actions and links */
+  --color-paddy-deep: #24552D; /* hover and pressed */
+  --color-shoot: #DCEFC8;     /* light highlights, selected states */
+  --color-calamansi: #E9B824; /* accent fill, always behind dark text */
+  --color-field: #F7F8F4;     /* alternate section background */
+
+  --radius-card: 12px;
+  --shadow-card: 0 1px 2px rgb(43 38 34 / 0.06), 0 2px 8px rgb(43 38 34 / 0.05);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* Prices and quantities line up in columns. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* One visible focus ring for every interactive element. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-paddy);
+  outline-offset: 2px;
 }
 
 input, textarea, select {
@@ -37,33 +53,74 @@ input, textarea, select {
   opacity: 1;
 }
 
-@keyframes heroEntrance {
+/* Buttons. In the components layer so a utility class on the same element
+   (a margin, a width) still wins. */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 8px;
+    padding: 0.75rem 1.4rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.2;
+    border: 1.5px solid transparent;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .btn-primary {
+    background: var(--color-paddy);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    background: var(--color-paddy-deep);
+  }
+  /* The bright one, for the main action on a dark section. */
+  .btn-calamansi {
+    background: var(--color-calamansi);
+    color: var(--color-soil);
+  }
+  .btn-calamansi:hover {
+    background: #d6a614;
+  }
+  .btn-outline {
+    border-color: var(--color-paddy);
+    color: var(--color-paddy);
+  }
+  .btn-outline:hover {
+    background: var(--color-shoot);
+  }
+  .btn-on-dark {
+    border-color: rgb(255 255 255 / 0.4);
+    color: #fff;
+  }
+  .btn-on-dark:hover {
+    background: rgb(255 255 255 / 0.1);
+  }
+}
+
+/* The home page's one moving moment: the harvest board's rows are chalked
+   up one after another. Each row sets --i to its position. */
+@keyframes boardRow {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateX(-8px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
-.hero-line-1 {
-  animation: heroEntrance 0.7s ease-out forwards;
-}
-.hero-line-2 {
+.board-row {
   opacity: 0;
-  animation: heroEntrance 0.7s ease-out 0.12s forwards;
-}
-.hero-line-3 {
-  opacity: 0;
-  animation: heroEntrance 0.7s ease-out 0.24s forwards;
+  animation: boardRow 0.45s ease-out forwards;
+  animation-delay: calc(0.25s + var(--i, 0) * 0.12s);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-line-1,
-  .hero-line-2,
-  .hero-line-3 {
+  .board-row {
     animation: none;
     opacity: 1;
   }

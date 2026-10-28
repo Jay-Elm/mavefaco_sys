@@ -42,7 +42,7 @@ export default function ImageUploader({ value, onChange, token }: Props) {
   return (
     <div className="space-y-2">
       <div
-        className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border-2 border-dashed border-gray-200 bg-gray-50 cursor-pointer hover:border-forest transition-colors flex items-center justify-center"
+        className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border-2 border-dashed border-gray-200 bg-gray-50 cursor-pointer hover:border-paddy transition-colors flex items-center justify-center"
         onClick={() => !uploading && inputRef.current?.click()}
       >
         {value ? (
@@ -81,7 +81,7 @@ export default function ImageUploader({ value, onChange, token }: Props) {
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="text-sm text-forest hover:text-forest-mid font-medium disabled:opacity-40 transition-colors"
+          className="text-sm text-paddy hover:text-paddy-deep font-medium disabled:opacity-40 transition-colors"
         >
           {uploading ? 'Uploading…' : value ? 'Change photo' : 'Upload photo'}
         </button>

@@ -48,7 +48,7 @@ export default function ConfirmEmailChangeStatus() {
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 text-center space-y-3">
       {status === 'confirming' && (
         <>
-          <Loader2 size={32} className="mx-auto text-forest-mid animate-spin" />
+          <Loader2 size={32} className="mx-auto text-paddy-deep animate-spin" />
           <p className="text-sm text-gray-600">Confirming your new email address…</p>
         </>
       )}
@@ -56,7 +56,7 @@ export default function ConfirmEmailChangeStatus() {
         <>
           <CheckCircle size={32} className="mx-auto text-green-600" />
           <p className="text-sm text-gray-700">{message}</p>
-          <Link href="/login" className="inline-block text-sm text-forest font-medium hover:underline">
+          <Link href="/login" className="inline-block text-sm text-paddy font-medium hover:underline">
             Sign in
           </Link>
         </>
@@ -65,7 +65,7 @@ export default function ConfirmEmailChangeStatus() {
         <>
           <XCircle size={32} className="mx-auto text-red-500" />
           <p className="text-sm text-red-600">{message}</p>
-          <Link href="/" className="inline-block text-sm text-forest font-medium hover:underline">
+          <Link href="/" className="inline-block text-sm text-paddy font-medium hover:underline">
             Back to the shop
           </Link>
         </>

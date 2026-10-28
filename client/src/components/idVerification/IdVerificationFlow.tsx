@@ -96,7 +96,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
       {/* Progress */}
       <ol className="flex items-center gap-1.5 mb-5" aria-label="Steps">
         {steps.map((s, i) => (
-          <li key={s} className={`h-1.5 flex-1 rounded-full ${i <= stepIndex ? 'bg-forest' : 'bg-gray-200'}`} aria-current={i === stepIndex ? 'step' : undefined} />
+          <li key={s} className={`h-1.5 flex-1 rounded-full ${i <= stepIndex ? 'bg-paddy' : 'bg-gray-200'}`} aria-current={i === stepIndex ? 'step' : undefined} />
         ))}
       </ol>
 
@@ -110,10 +110,10 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
                 key={t.key}
                 type="button"
                 onClick={() => { if (t.key !== idType) { (['front', 'back', 'selfie'] as PhotoKey[]).forEach((k) => setPhoto(k, undefined)) } setIdType(t.key); setStep('front') }}
-                className={`text-left rounded-lg border px-3 py-2.5 text-sm transition-colors ${idType === t.key ? 'border-forest bg-tint' : 'border-gray-200 hover:border-gray-400'}`}
+                className={`text-left rounded-lg border px-3 py-2.5 text-sm transition-colors ${idType === t.key ? 'border-paddy bg-field' : 'border-gray-200 hover:border-gray-400'}`}
               >
                 <span className="font-medium text-gray-900">{t.label}</span>
-                {t.hint && <span className="block text-xs text-forest-mid">{t.hint}</span>}
+                {t.hint && <span className="block text-xs text-paddy-deep">{t.hint}</span>}
                 {!t.needsBack && <span className="block text-xs text-gray-500">Photo page only</span>}
               </button>
             ))}
@@ -151,7 +151,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
                   <button type="button" onClick={() => setPhoto(key, undefined)} className="inline-flex items-center gap-1.5 border border-gray-300 text-gray-700 text-sm font-medium px-4 py-2 rounded-lg hover:bg-gray-50">
                     <RotateCcw size={14} /> Retake
                   </button>
-                  <button type="button" onClick={next} className="inline-flex items-center gap-1.5 bg-forest hover:bg-forest-mid text-white text-sm font-medium px-4 py-2 rounded-lg">
+                  <button type="button" onClick={next} className="inline-flex items-center gap-1.5 bg-paddy hover:bg-paddy-deep text-white text-sm font-medium px-4 py-2 rounded-lg">
                     <Check size={14} /> {photo.problems.length > 0 ? 'Use anyway' : 'Use this photo'}
                   </button>
                 </div>
@@ -173,7 +173,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
                     : "No camera is available on this device, so upload a photo instead."}
                 </p>
                 <p className="text-xs text-gray-500 mb-4">Staff will see that the photo was uploaded rather than taken with the camera.</p>
-                <label className="inline-flex items-center gap-1.5 bg-forest hover:bg-forest-mid text-white text-sm font-medium px-4 py-2 rounded-lg cursor-pointer">
+                <label className="inline-flex items-center gap-1.5 bg-paddy hover:bg-paddy-deep text-white text-sm font-medium px-4 py-2 rounded-lg cursor-pointer">
                   {loadingUpload ? <Loader2 size={14} className="animate-spin" /> : <ImageUp size={14} />} Choose photo
                   <input type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={(e) => upload(key, e.target.files?.[0])} />
                 </label>
@@ -202,7 +202,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
             {photoSteps.map((k) => (
               <button key={k} type="button" onClick={() => setStep(k)} className="text-left group flex flex-col self-start">
                 {/* eslint-disable-next-line @next/next/no-img-element -- a local blob preview */}
-                <img src={photos[k]!.url} alt={PHOTO_STEPS[k].title} className="block w-full aspect-[4/3] object-cover rounded-lg border border-gray-200 group-hover:border-forest" />
+                <img src={photos[k]!.url} alt={PHOTO_STEPS[k].title} className="block w-full aspect-[4/3] object-cover rounded-lg border border-gray-200 group-hover:border-paddy" />
                 <span className="text-xs text-gray-600">{PHOTO_STEPS[k].title}</span>
               </button>
             ))}
@@ -221,7 +221,7 @@ export default function IdVerificationFlow({ token, onSubmitted, onCancel }: {
             type="button"
             onClick={submit}
             disabled={submitting || !idNumber.trim()}
-            className="ml-auto inline-flex items-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg"
+            className="ml-auto inline-flex items-center gap-2 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg"
           >
             {submitting && <Loader2 size={14} className="animate-spin" />} Submit for review
           </button>

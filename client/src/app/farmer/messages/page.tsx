@@ -42,8 +42,8 @@ export default function FarmerMessagesPage() {
   return (
     <div className="p-8">
       <div className="flex items-center gap-3 mb-6">
-        <MessageCircle size={22} className="text-forest" />
-        <h1 className="font-serif text-2xl font-bold text-gray-900">Messages</h1>
+        <MessageCircle size={22} className="text-paddy" />
+        <h1 className="text-2xl font-bold text-gray-900">Messages</h1>
       </div>
 
       {/* System notices (e.g. a suspended listing): read-only, no reply */}
@@ -85,15 +85,15 @@ export default function FarmerMessagesPage() {
               href={`/farmer/messages/${c.user.id}`}
               className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors"
             >
-              <div className="w-10 h-10 rounded-full bg-tint flex items-center justify-center shrink-0">
-                <User size={18} className="text-forest" />
+              <div className="w-10 h-10 rounded-full bg-field flex items-center justify-center shrink-0">
+                <User size={18} className="text-paddy" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <p className="font-medium text-gray-900 text-sm">{c.user.name}</p>
                   <span className="text-xs text-gray-400 capitalize">{c.user.role}</span>
                   {c.unread > 0 && (
-                    <span className="ml-auto bg-forest text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                    <span className="ml-auto bg-paddy text-white text-xs font-bold px-2 py-0.5 rounded-full">
                       {c.unread}
                     </span>
                   )}

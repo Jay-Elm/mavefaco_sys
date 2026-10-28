@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { Leaf, Mail, Phone, MapPin, Globe, HelpCircle, Target, Eye } from "lucide-react";
+import { Mail, Phone, MapPin, Globe, ChevronDown } from "lucide-react";
 import { isSafeUrl } from "@/lib/url";
 
 async function getSiteData() {
@@ -24,97 +24,78 @@ export default async function AboutPage() {
   const fbUrl   = content.facebook_url || "";
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero */}
-      <section className="bg-forest text-white py-16 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="flex justify-center mb-4">
-            <Leaf size={44} className="text-green-300" />
-          </div>
-          <h1 className="font-serif text-3xl sm:text-4xl font-bold mb-3">{name}</h1>
-          <p className="text-green-200 text-lg max-w-xl mx-auto">{about}</p>
+    <div className="bg-white">
+      <section className="bg-soil text-white">
+        <div className="max-w-[1200px] mx-auto px-6 py-14 lg:py-20">
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[0.95] max-w-[18ch]">{name}</h1>
+          <p className="mt-6 text-lg leading-relaxed text-white/80 max-w-[60ch] whitespace-pre-wrap">{about}</p>
         </div>
       </section>
 
-      <div className="max-w-4xl mx-auto px-4 py-12 space-y-12">
-        {/* Mission & Vision */}
+      <div className="max-w-[1200px] mx-auto px-6 py-14 space-y-14">
         {(mission || vision) && (
-          <section className="grid sm:grid-cols-2 gap-6">
+          <section className="grid gap-10 md:grid-cols-2">
             {mission && (
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-                <div className="flex items-center gap-2 text-green-700 font-semibold mb-3">
-                  <Target size={18} /> Mission
-                </div>
-                <p className="text-gray-600 text-sm whitespace-pre-wrap">{mission}</p>
+              <div className="border-t-2 border-paddy pt-4">
+                <h2 className="font-display text-4xl font-bold">Mission</h2>
+                <p className="mt-3 text-[1.05rem] leading-relaxed text-gray-700 max-w-[60ch] whitespace-pre-wrap">{mission}</p>
               </div>
             )}
             {vision && (
-              <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-                <div className="flex items-center gap-2 text-green-700 font-semibold mb-3">
-                  <Eye size={18} /> Vision
-                </div>
-                <p className="text-gray-600 text-sm whitespace-pre-wrap">{vision}</p>
+              <div className="border-t-2 border-paddy pt-4">
+                <h2 className="font-display text-4xl font-bold">Vision</h2>
+                <p className="mt-3 text-[1.05rem] leading-relaxed text-gray-700 max-w-[60ch] whitespace-pre-wrap">{vision}</p>
               </div>
             )}
           </section>
         )}
 
-        {/* FAQs */}
         {faqs.length > 0 && (
-          <section>
-            <h2 className="font-serif text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
-              <HelpCircle size={20} className="text-green-600" />
-              Frequently Asked Questions
-            </h2>
-            <div className="space-y-3">
+          <section className="max-w-3xl">
+            <h2 className="font-display text-4xl font-bold">Questions people ask</h2>
+            <div className="mt-6 divide-y divide-gray-200 border-y border-gray-200">
               {faqs.map((faq) => (
-                <details
-                  key={faq.id}
-                  className="bg-white rounded-xl border border-gray-200 shadow-sm group"
-                >
-                  <summary className="flex items-center justify-between px-5 py-4 cursor-pointer font-medium text-gray-900 text-sm list-none">
+                <details key={faq.id} className="group">
+                  <summary className="flex items-center justify-between gap-4 py-4 cursor-pointer font-semibold list-none">
                     {faq.question}
-                    <span className="text-gray-400 group-open:rotate-180 transition-transform ml-4">▾</span>
+                    <ChevronDown size={18} aria-hidden="true" className="shrink-0 text-gray-500 group-open:rotate-180 transition-transform" />
                   </summary>
-                  <div className="px-5 pb-4 text-sm text-gray-600 whitespace-pre-wrap border-t border-gray-100 pt-3">
-                    {faq.answer}
-                  </div>
+                  <div className="pb-5 text-gray-700 leading-relaxed whitespace-pre-wrap max-w-[65ch]">{faq.answer}</div>
                 </details>
               ))}
             </div>
           </section>
         )}
 
-        {/* Contact */}
         {(email || phone || address || fbUrl) && (
           <section>
-            <h2 className="font-serif text-xl font-bold text-gray-900 mb-5">Contact Us</h2>
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 space-y-4">
+            <h2 className="font-display text-4xl font-bold">Contact the cooperative</h2>
+            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 text-[0.95rem]">
+              {address && (
+                <li className="flex items-start gap-3">
+                  <MapPin size={18} aria-hidden="true" className="text-paddy shrink-0 mt-0.5" />
+                  <span>{address}</span>
+                </li>
+              )}
               {email && (
-                <div className="flex items-center gap-3 text-sm text-gray-700">
-                  <Mail size={16} className="text-green-600 shrink-0" />
-                  <a href={`mailto:${email}`} className="hover:text-forest">{email}</a>
-                </div>
+                <li className="flex items-start gap-3">
+                  <Mail size={18} aria-hidden="true" className="text-paddy shrink-0 mt-0.5" />
+                  <a href={`mailto:${email}`} className="text-paddy hover:underline break-all">{email}</a>
+                </li>
               )}
               {phone && (
-                <div className="flex items-center gap-3 text-sm text-gray-700">
-                  <Phone size={16} className="text-green-600 shrink-0" />
+                <li className="flex items-start gap-3">
+                  <Phone size={18} aria-hidden="true" className="text-paddy shrink-0 mt-0.5" />
                   <span>{phone}</span>
-                </div>
-              )}
-              {address && (
-                <div className="flex items-start gap-3 text-sm text-gray-700">
-                  <MapPin size={16} className="text-green-600 shrink-0 mt-0.5" />
-                  <span>{address}</span>
-                </div>
+                </li>
               )}
               {fbUrl && isSafeUrl(fbUrl) && (
-                <div className="flex items-center gap-3 text-sm text-gray-700">
-                  <Globe size={16} className="text-green-600 shrink-0" />
-                  <a href={fbUrl} target="_blank" rel="noopener noreferrer" className="hover:text-forest break-all">{fbUrl}</a>
-                </div>
+                <li className="flex items-start gap-3">
+                  <Globe size={18} aria-hidden="true" className="text-paddy shrink-0 mt-0.5" />
+                  <a href={fbUrl} target="_blank" rel="noopener noreferrer" className="text-paddy hover:underline break-all">Facebook page</a>
+                </li>
               )}
-            </div>
+            </ul>
           </section>
         )}
       </div>

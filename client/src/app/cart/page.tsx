@@ -90,19 +90,19 @@ export default function CartPage() {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center">
         <ShoppingCart size={56} className="text-gray-300 mx-auto mb-4" />
-        <h1 className="font-serif text-2xl font-bold text-gray-800 mb-2">Log in to see your cart</h1>
+        <h1 className="font-display text-4xl font-bold text-soil mb-2">Log in to see your cart</h1>
         <p className="text-gray-500 mb-6">Your cart is tied to your account, so you&apos;ll need to sign in to add items and check out.</p>
         <div className="flex items-center justify-center gap-3 flex-wrap">
           <Link
             href="/login"
-            className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
+            className="inline-flex items-center gap-2 bg-paddy hover:bg-paddy-deep text-white font-semibold px-6 py-3 rounded-lg transition-colors text-sm"
           >
             <LogIn size={16} />
             Log In
           </Link>
           <Link
             href="/register"
-            className="inline-flex items-center gap-2 border border-gray-300 hover:border-forest text-gray-700 hover:text-forest font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
+            className="inline-flex items-center gap-2 border border-gray-300 hover:border-paddy text-gray-700 hover:text-paddy font-semibold px-6 py-3 rounded-lg transition-colors text-sm"
           >
             <UserPlus size={16} />
             Sign Up
@@ -110,7 +110,7 @@ export default function CartPage() {
         </div>
         <Link
           href="/products"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-forest transition-colors mt-6"
+          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-paddy transition-colors mt-6"
         >
           <ArrowLeft size={14} />
           Or keep browsing products
@@ -123,11 +123,11 @@ export default function CartPage() {
     return (
       <div className="max-w-2xl mx-auto px-4 py-20 text-center">
         <ShoppingCart size={56} className="text-gray-300 mx-auto mb-4" />
-        <h1 className="font-serif text-2xl font-bold text-gray-800 mb-2">Your cart is empty</h1>
+        <h1 className="font-display text-4xl font-bold text-soil mb-2">Your cart is empty</h1>
         <p className="text-gray-500 mb-6">Browse our products and add something you like.</p>
         <Link
           href="/products"
-          className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
+          className="inline-flex items-center gap-2 bg-paddy hover:bg-paddy-deep text-white font-semibold px-6 py-3 rounded-lg transition-colors text-sm"
         >
           <ArrowLeft size={16} />
           Browse Products
@@ -139,7 +139,7 @@ export default function CartPage() {
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="font-serif text-2xl font-bold text-gray-900 flex items-center gap-2">
+        <h1 className="font-display text-4xl font-bold text-soil flex items-center gap-2">
           <ShoppingCart size={24} />
           Your Cart
         </h1>
@@ -159,7 +159,7 @@ export default function CartPage() {
       )}
 
       {stockWarning && (
-        <div className="mb-6 flex items-start gap-3 bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-xl px-4 py-3">
+        <div className="mb-6 flex items-start gap-3 bg-amber-50 border border-amber-200 text-amber-800 text-sm rounded-lg px-4 py-3">
           <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
           <p>{stockWarning}</p>
         </div>
@@ -171,9 +171,9 @@ export default function CartPage() {
           {items.map(item => (
             <div
               key={item.productId}
-              className="bg-white border border-gray-200 rounded-2xl p-4 flex gap-4 shadow-sm"
+              className="bg-white border border-gray-200 rounded-card p-4 flex gap-4 shadow-sm"
             >
-              <div className="w-20 h-20 rounded-xl bg-gray-100 flex-shrink-0 relative overflow-hidden flex items-center justify-center">
+              <div className="w-20 h-20 rounded-lg bg-gray-100 flex-shrink-0 relative overflow-hidden flex items-center justify-center">
                 {item.imageUrl ? (
                   <Image src={item.imageUrl} alt={item.name} fill unoptimized className="object-cover" />
                 ) : (
@@ -217,7 +217,7 @@ export default function CartPage() {
               </div>
 
               <div className="flex flex-col items-end justify-between flex-shrink-0">
-                <p className="font-bold text-green-700">₱{(item.price * item.quantity).toFixed(2)}</p>
+                <p className="font-bold text-paddy">₱{(item.price * item.quantity).toFixed(2)}</p>
                 <button
                   onClick={() => removeItem(item.productId)}
                   className="text-gray-400 hover:text-red-500 transition-colors"
@@ -231,8 +231,8 @@ export default function CartPage() {
 
         {/* Order summary */}
         <div className="lg:col-span-1">
-          <div className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 shadow-sm sticky top-6 space-y-5">
-            <h2 className="font-serif text-lg font-bold text-gray-900">Order Summary</h2>
+          <div className="bg-white border border-gray-200 rounded-card p-4 sm:p-6 shadow-sm sticky top-6 space-y-5">
+            <h2 className="font-display text-lg font-bold text-gray-900">Order Summary</h2>
 
             <div className="space-y-2 text-sm text-gray-600">
               {items.map(item => (
@@ -248,7 +248,7 @@ export default function CartPage() {
             <div className="border-t border-gray-200 pt-4">
               <div className="flex justify-between items-center">
                 <span className="font-semibold text-gray-900">Total</span>
-                <span className="text-xl font-bold text-green-700">₱{totalAmount.toFixed(2)}</span>
+                <span className="text-xl font-bold text-paddy">₱{totalAmount.toFixed(2)}</span>
               </div>
             </div>
 
@@ -260,7 +260,7 @@ export default function CartPage() {
               <select
                 value={paymentMethod}
                 onChange={e => setPaymentMethod(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
               >
                 {PAYMENT_METHODS.map(m => (
                   <option key={m.value} value={m.value}>{m.label}</option>
@@ -281,8 +281,8 @@ export default function CartPage() {
                     onClick={() => setDeliveryMethod(m.value)}
                     className={`py-2 rounded-lg text-sm font-medium border transition-colors ${
                       deliveryMethod === m.value
-                        ? 'bg-forest text-white border-forest'
-                        : 'bg-white text-gray-600 border-gray-300 hover:border-forest'
+                        ? 'bg-paddy text-white border-paddy'
+                        : 'bg-white text-gray-600 border-gray-300 hover:border-paddy'
                     }`}
                   >
                     {m.label}
@@ -306,7 +306,7 @@ export default function CartPage() {
             <button
               onClick={handleCheckout}
               disabled={placing}
-              className="w-full bg-forest hover:bg-forest-mid disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-sm flex items-center justify-center gap-2"
+              className="w-full bg-paddy hover:bg-paddy-deep disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
             >
               {placing && <Loader2 size={16} className="animate-spin" />}
               {placing ? 'Placing Order…' : isAuthenticated ? 'Place Order' : 'Login to Checkout'}
@@ -314,7 +314,7 @@ export default function CartPage() {
 
             <Link
               href="/products"
-              className="block text-center text-sm text-gray-500 hover:text-forest transition-colors"
+              className="block text-center text-sm text-gray-500 hover:text-paddy transition-colors"
             >
               Continue Shopping
             </Link>

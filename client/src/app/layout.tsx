@@ -1,21 +1,31 @@
 import type { Metadata } from "next";
 import { connection } from "next/server";
-import { Fraunces, Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
+import { Big_Shoulders, Big_Shoulders_Stencil, Hanken_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import Navbar from "@/components/Navbar";
 import ConditionalFooter from "@/components/ConditionalFooter";
+import Footer from "@/components/Footer";
 import { getSessionUser } from "@/lib/serverSession";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+// Headlines: a condensed signage face, after the hand-lettered price boards
+// of the palengke. Its stencil cut is kept for crate-style product labels.
+const bigShoulders = Big_Shoulders({
+  variable: "--font-big-shoulders",
   subsets: ["latin"],
+  axes: ["opsz"],
 });
 
-const plusJakarta = Plus_Jakarta_Sans({
-  variable: "--font-plus-jakarta",
+const bigShouldersStencil = Big_Shoulders_Stencil({
+  variable: "--font-big-shoulders-stencil",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["700"],
+});
+
+// Body and interface text, with figures that line up in price columns.
+const hanken = Hanken_Grotesk({
+  variable: "--font-hanken",
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
@@ -44,13 +54,15 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${plusJakarta.variable} ${geistMono.variable} antialiased`}
+      className={`${bigShoulders.variable} ${bigShouldersStencil.variable} ${hanken.variable} ${geistMono.variable} antialiased`}
     >
-      <body className="min-h-screen flex flex-col bg-white font-sans">
+      <body className="min-h-screen flex flex-col bg-white font-sans text-soil">
         <Providers initialUser={user}>
           <Navbar />
           <main className="flex-1">{children}</main>
-          <ConditionalFooter />
+          <ConditionalFooter>
+            <Footer />
+          </ConditionalFooter>
         </Providers>
       </body>
     </html>

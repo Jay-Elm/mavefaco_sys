@@ -134,7 +134,7 @@ export default function IdReviewPanel({ token, userId, onClose, onReviewed }: {
                         <label key={key} className="flex items-start gap-2 text-sm text-gray-700">
                           <input
                             type="checkbox"
-                            className="mt-0.5 accent-forest"
+                            className="mt-0.5 accent-paddy"
                             checked={reasons.includes(key)}
                             onChange={(e) => setReasons((r) => (e.target.checked ? [...r, key] : r.filter((x) => x !== key)))}
                           />
@@ -163,7 +163,7 @@ export default function IdReviewPanel({ token, userId, onClose, onReviewed }: {
                   </div>
                 ) : (
                   <div className="flex flex-wrap items-center gap-3">
-                    <button onClick={() => decide('approve')} disabled={saving} className="inline-flex items-center gap-1.5 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg">
+                    <button onClick={() => decide('approve')} disabled={saving} className="inline-flex items-center gap-1.5 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg">
                       {saving ? <Loader2 size={14} className="animate-spin" /> : <CheckCircle size={14} />} Approve and verify
                     </button>
                     <button onClick={() => setRejecting(true)} disabled={saving} className="inline-flex items-center gap-1.5 border border-red-200 text-red-600 hover:bg-red-50 text-sm font-medium px-4 py-2 rounded-lg">

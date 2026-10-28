@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
 import LogoutConfirmModal from '@/components/LogoutConfirmModal'
 import {
-  ShoppingBag, LogIn, LogOut, UserPlus, User, Leaf,
+  ShoppingBag, LogIn, LogOut, Sprout, ChevronDown,
   LayoutDashboard, ShoppingCart, ClipboardList, UserCircle,
   Info, MessageCircle, Menu, X,
 } from 'lucide-react'
@@ -20,6 +20,25 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  // The account menu closes on a click outside it or on Escape.
+  useEffect(() => {
+    if (!menuOpen) return
+    function onPointer(e: PointerEvent) {
+      if (!menuRef.current?.contains(e.target as Node)) setMenuOpen(false)
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setMenuOpen(false)
+    }
+    document.addEventListener('pointerdown', onPointer)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', onPointer)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [menuOpen])
 
   // The farmer/admin/manager dashboards have their own persistent chrome
   // (sidebar, mobile top bar) — hiding this bar on scroll there would fight
@@ -55,6 +74,7 @@ export default function Navbar() {
   if (pathname !== prevPathname) {
     setPrevPathname(pathname)
     setMobileOpen(false)
+    setMenuOpen(false)
   }
 
   function handleLogout() {
@@ -70,95 +90,114 @@ export default function Navbar() {
   const canShop = !isAuthenticated || user?.role === 'customer'
 
   const linkCls = 'flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium'
-  const mobileLinkCls = 'flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-colors text-base font-medium w-full'
+  const mobileLinkCls = 'flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-base font-medium w-full'
+
+  // Everything about the signed-in person's own account, in one menu.
+  const accountLinks =
+    user?.role === 'customer'
+      ? [
+          { href: '/customer/orders', label: 'My Orders', icon: ClipboardList },
+          { href: '/customer/messages', label: 'Messages', icon: MessageCircle },
+          { href: '/customer/profile', label: 'Profile', icon: UserCircle },
+        ]
+      : []
+  const portal = isStaff
+    ? { href: '/dashboard', label: 'Dashboard' }
+    : user?.role === 'farmer'
+      ? { href: '/farmer', label: 'My farm' }
+      : null
+
+  const cartLabel = `Cart, ${totalItems} item${totalItems === 1 ? '' : 's'}`
+  const cartBadge = totalItems > 0 && (
+    <span className="absolute -top-0.5 -right-0.5 bg-calamansi text-soil text-[11px] font-bold rounded-full min-w-5 h-5 px-1 flex items-center justify-center leading-none tabular">
+      {totalItems > 9 ? '9+' : totalItems}
+    </span>
+  )
 
   return (
     <>
       <nav
-        className={`sticky top-0 z-50 h-16 flex items-center bg-forest text-white transition-[transform,box-shadow] duration-300 ${
+        className={`sticky top-0 z-50 h-16 flex items-center bg-soil text-white transition-[transform,box-shadow] duration-300 ${
           scrolled ? 'shadow-lg shadow-black/20' : ''
         } ${navHidden ? '-translate-y-full' : 'translate-y-0'}`}
       >
-        <div className="max-w-7xl mx-auto px-4 w-full flex items-center justify-between">
+        {/* Full width over the dashboards, so the logo lines up with their sidebar. */}
+        <div className={`${isDashboardStyle ? 'px-5' : 'max-w-[1200px] mx-auto px-6'} w-full flex items-center justify-between gap-6`}>
 
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity shrink-0">
-            <div className="w-7 h-7 bg-white/10 rounded-md flex items-center justify-center">
-              <Leaf size={16} className="text-green-300" />
-            </div>
-            <span className="font-serif text-xl font-bold tracking-tight">MaVeFaCo</span>
+          <Link href="/" className="flex items-center gap-2 shrink-0" aria-label="MaVeFaCo home">
+            <Sprout size={20} className="text-calamansi" aria-hidden="true" />
+            <span className="font-display text-2xl font-extrabold leading-none">MaVeFaCo</span>
           </Link>
 
           {/* Desktop nav */}
-          <div className="hidden lg:flex items-center gap-0.5">
-            {!isStaff && (
-              <Link href="/products" className={linkCls}>
-                <ShoppingBag size={15} /><span>Products</span>
-              </Link>
-            )}
-            <Link href="/about" className={linkCls}>
-              <Info size={15} /><span>About</span>
-            </Link>
-            {canShop && (
-              <Link href="/cart" className={`relative ${linkCls}`}>
-                <ShoppingCart size={15} /><span>Cart</span>
-                {totalItems > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-orange-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center leading-none">
-                    {totalItems > 9 ? '9+' : totalItems}
-                  </span>
-                )}
-              </Link>
-            )}
+          <div className="hidden lg:flex items-center gap-1 flex-1">
+            {!isStaff && <Link href="/products" className={linkCls}>Products</Link>}
+            <Link href="/about" className={linkCls}>About</Link>
+            {portal && <Link href={portal.href} className={linkCls}>{portal.label}</Link>}
 
-            {isAuthenticated ? (
-              <>
-                {(user?.role === 'admin' || user?.role === 'manager') && (
-                  <Link href="/dashboard" className={linkCls}><LayoutDashboard size={15} /><span>Dashboard</span></Link>
-                )}
-                {user?.role === 'farmer' && (
-                  <Link href="/farmer" className={linkCls}><LayoutDashboard size={15} /><span>My Farm</span></Link>
-                )}
-                {user?.role === 'customer' && (
-                  <>
-                    <Link href="/customer/messages" className={linkCls}><MessageCircle size={15} /><span>Messages</span></Link>
-                    <Link href="/customer/orders" className={linkCls}><ClipboardList size={15} /><span>My Orders</span></Link>
-                    <Link href="/customer/profile" className={linkCls}><UserCircle size={15} /><span>Profile</span></Link>
-                  </>
-                )}
-                <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 ml-1 rounded-lg bg-white/10 text-sm text-green-200">
-                  <User size={14} />
-                  <span className="max-w-[100px] truncate">{user?.name}</span>
-                </div>
-                <button onClick={() => setShowLogoutConfirm(true)} className={`ml-0.5 ${linkCls}`}>
-                  <LogOut size={15} /><span>Logout</span>
-                </button>
-              </>
-            ) : (
-              <>
-                <Link href="/login" className={linkCls}><LogIn size={15} /><span>Login</span></Link>
-                <Link href="/register" className="flex items-center gap-1.5 px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition-colors text-sm font-semibold ml-1">
-                  <UserPlus size={15} /><span>Register</span>
+            <div className="ml-auto flex items-center gap-1">
+              {canShop && (
+                <Link href="/cart" className="relative p-2 rounded-lg hover:bg-white/10 transition-colors" aria-label={cartLabel}>
+                  <ShoppingCart size={20} aria-hidden="true" />
+                  {cartBadge}
                 </Link>
-              </>
-            )}
+              )}
+
+              {isAuthenticated ? (
+                <div className="relative" ref={menuRef}>
+                  <button
+                    type="button"
+                    onClick={() => setMenuOpen((v) => !v)}
+                    aria-expanded={menuOpen}
+                    aria-haspopup="menu"
+                    className={`${linkCls} ml-1`}
+                  >
+                    <UserCircle size={18} aria-hidden="true" />
+                    <span className="max-w-[140px] truncate">{user?.name}</span>
+                    <ChevronDown size={15} aria-hidden="true" className={`transition-transform ${menuOpen ? 'rotate-180' : ''}`} />
+                  </button>
+                  {menuOpen && (
+                    <div role="menu" className="absolute right-0 top-full mt-2 w-56 bg-white text-soil rounded-card shadow-card border border-gray-200 py-1.5">
+                      {accountLinks.map(({ href, label, icon: Icon }) => (
+                        <Link key={href} href={href} role="menuitem" className="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-field">
+                          <Icon size={16} className="text-gray-500" aria-hidden="true" />{label}
+                        </Link>
+                      ))}
+                      {accountLinks.length > 0 && <div className="my-1.5 border-t border-gray-100" />}
+                      <button
+                        type="button"
+                        role="menuitem"
+                        onClick={() => { setMenuOpen(false); setShowLogoutConfirm(true) }}
+                        className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-field text-left"
+                      >
+                        <LogOut size={16} className="text-gray-500" aria-hidden="true" />Log out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <Link href="/login" className={linkCls}>Log in</Link>
+                  <Link href="/register" className="btn btn-calamansi ml-1 py-2 px-4 text-sm">Register</Link>
+                </>
+              )}
+            </div>
           </div>
 
-          {/* Mobile: cart badge (shoppers only) + hamburger */}
-          <div className="flex lg:hidden items-center gap-2">
+          {/* Mobile: cart (shoppers only) + menu */}
+          <div className="flex lg:hidden items-center gap-1">
             {canShop && (
-              <Link href="/cart" className="relative p-2 rounded-lg hover:bg-white/10 transition-colors">
-                <ShoppingCart size={20} />
-                {totalItems > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 bg-orange-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center leading-none">
-                    {totalItems > 9 ? '9+' : totalItems}
-                  </span>
-                )}
+              <Link href="/cart" className="relative p-2 rounded-lg hover:bg-white/10 transition-colors" aria-label={cartLabel}>
+                <ShoppingCart size={20} aria-hidden="true" />
+                {cartBadge}
               </Link>
             )}
             <button
               onClick={() => setMobileOpen(v => !v)}
               className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-              aria-label="Toggle menu"
+              aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -168,43 +207,28 @@ export default function Navbar() {
 
       {/* Mobile menu overlay */}
       {mobileOpen && (
-        <div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 bg-forest z-40 overflow-y-auto">
+        <div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 bg-soil text-white z-40 overflow-y-auto">
           <div className="px-4 py-4 space-y-1">
             {!isStaff && <Link href="/products" className={mobileLinkCls}><ShoppingBag size={18} />Products</Link>}
             <Link href="/about" className={mobileLinkCls}><Info size={18} />About</Link>
+            {portal && <Link href={portal.href} className={mobileLinkCls}><LayoutDashboard size={18} />{portal.label}</Link>}
 
             {isAuthenticated ? (
               <>
                 <div className="border-t border-white/10 my-3" />
-                {(user?.role === 'admin' || user?.role === 'manager') && (
-                  <Link href="/dashboard" className={mobileLinkCls}><LayoutDashboard size={18} />Dashboard</Link>
-                )}
-                {user?.role === 'farmer' && (
-                  <Link href="/farmer" className={mobileLinkCls}><LayoutDashboard size={18} />My Farm</Link>
-                )}
-                {user?.role === 'customer' && (
-                  <>
-                    <Link href="/customer/messages" className={mobileLinkCls}><MessageCircle size={18} />Messages</Link>
-                    <Link href="/customer/orders" className={mobileLinkCls}><ClipboardList size={18} />My Orders</Link>
-                    <Link href="/customer/profile" className={mobileLinkCls}><UserCircle size={18} />Profile</Link>
-                  </>
-                )}
-                <div className="border-t border-white/10 my-3" />
-                <div className="flex items-center gap-3 px-4 py-3 text-green-300 text-sm">
-                  <User size={16} />
-                  <span className="truncate">{user?.name}</span>
-                </div>
-                <button onClick={() => setShowLogoutConfirm(true)} className={`${mobileLinkCls} text-red-300`}>
-                  <LogOut size={18} />Logout
+                <p className="px-4 pb-1 text-sm text-white/60 truncate">Signed in as {user?.name}</p>
+                {accountLinks.map(({ href, label, icon: Icon }) => (
+                  <Link key={href} href={href} className={mobileLinkCls}><Icon size={18} />{label}</Link>
+                ))}
+                <button onClick={() => setShowLogoutConfirm(true)} className={mobileLinkCls}>
+                  <LogOut size={18} />Log out
                 </button>
               </>
             ) : (
               <>
                 <div className="border-t border-white/10 my-3" />
-                <Link href="/login" className={mobileLinkCls}><LogIn size={18} />Login</Link>
-                <Link href="/register" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500 hover:bg-orange-600 transition-colors text-base font-semibold w-full">
-                  <UserPlus size={18} />Register
-                </Link>
+                <Link href="/login" className={mobileLinkCls}><LogIn size={18} />Log in</Link>
+                <Link href="/register" className="btn btn-calamansi w-full mt-2">Register</Link>
               </>
             )}
           </div>

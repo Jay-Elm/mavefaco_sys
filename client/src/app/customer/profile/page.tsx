@@ -162,11 +162,11 @@ export default function CustomerProfilePage() {
   return (
     <div className="max-w-lg mx-auto px-4 py-10">
       <div className="flex items-center gap-3 mb-8">
-        <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-          <User size={22} className="text-green-700" />
+        <div className="w-12 h-12 rounded-full bg-shoot flex items-center justify-center">
+          <User size={22} className="text-paddy" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
+          <h1 className="font-display text-4xl font-bold text-soil">My Profile</h1>
           <p className="text-sm text-gray-500">Update your account information</p>
         </div>
       </div>
@@ -178,13 +178,13 @@ export default function CustomerProfilePage() {
         </div>
       )}
       {success && (
-        <div className="mb-4 flex items-center gap-2 text-green-700 text-sm bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+        <div className="mb-4 flex items-center gap-2 text-paddy text-sm bg-shoot/40 border border-shoot rounded-lg px-4 py-3">
           <CheckCircle size={16} />
           Name updated successfully
         </div>
       )}
 
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+      <div className="bg-white rounded-card border border-gray-200 shadow-sm p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -192,7 +192,7 @@ export default function CustomerProfilePage() {
               value={name}
               onChange={e => setName(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
             />
           </div>
 
@@ -209,7 +209,7 @@ export default function CustomerProfilePage() {
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-paddy text-white text-sm font-medium rounded-lg hover:bg-paddy-deep transition-colors disabled:opacity-60"
             >
               {submitting && <Loader2 size={14} className="animate-spin" />}
               {submitting ? 'Saving…' : 'Save Name'}
@@ -234,13 +234,13 @@ export default function CustomerProfilePage() {
           </div>
         )}
         {emailSuccess && (
-          <div className="mb-4 flex items-center gap-2 text-green-700 text-sm bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+          <div className="mb-4 flex items-center gap-2 text-paddy text-sm bg-shoot/40 border border-shoot rounded-lg px-4 py-3">
             <CheckCircle size={16} />
             Check {newEmail.trim().toLowerCase()} for a confirmation link. Your email won&apos;t change until you click it.
           </div>
         )}
 
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <div className="bg-white rounded-card border border-gray-200 shadow-sm p-6">
           <form onSubmit={handleEmailChange} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">New Email</label>
@@ -249,7 +249,7 @@ export default function CustomerProfilePage() {
                 value={newEmail}
                 onChange={e => setNewEmail(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
               />
             </div>
             <div>
@@ -259,14 +259,14 @@ export default function CustomerProfilePage() {
                 value={emailPassword}
                 onChange={e => setEmailPassword(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
               />
             </div>
             <div className="pt-2">
               <button
                 type="submit"
                 disabled={emailSubmitting}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-paddy text-white text-sm font-medium rounded-lg hover:bg-paddy-deep transition-colors disabled:opacity-60"
               >
                 {emailSubmitting && <Loader2 size={14} className="animate-spin" />}
                 {emailSubmitting ? 'Saving…' : 'Change Email'}
@@ -289,13 +289,13 @@ export default function CustomerProfilePage() {
           </div>
         )}
         {pwSuccess && (
-          <div className="mb-4 flex items-center gap-2 text-green-700 text-sm bg-green-50 border border-green-200 rounded-lg px-4 py-3">
+          <div className="mb-4 flex items-center gap-2 text-paddy text-sm bg-shoot/40 border border-shoot rounded-lg px-4 py-3">
             <CheckCircle size={16} />
             Password changed successfully
           </div>
         )}
 
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+        <div className="bg-white rounded-card border border-gray-200 shadow-sm p-6">
           <form onSubmit={handlePasswordChange} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
@@ -304,7 +304,7 @@ export default function CustomerProfilePage() {
                 value={currentPassword}
                 onChange={e => setCurrentPassword(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
               />
             </div>
             <div>
@@ -315,7 +315,7 @@ export default function CustomerProfilePage() {
                 onChange={e => setNewPassword(e.target.value)}
                 required
                 minLength={12}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
               />
             </div>
             <div>
@@ -325,14 +325,14 @@ export default function CustomerProfilePage() {
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
               />
             </div>
             <div className="pt-2">
               <button
                 type="submit"
                 disabled={pwSubmitting}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-paddy text-white text-sm font-medium rounded-lg hover:bg-paddy-deep transition-colors disabled:opacity-60"
               >
                 {pwSubmitting && <Loader2 size={14} className="animate-spin" />}
                 {pwSubmitting ? 'Updating…' : 'Change Password'}
@@ -358,7 +358,7 @@ export default function CustomerProfilePage() {
           </div>
         )}
 
-        <div className="bg-white rounded-2xl border border-red-200 shadow-sm p-6">
+        <div className="bg-white rounded-card border border-red-200 shadow-sm p-6">
           <form onSubmit={handleDeleteAccount} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>

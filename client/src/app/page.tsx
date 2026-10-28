@@ -4,10 +4,15 @@ import ProductCard from "@/components/ProductCard";
 import { redirectRoles } from "@/lib/serverSession";
 import HomeHeroActions from "@/components/HomeHeroActions";
 import HomeBottomCTAButtons from "@/components/HomeBottomCTAButtons";
-import { ShoppingBag, ArrowRight, Package, Users, CheckCircle, Star } from "lucide-react";
+import HarvestBoard from "@/components/HarvestBoard";
+import { ArrowRight, Star } from "lucide-react";
 import AnnouncementList from "@/components/AnnouncementList";
 import { isSafeUrl } from "@/lib/url";
 import { withComingSoon } from "@/lib/comingSoon";
+import { bannerStyle } from "@/components/bannerStyles";
+import { addDays, harvestBoard, toDateString, todayPH, weekStart } from "@/lib/planting";
+
+const WRAP = "mx-auto max-w-[1200px] px-6";
 
 async function getFeaturedProducts() {
   const products = await prisma.product.findMany({
@@ -52,216 +57,140 @@ async function getCategories() {
   });
 }
 
-const BANNER_BG: Record<string, string> = {
-  green:  "bg-gradient-to-r from-green-600 to-green-800",
-  orange: "bg-gradient-to-r from-orange-500 to-orange-700",
-  blue:   "bg-gradient-to-r from-blue-600 to-blue-800",
-  purple: "bg-gradient-to-r from-purple-600 to-purple-800",
-  teal:   "bg-gradient-to-r from-teal-600 to-teal-800",
-};
+// What member farms expect to harvest this week and next, from growing
+// plantings. Only crop totals leave this function, never a farm.
+async function getHarvestBoard() {
+  const today = todayPH();
+  const plantings = await prisma.planting.findMany({
+    where: { status: "growing", farmer: { deletedAt: null } },
+    select: {
+      id: true,
+      harvestStart: true,
+      harvestEnd: true,
+      expectedYield: true,
+      farmerId: true,
+      cropType: { select: { id: true, name: true } },
+    },
+  });
+  const board = harvestBoard(
+    plantings.map((p) => ({
+      id: p.id,
+      farmer: { id: p.farmerId, name: "" },
+      cropType: p.cropType,
+      harvestStart: toDateString(p.harvestStart),
+      harvestEnd: toDateString(p.harvestEnd),
+      expectedYield: p.expectedYield,
+    })),
+    today,
+  );
+  const start = weekStart(today);
+  return { ...board, weekStart: start, weekEnd: addDays(start, 6) };
+}
 
-const CATEGORY_COLORS = [
-  "bg-green-50 text-green-800 border border-green-200 hover:bg-green-100",
-  "bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100",
-  "bg-teal-50 text-teal-800 border border-teal-200 hover:bg-teal-100",
-  "bg-lime-50 text-lime-800 border border-lime-200 hover:bg-lime-100",
-  "bg-orange-50 text-orange-800 border border-orange-200 hover:bg-orange-100",
-  "bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100",
-  "bg-cyan-50 text-cyan-800 border border-cyan-200 hover:bg-cyan-100",
-  "bg-violet-50 text-violet-800 border border-violet-200 hover:bg-violet-100",
-];
+// Customers' own words: recent four- and five-star reviews that say something.
+async function getReviews() {
+  return prisma.review.findMany({
+    where: {
+      rating: { gte: 4 },
+      AND: [{ comment: { not: null } }, { comment: { not: "" } }],
+      product: { approved: true, archivedAt: null },
+    },
+    orderBy: { createdAt: "desc" },
+    take: 3,
+    include: {
+      customer: { select: { name: true } },
+      product: { select: { id: true, name: true } },
+    },
+  });
+}
 
-const TESTIMONIALS = [
-  {
-    name: "Maria Santos",
-    role: "Customer, Legazpi City",
-    quote: "I used to drive to the market every weekend. Now the same vegetables — fresher — show up at my door. The farmers are real people I can message directly.",
-    rating: 5,
-    initials: "MS",
-  },
-  {
-    name: "Jose Reyes",
-    role: "Farmer, Daraga, Albay",
-    quote: "Before this, I sold at 30% of what I should because of middlemen. Now I set my own price and know exactly who's buying.",
-    rating: 5,
-    initials: "JR",
-  },
-  {
-    name: "Ana Cruz",
-    role: "Customer, Tabaco City",
-    quote: "I can see which farm my kangkong came from and when it was harvested. That matters to me.",
-    rating: 5,
-    initials: "AC",
-  },
-];
+const count = (n: number, one: string, many: string) => `${n.toLocaleString("en-PH")} ${n === 1 ? one : many}`;
 
 export default async function HomePage() {
   // The storefront home is for customers and guests; everyone else has a portal.
   await redirectRoles(["admin", "manager", "farmer"]);
-  const [featuredProducts, announcements, banners, stats, categories] = await Promise.all([
+  const [featuredProducts, announcements, banners, stats, categories, board, reviews] = await Promise.all([
     getFeaturedProducts(),
     getAnnouncements(),
     getBanners(),
     getStats(),
     getCategories(),
+    getHarvestBoard(),
+    getReviews(),
   ]);
 
   const hasStats = stats.farmers > 0 || stats.products > 0 || stats.orders > 0;
 
   return (
     <div className="bg-white">
-      {/* ── HERO — split layout ──────────────────────────── */}
-      <section className="flex flex-col lg:flex-row" style={{ minHeight: "580px" }}>
+      {/* ── HERO ─────────────────────────────────────────── */}
+      <section className="bg-soil text-white">
+        <div className={`${WRAP} py-14 lg:py-20 grid gap-12 lg:grid-cols-[1fr_440px] lg:items-center`}>
+          <div>
+            <h1 className="font-display text-6xl sm:text-7xl lg:text-8xl font-extrabold leading-[0.92] max-w-[11ch]">
+              Albay&apos;s harvest, sold by the people who grew it.
+            </h1>
+            <p className="mt-6 text-lg leading-relaxed text-white/80 max-w-[46ch]">
+              Every listing comes from a verified MaVeFaCo member farmer. Order online, then pick it up or have it delivered.
+            </p>
 
-        {/* Left: text panel */}
-        <div
-          className="flex flex-col justify-center px-8 sm:px-14 lg:px-16 py-16 lg:py-0 lg:w-[56%] bg-forest"
-        >
-          <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight hero-line-1">
-            Buy fresh<br />
-            from Albay<br />
-            farmers.
-          </h1>
+            <HomeHeroActions />
 
-          <p className="mt-6 text-green-200 text-lg leading-relaxed max-w-md hero-line-2">
-            MaVeFaCo cuts out the middlemen. Order directly from verified local farmers and get produce harvested within the day.
-          </p>
+            {hasStats && (
+              <p className="mt-10 text-sm text-white/60 tabular max-w-[50ch]">
+                {count(stats.products, "product", "products")} listed by {count(stats.farmers, "verified farmer", "verified farmers")}.{" "}
+                {stats.orders > 0 && `${count(stats.orders, "order", "orders")} delivered so far.`}
+              </p>
+            )}
+          </div>
 
-          <HomeHeroActions />
-
-          {hasStats && (
-            <div className="mt-12 pt-8 border-t border-white/10 flex gap-8 hero-line-3">
-              {stats.farmers > 0 && (
-                <div>
-                  <div className="font-serif text-2xl font-bold text-white">{stats.farmers}+</div>
-                  <div className="text-green-400 text-xs mt-0.5">Verified farmers</div>
-                </div>
-              )}
-              {stats.products > 0 && (
-                <div>
-                  <div className="font-serif text-2xl font-bold text-white">{stats.products}+</div>
-                  <div className="text-green-400 text-xs mt-0.5">Fresh products</div>
-                </div>
-              )}
-              {stats.orders > 0 && (
-                <div>
-                  <div className="font-serif text-2xl font-bold text-white">{stats.orders}+</div>
-                  <div className="text-green-400 text-xs mt-0.5">Orders delivered</div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Right: photo panel */}
-        <div
-          className="w-full lg:w-[44%] h-56 sm:h-72 lg:h-auto relative overflow-hidden"
-          aria-hidden="true"
-        >
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: "url('https://images.unsplash.com/photo-1542838132-92c53300491e?w=1080&q=80')",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          />
+          <HarvestBoard {...board} />
         </div>
       </section>
 
-      {/* ── BANNERS ───────────────────────────────────────── */}
-      {banners.length > 0 && (
-        <section className="py-8 px-6 bg-tint">
-          <div className="max-w-5xl mx-auto space-y-4">
-            {banners.map((b) => (
-              <div key={b.id} className={`rounded-xl overflow-hidden text-white ${BANNER_BG[b.color] ?? BANNER_BG.green}`}>
-                <div className="px-7 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* ── BANNERS AND ANNOUNCEMENTS ────────────────────── */}
+      {(banners.length > 0 || announcements.length > 0) && (
+        <section className="py-8 border-b border-gray-100">
+          <div className={`${WRAP} space-y-4`}>
+            {banners.map((b) => {
+              const style = bannerStyle(b.color);
+              return (
+                <div key={b.id} className={`rounded-card px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${style.surface}`}>
                   <div>
-                    <h3 className="font-serif text-lg font-semibold">{b.title}</h3>
-                    {b.subtitle && <p className="text-white/75 text-sm mt-0.5">{b.subtitle}</p>}
+                    <h2 className="font-display text-2xl font-bold leading-tight">{b.title}</h2>
+                    {b.subtitle && <p className={`text-sm mt-1 ${style.muted}`}>{b.subtitle}</p>}
                   </div>
                   {b.ctaText && b.ctaLink && isSafeUrl(b.ctaLink) && (
-                    <Link href={b.ctaLink} className="shrink-0 inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-medium px-5 py-2 rounded-lg transition-colors text-sm">
-                      {b.ctaText} <ArrowRight size={14} />
+                    <Link href={b.ctaLink} className={`shrink-0 inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm ${style.action}`}>
+                      {b.ctaText} <ArrowRight size={14} aria-hidden="true" />
                     </Link>
                   )}
                 </div>
+              );
+            })}
+            {announcements.length > 0 && (
+              <div className="max-w-3xl">
+                <AnnouncementList announcements={announcements} />
               </div>
-            ))}
+            )}
           </div>
         </section>
       )}
 
-      {/* ── ANNOUNCEMENTS ─────────────────────────────────── */}
-      {announcements.length > 0 && (
-        <section className="py-6 px-6 bg-white border-b border-gray-100">
-          <div className="max-w-4xl mx-auto">
-            <AnnouncementList announcements={announcements} />
-          </div>
-        </section>
-      )}
-
-      {/* ── HOW IT WORKS ──────────────────────────────────── */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-gray-900 mb-14">
-            How it works
-          </h2>
-
-          <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-6">
-            {/* Connecting line — only on sm+ */}
-            <div className="hidden sm:block absolute top-6 left-[calc(16.67%+24px)] right-[calc(16.67%+24px)] h-px bg-gray-200" />
-
-            {[
-              {
-                n: "1",
-                icon: <Users size={20} className="text-forest" />,
-                title: "Farmers list products",
-                desc: "Verified Albay farmers post their harvest directly — what was picked this morning can be on sale by noon.",
-              },
-              {
-                n: "2",
-                icon: <ShoppingBag size={20} className="text-forest" />,
-                title: "Customers order directly",
-                desc: "Browse by category, read what the farmer wrote about their produce, and place an order in minutes.",
-              },
-              {
-                n: "3",
-                icon: <CheckCircle size={20} className="text-forest" />,
-                title: "Fresh, fair, and local",
-                desc: "Shorter supply chains mean better prices for both sides — and you always know exactly where your food came from.",
-              },
-            ].map((step) => (
-              <div key={step.n} className="relative flex flex-col items-start sm:items-center sm:text-center">
-                <div className="w-12 h-12 rounded-full border-2 border-forest bg-white flex items-center justify-center mb-5 relative z-10">
-                  <span className="font-serif text-lg font-bold text-forest">{step.n}</span>
-                </div>
-                <h3 className="font-serif font-semibold text-gray-900 text-lg mb-2">{step.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed max-w-[240px]">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CATEGORIES ────────────────────────────────────── */}
+      {/* ── CATEGORIES ───────────────────────────────────── */}
       {categories.length > 0 && (
-        <section className="py-16 px-6 bg-tint">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-gray-900 mb-8">
-              Shop by category
-            </h2>
-            <div className="flex flex-wrap gap-3">
-              {categories.map((cat, i) => (
+        <section className="pt-14">
+          <div className={WRAP}>
+            <h2 className="font-display text-4xl font-bold">Shop by category</h2>
+            <div className="mt-5 -mx-6 px-6 flex gap-2 overflow-x-auto pb-2 sm:mx-0 sm:px-0 sm:flex-wrap sm:overflow-visible">
+              {categories.map((cat) => (
                 <Link
                   key={cat.id}
                   href={`/products?categoryId=${cat.id}`}
-                  className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-colors ${CATEGORY_COLORS[i % CATEGORY_COLORS.length]}`}
+                  className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-soil hover:border-paddy hover:text-paddy transition-colors"
                 >
                   {cat.name}
-                  {cat._count.products > 0 && (
-                    <span className="opacity-50 text-xs">({cat._count.products})</span>
-                  )}
+                  {cat._count.products > 0 && <span className="text-xs text-gray-500 tabular">{cat._count.products}</span>}
                 </Link>
               ))}
             </div>
@@ -269,126 +198,100 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── FEATURED PRODUCTS ─────────────────────────────── */}
-      <section className="py-20 px-6 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-10">
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-gray-900">
-              Latest products
-            </h2>
-            <Link href="/products" className="hidden sm:inline-flex items-center gap-1.5 text-forest hover:underline text-sm font-medium">
-              View all <ArrowRight size={15} />
+      {/* ── LATEST PRODUCTS ──────────────────────────────── */}
+      <section className="py-14">
+        <div className={WRAP}>
+          <div className="flex items-baseline justify-between gap-4 mb-6">
+            <h2 className="font-display text-4xl font-bold">Just listed</h2>
+            <Link href="/products" className="inline-flex items-center gap-1.5 text-paddy hover:underline text-sm font-semibold">
+              All products <ArrowRight size={15} aria-hidden="true" />
             </Link>
           </div>
 
           {featuredProducts.length === 0 ? (
-            <div className="text-center py-20 bg-tint rounded-2xl border border-dashed border-green-200">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Package size={28} className="text-green-400" />
-              </div>
-              <p className="text-gray-600 font-medium mb-1">No products yet</p>
-              <p className="text-gray-400 text-sm mb-6">Be the first farmer to list fresh produce.</p>
-              <Link href="/register" className="inline-flex items-center gap-2 bg-forest hover:bg-forest-mid text-white font-medium px-5 py-2.5 rounded-lg transition-colors text-sm">
-                Register as a farmer <ArrowRight size={15} />
-              </Link>
+            <div className="rounded-card border border-dashed border-gray-300 px-6 py-14 max-w-xl">
+              <p className="font-display text-3xl font-bold">Nothing listed yet</p>
+              <p className="mt-2 text-gray-600">Member farmers&apos; produce appears here once staff approve it.</p>
+              <Link href="/register" className="btn btn-primary mt-6">Register as a farmer</Link>
             </div>
           ) : (
-            <>
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-                {featuredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-              <div className="sm:hidden text-center mt-8">
-                <Link href="/products" className="inline-flex items-center gap-2 text-forest font-medium hover:underline text-sm">
-                  View all products <ArrowRight size={15} />
-                </Link>
-              </div>
-            </>
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
           )}
         </div>
       </section>
 
-      {/* ── TESTIMONIALS — asymmetric layout ──────────────── */}
-      <section className="py-20 px-6 bg-tint">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-gray-900 mb-10">
-            What farmers and customers say
-          </h2>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {/* Featured testimonial */}
-            <div className="bg-white rounded-2xl p-8 border border-gray-100 flex flex-col justify-between">
-              <div>
-                <div className="flex gap-0.5 mb-6">
-                  {Array.from({ length: TESTIMONIALS[0].rating }).map((_, i) => (
-                    <Star key={i} size={15} className="fill-amber-400 text-amber-400" />
-                  ))}
-                </div>
-                <p className="font-serif text-xl text-gray-800 leading-relaxed">
-                  &ldquo;{TESTIMONIALS[0].quote}&rdquo;
-                </p>
-              </div>
-              <div className="flex items-center gap-3 mt-8 pt-6 border-t border-gray-100">
-                <div className="w-10 h-10 rounded-full bg-forest text-white flex items-center justify-center text-sm font-bold shrink-0">
-                  {TESTIMONIALS[0].initials}
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-900 text-sm">{TESTIMONIALS[0].name}</div>
-                  <div className="text-gray-400 text-xs">{TESTIMONIALS[0].role}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Two stacked testimonials */}
-            <div className="flex flex-col gap-5">
-              {TESTIMONIALS.slice(1).map((t) => (
-                <div key={t.name} className="bg-white rounded-2xl p-6 border border-gray-100 flex-1">
-                  <div className="flex gap-0.5 mb-4">
-                    {Array.from({ length: t.rating }).map((_, i) => (
-                      <Star key={i} size={13} className="fill-amber-400 text-amber-400" />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    &ldquo;{t.quote}&rdquo;
-                  </p>
-                  <div className="flex items-center gap-2.5 mt-5">
-                    <div className="w-8 h-8 rounded-full bg-forest-mid text-white flex items-center justify-center text-xs font-bold shrink-0">
-                      {t.initials}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-gray-900 text-xs">{t.name}</div>
-                      <div className="text-gray-400 text-xs">{t.role}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+      {/* ── HOW IT WORKS (a real sequence, so numbered) ──── */}
+      <section className="py-14 bg-field">
+        <div className={WRAP}>
+          <h2 className="font-display text-4xl font-bold">How ordering works</h2>
+          <ol className="mt-8 grid gap-8 sm:grid-cols-3">
+            {[
+              {
+                title: "Farmers list their produce",
+                desc: "Verified member farmers post what they grow, priced per kilo, bundle or piece. Staff check every listing before it goes up.",
+              },
+              {
+                title: "You order from one farm",
+                desc: "Pick what you need from one farmer's listings, choose pickup or delivery, and say how you'll pay.",
+              },
+              {
+                title: "The farmer gets it ready",
+                desc: "They accept and send your order, and you confirm when it arrives. You can message them along the way.",
+              },
+            ].map((step, i) => (
+              <li key={step.title} className="border-t-2 border-paddy pt-4">
+                <span className="font-display text-5xl font-extrabold text-paddy leading-none tabular">{i + 1}</span>
+                <h3 className="mt-3 text-lg font-semibold">{step.title}</h3>
+                <p className="mt-1.5 text-[0.95rem] leading-relaxed text-gray-600 max-w-[34ch]">{step.desc}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
-      {/* ── BOTTOM CTA ────────────────────────────────────── */}
-      <section
-        className="relative py-24 px-6 text-white overflow-hidden"
-        style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1920&q=80')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="absolute inset-0" style={{ backgroundColor: "rgba(27, 58, 45, 0.85)" }} />
-        <div className="relative max-w-2xl">
-          <h2 className="font-serif text-4xl sm:text-5xl font-bold leading-tight mb-5">
-            Ready to grow together?
+      {/* ── REVIEWS (real ones, hidden when there are none) ─ */}
+      {reviews.length > 0 && (
+        <section className="py-14">
+          <div className={WRAP}>
+            <h2 className="font-display text-4xl font-bold">From customers&apos; reviews</h2>
+            <div className="mt-8 grid gap-6 md:grid-cols-3">
+              {reviews.map((r) => (
+                <figure key={r.id} className="rounded-card border border-gray-200 p-6 flex flex-col">
+                  <div className="flex gap-0.5" role="img" aria-label={`${r.rating} out of 5 stars`}>
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} size={14} aria-hidden="true" className={i < r.rating ? "fill-calamansi text-calamansi" : "text-gray-300"} />
+                    ))}
+                  </div>
+                  <blockquote className="mt-4 flex-1 text-[1.05rem] leading-relaxed text-soil">
+                    &ldquo;{r.comment}&rdquo;
+                  </blockquote>
+                  <figcaption className="mt-5 text-sm text-gray-600">
+                    <span className="font-semibold text-soil">{r.customer.name}</span>, on{" "}
+                    <Link href={`/products/${r.product.id}`} className="text-paddy hover:underline">{r.product.name}</Link>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── BOTTOM CTA ───────────────────────────────────── */}
+      <section className="bg-soil text-white py-16">
+        <div className={WRAP}>
+          <h2 className="font-display text-5xl sm:text-6xl font-extrabold leading-[0.95] max-w-[16ch]">
+            Farming in Albay? Sell through the cooperative.
           </h2>
-          <p className="text-green-200 text-lg mb-9 leading-relaxed">
-            Whether you grow food or buy it — MaVeFaCo is your direct line to Albay&apos;s farming community.
+          <p className="mt-5 text-lg text-white/80 leading-relaxed max-w-[52ch]">
+            Register as a farmer, verify your ID, and list your harvest for customers across the province.
           </p>
           <HomeBottomCTAButtons />
         </div>
       </section>
-
     </div>
   );
 }

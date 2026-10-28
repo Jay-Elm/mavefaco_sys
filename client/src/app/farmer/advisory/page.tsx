@@ -30,12 +30,12 @@ export default function AdvisoryPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl">
-      <Link href="/farmer" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-forest mb-6">
+      <Link href="/farmer" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-paddy mb-6">
         <ArrowLeft size={15} /> Back to Overview
       </Link>
       <div className="flex items-center gap-3 mb-2">
         <Bug size={20} className="text-red-500" />
-        <h1 className="font-serif text-2xl font-bold text-gray-900">Community Advisory</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Community Advisory</h1>
       </div>
       <p className="text-sm text-gray-500 mb-6">
         Pest, weather and damage reports from members over the last 30 days, grouped by crop and problem.

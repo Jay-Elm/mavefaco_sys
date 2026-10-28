@@ -26,7 +26,7 @@ export default function LogoutConfirmModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
       <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" onClick={onCancel} />
-      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 space-y-4">
+      <div className="relative bg-white rounded-card shadow-xl w-full max-w-sm p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-gray-900">Log Out</h3>
           <button onClick={onCancel} className="text-gray-400 hover:text-gray-600" aria-label="Cancel">
@@ -38,14 +38,14 @@ export default function LogoutConfirmModal({
           <button
             onClick={onConfirm}
             autoFocus
-            className="flex-1 inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-xl text-sm transition-colors"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors"
           >
             <LogOut size={14} />
             Log Out
           </button>
           <button
             onClick={onCancel}
-            className="flex-1 border border-gray-300 text-gray-600 hover:border-gray-400 font-medium py-2.5 rounded-xl text-sm transition-colors"
+            className="flex-1 border border-gray-300 text-gray-600 hover:border-gray-400 font-medium py-2.5 rounded-lg text-sm transition-colors"
           >
             Cancel
           </button>

@@ -1,68 +1,89 @@
 import Link from 'next/link'
-import { Leaf, MapPin, Mail, Phone } from 'lucide-react'
+import { Sprout, MapPin, Mail, Phone } from 'lucide-react'
+import { prisma } from '@/lib/prisma'
 
-export default function Footer() {
+// Contact details come from the administrator's Coop Info settings, the
+// same source as the About page, so the two never disagree.
+async function getContact() {
+  try {
+    const rows = await prisma.siteContent.findMany({
+      where: { key: { in: ['cooperative_name', 'contact_address', 'contact_email', 'contact_phone'] } },
+    })
+    return Object.fromEntries(rows.map((r) => [r.key, r.value.trim()])) as Record<string, string | undefined>
+  } catch {
+    return {}
+  }
+}
+
+const linkCls = 'hover:text-white transition-colors'
+
+export default async function Footer() {
+  const contact = await getContact()
+  const name = contact.cooperative_name || 'Mayon Vegetable Farmers Agriculture Cooperative'
+
   return (
-    <footer className="shrink-0 bg-[#1B3A2D] text-white">
-      <div className="max-w-7xl mx-auto px-6 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-
+    <footer className="shrink-0 bg-soil text-white/70">
+      <div className="max-w-[1200px] mx-auto px-6 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-sm">
         <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Leaf size={18} className="text-green-400" />
-            <span className="font-serif text-lg font-bold">MaVeFaCo</span>
+          <div className="flex items-center gap-2 text-white">
+            <Sprout size={20} className="text-calamansi" aria-hidden="true" />
+            <span className="font-display text-2xl font-extrabold leading-none">MaVeFaCo</span>
           </div>
-          <p className="text-green-300 text-sm leading-relaxed">
-            Mayon Vegetable Farmers Agriculture Cooperative — connecting local farmers with customers for a fresher, fairer food system.
+          <p className="mt-4 leading-relaxed max-w-[32ch]">
+            {name}. Member farmers in Albay selling their harvest directly to customers.
           </p>
-          <div className="mt-5 flex items-center gap-2 text-green-400 text-sm">
-            <MapPin size={13} />
-            <span>Tabaco City, Albay</span>
+        </div>
+
+        <nav aria-label="Marketplace">
+          <h2 className="font-semibold text-white mb-4">Marketplace</h2>
+          <ul className="space-y-3">
+            <li><Link href="/products" className={linkCls}>Browse products</Link></li>
+            <li><Link href="/about" className={linkCls}>About the cooperative</Link></li>
+            <li><Link href="/register" className={linkCls}>Create an account</Link></li>
+            <li><Link href="/login" className={linkCls}>Log in</Link></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="For farmers">
+          <h2 className="font-semibold text-white mb-4">For farmers</h2>
+          <ul className="space-y-3">
+            <li><Link href="/register" className={linkCls}>Join as a farmer</Link></li>
+            <li><Link href="/farmer" className={linkCls}>Farmer dashboard</Link></li>
+            <li><Link href="/farmer/products/new" className={linkCls}>List a product</Link></li>
+            <li><Link href="/farmer/crops" className={linkCls}>Crop monitoring</Link></li>
+          </ul>
+        </nav>
+
+        {(contact.contact_address || contact.contact_email || contact.contact_phone) && (
+          <div>
+            <h2 className="font-semibold text-white mb-4">Contact</h2>
+            <ul className="space-y-3">
+              {contact.contact_address && (
+                <li className="flex items-start gap-2">
+                  <MapPin size={14} className="mt-0.5 shrink-0" aria-hidden="true" />
+                  <span>{contact.contact_address}</span>
+                </li>
+              )}
+              {contact.contact_email && (
+                <li className="flex items-center gap-2">
+                  <Mail size={14} className="shrink-0" aria-hidden="true" />
+                  <a href={`mailto:${contact.contact_email}`} className={linkCls}>{contact.contact_email}</a>
+                </li>
+              )}
+              {contact.contact_phone && (
+                <li className="flex items-center gap-2">
+                  <Phone size={14} className="shrink-0" aria-hidden="true" />
+                  <span>{contact.contact_phone}</span>
+                </li>
+              )}
+            </ul>
           </div>
-        </div>
-
-        <div>
-          <h4 className="font-semibold text-green-200 mb-4 text-sm">Marketplace</h4>
-          <ul className="space-y-3 text-sm text-green-300">
-            <li><Link href="/products" className="hover:text-white transition-colors">Browse products</Link></li>
-            <li><Link href="/about" className="hover:text-white transition-colors">About the cooperative</Link></li>
-            <li><Link href="/register" className="hover:text-white transition-colors">Create account</Link></li>
-            <li><Link href="/login" className="hover:text-white transition-colors">Sign in</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="font-semibold text-green-200 mb-4 text-sm">For farmers</h4>
-          <ul className="space-y-3 text-sm text-green-300">
-            <li><Link href="/register" className="hover:text-white transition-colors">Join as farmer</Link></li>
-            <li><Link href="/farmer" className="hover:text-white transition-colors">Farmer dashboard</Link></li>
-            <li><Link href="/farmer/products/new" className="hover:text-white transition-colors">List a product</Link></li>
-            <li><Link href="/farmer/crops" className="hover:text-white transition-colors">Crop monitoring</Link></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="font-semibold text-green-200 mb-4 text-sm">Contact</h4>
-          <ul className="space-y-3 text-sm text-green-300">
-            <li className="flex items-start gap-2">
-              <MapPin size={13} className="mt-0.5 shrink-0 text-green-500" />
-              <span>Tabaco City, Albay, Philippines 4511</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <Mail size={13} className="shrink-0 text-green-500" />
-              <a href="mailto:mavefaco@gmail.com" className="hover:text-white transition-colors">mavefaco@gmail.com</a>
-            </li>
-            <li className="flex items-center gap-2">
-              <Phone size={13} className="shrink-0 text-green-500" />
-              <span>0993-465-6269</span>
-            </li>
-          </ul>
-        </div>
+        )}
       </div>
 
-      <div className="border-t border-green-900">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm text-green-600">
-          <span>© 2026 Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo)</span>
-          <span>Built with care for Filipino farmers.</span>
+      <div className="border-t border-white/10">
+        <div className="max-w-[1200px] mx-auto px-6 py-5 text-sm text-white/50">
+          © {new Date().getFullYear()} {name}
         </div>
       </div>
     </footer>

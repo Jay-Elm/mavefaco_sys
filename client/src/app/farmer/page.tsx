@@ -74,7 +74,7 @@ export default function FarmerOverviewPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="mb-6">
-        <h1 className="font-serif text-2xl font-bold text-gray-900">Welcome, {user?.name}</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Welcome, {user?.name}</h1>
         <p className="text-sm text-gray-500 mt-1">Your farm at a glance</p>
       </div>
 
@@ -135,13 +135,13 @@ export default function FarmerOverviewPage() {
         <div className="mb-6 bg-white rounded-xl border border-gray-200 shadow-sm p-5">
           <div className="flex items-center gap-2 mb-3">
             <h2 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-              <Megaphone size={15} className="text-forest" /> Announcements
+              <Megaphone size={15} className="text-paddy" /> Announcements
             </h2>
             {announcements.length > ANNOUNCEMENTS_SHOWN && (
               <button
                 type="button"
                 onClick={() => setShowAllAnnouncements((v) => !v)}
-                className="ml-auto text-xs font-medium text-forest hover:underline"
+                className="ml-auto text-xs font-medium text-paddy hover:underline"
               >
                 {showAllAnnouncements ? 'Show fewer' : `Show all ${announcements.length}`}
               </button>
@@ -164,7 +164,7 @@ export default function FarmerOverviewPage() {
               <Bug size={15} className="text-red-500" /> Community Advisory (last 30 days)
             </h2>
             {advisory.length > 5 && (
-              <Link href="/farmer/advisory" className="ml-auto text-xs font-medium text-forest hover:underline">
+              <Link href="/farmer/advisory" className="ml-auto text-xs font-medium text-paddy hover:underline">
                 See all {advisory.length}
               </Link>
             )}
@@ -176,7 +176,7 @@ export default function FarmerOverviewPage() {
       <div className="flex gap-3">
         <Link
           href="/farmer/products/new"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-paddy text-white text-sm font-medium rounded-lg hover:bg-paddy-deep transition-colors"
         >
           <Plus size={16} />
           Add Product

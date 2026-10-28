@@ -47,26 +47,26 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-3">
-            <div className="bg-green-100 p-3 rounded-full">
-              <Leaf size={28} className="text-green-700" />
+            <div className="bg-shoot p-3 rounded-full">
+              <Leaf size={28} className="text-paddy" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Reset your password</h1>
+          <h1 className="font-display text-4xl font-bold text-soil">Reset your password</h1>
           <p className="text-gray-500 text-sm mt-1">We&apos;ll email you a link to choose a new one</p>
         </div>
 
         {submitted ? (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 text-center space-y-3">
-            <CheckCircle size={32} className="mx-auto text-green-600" />
+          <div className="bg-white rounded-card shadow-sm border border-gray-200 p-6 text-center space-y-3">
+            <CheckCircle size={32} className="mx-auto text-paddy" />
             <p className="text-sm text-gray-700">
               If an account exists for that email, we&apos;ve sent a password reset link. Check your inbox (and spam folder).
             </p>
-            <Link href="/login" className="inline-flex items-center gap-1 text-sm text-forest font-medium hover:underline">
+            <Link href="/login" className="inline-flex items-center gap-1 text-sm text-paddy font-medium hover:underline">
               <ArrowLeft size={14} /> Back to sign in
             </Link>
           </div>
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-card shadow-sm border border-gray-200 p-6 space-y-4">
             {serverError && (
               <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-lg border border-red-200">
                 {serverError}
@@ -82,7 +82,7 @@ export default function ForgotPasswordPage() {
                 type="email"
                 autoComplete="email"
                 {...register('email')}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy focus:border-transparent"
                 placeholder="you@example.com"
               />
               {errors.email && (
@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full flex items-center justify-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+              className="w-full flex items-center justify-center gap-2 bg-paddy hover:bg-paddy-deep disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
             >
               <Mail size={16} />
               {isSubmitting ? 'Sending…' : 'Send reset link'}
@@ -102,7 +102,7 @@ export default function ForgotPasswordPage() {
         )}
 
         <p className="text-center text-sm text-gray-500 mt-4">
-          <Link href="/login" className="text-forest font-medium hover:underline">
+          <Link href="/login" className="text-paddy font-medium hover:underline">
             Back to sign in
           </Link>
         </p>

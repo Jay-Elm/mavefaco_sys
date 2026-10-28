@@ -58,30 +58,30 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-12 bg-tint">
+    <div className="min-h-[calc(100vh-8rem)] flex items-center justify-center px-4 py-12 bg-field">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-3">
-            <div className="bg-green-100 p-3 rounded-full">
-              <Leaf size={28} className="text-forest" />
+            <div className="bg-shoot p-3 rounded-full">
+              <Leaf size={28} className="text-paddy" />
             </div>
           </div>
-          <h1 className="font-serif text-2xl font-bold text-gray-900">Create an account</h1>
+          <h1 className="font-display text-4xl font-bold text-soil">Create an account</h1>
           <p className="text-gray-500 text-sm mt-1">Join the MaVeFaCo community</p>
         </div>
 
         {success ? (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 text-center space-y-3">
-            <Mail size={32} className="mx-auto text-green-600" />
+          <div className="bg-white rounded-card shadow-sm border border-gray-200 p-6 text-center space-y-3">
+            <Mail size={32} className="mx-auto text-paddy" />
             <p className="text-sm text-gray-700">
               Account created! Check your email for a verification link — you&apos;ll need to click it before you can sign in.
             </p>
-            <Link href="/login" className="inline-flex items-center gap-1 text-sm text-forest font-medium hover:underline">
+            <Link href="/login" className="inline-flex items-center gap-1 text-sm text-paddy font-medium hover:underline">
               <CheckCircle size={14} /> Go to sign in
             </Link>
           </div>
         ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-card shadow-sm border border-gray-200 p-6 space-y-4">
           {serverError && (
             <div className="bg-red-50 text-red-700 text-sm px-4 py-3 rounded-lg border border-red-200">
               {serverError}
@@ -97,7 +97,7 @@ export default function RegisterPage() {
                 onClick={() => setValue('role', 'customer')}
                 className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-lg border-2 text-sm font-medium transition-colors ${
                   selectedRole === 'customer'
-                    ? 'border-forest bg-tint text-forest'
+                    ? 'border-paddy bg-field text-paddy'
                     : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
                 }`}
               >
@@ -109,7 +109,7 @@ export default function RegisterPage() {
                 onClick={() => setValue('role', 'farmer')}
                 className={`flex flex-col items-center gap-1.5 px-3 py-3 rounded-lg border-2 text-sm font-medium transition-colors ${
                   selectedRole === 'farmer'
-                    ? 'border-forest bg-tint text-forest'
+                    ? 'border-paddy bg-field text-paddy'
                     : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-50'
                 }`}
               >
@@ -133,7 +133,7 @@ export default function RegisterPage() {
               type="text"
               autoComplete="name"
               {...register('name')}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy focus:border-transparent"
               placeholder="Juan dela Cruz"
             />
             {errors.name && (
@@ -150,7 +150,7 @@ export default function RegisterPage() {
               type="email"
               autoComplete="email"
               {...register('email')}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy focus:border-transparent"
               placeholder="you@example.com"
             />
             {errors.email && (
@@ -167,7 +167,7 @@ export default function RegisterPage() {
               type="password"
               autoComplete="new-password"
               {...register('password')}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy focus:border-transparent"
               placeholder="At least 12 characters"
             />
             {errors.password && (
@@ -178,7 +178,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full flex items-center justify-center gap-2 bg-forest hover:bg-forest-mid disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+            className="w-full flex items-center justify-center gap-2 bg-paddy hover:bg-paddy-deep disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
           >
             <UserPlus size={16} />
             {isSubmitting ? 'Creating account…' : 'Create Account'}
@@ -188,7 +188,7 @@ export default function RegisterPage() {
 
         <p className="text-center text-sm text-gray-500 mt-4">
           Already have an account?{' '}
-          <Link href="/login" className="text-forest font-medium hover:underline">
+          <Link href="/login" className="text-paddy font-medium hover:underline">
             Sign in
           </Link>
         </p>

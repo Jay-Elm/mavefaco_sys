@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import ProductGrid from '@/components/ProductGrid'
 import ProductFilters from '@/components/ProductFilters'
-import { Package } from 'lucide-react'
 import { Suspense } from 'react'
 import { redirectRoles } from '@/lib/serverSession'
 import { withComingSoon } from '@/lib/comingSoon'
@@ -45,10 +44,10 @@ export default async function ProductsPage({
   ])
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      <div className="mb-8">
-        <h1 className="font-serif text-3xl font-bold text-gray-900">Products</h1>
-        <p className="text-gray-500 mt-1">Browse fresh products from local farmers</p>
+    <div className="max-w-[1200px] mx-auto px-6 py-10">
+      <div className="mb-6">
+        <h1 className="font-display text-5xl sm:text-6xl font-extrabold leading-[0.95]">Products</h1>
+        <p className="text-gray-600 mt-2">Everything member farmers have listed, newest first.</p>
       </div>
 
       <Suspense>
@@ -56,10 +55,9 @@ export default async function ProductsPage({
       </Suspense>
 
       {products.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">
-          <Package size={48} className="mx-auto mb-4" />
-          <p className="text-lg font-medium text-gray-500">No products found</p>
-          <p className="text-sm mt-1">Try adjusting your search or filters.</p>
+        <div className="rounded-card border border-dashed border-gray-300 px-6 py-14 max-w-xl">
+          <p className="font-display text-3xl font-bold">No products match</p>
+          <p className="mt-2 text-gray-600">Try another search, a different category or a wider price range.</p>
         </div>
       ) : (
         <ProductGrid products={await withComingSoon(products.map((p) => ({ ...p, price: Number(p.price) })))} />

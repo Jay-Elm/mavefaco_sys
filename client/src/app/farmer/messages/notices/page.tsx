@@ -53,12 +53,12 @@ export default function FarmerNoticesPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl">
-      <Link href="/farmer/messages" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-forest mb-6 transition-colors">
+      <Link href="/farmer/messages" className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-paddy mb-6 transition-colors">
         <ArrowLeft size={16} /> Back to Messages
       </Link>
       <div className="flex items-center gap-3 mb-6">
-        <Bell size={22} className="text-forest" />
-        <h1 className="font-serif text-2xl font-bold text-gray-900">MaVeFaCo notices</h1>
+        <Bell size={22} className="text-paddy" />
+        <h1 className="text-2xl font-bold text-gray-900">MaVeFaCo notices</h1>
       </div>
 
       {notices.length === 0 ? (
@@ -88,7 +88,7 @@ export default function FarmerNoticesPage() {
               ) : n.product && !n.product.archivedAt ? (
                 <Link
                   href={`/farmer/products/${n.product.id}/edit`}
-                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg bg-forest text-white hover:bg-forest-mid transition-colors"
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg bg-paddy text-white hover:bg-paddy-deep transition-colors"
                 >
                   <Pencil size={14} />
                   Edit or delete this listing

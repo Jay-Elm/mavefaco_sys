@@ -99,7 +99,7 @@ export default function AuditLogsPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="font-serif text-2xl font-bold text-gray-900">Audit Logs</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Audit Logs</h1>
         <span className="text-sm text-gray-500">{logs.length} most recent entries</span>
       </div>
 
@@ -219,7 +219,7 @@ export default function AuditLogsPage() {
           <button
             onClick={loadOlder}
             disabled={loadingMore}
-            className="inline-flex items-center gap-2 text-sm font-medium text-forest border border-gray-300 hover:border-forest rounded-lg px-4 py-2 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 text-sm font-medium text-paddy border border-gray-300 hover:border-paddy rounded-lg px-4 py-2 transition-colors disabled:opacity-50"
           >
             {loadingMore && <Loader2 size={14} className="animate-spin" />}
             Load older entries

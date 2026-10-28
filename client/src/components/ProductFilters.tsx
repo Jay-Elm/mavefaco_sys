@@ -70,19 +70,21 @@ export default function ProductFilters({ categories }: Props) {
       {/* Search bar */}
       <form onSubmit={handleSearchSubmit} className="flex gap-2">
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={16} aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search products…"
-            className="w-full pl-9 pr-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+            aria-label="Search products"
+            className="w-full pl-9 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy bg-white"
           />
           {search && (
             <button
               type="button"
               onClick={() => { setSearch(''); router.push(buildUrl({ search: null })) }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              aria-label="Clear search"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-soil"
             >
               <X size={14} />
             </button>
@@ -90,7 +92,7 @@ export default function ProductFilters({ categories }: Props) {
         </div>
         <button
           type="submit"
-          className="px-4 py-2.5 bg-forest text-white text-sm font-medium rounded-xl hover:bg-forest-mid transition-colors"
+          className="btn btn-primary py-2.5 text-sm"
         >
           Search
         </button>
@@ -98,14 +100,14 @@ export default function ProductFilters({ categories }: Props) {
 
       {/* Category + price row */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-2 flex-nowrap overflow-x-auto sm:flex-wrap sm:overflow-visible -mx-4 px-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <SlidersHorizontal size={15} className="text-gray-400 shrink-0" />
+        <div className="flex items-center gap-2 flex-nowrap overflow-x-auto sm:flex-wrap sm:overflow-visible -mx-6 px-6 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <SlidersHorizontal size={15} aria-hidden="true" className="text-gray-500 shrink-0" />
           <button
             onClick={() => setCategory(null)}
             className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
               !activeCategoryId
-                ? 'bg-forest text-white'
-                : 'bg-white text-gray-600 border border-gray-300 hover:border-forest hover:text-forest'
+                ? 'bg-paddy text-white border border-paddy'
+                : 'bg-white text-soil border border-gray-300 hover:border-paddy hover:text-paddy'
             }`}
           >
             All
@@ -116,8 +118,8 @@ export default function ProductFilters({ categories }: Props) {
               onClick={() => setCategory(String(cat.id))}
               className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 activeCategoryId === String(cat.id)
-                  ? 'bg-forest text-white'
-                  : 'bg-white text-gray-600 border border-gray-300 hover:border-forest hover:text-forest'
+                  ? 'bg-paddy text-white border border-paddy'
+                  : 'bg-white text-soil border border-gray-300 hover:border-paddy hover:text-paddy'
               }`}
             >
               {cat.name}
@@ -127,45 +129,47 @@ export default function ProductFilters({ categories }: Props) {
 
         {/* Price filter */}
         <form onSubmit={handlePriceSubmit} className="flex items-center gap-1.5 ml-auto">
-          <span className="text-sm text-gray-500 shrink-0">₱</span>
+          <span className="text-sm text-gray-600 shrink-0">Price ₱</span>
           <input
             type="number"
             min={0}
             value={minPrice}
             onChange={e => setMinPrice(e.target.value)}
             placeholder="Min"
-            className="w-20 px-2 py-1.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            aria-label="Minimum price"
+            className="w-20 px-2 py-1.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
           />
-          <span className="text-gray-400 text-sm">—</span>
+          <span className="text-gray-500 text-sm" aria-hidden="true">to</span>
           <input
             type="number"
             min={0}
             value={maxPrice}
             onChange={e => setMaxPrice(e.target.value)}
             placeholder="Max"
-            className="w-20 px-2 py-1.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            aria-label="Maximum price"
+            className="w-20 px-2 py-1.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
           />
           <button
             type="submit"
-            className="px-3 py-1.5 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-colors"
+            className="px-3 py-1.5 border border-gray-300 text-soil text-sm font-medium rounded-lg hover:border-paddy hover:text-paddy transition-colors"
           >
-            Go
+            Apply
           </button>
         </form>
       </div>
 
       {/* Active filter summary + clear */}
       {hasActiveFilters && (
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <span>Filtering by:</span>
-          {activeSearch && <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs font-medium">&ldquo;{activeSearch}&rdquo;</span>}
-          {activeCategoryId && <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs font-medium">{categories.find(c => String(c.id) === activeCategoryId)?.name ?? 'Category'}</span>}
+        <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+          <span>Showing:</span>
+          {activeSearch && <span className="bg-shoot text-paddy-deep px-2 py-0.5 rounded-full text-xs font-medium">&ldquo;{activeSearch}&rdquo;</span>}
+          {activeCategoryId && <span className="bg-shoot text-paddy-deep px-2 py-0.5 rounded-full text-xs font-medium">{categories.find(c => String(c.id) === activeCategoryId)?.name ?? 'Category'}</span>}
           {(activeMin || activeMax) && (
-            <span className="bg-green-100 text-green-800 px-2 py-0.5 rounded-full text-xs font-medium">
+            <span className="bg-shoot text-paddy-deep px-2 py-0.5 rounded-full text-xs font-medium">
               ₱{activeMin || '0'} – {activeMax ? `₱${activeMax}` : 'any'}
             </span>
           )}
-          <button onClick={clearAll} className="ml-1 text-red-500 hover:text-red-700 text-xs underline">
+          <button onClick={clearAll} className="ml-1 text-paddy hover:text-paddy-deep text-xs font-semibold underline">
             Clear all
           </button>
         </div>

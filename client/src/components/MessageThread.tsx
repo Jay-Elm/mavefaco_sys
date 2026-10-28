@@ -146,13 +146,13 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
                   </div>
                 )}
                 <div className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[75%] rounded-2xl px-4 py-2 text-sm ${
+                  <div className={`max-w-[75%] rounded-card px-4 py-2 text-sm ${
                     isMe
-                      ? 'bg-forest text-white rounded-br-sm'
+                      ? 'bg-paddy text-white rounded-br-sm'
                       : 'bg-white border border-gray-200 text-gray-800 rounded-bl-sm'
                   }`}>
                     <p>{m.content}</p>
-                    <p className={`text-xs mt-1 ${isMe ? 'text-green-200' : 'text-gray-400'}`}>
+                    <p className={`text-xs mt-1 ${isMe ? 'text-shoot' : 'text-gray-400'}`}>
                       {new Date(m.createdAt).toLocaleTimeString('en-PH', { timeStyle: 'short' })}
                     </p>
                   </div>
@@ -173,12 +173,12 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Type a message…"
-          className="flex-1 border border-gray-300 rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
         />
         <button
           type="submit"
           disabled={sending || !text.trim()}
-          className="inline-flex items-center gap-1.5 bg-forest hover:bg-forest-mid disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors"
+          className="inline-flex items-center gap-1.5 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
         >
           {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
         </button>

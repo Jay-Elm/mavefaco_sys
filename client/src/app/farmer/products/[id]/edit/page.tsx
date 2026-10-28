@@ -155,7 +155,7 @@ export default function EditProductPage() {
 
   return (
     <div className="p-4 sm:p-8 max-w-xl">
-      <h1 className="font-serif text-2xl font-bold text-gray-900 mb-6">Edit Product</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">Edit Product</h1>
 
       {suspension && (
         <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-800">
@@ -251,7 +251,7 @@ export default function EditProductPage() {
 
         <div className="flex gap-3 pt-2">
           <button type="submit" disabled={submitting}
-            className="inline-flex items-center gap-2 px-5 py-2 bg-forest text-white text-sm font-medium rounded-lg hover:bg-forest-mid transition-colors disabled:opacity-60"
+            className="inline-flex items-center gap-2 px-5 py-2 bg-paddy text-white text-sm font-medium rounded-lg hover:bg-paddy-deep transition-colors disabled:opacity-60"
           >
             {submitting && <Loader2 size={14} className="animate-spin" />}
             {submitting ? 'Saving…' : suspension ? 'Save & Resubmit' : 'Save Changes'}

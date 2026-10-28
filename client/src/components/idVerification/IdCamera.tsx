@@ -131,7 +131,7 @@ export default function IdCamera({ facing, frameAspect, prompt, onCapture, onUna
           onClick={capture}
           disabled={!size || capturing}
           aria-label="Take photo"
-          className="w-16 h-16 rounded-full bg-forest text-white flex items-center justify-center shadow-lg ring-4 ring-forest/20 hover:bg-forest-mid disabled:opacity-50"
+          className="w-16 h-16 rounded-full bg-paddy text-white flex items-center justify-center shadow-lg ring-4 ring-paddy/20 hover:bg-paddy-deep disabled:opacity-50"
         >
           {capturing ? <Loader2 size={22} className="animate-spin" /> : <Camera size={24} />}
         </button>

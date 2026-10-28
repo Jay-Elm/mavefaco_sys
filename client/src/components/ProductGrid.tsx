@@ -46,7 +46,7 @@ export default function ProductGrid({ products }: { products: Product[] }) {
               onClick={() => changeSize(s)}
               aria-pressed={size === s}
               className={`px-3 py-1.5 rounded-md text-xs font-medium capitalize transition-colors ${
-                size === s ? 'bg-white text-green-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+                size === s ? 'bg-white text-paddy shadow-sm' : 'text-gray-500 hover:text-gray-700'
               }`}
             >
               {s}

@@ -2,7 +2,8 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { prisma } from '@/lib/prisma'
-import { Package, ArrowLeft, Tag, User, CalendarDays, Sprout } from 'lucide-react'
+import { ArrowLeft, Sprout } from 'lucide-react'
+import { CrateLabel } from '@/components/ProductCard'
 import AddToCartButton from '@/components/AddToCartButton'
 import ReviewsSection from '@/components/ReviewsSection'
 import { redirectRoles } from '@/lib/serverSession'
@@ -41,102 +42,82 @@ export default async function ProductDetailPage({
   }).format(new Date(product.createdAt))
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
+    <div className="max-w-[1200px] mx-auto px-6 py-8">
       <Link
         href="/products"
-        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-forest mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-paddy mb-6 transition-colors"
       >
-        <ArrowLeft size={16} />
-        Back to Products
+        <ArrowLeft size={16} aria-hidden="true" />
+        All products
       </Link>
 
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-        <div className="grid grid-cols-1 md:grid-cols-2">
-          {/* Image */}
-          <div className="aspect-square bg-gray-100 relative flex items-center justify-center">
-            {product.imageUrl ? (
-              <Image
-                src={product.imageUrl}
-                alt={product.name}
-                fill
-                unoptimized
-                className="object-cover"
-              />
-            ) : (
-              <Package size={80} className="text-gray-300" />
-            )}
-          </div>
+      <div className="grid gap-8 lg:gap-12 md:grid-cols-2">
+        {/* Photo, or the crate label when there isn't one yet */}
+        <div className="aspect-[4/3] md:aspect-square relative rounded-card overflow-hidden bg-field">
+          <CrateLabel name={product.name} size="large" />
+          {product.imageUrl && (
+            <Image src={product.imageUrl} alt={product.name} fill unoptimized className="object-cover" />
+          )}
+        </div>
 
-          {/* Details */}
-          <div className="p-8 flex flex-col">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1">
-                <Tag size={11} />
-                {product.category.name}
-              </span>
+        <div className="flex flex-col">
+          <Link href={`/products?categoryId=${product.category.id}`} className="text-sm text-gray-600 hover:text-paddy self-start">
+            {product.category.name}
+          </Link>
+          <h1 className="mt-1 font-display text-5xl sm:text-6xl font-extrabold leading-[0.95]">{product.name}</h1>
+
+          <p className="mt-4 flex items-baseline gap-2">
+            <span className="font-display text-4xl font-bold tabular">₱{price.toFixed(2)}</span>
+            <span className="text-gray-600">per {product.unit}</span>
+          </p>
+
+          {product.description && (
+            <p className="mt-5 text-[1.05rem] leading-relaxed text-gray-700 max-w-[60ch] whitespace-pre-wrap">{product.description}</p>
+          )}
+
+          {comingSoon && (
+            <div className="mt-6 rounded-lg bg-calamansi/25 border border-calamansi px-4 py-3 text-sm flex items-start gap-2">
+              <Sprout size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
+              <p>
+                <span className="font-semibold">Coming soon.</span> Expected harvest {fmtWindow(comingSoon.harvestStart, comingSoon.harvestEnd)}.
+              </p>
             </div>
+          )}
 
-            <h1 className="font-serif text-2xl font-bold text-gray-900 mb-2">{product.name}</h1>
-
-            <p className="text-gray-600 text-sm leading-relaxed mb-6">{product.description}</p>
-
-            <div className="mb-6">
-              <span className="text-3xl font-bold text-green-700">
-                ₱{price.toFixed(2)}
-              </span>
-              <span className="text-sm text-gray-400 ml-2">/ {product.unit}</span>
+          <dl className="mt-6 divide-y divide-gray-200 border-y border-gray-200 text-sm">
+            <div className="flex justify-between gap-4 py-3">
+              <dt className="text-gray-600">Available</dt>
+              <dd className={`font-semibold tabular ${product.stock > 0 ? 'text-soil' : 'text-red-700'}`}>
+                {product.stock > 0 ? `${parseFloat(product.stock.toFixed(2))} ${product.unit}` : 'Out of stock'}
+              </dd>
             </div>
-
-            <div className="bg-gray-50 rounded-xl p-4 space-y-3 text-sm mb-6">
-              <div className="flex justify-between">
-                <span className="text-gray-500">Available stock</span>
-                <span
-                  className={`font-medium ${product.stock > 0 ? 'text-green-700' : 'text-red-500'}`}
-                >
-                  {product.stock > 0
-                    ? `${parseFloat(product.stock.toFixed(2))} ${product.unit}`
-                    : 'Out of stock'}
-                </span>
-              </div>
-              {comingSoon && (
-                <div className="flex justify-between gap-3 rounded-lg bg-amber-50 border border-amber-200 -mx-1 px-3 py-2">
-                  <span className="text-amber-800 font-medium flex items-center gap-1"><Sprout size={14} /> Coming soon</span>
-                  <span className="text-amber-900 text-right">Expected harvest {fmtWindow(comingSoon.harvestStart, comingSoon.harvestEnd)}</span>
-                </div>
-              )}
-              <div className="flex justify-between items-center">
-                <span className="text-gray-500 flex items-center gap-1">
-                  <User size={14} /> Farmer
-                </span>
-                <Link
-                  href={`/sellers/${product.farmer.id}`}
-                  className="font-medium text-forest hover:underline"
-                >
+            <div className="flex justify-between gap-4 py-3">
+              <dt className="text-gray-600">Farmer</dt>
+              <dd>
+                <Link href={`/sellers/${product.farmer.id}`} className="font-semibold text-paddy hover:underline">
                   {product.farmer.name}
                 </Link>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-gray-500 flex items-center gap-1">
-                  <CalendarDays size={14} /> Listed on
-                </span>
-                <span className="text-gray-600">{postedDate}</span>
-              </div>
+              </dd>
             </div>
+            <div className="flex justify-between gap-4 py-3">
+              <dt className="text-gray-600">Listed on</dt>
+              <dd>{postedDate}</dd>
+            </div>
+          </dl>
 
-            <div className="mt-auto space-y-3">
-              <AddToCartButton
-                product={{
-                  id: product.id,
-                  name: product.name,
-                  price,
-                  imageUrl: product.imageUrl,
-                  stock: product.stock,
-                  unit: product.unit,
-                  farmerId: product.farmer.id,
-                  farmerName: product.farmer.name,
-                }}
-              />
-            </div>
+          <div className="mt-6">
+            <AddToCartButton
+              product={{
+                id: product.id,
+                name: product.name,
+                price,
+                imageUrl: product.imageUrl,
+                stock: product.stock,
+                unit: product.unit,
+                farmerId: product.farmer.id,
+                farmerName: product.farmer.name,
+              }}
+            />
           </div>
         </div>
       </div>

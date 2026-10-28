@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 import ProductCard from '@/components/ProductCard'
-import { ShieldCheck, ShieldAlert, User, CalendarDays, Package, ArrowLeft, Star } from 'lucide-react'
+import { ShieldCheck, ShieldAlert, CalendarDays, Package, ArrowLeft, Star } from 'lucide-react'
 import { redirectRoles } from '@/lib/serverSession'
 import MessageFarmerLink from '@/components/MessageFarmerLink'
 import { withComingSoon } from '@/lib/comingSoon'
@@ -50,67 +50,54 @@ export default async function SellerPage({
   }).format(new Date(farmer.createdAt))
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-10">
+    <div className="max-w-[1200px] mx-auto px-6 py-8">
       <Link
         href="/products"
-        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-forest mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-paddy mb-6 transition-colors"
       >
-        <ArrowLeft size={16} />
-        Back to Products
+        <ArrowLeft size={16} aria-hidden="true" />
+        All products
       </Link>
 
-      {/* Seller header card */}
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-8">
-        <div className="flex items-center gap-5">
-          <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-            <User size={28} className="text-green-700" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="font-serif text-2xl font-bold text-gray-900">{farmer.name}</h1>
-              {farmer.verified ? (
-                <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-100 px-2.5 py-0.5 rounded-full">
-                  <ShieldCheck size={11} /> Verified Farmer
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-100 px-2.5 py-0.5 rounded-full">
-                  <ShieldAlert size={11} /> Unverified
-                </span>
-              )}
-            </div>
-            <div className="flex items-center gap-5 mt-2 text-sm text-gray-500 flex-wrap">
-              <span className="flex items-center gap-1.5">
-                <Package size={14} />
-                {farmer.products.length} product{farmer.products.length !== 1 ? 's' : ''} listed
+      {/* Seller header */}
+      <div className="pb-8 mb-8 border-b border-gray-200 flex flex-col sm:flex-row sm:items-end justify-between gap-5">
+        <div className="min-w-0">
+          {farmer.verified ? (
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-paddy-deep bg-shoot px-2.5 py-1 rounded-full">
+              <ShieldCheck size={12} aria-hidden="true" /> Verified farmer
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-amber-900 bg-amber-100 px-2.5 py-1 rounded-full">
+              <ShieldAlert size={12} aria-hidden="true" /> Unverified
+            </span>
+          )}
+          <h1 className="mt-3 font-display text-5xl sm:text-6xl font-extrabold leading-[0.95]">{farmer.name}</h1>
+          <div className="flex items-center gap-x-5 gap-y-1 mt-3 text-sm text-gray-600 flex-wrap">
+            <span className="flex items-center gap-1.5 tabular">
+              <Package size={14} aria-hidden="true" />
+              {farmer.products.length} product{farmer.products.length !== 1 ? 's' : ''} listed
+            </span>
+            {avgRating !== null && (
+              <span className="flex items-center gap-1.5 tabular">
+                <Star size={14} aria-hidden="true" className="fill-calamansi text-calamansi" />
+                {avgRating.toFixed(1)} average from {allRatings.length} review{allRatings.length !== 1 ? 's' : ''}
               </span>
-              {avgRating !== null && (
-                <span className="flex items-center gap-1.5">
-                  <Star size={14} className="fill-amber-400 text-amber-400" />
-                  {avgRating.toFixed(1)} avg rating ({allRatings.length} review{allRatings.length !== 1 ? 's' : ''})
-                </span>
-              )}
-              <span className="flex items-center gap-1.5">
-                <CalendarDays size={14} />
-                Member since {memberSince}
-              </span>
-            </div>
+            )}
+            <span className="flex items-center gap-1.5">
+              <CalendarDays size={14} aria-hidden="true" />
+              Member since {memberSince}
+            </span>
           </div>
-          <MessageFarmerLink farmerId={farmer.id} />
         </div>
+        <MessageFarmerLink farmerId={farmer.id} />
       </div>
 
-      {/* Products */}
-      <h2 className="text-lg font-bold text-gray-900 mb-5">
-        Products by {farmer.name}
-      </h2>
+      <h2 className="font-display text-4xl font-bold mb-6">Their products</h2>
 
       {farmer.products.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
-          <Package size={40} className="mx-auto mb-3" />
-          <p>This farmer has no listed products yet.</p>
-        </div>
+        <p className="text-gray-600">This farmer has no products listed right now.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
           {(await withComingSoon(farmer.products)).map((product) => (
             <ProductCard key={product.id} product={{ ...product, price: Number(product.price) }} />
           ))}
