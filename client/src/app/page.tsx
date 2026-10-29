@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/ProductCard";
 import { redirectRoles } from "@/lib/serverSession";
@@ -13,6 +14,15 @@ import { bannerStyle } from "@/components/bannerStyles";
 import { addDays, harvestBoard, toDateString, todayPH, weekStart } from "@/lib/planting";
 
 const WRAP = "mx-auto max-w-[1200px] px-6";
+
+// CC BY-SA 4.0 requires the credit, a licence link and a note that it was cropped.
+const HERO_PHOTO = {
+  src: "/photos/mount-mayon-2016.webp",
+  author: "Gcabig2024",
+  page: "https://commons.wikimedia.org/wiki/File:Mount_Mayon_2016.jpg",
+  license: "CC BY-SA 4.0",
+  licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
+};
 
 async function getFeaturedProducts() {
   const products = await prisma.product.findMany({
@@ -125,27 +135,53 @@ export default async function HomePage() {
   return (
     <div className="bg-white">
       {/* ── HERO ─────────────────────────────────────────── */}
+      <section className="relative isolate overflow-hidden bg-soil text-white">
+        {/* Temporary photo until the cooperative has its own. Phones show it
+            whole as a strip above the text; from xl (where the hero is wide
+            enough to show the whole picture) it fills the hero behind
+            the text, which sits in the sky left of the peak. */}
+        <div className="relative aspect-[16/10] xl:absolute xl:inset-0 xl:aspect-auto xl:-z-20">
+          <Image
+            src={HERO_PHOTO.src}
+            alt="A farmer ploughs a flooded rice paddy with a carabao below Mayon Volcano, which is reflected in the water"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[50%_40%]"
+          />
+          <p className="absolute bottom-2 right-3 text-[11px] text-white/85 bg-soil/55 rounded px-2 py-0.5">
+            Photo: <a href={HERO_PHOTO.page} className="underline hover:text-white">{HERO_PHOTO.author}</a>,{" "}
+            <a href={HERO_PHOTO.licenseUrl} className="underline hover:text-white">{HERO_PHOTO.license}</a>, cropped
+          </p>
+        </div>
+        {/* Shade behind the headline only; the volcano and farmer stay bright. */}
+        <div aria-hidden="true" className="hidden xl:block absolute inset-0 -z-10 bg-gradient-to-r from-soil/80 via-soil/30 via-45% to-transparent to-70%" />
+
+        <div className={`${WRAP} pt-8 pb-12 xl:pt-20 xl:pb-72`}>
+          <h1 className="font-display text-6xl sm:text-7xl font-extrabold leading-[0.92] max-w-[11ch] xl:[text-shadow:0_2px_24px_rgb(43_38_34/0.5)]">
+            Albay&apos;s harvest, sold by the people who grew it.
+          </h1>
+          <p className="mt-6 text-lg leading-relaxed text-white/90 max-w-[46ch] xl:[text-shadow:0_1px_12px_rgb(43_38_34/0.6)]">
+            Every listing comes from a verified MaVeFaCo member farmer. Order online, then pick it up or have it delivered.
+          </p>
+
+          <HomeHeroActions />
+        </div>
+      </section>
+
+      {/* From xl the harvest board rides up over the photo's lower edge, on
+          the left where it covers no one. */}
       <section className="bg-soil text-white">
-        <div className={`${WRAP} py-14 lg:py-20 grid gap-12 lg:grid-cols-[1fr_440px] lg:items-center`}>
-          <div>
-            <h1 className="font-display text-6xl sm:text-7xl lg:text-8xl font-extrabold leading-[0.92] max-w-[11ch]">
-              Albay&apos;s harvest, sold by the people who grew it.
-            </h1>
-            <p className="mt-6 text-lg leading-relaxed text-white/80 max-w-[46ch]">
-              Every listing comes from a verified MaVeFaCo member farmer. Order online, then pick it up or have it delivered.
-            </p>
-
-            <HomeHeroActions />
-
-            {hasStats && (
-              <p className="mt-10 text-sm text-white/60 tabular max-w-[50ch]">
-                {count(stats.products, "product", "products")} listed by {count(stats.farmers, "verified farmer", "verified farmers")}.{" "}
-                {stats.orders > 0 && `${count(stats.orders, "order", "orders")} delivered so far.`}
-              </p>
-            )}
+        <div className={`${WRAP} pb-14 grid gap-8 lg:grid-cols-[440px_1fr] lg:items-end`}>
+          <div className="xl:-mt-28 relative">
+            <HarvestBoard {...board} />
           </div>
-
-          <HarvestBoard {...board} />
+          {hasStats && (
+            <p className="text-sm text-white/70 tabular max-w-[50ch] lg:pb-2">
+              {count(stats.products, "product", "products")} listed by {count(stats.farmers, "verified farmer", "verified farmers")}.{" "}
+              {stats.orders > 0 && `${count(stats.orders, "order", "orders")} delivered so far.`}
+            </p>
+          )}
         </div>
       </section>
 
