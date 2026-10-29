@@ -196,7 +196,7 @@ export default async function HomePage() {
             )}
           </div>
 
-          <HarvestBoard {...board} look="glass" rows={3} />
+          <HarvestBoard {...board} look="glass" rows={2} />
         </div>
       </section>
 

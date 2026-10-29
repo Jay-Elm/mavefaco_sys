@@ -3,24 +3,42 @@ import type { HarvestBoardRow } from "@/lib/planting";
 const ROWS_SHOWN = 5;
 
 /**
- * Colours per part. "glass" is for laying the board over the hero photo from
- * xl up: translucent and blurred so the photo shows through, with white text.
- * Below xl it falls back to the solid board, since the photo sits above it.
+ * Classes per part. "glass" is for laying the board over the hero photo from
+ * xl up: a 33% tint, blurred so the photo shows through, white text, and
+ * tighter spacing so it ends well above the farmer in the photo. Below xl it
+ * is the solid board, since the photo sits above it there.
  */
+const SOLID = {
+  card: "bg-field text-soil shadow-card",
+  header: "px-6 py-4 flex-wrap",
+  title: "text-3xl",
+  date: "text-sm",
+  empty: "px-6 py-10 text-[0.95rem]",
+  list: "px-6 pt-2",
+  row: "py-4",
+  crop: "text-4xl",
+  more: "py-3",
+  foot: "px-6 py-4 text-sm border-soil/10",
+  rule: "border-soil/20",
+  muted: "text-soil/70",
+  strong: "text-soil",
+};
 const LOOK = {
-  solid: {
-    card: "bg-field text-soil shadow-card",
-    rule: "border-soil/20",
-    muted: "text-soil/70",
-    strong: "text-soil",
-    foot: "border-soil/10",
-  },
+  solid: SOLID,
   glass: {
-    card: "bg-field text-soil shadow-card xl:bg-soil/40 xl:text-white xl:backdrop-blur-md xl:border xl:border-white/20 xl:shadow-none",
-    rule: "border-soil/20 xl:border-white/25",
-    muted: "text-soil/70 xl:text-white/80",
-    strong: "text-soil xl:text-white",
-    foot: "border-soil/10 xl:border-white/15",
+    card: `${SOLID.card} xl:bg-soil/[.33] xl:text-white xl:backdrop-blur-md xl:border xl:border-white/20 xl:shadow-none`,
+    header: `${SOLID.header} xl:px-5 xl:py-3 xl:flex-nowrap`,
+    title: `${SOLID.title} xl:text-2xl`,
+    date: `${SOLID.date} xl:text-xs`,
+    empty: `${SOLID.empty} xl:px-5 xl:py-4 xl:text-sm`,
+    list: `${SOLID.list} xl:px-5 xl:pt-1`,
+    row: `${SOLID.row} xl:py-2`,
+    crop: `${SOLID.crop} xl:text-2xl`,
+    more: `${SOLID.more} xl:py-2`,
+    foot: `${SOLID.foot} xl:px-5 xl:py-2.5 xl:text-xs xl:border-white/15`,
+    rule: `${SOLID.rule} xl:border-white/25`,
+    muted: `${SOLID.muted} xl:text-white/85`,
+    strong: `${SOLID.strong} xl:text-white`,
   },
 } as const;
 
@@ -56,30 +74,29 @@ export default function HarvestBoard({
   rows?: number;
 }) {
   const c = LOOK[look];
-  const compact = look === "glass";
   const shown = thisWeek.slice(0, rows);
   const more = thisWeek.length - shown.length;
 
   return (
     <section aria-labelledby="harvest-board-title" className={`${c.card} rounded-card overflow-hidden`}>
-      <div className="bg-calamansi px-6 py-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <h2 id="harvest-board-title" className="font-stencil text-3xl leading-none">This week&apos;s harvest</h2>
-        <p className="text-sm font-medium tabular whitespace-nowrap">{weekLabel(weekStart, weekEnd)}</p>
+      <div className={`bg-calamansi text-soil flex items-baseline justify-between gap-x-4 gap-y-1 ${c.header}`}>
+        <h2 id="harvest-board-title" className={`font-stencil leading-none ${c.title}`}>This week&apos;s harvest</h2>
+        <p className={`font-medium tabular whitespace-nowrap ${c.date}`}>{weekLabel(weekStart, weekEnd)}</p>
       </div>
 
       {shown.length === 0 ? (
-        <p className={`px-6 py-10 text-[0.95rem] leading-relaxed max-w-sm ${c.muted}`}>
+        <p className={`leading-relaxed max-w-sm ${c.empty} ${c.muted}`}>
           No harvests are expected this week. Crops show up here as member farmers record their plantings.
         </p>
       ) : (
-        <ul className="px-6 pt-2">
+        <ul className={c.list}>
           {shown.map((row, i) => (
             <li
               key={row.crop}
-              className={`board-row flex items-baseline gap-3 border-b border-dashed last:border-b-0 ${c.rule} ${compact ? "py-3" : "py-4"}`}
+              className={`board-row flex items-baseline gap-3 border-b border-dashed last:border-b-0 ${c.rule} ${c.row}`}
               style={{ "--i": i } as React.CSSProperties}
             >
-              <span className={`font-display font-bold leading-none ${compact ? "text-3xl" : "text-4xl"}`}>{row.crop}</span>
+              <span className={`font-display font-bold leading-none ${c.crop}`}>{row.crop}</span>
               <span className="flex-1" aria-hidden="true" />
               <span className={`text-sm tabular whitespace-nowrap ${c.muted}`}>{plural(row.farms, "farm", "farms")}</span>
               {/* Kept even when empty, so the farm counts stay in one column. */}
@@ -88,11 +105,11 @@ export default function HarvestBoard({
               </span>
             </li>
           ))}
-          {more > 0 && <li className={`py-3 text-sm ${c.muted}`}>and {plural(more, "more crop", "more crops")}</li>}
+          {more > 0 && <li className={`text-sm ${c.more} ${c.muted}`}>and {plural(more, "more crop", "more crops")}</li>}
         </ul>
       )}
 
-      <div className={`px-6 py-4 border-t text-sm space-y-1 ${c.foot} ${c.muted}`}>
+      <div className={`border-t space-y-1 ${c.foot} ${c.muted}`}>
         {nextWeek.length > 0 && (
           <p>
             <span className={`font-semibold ${c.strong}`}>Next week:</span> {nextWeek.join(", ")}
