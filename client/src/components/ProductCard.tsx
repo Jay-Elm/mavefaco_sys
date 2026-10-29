@@ -68,7 +68,16 @@ export function CrateLabel({ name, size }: { name: string; size: ProductCardSize
 
 // 'large' is the default so call sites that don't pass `size` (homepage,
 // sellers page, etc.) render at full size.
-export default function ProductCard({ product, size = 'large' }: { product: Product; size?: ProductCardSize }) {
+export default function ProductCard({
+  product,
+  size = 'large',
+  showCategory = true,
+}: {
+  product: Product
+  size?: ProductCardSize
+  /** Off where the category is already named, as on a home page shelf. */
+  showCategory?: boolean
+}) {
   const badge = stockBadge(product)
   const showDetails = size !== 'small'
 
@@ -93,7 +102,7 @@ export default function ProductCard({ product, size = 'large' }: { product: Prod
         </div>
 
         <div className={`flex-1 ${BODY_PAD[size]}`}>
-          {showDetails && <p className="text-[11px] sm:text-xs text-gray-500 truncate">{product.category.name}</p>}
+          {showDetails && showCategory && <p className="text-[11px] sm:text-xs text-gray-500 truncate">{product.category.name}</p>}
           <h3 className={`font-semibold text-soil line-clamp-1 group-hover:underline underline-offset-2 ${NAME_TEXT[size]}`}>
             {product.name}
           </h3>

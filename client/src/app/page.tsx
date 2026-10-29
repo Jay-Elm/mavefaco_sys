@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
-import ProductCard from "@/components/ProductCard";
+import ProductShelf from "@/components/ProductShelf";
 import { redirectRoles } from "@/lib/serverSession";
 import HomeHeroActions from "@/components/HomeHeroActions";
 import HomeBottomCTAButtons from "@/components/HomeBottomCTAButtons";
@@ -24,17 +24,45 @@ const HERO_PHOTO = {
   licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
 };
 
-async function getFeaturedProducts() {
-  const products = await prisma.product.findMany({
-    take: 6,
-    where: { approved: true, archivedAt: null },
-    orderBy: { createdAt: "desc" },
-    include: {
-      category: true,
-      farmer: { select: { id: true, name: true, email: true } },
-    },
+// Card fields only, so the shelves (client components) get a small payload.
+const SHELF_SELECT = {
+  id: true,
+  name: true,
+  description: true,
+  price: true,
+  stock: true,
+  unit: true,
+  imageUrl: true,
+  category: { select: { id: true, name: true } },
+  farmer: { select: { id: true, name: true, email: true } },
+} as const;
+
+const SHELF_SIZE = 10;
+
+// One shelf per category that has products, fullest first; each holds its
+// newest products.
+async function getShelves() {
+  const categories = await prisma.category.findMany({
+    select: { id: true, name: true, _count: { select: { products: { where: { approved: true, archivedAt: null } } } } },
   });
-  return withComingSoon(products.map((p) => ({ ...p, price: Number(p.price) })));
+  const stocked = categories
+    .filter((c) => c._count.products > 0)
+    .sort((a, b) => b._count.products - a._count.products || a.name.localeCompare(b.name));
+  return Promise.all(
+    stocked.map(async (c) => {
+      const products = await prisma.product.findMany({
+        where: { categoryId: c.id, approved: true, archivedAt: null },
+        orderBy: { createdAt: "desc" },
+        take: SHELF_SIZE,
+        select: SHELF_SELECT,
+      });
+      return {
+        category: { id: c.id, name: c.name },
+        total: c._count.products,
+        products: await withComingSoon(products.map((p) => ({ ...p, price: Number(p.price) }))),
+      };
+    }),
+  );
 }
 
 async function getBanners() {
@@ -59,13 +87,6 @@ async function getStats() {
     prisma.order.count({ where: { status: "delivered" } }),
   ]);
   return { farmers, products, orders };
-}
-
-async function getCategories() {
-  return prisma.category.findMany({
-    orderBy: { name: "asc" },
-    include: { _count: { select: { products: { where: { approved: true, archivedAt: null } } } } },
-  });
 }
 
 // What member farms expect to harvest this week and next, from growing
@@ -120,12 +141,11 @@ const count = (n: number, one: string, many: string) => `${n.toLocaleString("en-
 export default async function HomePage() {
   // The storefront home is for customers and guests; everyone else has a portal.
   await redirectRoles(["admin", "manager", "farmer"]);
-  const [featuredProducts, announcements, banners, stats, categories, board, reviews] = await Promise.all([
-    getFeaturedProducts(),
+  const [shelves, announcements, banners, stats, board, reviews] = await Promise.all([
+    getShelves(),
     getAnnouncements(),
     getBanners(),
     getStats(),
-    getCategories(),
     getHarvestBoard(),
     getReviews(),
   ]);
@@ -136,10 +156,10 @@ export default async function HomePage() {
     <div className="bg-white">
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative isolate overflow-hidden bg-soil text-white">
-        {/* Temporary photo until the cooperative has its own. Phones show it
-            whole as a strip above the text; from xl (where the hero is wide
-            enough to show the whole picture) it fills the hero behind
-            the text, which sits in the sky left of the peak. */}
+        {/* Temporary photo until the cooperative has its own. Below xl it
+            shows whole as a strip above the text. From xl it fills the hero:
+            headline on the left, harvest board on the right in the sky, both
+            clear of the farmer and carabao, who stay the subject. */}
         <div className="relative aspect-[16/10] xl:absolute xl:inset-0 xl:aspect-auto xl:-z-20">
           <Image
             src={HERO_PHOTO.src}
@@ -147,7 +167,7 @@ export default async function HomePage() {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-[50%_40%]"
+            className="object-cover object-[50%_45%]"
           />
           <p className="absolute bottom-2 right-3 text-[11px] text-white/85 bg-soil/55 rounded px-2 py-0.5">
             Photo: <a href={HERO_PHOTO.page} className="underline hover:text-white">{HERO_PHOTO.author}</a>,{" "}
@@ -157,31 +177,26 @@ export default async function HomePage() {
         {/* Shade behind the headline only; the volcano and farmer stay bright. */}
         <div aria-hidden="true" className="hidden xl:block absolute inset-0 -z-10 bg-gradient-to-r from-soil/80 via-soil/30 via-45% to-transparent to-70%" />
 
-        <div className={`${WRAP} pt-8 pb-12 xl:pt-20 xl:pb-72`}>
-          <h1 className="font-display text-6xl sm:text-7xl font-extrabold leading-[0.92] max-w-[11ch] xl:[text-shadow:0_2px_24px_rgb(43_38_34/0.5)]">
-            Albay&apos;s harvest, sold by the people who grew it.
-          </h1>
-          <p className="mt-6 text-lg leading-relaxed text-white/90 max-w-[46ch] xl:[text-shadow:0_1px_12px_rgb(43_38_34/0.6)]">
-            Every listing comes from a verified MaVeFaCo member farmer. Order online, then pick it up or have it delivered.
-          </p>
-
-          <HomeHeroActions />
-        </div>
-      </section>
-
-      {/* From xl the harvest board rides up over the photo's lower edge, on
-          the left where it covers no one. */}
-      <section className="bg-soil text-white">
-        <div className={`${WRAP} pb-14 grid gap-8 lg:grid-cols-[440px_1fr] lg:items-end`}>
-          <div className="xl:-mt-28 relative">
-            <HarvestBoard {...board} />
-          </div>
-          {hasStats && (
-            <p className="text-sm text-white/70 tabular max-w-[50ch] lg:pb-2">
-              {count(stats.products, "product", "products")} listed by {count(stats.farmers, "verified farmer", "verified farmers")}.{" "}
-              {stats.orders > 0 && `${count(stats.orders, "order", "orders")} delivered so far.`}
+        <div className={`${WRAP} pt-8 pb-12 xl:pt-16 xl:min-h-[min(780px,calc(100svh-4rem))] grid gap-10 xl:grid-cols-[1fr_380px] xl:items-start`}>
+          <div>
+            <h1 className="font-display text-6xl sm:text-7xl font-extrabold leading-[0.92] max-w-[11ch] xl:[text-shadow:0_2px_24px_rgb(43_38_34/0.5)]">
+              Albay&apos;s harvest, sold by the people who grew it.
+            </h1>
+            <p className="mt-6 text-lg leading-relaxed text-white/90 max-w-[46ch] xl:[text-shadow:0_1px_12px_rgb(43_38_34/0.6)]">
+              Every listing comes from a verified MaVeFaCo member farmer. Order online, then pick it up or have it delivered.
             </p>
-          )}
+
+            <HomeHeroActions />
+
+            {hasStats && (
+              <p className="mt-8 text-sm text-white/75 tabular max-w-[50ch] xl:[text-shadow:0_1px_8px_rgb(43_38_34/0.7)]">
+                {count(stats.products, "product", "products")} listed by {count(stats.farmers, "verified farmer", "verified farmers")}.{" "}
+                {stats.orders > 0 && `${count(stats.orders, "order", "orders")} delivered so far.`}
+              </p>
+            )}
+          </div>
+
+          <HarvestBoard {...board} look="glass" rows={3} />
         </div>
       </section>
 
@@ -214,49 +229,26 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ── CATEGORIES ───────────────────────────────────── */}
-      {categories.length > 0 && (
-        <section className="pt-14">
-          <div className={WRAP}>
-            <h2 className="font-display text-4xl font-bold">Shop by category</h2>
-            <div className="mt-5 -mx-6 px-6 flex gap-2 overflow-x-auto pb-2 sm:mx-0 sm:px-0 sm:flex-wrap sm:overflow-visible">
-              {categories.map((cat) => (
-                <Link
-                  key={cat.id}
-                  href={`/products?categoryId=${cat.id}`}
-                  className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 text-sm font-medium text-soil hover:border-paddy hover:text-paddy transition-colors"
-                >
-                  {cat.name}
-                  {cat._count.products > 0 && <span className="text-xs text-gray-500 tabular">{cat._count.products}</span>}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── LATEST PRODUCTS ──────────────────────────────── */}
-      <section className="py-14">
+      {/* ── SHELVES ─────────────────────────────────────── */}
+      <section className="py-10">
         <div className={WRAP}>
-          <div className="flex items-baseline justify-between gap-4 mb-6">
-            <h2 className="font-display text-4xl font-bold">Just listed</h2>
-            <Link href="/products" className="inline-flex items-center gap-1.5 text-paddy hover:underline text-sm font-semibold">
-              All products <ArrowRight size={15} aria-hidden="true" />
-            </Link>
-          </div>
-
-          {featuredProducts.length === 0 ? (
+          {shelves.length === 0 ? (
             <div className="rounded-card border border-dashed border-gray-300 px-6 py-14 max-w-xl">
               <p className="font-display text-3xl font-bold">Nothing listed yet</p>
               <p className="mt-2 text-gray-600">Member farmers&apos; produce appears here once staff approve it.</p>
               <Link href="/register" className="btn btn-primary mt-6">Register as a farmer</Link>
             </div>
           ) : (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
-              {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            shelves.map((shelf) => (
+              <ProductShelf
+                key={shelf.category.id}
+                id={`shelf-${shelf.category.id}`}
+                title={shelf.category.name}
+                total={shelf.total}
+                href={`/products?categoryId=${shelf.category.id}`}
+                products={shelf.products}
+              />
+            ))
           )}
         </div>
       </section>

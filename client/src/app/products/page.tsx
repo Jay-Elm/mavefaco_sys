@@ -1,3 +1,5 @@
+import Link from 'next/link'
+import { ChevronLeft } from 'lucide-react'
 import { prisma } from '@/lib/prisma'
 import ProductGrid from '@/components/ProductGrid'
 import ProductFilters from '@/components/ProductFilters'
@@ -42,12 +44,23 @@ export default async function ProductsPage({
     }),
     prisma.category.findMany({ orderBy: { name: 'asc' } }),
   ])
+  const activeCategory = categories.find((c) => c.id === activeCategoryId) ?? null
 
   return (
     <div className="max-w-[1200px] mx-auto px-6 py-10">
       <div className="mb-6">
-        <h1 className="font-display text-5xl sm:text-6xl font-extrabold leading-[0.95]">Products</h1>
-        <p className="text-gray-600 mt-2">Everything member farmers have listed, newest first.</p>
+        {/* Arriving from a home page shelf, the page is named after its category. */}
+        {activeCategory && (
+          <Link href="/products" className="inline-flex items-center gap-1 text-sm font-medium text-paddy hover:underline mb-2">
+            <ChevronLeft size={15} aria-hidden="true" /> All products
+          </Link>
+        )}
+        <h1 className="font-display text-5xl sm:text-6xl font-extrabold leading-[0.95]">{activeCategory?.name ?? 'Products'}</h1>
+        <p className="text-gray-600 mt-2">
+          {activeCategory
+            ? `What member farmers have listed in ${activeCategory.name}, newest first.`
+            : 'Everything member farmers have listed, newest first.'}
+        </p>
       </div>
 
       <Suspense>
