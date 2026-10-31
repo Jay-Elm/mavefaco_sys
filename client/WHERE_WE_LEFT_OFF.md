@@ -1,6 +1,6 @@
 # Where We Left Off
 
-_Updated: 2026-10-26_
+_Updated: 2026-10-31_
 
 ## Current state
 
@@ -9,7 +9,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 1. **Phase 1–3 security review** (completed 2026-09-08, `SECURITY_REVIEW.md`): cookie-based sessions, admin-route guard, private ID storage, password reset, shared validators, email verification.
 2. **10-item gap list** (completed 2026-09-21): Next.js CVE patches, JWT secret validation, `Decimal` money, connection pooling, Dependabot + CI audit, mandatory TOTP MFA for staff, ID-image auto-purge, no email enumeration.
 3. **Whole-project review and fixes** (2026-10-03 to 2026-10-05, `PROJECT_REVIEW.md`): every finding fixed except L4. Highlights:
-   - **Integration tests** against a real Postgres database (`npm run test:integration`, 254 tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron, crop monitoring; 73 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
+   - **Integration tests** against a real Postgres database (`npm run test:integration`, now 281 tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron, crop monitoring, announcements, FAQ/banner order; now 84 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
    - **MFA encryption key** separated from `JWT_SECRET` (`TOTP_ENCRYPTION_KEY`); all staff migrated.
    - **Preview deployments** have their own Supabase database and keys; Preview builds migrate only that database (`PREVIEW_DATABASE_ISOLATED`).
    - **Product archiving** (and staff restore) instead of deleting products with history.
@@ -31,7 +31,16 @@ Feature-complete for the capstone scope and through three structured hardening p
    - Weather widget moved to Tabaco City.
    - **Crop monitoring redesign**: plantings are their own records (`Planting`, one per season) instead of fields on products; a staff-managed `CropType` list with approximate growing times drives computed growth stages and harvest windows; "Needs attention" view, record harvest (adds to the linked listing's stock), structured crop logs (pest from a list, severity, date seen); the advisory names crops, not listings; Dashboard → **Supply** shows expected kg per crop per week for 8 weeks with oversupply flags; Dashboard → **Crop Types**. Migration `add_plantings` carries existing crop data over. Then: the community advisory groups reports by crop and problem (`/farmer/advisory`), and out-of-stock listings with a growing linked planting show **Coming soon** with the expected harvest window to customers.
 6. **Changes 2026-10-26 — stronger ID verification:** farmers choose one of 10 ID types and take the front, back and a selfie holding the ID with the in-app camera (ID-shaped frame, blur/lighting checks; upload only without a camera, tagged for staff); the ID number is kept as an HMAC fingerprint + last 4, and one ID can't verify two accounts; staff review the photos side by side and approve or reject with reasons (notice + email), or mark a farmer verified in person. New `IdSubmission` model (migration `add_id_submissions` moves existing uploads over). **Needs `ID_NUMBER_HASH_KEY` in Vercel** (Production and Preview, separate values).
-7. **Scope** is documented item by item in `SCOPE_AND_DELIMITATIONS.md` (129 use-case items: 81 implemented, 20 partial, 28 not implemented).
+7. **Changes 2026-10-26 to 2026-10-27:** staff can delete reviews from the staff product page (audited as DELETE_REVIEW); farmers see announcements on their overview; order audit entries all use entity type `ORDER` (migration `normalize_order_audit_names`); managers no longer see Suspend on other managers.
+8. **Redesign 2026-10-28 ("palengke slate"):** fonts Big Shoulders (headlines, stencil cut for crate labels) and Hanken Grotesk (body); palette tokens soil, paddy, paddy-deep, shoot, calamansi, field in `globals.css` with shared `.btn` styles; home page "This week's harvest" board (`harvestBoard()` in `src/lib/planting.ts`, totals only, no farm names) and real 4–5 star reviews; product cards with a stencilled crate label when there's no photo; one account menu in the navbar; dashboards and farmer portal on soil-coloured sidebars; accessibility pass (contrast, a name on every field and icon button).
+9. **Changes 2026-10-29 to 2026-10-31:**
+   - **Brand:** the cooperative's own logo (Mayon, furrows, sun) in `public/logo.svg` and `public/logo-light.svg`, shown through `src/components/Logo.tsx` in the navbar (with the full name), footer, sidebars, auth and error pages. Favicon and home-screen icon (`src/app/icon.svg`, `favicon.ico`, `apple-icon.png`) are a simplified square version. Unused Next.js starter SVGs deleted.
+   - **Emails** carry a letterhead: `emailLayout()` in `src/lib/email.ts` wraps every body (logo PNG at `public/email/logo.png`, loaded from the production URL because email clients block SVG; name; footer). If the logo changes, re-export that PNG (480×159).
+   - **Verifying a farmer in person** also approves their pending ID submission, so the Users badge clears (migration closes the ones already stuck).
+   - **Announcements have an audience:** everyone, farmers or customers (`Announcement.audience`); `GET /api/announcements` filters by the viewer's role.
+   - **FAQ and banner order** uses move up/down buttons (`PUT /api/admin/faqs/order`, `/api/admin/banners/order`, `src/lib/reorder.ts`); new items go to the end; existing orders renumbered 1, 2, 3….
+   - **Home page:** a hero photo of Mayon with a farmer ploughing a paddy, the harvest board laid over its sky on wide screens (33% tint), and a horizontal **shelf per category** (`src/components/ProductShelf.tsx`) whose "See all" opens `/products?categoryId=…` titled with that category. The photo is a **temporary** Wikimedia image (“Mount Mayon 2016” by Gcabig2024, CC BY-SA 4.0): its on-photo credit (`HERO_PHOTO` in `src/app/page.tsx`) is a licence condition and stays until the cooperative's own photos replace it.
+10. **Scope** is documented item by item in `SCOPE_AND_DELIMITATIONS.md` (129 use-case items: 81 implemented, 20 partial, 28 not implemented).
 
 ---
 
@@ -52,6 +61,14 @@ Feature-complete for the capstone scope and through three structured hardening p
 11. As admin: the sidebar shows a count on Products and Users when something is waiting, and the dashboard overview counts suspended listings apart from pending ones.
 12. Refresh a page as each role: no Login/Register flash, and `/` goes straight to the farmer or staff portal.
 
+13. As admin: verify a farmer in person, then the red count on Users disappears.
+14. Post a farmers-only announcement: it shows on the farmer overview, not on the home page.
+15. Site Content: move FAQs and banners up and down; the order holds after a refresh and on the About/home pages.
+16. Home page shelves: swipe on a phone; arrows on a laptop; "See all" opens that category.
+17. Receive any email (e.g. password reset): the logo and name show at the top. Some email apps hide images until "show images" is tapped.
+
+**Waiting on the project owner:** the cooperative's own photos to replace the temporary hero photo (then remove its credit line).
+
 **Remaining debt** (see `DEVELOPMENT_STATUS.md` → Known Technical Debt): per-instance rate limiting (L4, needs Upstash Redis credentials from the project owner), Prisma 8 upgrade when released, no UI/end-to-end tests.
 
 **Optional:** staff can rename their authenticator entry from "CoopMarket" to "MaVeFaCo"; Vercel's Preview toolbar can be turned off if its CSP violations clutter the logs.
@@ -62,7 +79,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 
 ```
 src/app/
-  page.tsx                              ← home: hero + banners + announcements + featured products
+  page.tsx                              ← home: photo hero + harvest board, banners, announcements, category shelves, reviews
   login/page.tsx                        ← handles MFA branching (mfaRequired / mfaSetupRequired)
   register/page.tsx
   verify-email/page.tsx                 ← confirms emailVerifiedAt via emailed link
@@ -70,7 +87,7 @@ src/app/
   forgot-password/page.tsx
   reset-password/page.tsx
   about/page.tsx                        ← cooperative info, FAQ accordion, contact (public)
-  products/page.tsx                     ← listing with category/search/price filters
+  products/page.tsx                     ← listing with category/search/price filters; titled by category from a shelf
   products/[id]/page.tsx                ← detail + Add to Cart + ReviewsSection
   sellers/[id]/page.tsx                 ← public seller profile
 
@@ -154,11 +171,13 @@ src/app/
     admin/site-content/route.ts         ← GET + PUT (key-value CMS)
     admin/faqs/route.ts                 ← GET + POST
     admin/faqs/[id]/route.ts            ← DELETE
+    admin/faqs/order/route.ts           ← PUT (save the order from the move buttons)
+    admin/banners/order/route.ts        ← PUT (same, for banners)
     admin/banners/route.ts              ← GET (all, for admin)
     banners/route.ts                    ← GET (active only, public)
     banners/[id]/route.ts               ← PUT + DELETE
     site-content/route.ts               ← GET (public: SiteContent + FAQs)
-    announcements/route.ts
+    announcements/route.ts              ← GET filtered by audience for the viewer; POST (staff)
     announcements/[id]/route.ts
     farmer/orders/route.ts
     farmer/orders/[id]/route.ts
@@ -179,7 +198,10 @@ src/app/
     cron/purge-suspended-products/route.ts ← removes listings suspended 7+ days
 
 src/components/
-  Navbar.tsx                            ← About link, Messages link (customer), cart badge
+  Navbar.tsx                            ← logo + full name, About link, account menu, cart badge
+  Logo.tsx                              ← the cooperative's logo (dark or light variant)
+  ProductShelf.tsx                      ← one category's newest products, scrolls sideways
+  HarvestBoard.tsx                      ← "This week's harvest" (solid, or glass over the hero photo)
   ProductCard.tsx                       ← farmer name links to /sellers/[id]
   ReviewForm.tsx                        ← interactive star picker + comment textarea
   ReviewsSection.tsx                    ← avg rating + form + review cards
@@ -210,7 +232,8 @@ src/lib/
   photoQuality.ts                       ← blur / brightness checks for ID photos
   audit.ts                              ← logAudit()
   csp.ts                                ← the Content-Security-Policy (nonce per request)
-  email.ts                              ← Brevo wrapper (fails soft) + emailHtml escaping template
+  email.ts                              ← Brevo wrapper (fails soft), emailHtml escaping template, emailLayout letterhead
+  reorder.ts                            ← saveOrder() / nextDisplayOrder() for FAQs and banners
   imageSniff.ts                         ← magic-byte checks for uploads
   rateLimit.ts
   url.ts                                ← isSafeUrl XSS guard
@@ -222,11 +245,15 @@ src/validators/                          ← shared Zod schemas (client + server
   category.ts, product.ts, review.ts, message.ts, faq.ts, crop.ts, mfa.ts, helpers.ts,
   limits.ts                             ← maximum lengths (MAX, tooLong)
   productSuspension.ts                  ← suspension reasons, SUSPENSION_DAYS, deadline
+  announcement.ts, reorder.ts           ← announcement audiences; move-button id lists
 
 prisma/
-  schema.prisma                         ← 18 models; generated/prisma custom output
-  migrations/ (27 applied — see DEVELOPMENT_STATUS.md for the full list)
+  schema.prisma                         ← 21 models; generated/prisma custom output
+  migrations/ (33 applied — see DEVELOPMENT_STATUS.md for the full list)
 
+public/logo.svg, logo-light.svg         ← the logo; public/email/logo.png is its PNG copy for emails
+public/photos/mount-mayon-2016.webp     ← TEMPORARY hero photo (CC BY-SA 4.0, credit required)
+src/app/icon.svg, favicon.ico, apple-icon.png ← browser and home-screen icons
 src/proxy.ts                            ← per-request CSP nonce + /api/admin guard
 src/test-utils/integration/             ← integration-test helpers (test DB guard, factories, withRowLocked, fakeStorage)
 scripts/migrate.mjs                     ← build-time migrations (skipped on Preview unless isolated)
@@ -242,7 +269,9 @@ scripts/migrate.mjs                     ← build-time migrations (skipped on Pr
 - `.github/dependabot.yml` also ignores major bumps of `typescript` (TS 7 crashes typescript-eslint) and `@types/node` (keep it on the Node 24 runtime), and groups lockstep packages (prisma, react, next, tailwind) into single PRs.
 - Every page renders per request because of the CSP nonce (root layout awaits `connection()`). A new third-party script needs the nonce from `(await headers()).get('x-nonce')`.
 - Any new query listing live products must filter `archivedAt: null`; any new user listing must filter `deletedAt: null`.
-- Build new email bodies with the `emailHtml` template so user values are escaped.
+- Build new email bodies with the `emailHtml` template so user values are escaped; `sendEmail` adds the letterhead, so bodies stay plain paragraphs.
+- Before using any third-party image, confirm its source and licence; keep any required credit on the page.
+- FAQ/banner order changes go through `saveOrder()` (all ids in one transaction); don't reintroduce a free-number order input.
 - Confirmations and alerts go through `useDialog()`, never the browser's `confirm()`/`alert()`.
 - Role-based redirects belong on the server (`redirectRoles()`); client-side ones flash the wrong page first.
 - Don't run `npx prisma format`; it reformats the whole schema. Use `npx prisma validate`.

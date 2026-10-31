@@ -1,6 +1,6 @@
 # Development Status — MaVeFaCo Marketplace
 
-_Last updated: 2026-10-15_
+_Last updated: 2026-10-31_
 
 ---
 
@@ -14,10 +14,11 @@ _Last updated: 2026-10-15_
 | Database | PostgreSQL via Prisma 7.10.0 (`@prisma/client` + `@prisma/adapter-pg`, kept version-locked) |
 | Auth | JWT (jsonwebtoken) + bcrypt, in an `httpOnly` cookie — **not** localStorage; mandatory TOTP MFA for admin/manager |
 | File storage | Supabase Storage (private bucket, signed URLs) for ID verification images |
-| Email | Brevo transactional API (password reset, email verification) |
+| Email | Brevo transactional API (account, security, listing-suspension and ID-review emails), every one inside the logo letterhead (`emailLayout`) |
 | Testing | Vitest — `npm test` (validators + security-critical `lib/` helpers, no DB) and `npm run test:integration` (route handlers against a real Postgres test DB); both run in CI (`.github/workflows/test.yml`) |
 | Icons | lucide-react |
 | Weather | Open-Meteo API (free, no key required) |
+| Fonts and brand | Big Shoulders (+ Stencil) and Hanken Grotesk via `next/font`; palette tokens in `globals.css`; the cooperative's logo in `public/logo.svg` (`Logo` component) and a square icon in `src/app/icon.svg` |
 
 ---
 
@@ -59,7 +60,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `Order` — id, **totalAmount (`Decimal(10,2)`)**, status, paymentMethod, deliveryMethod, createdAt, customerId
 - `OrderItem` — id, quantity (Float), **price (`Decimal(10,2)`)**, orderId, productId
 - `AuditLog` — id, action, entityType, entityId, timestamp, userId
-- `Announcement` — id, title, body, type (info/alert/advisory), createdAt, authorId
+- `Announcement` — id, title, body, type (info/alert/advisory), audience (everyone/farmers/customers, default everyone), createdAt, authorId
 - `Banner` — id, title, subtitle, ctaText, ctaLink, color, active, displayOrder, createdAt
 - `Faq` — id, question, answer, displayOrder, createdAt
 - `SiteContent` — key (PK), value (key-value store for cooperative info)
@@ -70,7 +71,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `Message` — id, content, read, createdAt, senderId, receiverId
 - `Notice` — id, title, body, read, createdAt, recipientId, productId (set null if the listing is deleted), resolvedAt, resolution (`resubmitted` | `removed`) — one-way system notices, e.g. a listing suspension
 
-**Migrations applied (29, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`) → `add_id_submissions` (moves `User.idImagePath` into `IdSubmission`).
+**Migrations applied (33, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`) → `add_id_submissions` (moves `User.idImagePath` into `IdSubmission`) → `normalize_order_audit_names` → `close_id_submissions_verified_in_person` → `announcement_audience` → `renumber_faq_banner_order`.
 
 **Infra note:** `DIRECT_URL` cannot use Supabase's true direct-connection endpoint (`db.<ref>.supabase.co:5432`) — neither locally nor from Vercel's build infra can reach it (`P1001`), almost certainly Supabase's IPv6-only requirement for that endpoint. Fixed by pointing `DIRECT_URL` at the **Session pooler** instead (distinct from the Transaction pooler `DATABASE_URL` uses) — still holds `prisma migrate deploy`'s advisory lock, and is IPv4-compatible.
 
@@ -79,8 +80,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 ## Completed Features
 
 ### Public Pages
-- `/` — Hero, active Banners, Announcements, How It Works, Featured Products (approved only, last 6)
-- `/products` — Product listing with category/search/price filters (Server Component, URL-based); approved only
+- `/` — Hero with a temporary photo of Mayon (credited, CC BY-SA 4.0) and the "This week's harvest" board over its sky on wide screens; active Banners; Announcements for everyone/customers; one horizontal shelf per category (newest 10, "See all" → `/products?categoryId=…`); How It Works; real 4–5 star reviews
+- `/products` — Product listing with category/search/price filters (Server Component, URL-based); approved only; titled with the category when one is chosen
 - `/products/[id]` — Product detail; 404 if not approved; Add to Cart; farmer name links to seller page; Reviews section
 - `/sellers/[id]` — Public seller profile: name, verified badge, member since, avg rating, all approved products; "Message Farmer" button
 - `/about` — Cooperative info page: name, about, mission/vision, FAQ accordion, contact details (all editable by admin)
@@ -111,14 +112,14 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `products/[id]` — read-only listing view, with suspension reasons and deadline
 - `orders/` — all orders; expandable; status management; CSV export
 - `audit-logs/` — last 100 entries; search + action/entity type filters; CSV export
-- `announcements/` — post/delete announcements (info/alert/advisory types)
+- `announcements/` — post/delete announcements (info/alert/advisory types) for everyone, farmers only or customers only
 - `crop-types/` — add/edit/delete crop types and their approximate growing times (delete refused while plantings use one); audit logged
 - `supply/` — Upcoming Supply: expected kg per crop per week for 8 weeks (heat grid, hover details, expandable planting lists), 3+ farms in a week flagged as possible oversupply, overdue plantings listed separately; CSV export
 - `reports/` — Sales, Crop Demand, Users, Farmers tabs; CSS bar charts; per-section CSV + full report export; print button
 - `site/` — **Admin only**: 3-tab CMS:
-  - **Banners** — add/toggle/delete homepage banners (5 color themes, CTA link, display order)
+  - **Banners** — add/toggle/delete homepage banners (5 color themes, CTA link); move up/down to order them
   - **Cooperative Info** — edit name, about, mission, vision, contact email/phone/address, Facebook URL
-  - **FAQs** — add/delete FAQ entries with display order
+  - **FAQs** — add/delete FAQ entries; move up/down to order them (new ones go to the end)
 
 ### Farmer Dashboard (`/farmer/`) — farmer role only
 - `layout.tsx` — green-accent sidebar (184px), auth guard, isolated scroll; red count badges on Messages (unread messages + notices), Orders (new), My Products (suspended), Crop Monitor (plantings whose harvest window has opened), Profile (no ID submitted)
@@ -195,6 +196,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/admin/site-content` | admin | all key-value site content |
 | PUT | `/api/admin/site-content` | admin | upsert multiple keys |
 | GET | `/api/admin/faqs` | admin | all FAQs |
+| PUT | `/api/admin/faqs/order` | admin | `{ ids }` — every FAQ id in the new order; 409 if the set changed meanwhile; audit `REORDER_FAQS` |
+| PUT | `/api/admin/banners/order` | admin | same for banners; audit `REORDER_BANNERS` |
 | POST | `/api/admin/faqs` | admin | create FAQ |
 | DELETE | `/api/admin/faqs/[id]` | admin | |
 | GET | `/api/admin/banners` | admin | all banners (active + inactive) |
@@ -203,8 +206,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | PUT | `/api/banners/[id]` | admin | toggle active, edit |
 | DELETE | `/api/banners/[id]` | admin | |
 | GET | `/api/site-content` | public | all SiteContent + FAQs |
-| GET | `/api/announcements` | public | all announcements with author |
-| POST | `/api/announcements` | admin/manager | create announcement |
+| GET | `/api/announcements` | public | announcements with author, filtered by audience: staff see all, farmers everyone + farmers, everyone else everyone + customers |
+| POST | `/api/announcements` | admin/manager | create announcement (`audience` defaults to everyone) |
 | DELETE | `/api/announcements/[id]` | admin/manager | |
 | POST | `/api/orders` | customer | validates stock, approved, same-farmer; `$transaction`; 403 for farmers and staff |
 | GET | `/api/notices` | authenticated | own system notices, newest first |
@@ -287,6 +290,15 @@ Use `useDialog()` (`src/contexts/DialogContext.tsx`) — `confirm({ title, messa
 ### Sidebar badges
 `GET /api/nav-badges` returns counts keyed by sidebar path for the caller's role; `useNavBadges()`/`NavBadge` (`src/components/NavBadge.tsx`) poll it every 30s and on navigation. Call `refreshNavBadges()` after an action that clears a badge.
 
+### Display order (FAQs, banners)
+The admin moves an item up or down; the page swaps it optimistically and sends every id in the new order to `PUT /api/admin/{faqs,banners}/order`. `saveOrder()` (`src/lib/reorder.ts`) renumbers them 1…n in one transaction and throws `ReorderConflict` (409) if the ids don't match the table, so a concurrent add or delete can't be lost. New items get `nextDisplayOrder()`. Lists sort by `displayOrder`, then `id`.
+
+### In-person verification
+`PATCH /api/admin/users/[id]` with `verifiedInPerson: true` also approves the farmer's pending `IdSubmission` in the same transaction, so the ID-review badge clears.
+
+### Home page shelves and harvest board
+`getShelves()` in `src/app/page.tsx` returns each category with approved, unarchived products (fullest first) and its 10 newest. `ProductShelf` is a scroll-snap row: phones swipe, wider screens get arrow buttons that hide when nothing scrolls, and a "+N" tile links to the category. `HarvestBoard` has a `look="glass"` variant used over the hero photo from the `xl` breakpoint (33% soil tint, blur, compact rows) and `rows` to cap the crops listed.
+
 ### Layout / scroll architecture
 - Navbar: `sticky top-0 z-50 h-14`; gains `shadow-xl` on scroll
 - Root layout: `body` is `h-full flex flex-col`; `main` is `flex-1 min-h-0 overflow-y-auto`
@@ -303,7 +315,7 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 
 **Email changes are confirmed by the new address:** `PATCH /api/users/me` stores an `EmailChangeToken` (hashed, 24h, single-use, latest request only) instead of changing `User.email`, and emails the current address that a change was requested. `/confirm-email-change` → `POST /api/auth/confirm-email-change` switches the email, sets `emailVerifiedAt`, bumps `tokenVersion`, and notifies the previous address.
 
-**Email templates escape their values:** every `sendEmail` body is built with the `emailHtml` tagged template (`src/lib/email.ts`), which HTML-escapes each interpolated value. Use it for any new email.
+**Email templates escape their values:** every `sendEmail` body is built with the `emailHtml` tagged template (`src/lib/email.ts`), which HTML-escapes each interpolated value. Use it for any new email. `sendEmail` then wraps the body in `emailLayout()`: the logo (`public/email/logo.png`, a 480×159 PNG of `logo.svg`, loaded from the production URL because email clients block SVG and Preview sits behind Vercel sign-in), the cooperative's name, and a footer; tables and inline styles only.
 
 **Content-Security-Policy (enforced):** `src/proxy.ts` generates a nonce per page request and sends the policy from `src/lib/csp.ts`: scripts only with that nonce (`'strict-dynamic'`), styles `'unsafe-inline'`, images from https/data, `connect-src` self plus `api.open-meteo.com`, framing denied, reports to `/api/csp-report`. Next.js stamps the nonce on its own scripts while rendering, which is why the root layout awaits `connection()` and **every page renders per request** (no static pages or ISR). Adding a third-party script means passing it the nonce (`(await headers()).get('x-nonce')`) and, if it fetches from another origin, extending `connect-src`.
 
@@ -323,7 +335,8 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 |-------|----------|-------|
 | Rate limiting is per server instance | Low | In-memory (`src/lib/rateLimit.ts`), so limits aren't strict across simultaneous Vercel instances. Fix: a shared store such as Upstash Redis (needs an account and credentials). Review finding L4 |
 | Every page renders per request | Low | Accepted trade-off of the nonce-based CSP: no static pages, ISR or CDN page caching. Fine at current traffic |
-| 4 high `npm audit` findings in Prisma's CLI tooling | Low | `deepmerge-ts` and `mysql2` inside `prisma`, unused at runtime; resolved by Prisma 8 (release candidate as of 2026-10). Don't apply npm's suggested downgrade |
+| 16 moderate `npm audit` findings in dev tooling | Low | `minimatch` (ReDoS) inside ESLint/typescript-eslint, dev only: `npm audit --omit=dev` reports 0 (2026-10-31). CI blocks only critical. Don't run `npm audit fix --force`; wait for the upstream bumps through Dependabot |
+| Temporary hero photo | Low | Third-party CC BY-SA 4.0 image with a required on-page credit; to be replaced by the cooperative's own photos |
 | Product images orphaned by edits aren't cleaned up | Low | Replaced product photos stay in the public bucket |
 | Messaging is polling, not WebSocket | Low | 8s interval; acceptable for the cooperative's use |
 | A resubmitted listing keeps no record of its previous details | Low | The audit log records the suspension and resubmission (who, when) and the notice keeps the reasons, but not the before/after values |

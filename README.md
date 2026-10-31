@@ -23,10 +23,10 @@ The app has four roles, from most to least privileged: **Admin**, **Manager**, *
 
 | Role | What they can do |
 |---|---|
-| **Customer** | Browse, search, and filter the shop, including out-of-stock produce marked "coming soon" with its expected harvest; view farmer profiles; keep a cart; check out (choose cash on delivery, GCash, or bank transfer — payment is settled outside the app — and pickup or delivery); track, cancel, and confirm orders; review products from delivered orders; message farmers |
+| **Customer** | Browse the home page's shelf for each category and "This week's harvest" board; search and filter the shop, including out-of-stock produce marked "coming soon" with its expected harvest; view farmer profiles; keep a cart; check out (choose cash on delivery, GCash, or bank transfer — payment is settled outside the app — and pickup or delivery); track, cancel, and confirm orders; review products from delivered orders; message farmers |
 | **Farmer** | Verify their identity with a government ID (front, back and a selfie holding it, taken with the in-app camera); list products (each reviewed by staff before going live); fix and resubmit, or delete, a listing staff suspended; manage stock and prices; fulfil orders; record each planting and follow its growth stage and harvest window, record harvests straight into stock, and log pests, weather and damage; see a shared pest and weather advisory and a local weather widget |
-| **Manager** | Approve listings; view a listing and suspend it with reasons (the farmer gets a notice and an email, and has 7 days to resubmit before it is deleted), or delete a suspended one early; restore archived listings; move orders through their lifecycle; manage categories, crop types and announcements; see upcoming supply by crop and week; review farmers' ID submissions and approve or reject them with reasons, or verify a farmer in person; suspend customers and farmers; view reports and farmer performance |
-| **Admin** | Everything a manager can do, plus deleting accounts, resetting passwords and two-factor authentication, overriding order status, the audit log, homepage banners, FAQs, and site content |
+| **Manager** | Approve listings; view a listing and suspend it with reasons (the farmer gets a notice and an email, and has 7 days to resubmit before it is deleted), or delete a suspended one early; restore archived listings; move orders through their lifecycle; manage categories, crop types and announcements (shown to everyone, farmers only or customers only); see upcoming supply by crop and week; review farmers' ID submissions and approve or reject them with reasons, or verify a farmer in person; suspend customers and farmers; view reports and farmer performance |
+| **Admin** | Everything a manager can do, plus deleting accounts, resetting passwords and two-factor authentication, overriding order status, the audit log, homepage banners and FAQs (ordered with move up/down), and site content |
 
 Admin and manager accounts must use an authenticator app (two-factor authentication) to sign in.
 
@@ -37,10 +37,10 @@ Only customers buy: farmers, managers and admins have no cart and can't place or
 | Layer | Technology |
 |---|---|
 | Framework | [Next.js 16](https://nextjs.org) (App Router), React 19, TypeScript |
-| Styling | Tailwind CSS 4 |
+| Styling | Tailwind CSS 4; Big Shoulders and Hanken Grotesk fonts; the cooperative's logo (`client/public/logo.svg`) |
 | Database | PostgreSQL via [Prisma 7](https://www.prisma.io) |
 | Hosting | Vercel (app and daily cron job), Supabase (Postgres and file storage) |
-| Email | Brevo |
+| Email | Brevo, with the logo letterhead on every email |
 | Validation | Zod, shared between forms and API routes |
 | Testing | Vitest — unit tests, plus integration tests against a real Postgres database |
 
@@ -140,8 +140,9 @@ GitHub Actions runs both suites on every push and pull request (`.github/workflo
     ├── prisma/           Database schema and migrations
     ├── generated/        Generated Prisma client (committed)
     ├── scripts/          Build helpers (migrations on deploy)
+    ├── public/           Logo, the email logo PNG, the temporary hero photo (credit required)
     └── src/
-        ├── app/          Pages and API routes (App Router)
+        ├── app/          Pages and API routes (App Router); icon.svg, favicon.ico, apple-icon.png
         │   ├── api/      REST endpoints, grouped by area
         │   ├── dashboard/    Admin and manager console
         │   ├── farmer/       Farmer portal
