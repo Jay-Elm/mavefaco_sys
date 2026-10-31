@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { emailHtml, escapeHtml } from "./email";
+import { emailHtml, emailLayout, escapeHtml } from "./email";
 
 describe("escapeHtml", () => {
   it("escapes every character that can start markup or break out of an attribute", () => {
@@ -26,5 +26,14 @@ describe("emailHtml", () => {
     expect(emailHtml`<p>Hi ${"Juan dela Cruz"} (${"juan@example.com"})</p><a href="${url}">${url}</a>`).toBe(
       `<p>Hi Juan dela Cruz (juan@example.com)</p><a href="${url}">${url}</a>`,
     );
+  });
+});
+
+describe("emailLayout", () => {
+  it("puts the body inside the letterhead with an absolute PNG logo", () => {
+    const html = emailLayout("<p>Hi Juan,</p>");
+    expect(html).toContain("<p>Hi Juan,</p>");
+    expect(html).toContain('src="https://mavefaco-sys.vercel.app/email/logo.png"');
+    expect(html).toContain("Mayon Vegetable Farmers Agriculture Cooperative");
   });
 });
