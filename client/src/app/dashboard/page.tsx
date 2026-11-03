@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Users, Package, ShoppingCart, TrendingUp, Loader2, Leaf, CheckCircle, Clock, AlertCircle } from 'lucide-react'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface Stats {
   userCount: number
@@ -43,6 +44,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 export default function DashboardOverviewPage() {
   const { token, user } = useAuth()
+  const live = useLiveVersion()
   // The endpoint (/api/admin/farmer-stats) already allows both admin and
   // manager — admin should see everything manager can, so this isn't
   // manager-exclusive.
@@ -58,7 +60,7 @@ export default function DashboardOverviewPage() {
       .then((r) => r.json())
       .then((data) => { if (data.error) setError(data.error); else setStats(data) })
       .catch(() => setError('Failed to load stats'))
-  }, [token])
+  }, [token, live])
 
   useEffect(() => {
     if (!token || !canSeeFarmerStats) return
@@ -66,7 +68,7 @@ export default function DashboardOverviewPage() {
       .then((r) => r.json())
       .then((data) => { if (!data.error) setFarmerStats(data) })
       .catch(() => {})
-  }, [token, canSeeFarmerStats])
+  }, [token, canSeeFarmerStats, live])
 
   if (error) return <div className="p-8 text-red-600">{error}</div>
 

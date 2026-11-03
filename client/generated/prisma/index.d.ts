@@ -15252,6 +15252,7 @@ export namespace Prisma {
     paymentMethod: string | null
     deliveryMethod: string | null
     createdAt: Date | null
+    updatedAt: Date | null
     customerId: number | null
   }
 
@@ -15262,6 +15263,7 @@ export namespace Prisma {
     paymentMethod: string | null
     deliveryMethod: string | null
     createdAt: Date | null
+    updatedAt: Date | null
     customerId: number | null
   }
 
@@ -15272,6 +15274,7 @@ export namespace Prisma {
     paymentMethod: number
     deliveryMethod: number
     createdAt: number
+    updatedAt: number
     customerId: number
     _all: number
   }
@@ -15296,6 +15299,7 @@ export namespace Prisma {
     paymentMethod?: true
     deliveryMethod?: true
     createdAt?: true
+    updatedAt?: true
     customerId?: true
   }
 
@@ -15306,6 +15310,7 @@ export namespace Prisma {
     paymentMethod?: true
     deliveryMethod?: true
     createdAt?: true
+    updatedAt?: true
     customerId?: true
   }
 
@@ -15316,6 +15321,7 @@ export namespace Prisma {
     paymentMethod?: true
     deliveryMethod?: true
     createdAt?: true
+    updatedAt?: true
     customerId?: true
     _all?: true
   }
@@ -15413,6 +15419,7 @@ export namespace Prisma {
     paymentMethod: string
     deliveryMethod: string
     createdAt: Date
+    updatedAt: Date
     customerId: number
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
@@ -15442,6 +15449,7 @@ export namespace Prisma {
     paymentMethod?: boolean
     deliveryMethod?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     customerId?: boolean
     customer?: boolean | UserDefaultArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
@@ -15455,6 +15463,7 @@ export namespace Prisma {
     paymentMethod?: boolean
     deliveryMethod?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     customerId?: boolean
     customer?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -15466,6 +15475,7 @@ export namespace Prisma {
     paymentMethod?: boolean
     deliveryMethod?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     customerId?: boolean
     customer?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -15477,10 +15487,11 @@ export namespace Prisma {
     paymentMethod?: boolean
     deliveryMethod?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     customerId?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "totalAmount" | "status" | "paymentMethod" | "deliveryMethod" | "createdAt" | "customerId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "totalAmount" | "status" | "paymentMethod" | "deliveryMethod" | "createdAt" | "updatedAt" | "customerId", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | UserDefaultArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
@@ -15506,6 +15517,7 @@ export namespace Prisma {
       paymentMethod: string
       deliveryMethod: string
       createdAt: Date
+      updatedAt: Date
       customerId: number
     }, ExtArgs["result"]["order"]>
     composites: {}
@@ -15938,6 +15950,7 @@ export namespace Prisma {
     readonly paymentMethod: FieldRef<"Order", 'String'>
     readonly deliveryMethod: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
+    readonly updatedAt: FieldRef<"Order", 'DateTime'>
     readonly customerId: FieldRef<"Order", 'Int'>
   }
     
@@ -27696,6 +27709,7 @@ export namespace Prisma {
     paymentMethod: 'paymentMethod',
     deliveryMethod: 'deliveryMethod',
     createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
     customerId: 'customerId'
   };
 
@@ -28790,6 +28804,7 @@ export namespace Prisma {
     paymentMethod?: StringFilter<"Order"> | string
     deliveryMethod?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
+    updatedAt?: DateTimeFilter<"Order"> | Date | string
     customerId?: IntFilter<"Order"> | number
     customer?: XOR<UserScalarRelationFilter, UserWhereInput>
     items?: OrderItemListRelationFilter
@@ -28802,6 +28817,7 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     deliveryMethod?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     customerId?: SortOrder
     customer?: UserOrderByWithRelationInput
     items?: OrderItemOrderByRelationAggregateInput
@@ -28817,6 +28833,7 @@ export namespace Prisma {
     paymentMethod?: StringFilter<"Order"> | string
     deliveryMethod?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
+    updatedAt?: DateTimeFilter<"Order"> | Date | string
     customerId?: IntFilter<"Order"> | number
     customer?: XOR<UserScalarRelationFilter, UserWhereInput>
     items?: OrderItemListRelationFilter
@@ -28829,6 +28846,7 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     deliveryMethod?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     customerId?: SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
@@ -28847,6 +28865,7 @@ export namespace Prisma {
     paymentMethod?: StringWithAggregatesFilter<"Order"> | string
     deliveryMethod?: StringWithAggregatesFilter<"Order"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     customerId?: IntWithAggregatesFilter<"Order"> | number
   }
 
@@ -30424,6 +30443,7 @@ export namespace Prisma {
     paymentMethod?: string
     deliveryMethod?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
     customer: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
   }
@@ -30435,6 +30455,7 @@ export namespace Prisma {
     paymentMethod?: string
     deliveryMethod?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
     customerId: number
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
@@ -30445,6 +30466,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
   }
@@ -30456,6 +30478,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerId?: IntFieldUpdateOperationsInput | number
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
@@ -30467,6 +30490,7 @@ export namespace Prisma {
     paymentMethod?: string
     deliveryMethod?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
     customerId: number
   }
 
@@ -30476,6 +30500,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderUncheckedUpdateManyInput = {
@@ -30485,6 +30510,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -32103,6 +32129,7 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     deliveryMethod?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     customerId?: SortOrder
   }
 
@@ -32119,6 +32146,7 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     deliveryMethod?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     customerId?: SortOrder
   }
 
@@ -32129,6 +32157,7 @@ export namespace Prisma {
     paymentMethod?: SortOrder
     deliveryMethod?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     customerId?: SortOrder
   }
 
@@ -34197,6 +34226,7 @@ export namespace Prisma {
     paymentMethod?: string
     deliveryMethod?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
     items?: OrderItemCreateNestedManyWithoutOrderInput
   }
 
@@ -34207,6 +34237,7 @@ export namespace Prisma {
     paymentMethod?: string
     deliveryMethod?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
   }
 
@@ -34631,6 +34662,7 @@ export namespace Prisma {
     paymentMethod?: StringFilter<"Order"> | string
     deliveryMethod?: StringFilter<"Order"> | string
     createdAt?: DateTimeFilter<"Order"> | Date | string
+    updatedAt?: DateTimeFilter<"Order"> | Date | string
     customerId?: IntFilter<"Order"> | number
   }
 
@@ -36717,6 +36749,7 @@ export namespace Prisma {
     paymentMethod?: string
     deliveryMethod?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
     customer: UserCreateNestedOneWithoutOrdersInput
   }
 
@@ -36727,6 +36760,7 @@ export namespace Prisma {
     paymentMethod?: string
     deliveryMethod?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
     customerId: number
   }
 
@@ -36802,6 +36836,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: UserUpdateOneRequiredWithoutOrdersNestedInput
   }
 
@@ -36812,6 +36847,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -38131,6 +38167,7 @@ export namespace Prisma {
     paymentMethod?: string
     deliveryMethod?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AuditLogCreateManyUserInput = {
@@ -38321,6 +38358,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUpdateManyWithoutOrderNestedInput
   }
 
@@ -38331,6 +38369,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
 
@@ -38341,6 +38380,7 @@ export namespace Prisma {
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AuditLogUpdateWithoutUserInput = {

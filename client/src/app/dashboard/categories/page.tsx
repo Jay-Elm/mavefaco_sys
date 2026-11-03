@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, Tag, Trash2, Plus, AlertCircle, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
 import { useDialog } from '@/contexts/DialogContext'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface Category {
   id: number
@@ -25,6 +26,7 @@ function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; s
 
 export default function CategoriesPage() {
   const { token } = useAuth()
+  const live = useLiveVersion()
   const dialog = useDialog()
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading]       = useState(true)
@@ -51,7 +53,7 @@ export default function CategoriesPage() {
       .finally(() => setLoading(false))
   }
 
-  useEffect(() => { load() }, [token]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { load() }, [token, live]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const displayed = useMemo(() => {
     let list = [...categories]

@@ -6,6 +6,7 @@ import { AlertTriangle, CalendarRange, ChevronDown, ChevronRight, Download, Load
 import { downloadCSV } from '@/lib/csv'
 import { addDays } from '@/lib/planting'
 import { fmtDate, fmtKg, fmtWindow } from '@/components/cropDisplay'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface SupplyPlanting {
   id: number
@@ -35,6 +36,7 @@ const weekLabel = (start: string) =>
 
 export default function SupplyPage() {
   const { token } = useAuth()
+  const live = useLiveVersion()
   const [data, setData] = useState<Supply | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -48,7 +50,7 @@ export default function SupplyPage() {
       .then((d) => (d.error ? setError(d.error) : setData(d)))
       .catch(() => setError('Failed to load supply'))
       .finally(() => setLoading(false))
-  }, [token])
+  }, [token, live])
 
   const maxKg = useMemo(() => Math.max(0, ...(data?.crops.flatMap((c) => c.weekly.map((w) => w.kg)) ?? [])), [data])
   const step = (kg: number) => (kg <= 0 || maxKg === 0 ? -1 : Math.min(RAMP.length - 1, Math.ceil((kg / maxKg) * RAMP.length) - 1))

@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useDialog } from '@/contexts/DialogContext'
 import { Star, Trash2, Loader2 } from 'lucide-react'
 import ReviewForm from './ReviewForm'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface Review {
   id: number
@@ -30,6 +31,7 @@ function StarDisplay({ rating, size = 14 }: { rating: number; size?: number }) {
 
 export default function ReviewsSection({ productId }: { productId: number }) {
   const { user, token } = useAuth()
+  const live = useLiveVersion()
   const dialog = useDialog()
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
@@ -40,7 +42,7 @@ export default function ReviewsSection({ productId }: { productId: number }) {
       .then((r) => r.json())
       .then((data) => { if (Array.isArray(data)) setReviews(data) })
       .finally(() => setLoading(false))
-  }, [productId])
+  }, [productId, live])
 
   const hasReviewed = reviews.some((r) => r.customer.id === user?.id)
   const avg = reviews.length

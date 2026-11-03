@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, ShoppingCart, AlertTriangle, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
 import { useDialog } from '@/contexts/DialogContext'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface OrderRow {
   id: number
@@ -55,6 +56,7 @@ function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; s
 
 export default function OrdersPage() {
   const { token, user } = useAuth()
+  const live = useLiveVersion()
   const dialog = useDialog()
   const isManager = user?.role === 'manager'
   const [orders, setOrders]     = useState<OrderRow[]>([])
@@ -79,7 +81,7 @@ export default function OrdersPage() {
       })
       .catch(() => setError('Failed to load orders'))
       .finally(() => setLoading(false))
-  }, [token])
+  }, [token, live])
 
   const displayed = useMemo(() => {
     let list = [...orders]

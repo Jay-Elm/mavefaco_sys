@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { ArrowLeft, Loader2, Package, AlertTriangle } from 'lucide-react'
 import { reasonLabels, suspensionDeadline } from '@/validators/productSuspension'
 import ReviewsSection from '@/components/ReviewsSection'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface Product {
   id: number
@@ -33,6 +34,7 @@ const fmtDate = (d: string | Date) =>
 /** Read-only view of a listing for staff. Staff don't edit listings; they approve or suspend them. */
 export default function DashboardProductViewPage() {
   const { token } = useAuth()
+  const live = useLiveVersion()
   const params = useParams()
   const productId = params.id as string
 
@@ -47,7 +49,7 @@ export default function DashboardProductViewPage() {
       .then((d) => (d.error ? setError(d.error) : setProduct(d)))
       .catch(() => setError('Failed to load product'))
       .finally(() => setLoading(false))
-  }, [token, productId])
+  }, [token, productId, live])
 
   if (loading) {
     return (

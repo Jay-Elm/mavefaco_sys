@@ -6,6 +6,7 @@ import { refreshNavBadges } from '@/components/NavBadge'
 import { Loader2, ShoppingCart, AlertTriangle, Download } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
 import { useDialog } from '@/contexts/DialogContext'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface OrderRow {
   id: number
@@ -43,6 +44,7 @@ const ACTIONS: Record<string, { label: string; next: string; style: string }[]> 
 
 export default function FarmerOrdersPage() {
   const { token } = useAuth()
+  const live = useLiveVersion()
   const dialog = useDialog()
   const [orders, setOrders] = useState<OrderRow[]>([])
   const [loading, setLoading] = useState(true)
@@ -61,7 +63,7 @@ export default function FarmerOrdersPage() {
       })
       .catch(() => setError('Failed to load orders'))
       .finally(() => setLoading(false))
-  }, [token])
+  }, [token, live])
 
   async function handleStatusChange(orderId: number, status: string) {
     if (!token) return

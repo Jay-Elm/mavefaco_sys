@@ -12,6 +12,8 @@ import {
 import { downloadCSV } from '@/lib/csv'
 import { useDialog } from '@/contexts/DialogContext'
 import IdReviewPanel from '@/components/idVerification/IdReviewPanel'
+import PasswordInput from '@/components/PasswordInput'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface UserRow {
   id: number
@@ -54,6 +56,7 @@ function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; s
 
 export default function UsersPage() {
   const { token, user: currentUser } = useAuth()
+  const live = useLiveVersion()
   const dialog = useDialog()
   const [users, setUsers]         = useState<UserRow[]>([])
   const [loading, setLoading]     = useState(true)
@@ -79,7 +82,7 @@ export default function UsersPage() {
       .then((data) => (data.error ? setError(data.error) : setUsers(data)))
       .catch(() => setError('Failed to load users'))
       .finally(() => setLoading(false))
-  }, [token])
+  }, [token, live])
 
   const displayed = useMemo(() => {
     let list = [...users]
@@ -589,8 +592,7 @@ export default function UsersPage() {
             {resetError && (
               <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{resetError}</p>
             )}
-            <input aria-label="New password (12–128 characters)"
-              type="password"
+            <PasswordInput aria-label="New password (12–128 characters)"
               value={newPw}
               onChange={(e) => setNewPw(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleResetPassword()}

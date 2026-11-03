@@ -9,6 +9,7 @@ import { downloadCSV } from '@/lib/csv'
 import SuspendListingModal, { type SuspendResult } from '@/components/SuspendListingModal'
 import { suspensionDeadline } from '@/validators/productSuspension'
 import { useDialog } from '@/contexts/DialogContext'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface ProductRow {
   id: number
@@ -45,6 +46,7 @@ function SortIcon({ col, sortKey, sortDir }: { col: SortKey; sortKey: SortKey; s
 
 export default function DashboardProductsPage() {
   const { token } = useAuth()
+  const live = useLiveVersion()
   const dialog = useDialog()
   const [products, setProducts]       = useState<ProductRow[]>([])
   const [loading, setLoading]         = useState(true)
@@ -74,7 +76,7 @@ export default function DashboardProductsPage() {
       .then((data) => (data.error ? setError(data.error) : setProducts(data)))
       .catch(() => setError('Failed to load products'))
       .finally(() => setLoading(false))
-  }, [token])
+  }, [token, live])
 
   useEffect(() => {
     if (!token || !showingArchived || archivedProducts !== null) return

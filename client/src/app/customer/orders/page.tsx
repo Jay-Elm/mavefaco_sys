@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { ShoppingBag, ChevronDown, ChevronUp, Loader2, Package, X, CheckCheck } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useDialog } from '@/contexts/DialogContext'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface OrderItem {
   id: number
@@ -45,6 +46,7 @@ const DELIVERY_LABELS: Record<string, string> = {
 
 export default function CustomerOrdersPage() {
   const { isAuthenticated, loading, token } = useAuth()
+  const live = useLiveVersion()
   const dialog = useDialog()
   const router = useRouter()
   const [orders, setOrders] = useState<Order[]>([])
@@ -65,7 +67,7 @@ export default function CustomerOrdersPage() {
       })
       .catch(() => setError('Network error'))
       .finally(() => setFetching(false))
-  }, [loading, isAuthenticated, token, router])
+  }, [loading, isAuthenticated, token, router, live])
 
   function toggleExpand(id: number) {
     setExpanded(prev => {

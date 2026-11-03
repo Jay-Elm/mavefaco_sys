@@ -12,12 +12,14 @@ import {
   INPUT, LOG_TYPES, SEVERITY_STYLES, STAGE_STYLES, STATUS_STYLES, fmtDate, fmtKg, fmtWindow,
   type CropLog, type Planting,
 } from '@/components/cropDisplay'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 type Detail = Planting & { logs: CropLog[] }
 interface Listing { id: number; name: string; unit: string }
 
 export default function PlantingPage() {
   const { token, user } = useAuth()
+  const live = useLiveVersion()
   const dialog = useDialog()
   const router = useRouter()
   const plantingId = Number(useParams().id)
@@ -41,7 +43,7 @@ export default function PlantingPage() {
       })
       .catch(() => setError('Failed to load this planting'))
       .finally(() => setLoading(false))
-  }, [token, user, plantingId])
+  }, [token, user, plantingId, live])
 
   async function send(path: string, method: string, body?: unknown) {
     const res = await fetch(`/api/farmer/plantings/${plantingId}${path}`, {

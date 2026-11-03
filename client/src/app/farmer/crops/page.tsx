@@ -7,6 +7,7 @@ import { AlertTriangle, Bug, ChevronRight, Loader2, Plus, Sprout, Wheat } from '
 import { PEST_LABELS } from '@/validators/crop'
 import { addDays, todayPH } from '@/lib/planting'
 import { STAGE_STYLES, STATUS_STYLES, fmtDate, fmtKg, fmtWindow, type Planting } from '@/components/cropDisplay'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 type Row = Planting & {
   _count: { logs: number }
@@ -15,6 +16,7 @@ type Row = Planting & {
 
 export default function CropsPage() {
   const { token } = useAuth()
+  const live = useLiveVersion()
   const [plantings, setPlantings] = useState<Row[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -26,7 +28,7 @@ export default function CropsPage() {
       .then((d) => (d.error ? setError(d.error) : setPlantings(d)))
       .catch(() => setError('Failed to load your crops'))
       .finally(() => setLoading(false))
-  }, [token])
+  }, [token, live])
 
   const { growing, history, attention } = useMemo(() => {
     const twoWeeksAgo = addDays(todayPH(), -14)

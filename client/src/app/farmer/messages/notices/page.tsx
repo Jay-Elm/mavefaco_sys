@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { ArrowLeft, Bell, CheckCircle, Loader2, Pencil, Trash2 } from 'lucide-react'
 import { refreshNavBadges } from '@/components/NavBadge'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface Notice {
   id: number
@@ -29,6 +30,7 @@ function afterResubmit(product: Notice['product']): string {
 /** System notices from MaVeFaCo. One-way: there is no reply box. */
 export default function FarmerNoticesPage() {
   const { token } = useAuth()
+  const live = useLiveVersion()
   const [notices, setNotices] = useState<Notice[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -43,7 +45,7 @@ export default function FarmerNoticesPage() {
           fetch('/api/notices/read', { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).then(refreshNavBadges)
       })
       .finally(() => setLoading(false))
-  }, [token])
+  }, [token, live])
 
   if (loading) return (
     <div className="flex items-center justify-center h-64 text-gray-500">

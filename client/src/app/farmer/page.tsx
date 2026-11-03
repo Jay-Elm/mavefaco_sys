@@ -8,6 +8,7 @@ import WeatherWidget from '@/components/WeatherWidget'
 import AdvisoryList from '@/components/AdvisoryList'
 import AnnouncementList, { type AnnouncementItem } from '@/components/AnnouncementList'
 import type { AdvisoryGroup } from '@/lib/advisory'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 const LOW_STOCK_THRESHOLD = 5
 /** Announcements shown before "Show all". */
@@ -23,6 +24,7 @@ interface Stats {
 
 export default function FarmerOverviewPage() {
   const { token, user } = useAuth()
+  const live = useLiveVersion()
   const [stats, setStats] = useState<Stats | null>(null)
   const [loading, setLoading] = useState(true)
   const [advisory, setAdvisory] = useState<AdvisoryGroup[]>([])
@@ -61,7 +63,7 @@ export default function FarmerOverviewPage() {
         setStats({ productCount, orderCount, totalRevenue, outOfStock, lowStock })
       })
       .finally(() => setLoading(false))
-  }, [token, user])
+  }, [token, user, live])
 
   if (loading) {
     return (

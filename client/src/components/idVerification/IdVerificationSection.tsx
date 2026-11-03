@@ -7,6 +7,7 @@ import { refreshNavBadges } from '@/components/NavBadge'
 import { idTypeLabel } from '@/lib/idVerification'
 import { idReasonLabels } from '@/validators/idReview'
 import IdVerificationFlow from './IdVerificationFlow'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface Submission {
   id: number
@@ -28,6 +29,7 @@ const fmt = (d: string) => new Date(d).toLocaleDateString('en-PH', { dateStyle: 
 
 /** The farmer's ID verification status, and the capture flow to submit an ID. */
 export default function IdVerificationSection({ token }: { token: string }) {
+  const live = useLiveVersion()
   const dialog = useDialog()
   const [me, setMe] = useState<Me | null>(null)
   const [capturing, setCapturing] = useState(false)
@@ -41,7 +43,7 @@ export default function IdVerificationSection({ token }: { token: string }) {
       .then((d) => { if (!d.error) setMe({ verified: d.verified, verifiedInPersonAt: d.verifiedInPersonAt, idSubmission: d.idSubmission }) })
       .catch(() => setError('Failed to load your verification status'))
   }, [token])
-  useEffect(() => { load() }, [load])
+  useEffect(() => { load() }, [load, live])
 
   async function withdraw() {
     if (!(await dialog.confirm({ title: 'Withdraw your ID submission?', message: 'Its photos are deleted. You will need to submit your ID again to be verified.', confirmLabel: 'Withdraw', tone: 'danger' }))) return

@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, Megaphone, Trash2, AlertCircle, Plus, Info, AlertTriangle, Leaf } from 'lucide-react'
 import { useDialog } from '@/contexts/DialogContext'
 import { ANNOUNCEMENT_AUDIENCES, type AnnouncementAudience } from '@/validators/announcement'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface Announcement {
   id: number
@@ -33,6 +34,7 @@ const AUDIENCE_CONFIG: Record<AnnouncementAudience, { label: string; where: stri
 
 export default function AnnouncementsPage() {
   const { token } = useAuth()
+  const live = useLiveVersion()
   const dialog = useDialog()
   const [items, setItems]       = useState<Announcement[]>([])
   const [loading, setLoading]   = useState(true)
@@ -53,7 +55,7 @@ export default function AnnouncementsPage() {
       .then((data) => (data.error ? setError(data.error) : setItems(data)))
       .catch(() => setError('Failed to load announcements'))
       .finally(() => setLoading(false))
-  }, [token])
+  }, [token, live])
 
   async function handlePost(e: React.FormEvent) {
     e.preventDefault()

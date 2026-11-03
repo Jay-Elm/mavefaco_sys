@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useDialog } from '@/contexts/DialogContext'
 import { AlertCircle, Check, Loader2, Pencil, Plus, Sprout, Trash2, X } from 'lucide-react'
 import type { CropType } from '@/components/cropDisplay'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 type Row = CropType & { _count: { plantings: number } }
 type Form = { name: string; daysToHarvestMin: string; daysToHarvestMax: string; vegetativeDay: string; floweringDay: string; fruitingDay: string }
@@ -31,6 +32,7 @@ const toBody = (f: Form) => ({
 
 export default function CropTypesPage() {
   const { token } = useAuth()
+  const live = useLiveVersion()
   const dialog = useDialog()
   const [rows, setRows] = useState<Row[]>([])
   const [loading, setLoading] = useState(true)
@@ -49,7 +51,7 @@ export default function CropTypesPage() {
       .then((d) => (d.error ? setError(d.error) : setRows(d)))
       .catch(() => setError('Failed to load crop types'))
       .finally(() => setLoading(false))
-  }, [token])
+  }, [token, live])
 
   const request = (path: string, method: string, body?: unknown) =>
     fetch(path, {

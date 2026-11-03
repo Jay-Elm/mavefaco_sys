@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, MessageCircle, User } from 'lucide-react'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface Conversation {
   user: { id: number; name: string; role: string }
@@ -15,6 +16,7 @@ interface Conversation {
 
 export default function CustomerMessagesPage() {
   const { token, isAuthenticated, loading: authLoading } = useAuth()
+  const live = useLiveVersion()
   const router = useRouter()
   const [convs, setConvs] = useState<Conversation[]>([])
   const [fetching, setFetching] = useState(true)
@@ -26,7 +28,7 @@ export default function CustomerMessagesPage() {
       .then((r) => r.json())
       .then((d) => { if (Array.isArray(d)) setConvs(d) })
       .finally(() => setFetching(false))
-  }, [authLoading, isAuthenticated, token, router])
+  }, [authLoading, isAuthenticated, token, router, live])
 
   if (authLoading || fetching) return (
     <div className="flex items-center justify-center py-20 text-gray-500">

@@ -6,9 +6,11 @@ import { useAuth } from '@/contexts/AuthContext'
 import { ArrowLeft, Bug, Loader2 } from 'lucide-react'
 import AdvisoryList from '@/components/AdvisoryList'
 import type { AdvisoryGroup } from '@/lib/advisory'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 export default function AdvisoryPage() {
   const { token } = useAuth()
+  const live = useLiveVersion()
   const [groups, setGroups] = useState<AdvisoryGroup[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -20,7 +22,7 @@ export default function AdvisoryPage() {
       .then((d) => (Array.isArray(d) ? setGroups(d) : setError(d.error ?? 'Failed to load the advisory')))
       .catch(() => setError('Failed to load the advisory'))
       .finally(() => setLoading(false))
-  }, [token])
+  }, [token, live])
 
   if (loading) return (
     <div className="flex items-center justify-center h-64 text-gray-500">

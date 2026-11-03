@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, MessageCircle, User, Bell } from 'lucide-react'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface Conversation {
   user: { id: number; name: string; role: string }
@@ -16,6 +17,7 @@ interface Notice { id: number; title: string; read: boolean; createdAt: string }
 
 export default function FarmerMessagesPage() {
   const { token } = useAuth()
+  const live = useLiveVersion()
   const [convs, setConvs] = useState<Conversation[]>([])
   const [notices, setNotices] = useState<Notice[]>([])
   const [loading, setLoading] = useState(true)
@@ -31,7 +33,7 @@ export default function FarmerMessagesPage() {
         if (Array.isArray(n)) setNotices(n)
       })
       .finally(() => setLoading(false))
-  }, [token])
+  }, [token, live])
 
   if (loading) return (
     <div className="flex items-center justify-center h-64 text-gray-500">
