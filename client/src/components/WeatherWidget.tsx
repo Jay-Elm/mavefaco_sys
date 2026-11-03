@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Cloud, CloudRain, Sun, CloudSnow, CloudLightning, Wind, Droplets, Thermometer, Loader2 } from 'lucide-react'
+import { Cloud, CloudRain, Sun, CloudSnow, CloudLightning, Wind, Droplets, Loader2 } from 'lucide-react'
 
 interface WeatherData {
   temperature: number
@@ -50,14 +50,17 @@ export default function WeatherWidget() {
       .finally(() => setLoading(false))
   }, [])
 
+  // A light, see-through card that sits over the sand like an overlay.
+  const card = 'rounded-card border border-white/70 bg-white/45 backdrop-blur-sm shadow-card'
+
   if (loading) return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 flex items-center justify-center h-28">
-      <Loader2 size={20} className="animate-spin text-gray-500" />
+    <div className={`${card} px-4 py-3 flex items-center justify-center h-[76px] w-full sm:w-80`}>
+      <Loader2 size={18} className="animate-spin text-gray-500" />
     </div>
   )
 
   if (error || !weather) return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 text-xs text-gray-500 text-center h-28 flex items-center justify-center">
+    <div className={`${card} px-4 py-3 text-xs text-gray-600 flex items-center justify-center h-[76px] w-full sm:w-80`}>
       Weather unavailable
     </div>
   )
@@ -65,26 +68,19 @@ export default function WeatherWidget() {
   const { label, Icon, color } = getWeatherInfo(weather.code)
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
-      <h2 className="text-sm font-semibold text-soil mb-3">Weather in Tabaco City, Albay</h2>
-      <div className="flex items-center gap-4">
-        <Icon size={36} className={color} />
-        <div>
-          <p className="text-3xl font-bold text-soil">{weather.temperature}°C</p>
-          <p className="text-sm text-gray-500">{label}</p>
-        </div>
-        <div className="ml-auto space-y-1 text-xs text-gray-500 text-right">
-          <p className="flex items-center gap-1 justify-end">
-            <Droplets size={12} className="text-blue-400" /> {weather.humidity}% humidity
-          </p>
-          <p className="flex items-center gap-1 justify-end">
-            <Wind size={12} className="text-gray-500" /> {weather.windSpeed} km/h wind
-          </p>
-          <p className="flex items-center gap-1 justify-end">
-            <Thermometer size={12} className="text-red-400" /> Feels tropical
-          </p>
-        </div>
+    <section aria-label="Weather in Tabaco City, Albay" className={`${card} px-4 py-3 flex items-center gap-3 w-full sm:w-auto`}>
+      <Icon size={32} className={`${color} shrink-0`} aria-hidden />
+      <div className="min-w-0">
+        <p className="flex items-baseline gap-2">
+          <span className="font-display text-3xl font-bold leading-none text-soil tabular">{weather.temperature}°C</span>
+          <span className="text-sm text-soil/80">{label}</span>
+        </p>
+        <p className="mt-1 text-xs text-soil/70">Tabaco City, Albay</p>
       </div>
-    </div>
+      <div className="ml-auto sm:ml-4 pl-4 border-l border-soil/10 space-y-1 text-xs text-soil/75 whitespace-nowrap">
+        <p className="flex items-center gap-1"><Droplets size={12} className="text-blue-500" aria-hidden /> {weather.humidity}% humidity</p>
+        <p className="flex items-center gap-1"><Wind size={12} className="text-gray-500" aria-hidden /> {weather.windSpeed} km/h wind</p>
+      </div>
+    </section>
   )
 }

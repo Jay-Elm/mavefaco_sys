@@ -186,8 +186,8 @@ function Timeline({ planting: p }: { planting: Planting }) {
       </div>
       <div className="relative pt-6">
         <div
-          className="absolute top-0 -translate-x-1/2 flex flex-col items-center"
-          style={{ left: `${todayPct}%` }}
+          className="absolute top-0 flex flex-col items-center"
+          style={{ left: `${todayPct}%`, transform: `translateX(-${todayPct}%)` }}
         >
           <span className="text-[11px] font-semibold text-paddy whitespace-nowrap">Today · day {Math.max(p.day, 0)}</span>
         </div>

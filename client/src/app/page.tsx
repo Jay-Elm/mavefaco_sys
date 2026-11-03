@@ -7,7 +7,7 @@ import HomeHeroActions from "@/components/HomeHeroActions";
 import HomeBottomCTAButtons from "@/components/HomeBottomCTAButtons";
 import HarvestBoard from "@/components/HarvestBoard";
 import { ArrowRight, Star } from "lucide-react";
-import AnnouncementList from "@/components/AnnouncementList";
+import AnnouncementBoard from "@/components/AnnouncementList";
 import { isSafeUrl } from "@/lib/url";
 import { withComingSoon } from "@/lib/comingSoon";
 import { bannerStyle } from "@/components/bannerStyles";
@@ -153,7 +153,7 @@ export default async function HomePage() {
   const hasStats = stats.farmers > 0 || stats.products > 0 || stats.orders > 0;
 
   return (
-    <div className="bg-white">
+    <div>
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="relative isolate overflow-hidden bg-soil text-white">
         {/* Temporary photo until the cooperative has its own. Below xl it
@@ -221,8 +221,8 @@ export default async function HomePage() {
               );
             })}
             {announcements.length > 0 && (
-              <div className="max-w-3xl">
-                <AnnouncementList announcements={announcements} />
+              <div className={banners.length > 0 ? "pt-4" : ""}>
+                <AnnouncementBoard announcements={announcements} shown={4} />
               </div>
             )}
           </div>

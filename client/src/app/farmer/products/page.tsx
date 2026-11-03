@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, Package, Trash2, Pencil, Plus, AlertTriangle, CheckCircle, Clock, Download, XCircle, Ban } from 'lucide-react'
@@ -8,6 +8,7 @@ import { downloadCSV } from '@/lib/csv'
 import { reasonLabels, suspensionDeadline } from '@/validators/productSuspension'
 import { useDialog } from '@/contexts/DialogContext'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
+import ListToolbar from '@/components/ListToolbar'
 
 interface ProductRow {
   id: number
@@ -24,6 +25,12 @@ interface ProductRow {
 const fmtDate = (d: string | Date) => new Date(d).toLocaleDateString('en-PH')
 
 const LOW_STOCK_THRESHOLD = 5
+
+type StatusFilter = 'all' | 'approved' | 'pending' | 'suspended'
+type StockFilter = 'all' | 'in' | 'low' | 'out'
+type Sort = 'newest' | 'oldest' | 'name' | 'price-desc' | 'price-asc' | 'stock-asc' | 'stock-desc'
+
+const statusOf = (p: ProductRow): Exclude<StatusFilter, 'all'> => (p.suspendedAt ? 'suspended' : p.approved ? 'approved' : 'pending')
 
 function StockBadge({ stock }: { stock: number }) {
   if (stock === 0)
@@ -50,6 +57,39 @@ export default function FarmerProductsPage() {
   const [error, setError] = useState('')
   const [deletingId, setDeletingId] = useState<number | null>(null)
   const [deleteError, setDeleteError] = useState<{ id: number; msg: string } | null>(null)
+  const [search, setSearch] = useState('')
+  const [status, setStatus] = useState<StatusFilter>('all')
+  const [stockFilter, setStockFilter] = useState<StockFilter>('all')
+  const [category, setCategory] = useState('')
+  const [sort, setSort] = useState<Sort>('newest')
+
+  const categories = useMemo(() => [...new Set(products.map((p) => p.category.name))].sort(), [products])
+
+  const displayed = useMemo(() => {
+    const q = search.trim().toLowerCase()
+    const list = products.filter((p) =>
+      (!q || p.name.toLowerCase().includes(q)) &&
+      (status === 'all' || statusOf(p) === status) &&
+      (!category || p.category.name === category) &&
+      (stockFilter === 'all' ||
+        (stockFilter === 'out' && p.stock === 0) ||
+        (stockFilter === 'low' && p.stock > 0 && p.stock <= LOW_STOCK_THRESHOLD) ||
+        (stockFilter === 'in' && p.stock > 0)),
+    )
+    const time = (p: ProductRow) => new Date(p.createdAt).getTime()
+    return list.sort((a, b) => {
+      switch (sort) {
+        case 'oldest': return time(a) - time(b)
+        case 'name': return a.name.localeCompare(b.name)
+        case 'price-desc': return b.price - a.price
+        case 'price-asc': return a.price - b.price
+        case 'stock-asc': return a.stock - b.stock
+        case 'stock-desc': return b.stock - a.stock
+        default: return time(b) - time(a)
+      }
+    })
+  }, [products, search, status, stockFilter, category, sort])
+  const filtered = search.trim() !== '' || status !== 'all' || stockFilter !== 'all' || category !== ''
 
   useEffect(() => {
     if (!token || !user) return
@@ -160,6 +200,37 @@ export default function FarmerProductsPage() {
         )
       })()}
 
+      {products.length > 0 && (
+        <ListToolbar
+          search={search}
+          onSearch={setSearch}
+          placeholder="Search my products"
+          filters={[
+            { label: 'Status', value: status, onChange: (v) => setStatus(v as StatusFilter), options: [
+              { value: 'all', label: 'All statuses' }, { value: 'approved', label: 'Approved' },
+              { value: 'pending', label: 'Pending' }, { value: 'suspended', label: 'Suspended' },
+            ] },
+            { label: 'Stock', value: stockFilter, onChange: (v) => setStockFilter(v as StockFilter), options: [
+              { value: 'all', label: 'Any stock' }, { value: 'in', label: 'In stock' },
+              { value: 'low', label: `Running low (≤ ${LOW_STOCK_THRESHOLD})` }, { value: 'out', label: 'Out of stock' },
+            ] },
+            { label: 'Category', value: category, onChange: setCategory, options: [
+              { value: '', label: 'All categories' }, ...categories.map((c) => ({ value: c, label: c })),
+            ] },
+          ]}
+          sort={{ label: 'Sort by', value: sort, onChange: (v) => setSort(v as Sort), options: [
+            { value: 'newest', label: 'Newest first' }, { value: 'oldest', label: 'Oldest first' },
+            { value: 'name', label: 'Name (A–Z)' },
+            { value: 'price-desc', label: 'Price: high to low' }, { value: 'price-asc', label: 'Price: low to high' },
+            { value: 'stock-asc', label: 'Stock: low to high' }, { value: 'stock-desc', label: 'Stock: high to low' },
+          ] }}
+          shown={displayed.length}
+          total={products.length}
+          noun="products"
+          onClear={filtered ? () => { setSearch(''); setStatus('all'); setStockFilter('all'); setCategory('') } : undefined}
+        />
+      )}
+
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
         <table className="w-full text-sm min-w-[560px]">
@@ -181,8 +252,12 @@ export default function FarmerProductsPage() {
                   No products yet
                 </td>
               </tr>
+            ) : displayed.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="text-center py-12 text-gray-500">No products match these filters</td>
+              </tr>
             ) : (
-              products.map((p) => (
+              displayed.map((p) => (
                 <React.Fragment key={p.id}>
                   <tr className="hover:bg-gray-50 transition-colors">
                     <td className="px-5 py-3">

@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { refreshNavBadges } from '@/components/NavBadge'
-import { Loader2, ShoppingCart, AlertTriangle, Download } from 'lucide-react'
+import { Loader2, ShoppingCart, AlertTriangle, Download, ChevronRight } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
 import { useDialog } from '@/contexts/DialogContext'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
+import ListToolbar from '@/components/ListToolbar'
 
 interface OrderRow {
   id: number
@@ -42,6 +43,9 @@ const ACTIONS: Record<string, { label: string; next: string; style: string }[]> 
   cancelled: [],
 }
 
+const STATUSES = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'] as const
+type Sort = 'newest' | 'oldest' | 'total-desc' | 'total-asc'
+
 export default function FarmerOrdersPage() {
   const { token } = useAuth()
   const live = useLiveVersion()
@@ -52,6 +56,35 @@ export default function FarmerOrdersPage() {
   const [updatingId, setUpdatingId] = useState<number | null>(null)
   const [updateError, setUpdateError] = useState<{ id: number; msg: string } | null>(null)
   const [expanded, setExpanded] = useState<number | null>(null)
+  const [search, setSearch] = useState('')
+  const [status, setStatus] = useState('all')
+  const [sort, setSort] = useState<Sort>('newest')
+
+  const displayed = useMemo(() => {
+    const q = search.trim().toLowerCase().replace(/^#/, '')
+    const list = orders.filter((o) =>
+      (status === 'all' || o.status === status) &&
+      (!q ||
+        String(o.id) === q ||
+        o.customer.name.toLowerCase().includes(q) ||
+        o.customer.email.toLowerCase().includes(q) ||
+        o.items.some((i) => i.product.name.toLowerCase().includes(q))),
+    )
+    const time = (o: OrderRow) => new Date(o.createdAt).getTime()
+    return list.sort((a, b) => {
+      switch (sort) {
+        case 'oldest': return time(a) - time(b)
+        case 'total-desc': return b.totalAmount - a.totalAmount
+        case 'total-asc': return a.totalAmount - b.totalAmount
+        default: return time(b) - time(a)
+      }
+    })
+  }, [orders, search, status, sort])
+  const counts = useMemo(() => {
+    const c: Record<string, number> = {}
+    for (const o of orders) c[o.status] = (c[o.status] ?? 0) + 1
+    return c
+  }, [orders])
 
   useEffect(() => {
     if (!token) return
@@ -100,7 +133,6 @@ export default function FarmerOrdersPage() {
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
         <h1 className="text-2xl font-bold text-soil">Orders</h1>
         <div className="flex items-center gap-3">
-          <span className="text-sm text-gray-500">{orders.length} total</span>
           <button
             onClick={() => downloadCSV(
               'my-orders.csv',
@@ -120,6 +152,28 @@ export default function FarmerOrdersPage() {
       </div>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
+
+      {orders.length > 0 && (
+        <ListToolbar
+          search={search}
+          onSearch={setSearch}
+          placeholder="Search by customer, product or #ID"
+          filters={[
+            { label: 'Status', value: status, onChange: setStatus, options: [
+              { value: 'all', label: 'All statuses' },
+              ...STATUSES.map((s) => ({ value: s, label: `${s[0].toUpperCase()}${s.slice(1)} (${counts[s] ?? 0})` })),
+            ] },
+          ]}
+          sort={{ label: 'Sort by', value: sort, onChange: (v) => setSort(v as Sort), options: [
+            { value: 'newest', label: 'Newest first' }, { value: 'oldest', label: 'Oldest first' },
+            { value: 'total-desc', label: 'Total: high to low' }, { value: 'total-asc', label: 'Total: low to high' },
+          ] }}
+          shown={displayed.length}
+          total={orders.length}
+          noun="orders"
+          onClear={search.trim() || status !== 'all' ? () => { setSearch(''); setStatus('all') } : undefined}
+        />
+      )}
 
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
@@ -143,8 +197,14 @@ export default function FarmerOrdersPage() {
                   No orders yet
                 </td>
               </tr>
+            ) : displayed.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="text-center py-12 text-gray-500">No orders match these filters</td>
+              </tr>
             ) : (
-              orders.map((order) => (
+              displayed.map((order) => {
+                const isOpen = expanded === order.id
+                return (
                 <React.Fragment key={order.id}>
                   {updateError?.id === order.id && (
                     <tr className="bg-red-50">
@@ -158,10 +218,16 @@ export default function FarmerOrdersPage() {
                     </tr>
                   )}
                   <tr
-                    className="hover:bg-gray-50 transition-colors cursor-pointer"
-                    onClick={() => setExpanded(expanded === order.id ? null : order.id)}
+                    className={`transition-colors cursor-pointer ${isOpen ? 'bg-shoot/50 border-b-0 shadow-[inset_4px_0_0_var(--color-paddy)]' : 'hover:bg-gray-50'}`}
+                    onClick={() => setExpanded(isOpen ? null : order.id)}
+                    aria-expanded={isOpen}
                   >
-                    <td className="px-5 py-3 font-mono text-gray-500">#{order.id}</td>
+                    <td className="px-5 py-3 font-mono text-gray-600">
+                      <span className="inline-flex items-center gap-1">
+                        <ChevronRight size={14} aria-hidden className={`transition-transform ${isOpen ? 'rotate-90 text-paddy' : 'text-gray-400'}`} />
+                        #{order.id}
+                      </span>
+                    </td>
                     <td className="px-5 py-3">
                       <p className="font-medium text-soil">{order.customer.name}</p>
                       <p className="text-xs text-gray-500">{order.customer.email}</p>
@@ -201,23 +267,26 @@ export default function FarmerOrdersPage() {
                       {order.items.length}
                     </td>
                   </tr>
-                  {expanded === order.id && (
-                    <tr className="bg-gray-50">
-                      <td colSpan={7} className="px-10 py-3">
-                        <p className="text-xs font-semibold text-gray-500 mb-2">Your items in this order:</p>
-                        <div className="space-y-1">
-                          {order.items.map((item) => (
-                            <div key={item.id} className="flex justify-between text-xs text-gray-600">
-                              <span>{item.product.name} × {parseFloat(item.quantity.toFixed(2))} {item.product.unit}</span>
-                              <span>₱{(item.price * item.quantity).toFixed(2)}</span>
-                            </div>
-                          ))}
+                  {isOpen && (
+                    <tr className="bg-shoot/50 shadow-[inset_4px_0_0_var(--color-paddy)] border-b-2 border-paddy/20">
+                      <td colSpan={7} className="px-10 pt-1 pb-4">
+                        <div className="max-w-xl rounded-lg bg-white/80 border border-paddy/15 px-4 py-3">
+                          <p className="text-xs font-semibold text-paddy-deep mb-2">Order #{order.id}: your items</p>
+                          <div className="space-y-1">
+                            {order.items.map((item) => (
+                              <div key={item.id} className="flex justify-between gap-4 text-sm text-gray-700">
+                                <span>{item.product.name} × {parseFloat(item.quantity.toFixed(2))} {item.product.unit}</span>
+                                <span className="tabular">₱{(item.price * item.quantity).toFixed(2)}</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </td>
                     </tr>
                   )}
                 </React.Fragment>
-              ))
+                )
+              })
             )}
           </tbody>
         </table>

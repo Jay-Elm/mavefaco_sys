@@ -24,7 +24,7 @@ export default async function AboutPage() {
   const fbUrl   = content.facebook_url || "";
 
   return (
-    <div className="bg-white">
+    <div>
       <section className="bg-soil text-white">
         <div className="max-w-[1200px] mx-auto px-6 py-14 lg:py-20">
           <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[0.95] max-w-[18ch]">{name}</h1>

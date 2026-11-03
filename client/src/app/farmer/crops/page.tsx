@@ -8,11 +8,15 @@ import { PEST_LABELS } from '@/validators/crop'
 import { addDays, todayPH } from '@/lib/planting'
 import { STAGE_STYLES, STATUS_STYLES, fmtDate, fmtKg, fmtWindow, type Planting } from '@/components/cropDisplay'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
+import ListToolbar from '@/components/ListToolbar'
 
 type Row = Planting & {
   _count: { logs: number }
   latestHighSeverity: { id: number; type: string; pest: string | null; note: string; observedOn: string } | null
 }
+
+type Show = 'all' | 'growing' | 'ready' | 'overdue' | 'problem' | 'harvested' | 'failed'
+type Sort = 'harvest' | 'planted-desc' | 'planted-asc' | 'name'
 
 export default function CropsPage() {
   const { token } = useAuth()
@@ -20,6 +24,10 @@ export default function CropsPage() {
   const [plantings, setPlantings] = useState<Row[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [search, setSearch] = useState('')
+  const [show, setShow] = useState<Show>('all')
+  const [crop, setCrop] = useState('')
+  const [sort, setSort] = useState<Sort>('harvest')
 
   useEffect(() => {
     if (!token) return
@@ -30,12 +38,35 @@ export default function CropsPage() {
       .finally(() => setLoading(false))
   }, [token, live])
 
+  const cropNames = useMemo(() => [...new Set(plantings.map((p) => p.cropType.name))].sort(), [plantings])
+
   const { growing, history, attention } = useMemo(() => {
     const twoWeeksAgo = addDays(todayPH(), -14)
-    const growing = plantings.filter((p) => p.status === 'growing')
+    const q = search.trim().toLowerCase()
+    const hasProblem = (p: Row) => !!p.latestHighSeverity && p.latestHighSeverity.observedOn >= twoWeeksAgo
+    const matches = (p: Row) =>
+      (!q || p.cropType.name.toLowerCase().includes(q) || (p.product?.name.toLowerCase().includes(q) ?? false)) &&
+      (!crop || p.cropType.name === crop) &&
+      (show === 'all' ||
+        (show === 'growing' && p.status === 'growing') ||
+        (show === 'ready' && p.status === 'growing' && p.attention === 'harvest-now') ||
+        (show === 'overdue' && p.status === 'growing' && p.attention === 'overdue') ||
+        (show === 'problem' && p.status === 'growing' && hasProblem(p)) ||
+        (show === 'harvested' && p.status === 'harvested') ||
+        (show === 'failed' && p.status === 'failed'))
+    const order = (a: Row, b: Row) => {
+      switch (sort) {
+        case 'planted-desc': return b.plantedOn.localeCompare(a.plantedOn)
+        case 'planted-asc': return a.plantedOn.localeCompare(b.plantedOn)
+        case 'name': return a.cropType.name.localeCompare(b.cropType.name)
+        // Soonest harvest first while growing; most recent first for past seasons.
+        default: return a.status === 'growing' ? a.harvestStart.localeCompare(b.harvestStart) : (b.harvestedOn ?? b.plantedOn).localeCompare(a.harvestedOn ?? a.plantedOn)
+      }
+    }
+    const growing = plantings.filter((p) => p.status === 'growing' && matches(p))
     return {
-      growing: [...growing].sort((a, b) => a.harvestStart.localeCompare(b.harvestStart)),
-      history: plantings.filter((p) => p.status !== 'growing'),
+      growing: [...growing].sort(order),
+      history: plantings.filter((p) => p.status !== 'growing' && matches(p)).sort(order),
       attention: growing.flatMap((p) => {
         const items: { key: string; planting: Row; tone: 'red' | 'amber'; icon: typeof Bug; title: string; detail: string }[] = []
         if (p.attention === 'overdue')
@@ -52,7 +83,9 @@ export default function CropsPage() {
         return items
       }),
     }
-  }, [plantings])
+  }, [plantings, search, show, crop, sort])
+  const shownCount = growing.length + history.length
+  const filtered = search.trim() !== '' || show !== 'all' || crop !== ''
 
   if (loading) return (
     <div className="flex items-center justify-center h-64 text-gray-500">
@@ -92,7 +125,36 @@ export default function CropsPage() {
         </div>
       ) : (
         <>
-          {attention.length > 0 && (
+          <ListToolbar
+            search={search}
+            onSearch={setSearch}
+            placeholder="Search crops or listings"
+            filters={[
+              { label: 'Show', value: show, onChange: (v) => setShow(v as Show), options: [
+                { value: 'all', label: 'All plantings' }, { value: 'growing', label: 'Growing' },
+                { value: 'ready', label: 'Ready to harvest' }, { value: 'overdue', label: 'Overdue' },
+                { value: 'problem', label: 'Problem reported' },
+                { value: 'harvested', label: 'Harvested' }, { value: 'failed', label: 'Failed' },
+              ] },
+              { label: 'Crop', value: crop, onChange: setCrop, options: [
+                { value: '', label: 'All crops' }, ...cropNames.map((c) => ({ value: c, label: c })),
+              ] },
+            ]}
+            sort={{ label: 'Sort by', value: sort, onChange: (v) => setSort(v as Sort), options: [
+              { value: 'harvest', label: 'Harvest date' }, { value: 'planted-desc', label: 'Planted: newest' },
+              { value: 'planted-asc', label: 'Planted: oldest' }, { value: 'name', label: 'Crop (A–Z)' },
+            ] }}
+            shown={shownCount}
+            total={plantings.length}
+            noun="plantings"
+            onClear={filtered ? () => { setSearch(''); setShow('all'); setCrop('') } : undefined}
+          />
+
+          {filtered && shownCount === 0 && (
+            <p className="text-sm text-gray-500 mb-8">No plantings match these filters.</p>
+          )}
+
+          {attention.length > 0 && !filtered && (
             <section className="mb-8">
               <h2 className="text-sm font-semibold text-gray-700 mb-3">Needs attention</h2>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -116,7 +178,7 @@ export default function CropsPage() {
             </section>
           )}
 
-          <section className="mb-8">
+          {(!filtered || growing.length > 0) && <section className="mb-8">
             <h2 className="text-sm font-semibold text-gray-700 mb-3">Growing <span className="text-gray-500 font-normal">({growing.length})</span></h2>
             {growing.length === 0 ? (
               <p className="text-sm text-gray-500">Nothing growing right now.</p>
@@ -125,7 +187,7 @@ export default function CropsPage() {
                 {growing.map((p) => <GrowingCard key={p.id} planting={p} />)}
               </div>
             )}
-          </section>
+          </section>}
 
           {history.length > 0 && (
             <section>

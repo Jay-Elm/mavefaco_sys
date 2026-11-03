@@ -3,16 +3,16 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, ShoppingCart, TrendingUp, Plus, AlertTriangle, Bug, Megaphone } from 'lucide-react'
+import { Loader2, Package, ShoppingCart, TrendingUp, Plus, AlertTriangle, Bug } from 'lucide-react'
 import WeatherWidget from '@/components/WeatherWidget'
 import AdvisoryList from '@/components/AdvisoryList'
-import AnnouncementList, { type AnnouncementItem } from '@/components/AnnouncementList'
+import AnnouncementBoard, { type AnnouncementItem } from '@/components/AnnouncementList'
 import type { AdvisoryGroup } from '@/lib/advisory'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 const LOW_STOCK_THRESHOLD = 5
-/** Announcements shown before "Show all". */
-const ANNOUNCEMENTS_SHOWN = 3
+/** Newest announcements shown as cards; the rest are under "View all". */
+const ANNOUNCEMENTS_SHOWN = 2
 
 interface Stats {
   productCount: number
@@ -29,7 +29,6 @@ export default function FarmerOverviewPage() {
   const [loading, setLoading] = useState(true)
   const [advisory, setAdvisory] = useState<AdvisoryGroup[]>([])
   const [announcements, setAnnouncements] = useState<AnnouncementItem[]>([])
-  const [showAllAnnouncements, setShowAllAnnouncements] = useState(false)
 
   useEffect(() => {
     if (!token || !user) return
@@ -75,10 +74,20 @@ export default function FarmerOverviewPage() {
 
   return (
     <div className="p-4 sm:p-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-soil">Welcome, {user?.name}</h1>
-        <p className="text-sm text-gray-500 mt-1">Your farm at a glance</p>
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-soil">Welcome, {user?.name}</h1>
+          <p className="text-sm text-gray-500 mt-1">Your farm at a glance</p>
+        </div>
+        <WeatherWidget />
       </div>
+
+      {/* Announcements from the cooperative, in view straight away */}
+      {announcements.length > 0 && (
+        <div className="mb-8">
+          <AnnouncementBoard announcements={announcements} shown={ANNOUNCEMENTS_SHOWN} heading="From the cooperative" />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
@@ -131,32 +140,6 @@ export default function FarmerOverviewPage() {
           </div>
         </div>
       )}
-
-      {/* Announcements from the cooperative */}
-      {announcements.length > 0 && (
-        <div className="mb-6 bg-white rounded-lg border border-gray-200 shadow-sm p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <h2 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-              <Megaphone size={15} className="text-paddy" /> Announcements
-            </h2>
-            {announcements.length > ANNOUNCEMENTS_SHOWN && (
-              <button
-                type="button"
-                onClick={() => setShowAllAnnouncements((v) => !v)}
-                className="ml-auto text-xs font-medium text-paddy hover:underline"
-              >
-                {showAllAnnouncements ? 'Show fewer' : `Show all ${announcements.length}`}
-              </button>
-            )}
-          </div>
-          <AnnouncementList announcements={showAllAnnouncements ? announcements : announcements.slice(0, ANNOUNCEMENTS_SHOWN)} />
-        </div>
-      )}
-
-      {/* Weather widget */}
-      <div className="mb-6">
-        <WeatherWidget />
-      </div>
 
       {/* Community advisory */}
       {advisory.length > 0 && (

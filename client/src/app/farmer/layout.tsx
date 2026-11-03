@@ -7,7 +7,6 @@ import { useAuth } from '@/contexts/AuthContext'
 import LogoutConfirmModal from '@/components/LogoutConfirmModal'
 import { MenuDot, NavBadge, useNavBadges } from '@/components/NavBadge'
 import { Loader2, LayoutDashboard, Package, ShoppingCart, User, Sprout, MessageCircle, Menu } from 'lucide-react'
-import Logo from '@/components/Logo'
 
 const NAV = [
   { href: '/farmer', label: 'Overview', icon: LayoutDashboard, exact: true },
@@ -68,8 +67,7 @@ export default function FarmerLayout({ children }: { children: React.ReactNode }
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
-        <div className="px-5 py-4 flex flex-col items-start gap-2 border-b border-white/10">
-          <Logo variant="light" height={24} />
+        <div className="px-5 py-4 border-b border-white/10">
           <span className="font-semibold">Farmer Portal</span>
         </div>
 

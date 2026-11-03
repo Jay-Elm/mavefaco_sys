@@ -93,6 +93,8 @@ export default function Navbar() {
   const linkCls = 'flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors text-sm font-medium'
   const mobileLinkCls = 'flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-base font-medium w-full'
 
+  const isFarmer = user?.role === 'farmer'
+
   // Everything about the signed-in person's own account, in one menu.
   const accountLinks =
     user?.role === 'customer'
@@ -105,7 +107,7 @@ export default function Navbar() {
   const portal = isStaff
     ? { href: '/dashboard', label: 'Dashboard' }
     : user?.role === 'farmer'
-      ? { href: '/farmer', label: 'My farm' }
+      ? { href: '/farmer', label: 'My Farm' }
       : null
 
   const cartLabel = `Cart, ${totalItems} item${totalItems === 1 ? '' : 's'}`
@@ -139,9 +141,19 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-1 flex-1">
-            {!isStaff && <Link href="/products" className={linkCls}>All Products</Link>}
-            <Link href="/about" className={linkCls}>About</Link>
-            {portal && <Link href={portal.href} className={linkCls}>{portal.label}</Link>}
+            {isFarmer ? (
+              <>
+                <Link href="/farmer" className={linkCls}>My Farm</Link>
+                <Link href="/farmer/products" className={linkCls}>My Products</Link>
+                <Link href="/about" className={linkCls}>About</Link>
+              </>
+            ) : (
+              <>
+                {!isStaff && <Link href="/products" className={linkCls}>All Products</Link>}
+                <Link href="/about" className={linkCls}>About</Link>
+                {portal && <Link href={portal.href} className={linkCls}>{portal.label}</Link>}
+              </>
+            )}
 
             <div className="ml-auto flex items-center gap-1">
               {canShop && (
@@ -216,9 +228,19 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 bg-soil text-white z-40 overflow-y-auto">
           <div className="px-4 py-4 space-y-1">
-            {!isStaff && <Link href="/products" className={mobileLinkCls}><ShoppingBag size={18} />All Products</Link>}
-            <Link href="/about" className={mobileLinkCls}><Info size={18} />About</Link>
-            {portal && <Link href={portal.href} className={mobileLinkCls}><LayoutDashboard size={18} />{portal.label}</Link>}
+            {isFarmer ? (
+              <>
+                <Link href="/farmer" className={mobileLinkCls}><LayoutDashboard size={18} />My Farm</Link>
+                <Link href="/farmer/products" className={mobileLinkCls}><ShoppingBag size={18} />My Products</Link>
+                <Link href="/about" className={mobileLinkCls}><Info size={18} />About</Link>
+              </>
+            ) : (
+              <>
+                {!isStaff && <Link href="/products" className={mobileLinkCls}><ShoppingBag size={18} />All Products</Link>}
+                <Link href="/about" className={mobileLinkCls}><Info size={18} />About</Link>
+                {portal && <Link href={portal.href} className={mobileLinkCls}><LayoutDashboard size={18} />{portal.label}</Link>}
+              </>
+            )}
 
             {isAuthenticated ? (
               <>
