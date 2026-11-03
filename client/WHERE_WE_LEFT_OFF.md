@@ -41,7 +41,7 @@ Feature-complete for the capstone scope and through three structured hardening p
    - **FAQ and banner order** uses move up/down buttons (`PUT /api/admin/faqs/order`, `/api/admin/banners/order`, `src/lib/reorder.ts`); new items go to the end; existing orders renumbered 1, 2, 3….
    - **Home page:** a hero photo of Mayon with a farmer ploughing a paddy, the harvest board laid over its sky on wide screens (33% tint), and a horizontal **shelf per category** (`src/components/ProductShelf.tsx`) whose "See all" opens `/products?categoryId=…` titled with that category. The photo is a **temporary** Wikimedia image (“Mount Mayon 2016” by Gcabig2024, CC BY-SA 4.0): its on-photo credit (`HERO_PHOTO` in `src/app/page.tsx`) is a licence condition and stays until the cooperative's own photos replace it.
 10. **Changes 2026-11-03:**
-   - **Pages update by themselves:** open pages poll `GET /api/live` every 15 s and re-load when something the viewer can see changed (`src/contexts/LiveUpdatesContext.tsx`). `Order.updatedAt` added for it.
+   - **Pages update by themselves:** open pages re-load when something the viewer can see changed (`src/contexts/LiveUpdatesContext.tsx`, `GET /api/live`). Every database write sends an empty signal over Supabase Realtime (`src/lib/liveSignal.ts`), so it takes about a second; without `SUPABASE_ANON_KEY` pages fall back to checking every 15 s. `Order.updatedAt` added for it.
    - **Quantities follow the unit** (`src/lib/units.ts`): kg and liter in steps of 0.25, everything else whole; enforced by the order API, and counted units need whole-number stock. Farmer price/stock are plain text boxes; no number box changes on scroll.
    - Hold-to-show eye on every password box (`src/components/PasswordInput.tsx`); cream background with a sand grain; navbar "All Products"; farmers get My Farm, My Products, About.
    - **Announcements** (`src/components/AnnouncementList.tsx`): gradient cards by type (advisory green, alert red, info blue), two columns, newest 4 on the home page (2 on phones and the farmer overview), "Read more" and "View all" windows with search, type filter and sort.
@@ -74,7 +74,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 16. Home page shelves: swipe on a phone; arrows on a laptop; "See all" opens that category.
 17. Receive any email (e.g. password reset): the logo and name show at the top. Some email apps hide images until "show images" is tapped.
 
-18. With two browsers open (customer and farmer), send a message or change an order: the other page updates within about 15 seconds without refreshing.
+18. With two browsers open (customer and farmer), send a message or change an order: the other page updates within about a second without refreshing. (Needs `SUPABASE_ANON_KEY` in Vercel; without it, within 15 seconds.)
 19. Buy a kg product in 0.25 steps and a piece/bundle product in whole numbers; typing 2.5 for a bundle snaps to a whole number.
 20. As a farmer, and again as a customer: delete a conversation, have the other side write again, and only the new message shows; search Messages for a word from an older message.
 

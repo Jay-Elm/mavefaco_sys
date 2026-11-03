@@ -2,6 +2,7 @@ import { createHash } from "crypto";
 import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { ROLES } from "@/lib/roles";
+import { realtimeClientConfig } from "@/lib/liveSignal";
 import { NextRequest, NextResponse } from "next/server";
 
 type Part = string | number | Date | null | undefined;
@@ -11,6 +12,9 @@ type Part = string | number | Date | null | undefined;
  * change. Open pages poll it (contexts/LiveUpdatesContext) and re-load when
  * it differs from last time. It holds no data, only a hash of counts and
  * latest ids/times, so it's safe to answer guests too.
+ *
+ * `realtime` tells the page where to listen for instant change signals
+ * (src/lib/liveSignal.ts); it is null when Supabase Realtime isn't set up.
  */
 export async function GET(req: NextRequest) {
   const actor = await getActiveAuthUser(req);
@@ -84,7 +88,7 @@ export async function GET(req: NextRequest) {
     const text = parts.map((v) => (v instanceof Date ? v.getTime() : v ?? "-")).join("|");
     const stamp = createHash("sha256").update(`${actor?.id ?? 0}:${text}`).digest("base64url").slice(0, 16);
 
-    return NextResponse.json({ stamp }, { headers: { "Cache-Control": "no-store" } });
+    return NextResponse.json({ stamp, realtime: realtimeClientConfig() }, { headers: { "Cache-Control": "no-store" } });
   } catch {
     return NextResponse.json({ error: "Failed to check for updates" }, { status: 500 });
   }

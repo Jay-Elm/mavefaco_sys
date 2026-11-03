@@ -73,6 +73,7 @@ ID_NUMBER_HASH_KEY="<at least 32 random characters>"  # optional locally; derive
 BREVO_API_KEY=""              # emails (verification, password reset)
 SUPABASE_URL=""               # image uploads and ID verification
 SUPABASE_SERVICE_ROLE_KEY=""
+SUPABASE_ANON_KEY=""          # optional: instant page updates (else a 15 s poll)
 CRON_SECRET=""                # the ID-photo and suspended-listing cleanup jobs
 ```
 

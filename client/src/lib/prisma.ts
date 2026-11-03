@@ -1,6 +1,7 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../../generated/prisma";
 import { Pool } from "pg";
+import { signalChange } from "./liveSignal";
 
 const connectionString = process.env.DATABASE_URL!;
 
@@ -21,12 +22,34 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-export const prisma =
+const base =
   globalForPrisma.prisma ??
   new PrismaClient({
     adapter,
   });
 
 if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
+  globalForPrisma.prisma = base;
 }
+
+const WRITES = new Set([
+  "create", "createMany", "createManyAndReturn",
+  "update", "updateMany", "updateManyAndReturn",
+  "upsert", "delete", "deleteMany",
+]);
+
+/**
+ * The shared client. Every successful write also tells open pages that
+ * something changed (src/lib/liveSignal.ts), so they update straight away.
+ */
+export const prisma = base.$extends({
+  query: {
+    $allModels: {
+      async $allOperations({ operation, args, query }) {
+        const result = await query(args);
+        if (WRITES.has(operation)) signalChange();
+        return result;
+      },
+    },
+  },
+});

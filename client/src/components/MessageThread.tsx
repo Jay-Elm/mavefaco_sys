@@ -4,6 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, Send } from 'lucide-react'
 import { refreshNavBadges } from '@/components/NavBadge'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 interface Message {
   id: number
@@ -36,6 +37,8 @@ const NEAR_BOTTOM_PX = 80
 
 export default function MessageThread({ otherId, otherName, onOtherName }: Props) {
   const { token, user } = useAuth()
+  // Goes up when the other side writes, so their message shows at once.
+  const live = useLiveVersion()
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
   const [text, setText] = useState('')
@@ -90,7 +93,7 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
     const interval = setInterval(fetchMessages, 8000)
     return () => clearInterval(interval)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, otherId])
+  }, [token, otherId, live])
 
   // Before paint: open at the first unread message (or the latest), then
   // follow new messages only while the reader is at the bottom.

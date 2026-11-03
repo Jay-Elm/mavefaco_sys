@@ -24,8 +24,9 @@ export function buildCsp(nonce: string, { dev = false }: { dev?: boolean } = {})
     // MFA QR code is a data: URL.
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
-    // api.open-meteo.com: the farmer dashboard's weather widget.
-    "connect-src 'self' https://api.open-meteo.com",
+    // api.open-meteo.com: the farmer dashboard's weather widget. The
+    // Supabase socket: instant change signals (src/lib/liveSignal.ts).
+    `connect-src 'self' https://api.open-meteo.com${realtimeSocket()}`,
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -33,6 +34,15 @@ export function buildCsp(nonce: string, { dev = false }: { dev?: boolean } = {})
     "report-uri /api/csp-report",
     "report-to csp",
   ].join("; ");
+}
+
+/** " wss://<project>.supabase.co" when Supabase is configured, else "". */
+function realtimeSocket(): string {
+  try {
+    return process.env.SUPABASE_URL ? ` wss://${new URL(process.env.SUPABASE_URL).host}` : "";
+  } catch {
+    return "";
+  }
 }
 
 export function generateNonce(): string {
