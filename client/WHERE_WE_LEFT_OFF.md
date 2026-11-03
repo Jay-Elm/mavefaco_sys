@@ -46,7 +46,7 @@ Feature-complete for the capstone scope and through three structured hardening p
    - Hold-to-show eye on every password box (`src/components/PasswordInput.tsx`); cream background with a sand grain; navbar "All Products"; farmers get My Farm, My Products, About.
    - **Announcements** (`src/components/AnnouncementList.tsx`): gradient cards by type (advisory green, alert red, info blue), two columns, newest 4 on the home page (2 on phones and the farmer overview), "Read more" and "View all" windows with search, type filter and sort.
    - **Farmer portal:** logo only in the navbar; weather as a see-through card beside the welcome line with announcements under it; search/filter/sort on My Products, Orders and Crop Monitor (`src/components/ListToolbar.tsx`); an opened order and its items read as one block; the timeline's "Today" label stays inside its card.
-   - **Messages:** date lines in threads; search over names and message text; delete a conversation for yourself only (`ConversationHide`; the other side keeps theirs, a new message brings it back). Notices stay first and can't be deleted.
+   - **Messages (customers and farmers):** date lines in threads; search over names and message text; delete a conversation for yourself only (`ConversationHide`; the other side keeps theirs, a new message brings it back). Notices stay first and can't be deleted.
 11. **Scope** is documented item by item in `SCOPE_AND_DELIMITATIONS.md` (129 use-case items: 82 implemented, 20 partial, 27 not implemented).
 
 ---
@@ -76,7 +76,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 
 18. With two browsers open (customer and farmer), send a message or change an order: the other page updates within about 15 seconds without refreshing.
 19. Buy a kg product in 0.25 steps and a piece/bundle product in whole numbers; typing 2.5 for a bundle snaps to a whole number.
-20. As a farmer: delete a conversation, have the customer write again, and only the new message shows; search Messages for a word from an older message.
+20. As a farmer, and again as a customer: delete a conversation, have the other side write again, and only the new message shows; search Messages for a word from an older message.
 
 **Waiting on the project owner:** the cooperative's own photos to replace the temporary hero photo (then remove its credit line).
 

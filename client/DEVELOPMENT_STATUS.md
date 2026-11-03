@@ -96,7 +96,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `/cart` — item list, qty controls, payment/delivery method, Place Order
 - `/customer/orders` — order history, expandable items; **Cancel** (pending → cancelled, stock restored); **Confirm Received** (shipped → delivered)
 - `/customer/profile` — edit name/email (email change requires re-entering current password, kills the session); change password; self-service account deletion (password-gated, blocked while an active order exists)
-- `/customer/messages` — conversation inbox; `/customer/messages/[farmerId]` — message thread with farmer (polls every 8s)
+- `/customer/messages` — conversation inbox with the same search and delete as the farmer's (`src/components/ConversationList.tsx`); `/customer/messages/[farmerId]` — message thread with farmer (polls every 8s)
 
 ### Ratings & Reviews
 - Customers with a **delivered** order containing the product can leave one review (rating 1–5 + optional comment)
@@ -132,13 +132,13 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `crops/` — Crop Monitor (search, filters by state and crop, sort): "Needs attention" (harvest window open, overdue, high-severity report in 14 days), growing plantings with stage and progress to harvest, past seasons with expected vs actual yield
 - `crops/new/` — record a planting (crop type, date, optional area, expected yield, linked listing); previews the harvest window
 - `crops/[id]/` — planting detail: growth timeline, record harvest (optionally adding to the linked listing's stock) or mark failed, edit details/harvest window, structured crop log (pest from a list, severity, date seen), delete
-- `messages/` — conversation inbox with unread counts, a search over names and message text, and a delete button per conversation, plus a "MaVeFaCo notices" entry pinned first (can't be deleted); `/farmer/messages/notices` — one-way system notices (no reply); an open suspension notice links to the listing's edit page, and once resolved (`Notice.resolvedAt`/`resolution`: resubmitted, or removed by a delete or the 7-day cleanup) it shows that outcome instead; `/farmer/messages/[userId]` — message thread
+- `messages/` — conversation inbox (`src/components/ConversationList.tsx`, shared with customers) with unread counts, a search over names and message text, and a delete button per conversation, plus a "MaVeFaCo notices" entry pinned first (can't be deleted); `/farmer/messages/notices` — one-way system notices (no reply); an open suspension notice links to the listing's edit page, and once resolved (`Notice.resolvedAt`/`resolution`: resubmitted, or removed by a delete or the 7-day cleanup) it shows that outcome instead; `/farmer/messages/[userId]` — message thread
 - `profile/` — edit name/email; ID verification status and the camera capture flow (`components/idVerification/`); change password
 
 ### Customer Pages
 - `/customer/orders` — full order lifecycle (cancel pending, confirm received)
 - `/customer/profile` — edit name/email; change password; self-delete
-- `/customer/messages` — inbox; `/customer/messages/[userId]` — thread with farmer
+- `/customer/messages` — inbox (search, delete); `/customer/messages/[userId]` — thread with farmer
 
 ### Product Approval System
 - All products created with `approved: false`; must be verified farmer to list
