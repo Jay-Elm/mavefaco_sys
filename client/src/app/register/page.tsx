@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { UserPlus, Leaf, ShoppingBag, Mail, CheckCircle } from 'lucide-react'
 import { registerSchema, type RegisterInput as RegisterForm } from '@/validators/auth'
 import Logo from '@/components/Logo'
+import PasswordInput from '@/components/PasswordInput'
 
 function roleDest(role?: string) {
   if (role === 'admin' || role === 'manager') return '/dashboard'
@@ -161,9 +162,8 @@ export default function RegisterPage() {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
-            <input
+            <PasswordInput
               id="password"
-              type="password"
               autoComplete="new-password"
               {...register('password')}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy focus:border-transparent"

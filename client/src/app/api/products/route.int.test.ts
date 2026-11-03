@@ -41,6 +41,17 @@ describe("POST /api/products", () => {
     expect(product).toMatchObject({ approved: false, farmerId: farmer.id });
   });
 
+  it("wants whole-number stock for a listing sold by the piece", async () => {
+    const farmer = await verifiedFarmer();
+
+    const res = await create(farmer, { unit: "piece", stock: 2.5 });
+
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toMatch(/must be a whole number/);
+    expect(await prisma.product.count()).toBe(0);
+    expect((await create(farmer, { unit: "kg", stock: 2.5 })).status).toBe(201);
+  });
+
   it("requires a farmer's ID to be verified first", async () => {
     const farmer = await createUser({ role: "farmer" });
 

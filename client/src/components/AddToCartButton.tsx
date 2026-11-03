@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ShoppingCart, Zap, MessageCircle, X, Minus, Plus } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
+import { fmtQty, maxBuyable, numericText, snapQuantity, unitStep } from '@/lib/units'
 
 interface Props {
   product: {
@@ -21,23 +22,19 @@ interface Props {
 
 type Mode = 'cart' | 'buy'
 
-function stepFor(unit: string): number {
-  return /kg|kilo|gram|\bg\b|lb|liter|litre|ml/.test(unit.toLowerCase()) ? 0.25 : 1
-}
-
-function fmtQty(n: number): string {
-  return parseFloat(n.toFixed(2)).toString()
-}
 
 export default function AddToCartButton({ product }: Props) {
   const { isAuthenticated, user } = useAuth()
   const { addItem, items, clearCart } = useCart()
   const router = useRouter()
 
-  const step = stepFor(product.unit)
+  const step = unitStep(product.unit)
+  const maxQty = maxBuyable(product.stock, product.unit)
   const [showModal, setShowModal] = useState(false)
   const [showConflict, setShowConflict] = useState(false)
   const [quantity, setQuantity] = useState(step)
+  // What's in the box while typing; snapped to a step when it loses focus.
+  const [qtyText, setQtyText] = useState<string | null>(null)
   const [pendingMode, setPendingMode] = useState<Mode>('cart')
   const [cartFlash, setCartFlash] = useState(false)
 
@@ -47,6 +44,7 @@ export default function AddToCartButton({ product }: Props) {
   function openModal(mode: Mode) {
     if (!isAuthenticated) { router.push('/login'); return }
     setQuantity(step)
+    setQtyText(null)
     setPendingMode(mode)
     setShowConflict(false)
     setShowModal(true)
@@ -58,16 +56,20 @@ export default function AddToCartButton({ product }: Props) {
   }
 
   function changeQty(delta: number) {
-    setQuantity(q => {
-      const next = parseFloat((q + delta).toFixed(2))
-      return Math.min(Math.max(next, step), product.stock)
-    })
+    setQtyText(null)
+    setQuantity(q => snapQuantity(q + delta, product.stock, product.unit) ?? q)
   }
 
   function handleQtyInput(val: string) {
-    const n = parseFloat(val)
-    if (isNaN(n) || n <= 0) return
-    setQuantity(Math.min(parseFloat(n.toFixed(2)), product.stock))
+    // Digits only, plus a decimal point where quarters are allowed.
+    const cleaned = numericText(val, step < 1)
+    setQtyText(cleaned)
+    const n = parseFloat(cleaned)
+    if (!isNaN(n) && n > 0) setQuantity(snapQuantity(n, product.stock, product.unit) ?? step)
+  }
+
+  function commitQtyText() {
+    setQtyText(null)
   }
 
   function doAdd(qty: number) {
@@ -119,7 +121,7 @@ export default function AddToCartButton({ product }: Props) {
   // Buying and messaging farmers are for customers; guests are sent to log in.
   if (isAuthenticated && user?.role !== 'customer') return null
 
-  if (product.stock === 0) {
+  if (maxQty < step) {
     return (
       <div className="space-y-2">
         <button disabled className="btn w-full bg-gray-100 text-gray-500 cursor-not-allowed">
@@ -219,26 +221,28 @@ export default function AddToCartButton({ product }: Props) {
                     </button>
                     <div className="flex flex-col items-center gap-0.5">
                       <input
-                        type="number"
+                        type="text"
+                        inputMode={step < 1 ? 'decimal' : 'numeric'}
                         aria-label={`Quantity in ${product.unit}`}
-                        min={step}
-                        max={product.stock}
-                        step={step}
-                        value={fmtQty(quantity)}
+                        value={qtyText ?? fmtQty(quantity)}
                         onChange={e => handleQtyInput(e.target.value)}
+                        onBlur={commitQtyText}
+                        onKeyDown={e => { if (e.key === 'Enter') commitQtyText() }}
                         className="w-20 text-center text-2xl font-bold text-soil border-b-2 border-gray-200 focus:border-paddy focus:outline-none bg-transparent tabular-nums py-0.5"
                       />
                       <span className="text-xs text-gray-600">{product.unit}</span>
                     </div>
                     <button
                       onClick={() => changeQty(step)}
-                      disabled={quantity >= product.stock}
+                      disabled={quantity + step > maxQty + 1e-9}
                       className="w-11 h-11 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-600 hover:border-gray-400 hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                     >
                       <Plus size={18} />
                     </button>
                   </div>
-                  <p className="text-xs text-gray-600 tabular">{fmtQty(product.stock)} {product.unit} available</p>
+                  <p className="text-xs text-gray-600 tabular">
+                    {fmtQty(product.stock)} {product.unit} available · {step < 1 ? `in steps of ${step}` : 'whole numbers only'}
+                  </p>
                 </div>
 
                 {/* Subtotal */}

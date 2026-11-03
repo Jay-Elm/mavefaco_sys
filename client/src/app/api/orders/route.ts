@@ -3,6 +3,7 @@ import { getActiveAuthUser } from '@/lib/getActiveAuthUser'
 import { NextRequest, NextResponse } from 'next/server'
 import { orderSchema } from '@/validators/order'
 import { ROLES } from '@/lib/roles'
+import { isValidQuantity, unitStep } from '@/lib/units'
 
 export async function POST(req: NextRequest) {
   const user = await getActiveAuthUser(req)
@@ -33,6 +34,11 @@ export async function POST(req: NextRequest) {
         const product = products.find(p => p.id === item.productId)
         if (!product) throw new Error(`Product ${item.productId} not found`)
         if (!product.approved || product.archivedAt) throw new Error(`"${product.name}" is no longer available`)
+        if (!isValidQuantity(item.quantity, product.unit)) {
+          throw new Error(unitStep(product.unit) === 1
+            ? `"${product.name}" is sold in whole numbers (per ${product.unit})`
+            : `"${product.name}" is sold in steps of ${unitStep(product.unit)} ${product.unit}`)
+        }
         if (product.stock < item.quantity) {
           throw new Error(`Insufficient stock for "${product.name}" (only ${product.stock} left)`)
         }

@@ -7,6 +7,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { KeyRound, CheckCircle } from 'lucide-react'
 import { z } from 'zod'
+import PasswordInput from '@/components/PasswordInput'
 
 // Only the password field is a form input here — the token comes from the
 // URL, not something the user types, so it's validated separately below.
@@ -86,9 +87,8 @@ export default function ResetPasswordForm() {
         <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 mb-1">
           New password
         </label>
-        <input
+        <PasswordInput
           id="newPassword"
-          type="password"
           autoComplete="new-password"
           {...register('newPassword')}
           className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy focus:border-transparent"
@@ -103,9 +103,8 @@ export default function ResetPasswordForm() {
         <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
           Confirm new password
         </label>
-        <input
+        <PasswordInput
           id="confirmPassword"
-          type="password"
           autoComplete="new-password"
           {...register('confirmPassword')}
           className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy focus:border-transparent"

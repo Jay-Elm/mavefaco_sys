@@ -5,6 +5,7 @@ import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 import { productUpdateSchema } from "@/validators/product";
 import { removeListing } from "@/lib/productRemoval";
+import { stockError } from "@/lib/units";
 
 export async function GET(
   req: NextRequest,
@@ -65,6 +66,10 @@ export async function PATCH(
     if (!parsed.success)
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     const { name, description, price, stock, unit, imageUrl, categoryId } = parsed.data;
+    if (stock !== undefined || unit !== undefined) {
+      const badStock = stockError(stock ?? product.stock, unit ?? product.unit);
+      if (badStock) return NextResponse.json({ error: badStock }, { status: 400 });
+    }
 
     // Did anything customers see actually change? (Stock alone doesn't count.)
     const contentChanged =

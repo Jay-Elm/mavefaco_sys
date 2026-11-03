@@ -4,6 +4,7 @@ import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 import { productCreateSchema } from "@/validators/product";
+import { stockError } from "@/lib/units";
 
 export async function POST(req: NextRequest) {
   try {
@@ -23,6 +24,8 @@ export async function POST(req: NextRequest) {
     if (!parsed.success)
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     const { name, description, price, stock, unit, categoryId, imageUrl } = parsed.data;
+    const badStock = stockError(stock, unit);
+    if (badStock) return NextResponse.json({ error: badStock }, { status: 400 });
 
     const product = await prisma.product.create({
       data: {

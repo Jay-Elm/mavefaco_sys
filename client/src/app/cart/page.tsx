@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { Trash2, Plus, Minus, ShoppingCart, Package, ArrowLeft, Loader2, Wallet, MapPin, AlertTriangle, LogIn, UserPlus } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
+import { fmtQty, maxBuyable, unitStep } from '@/lib/units'
 
 const PAYMENT_METHODS = [
   { value: 'cod', label: 'Cash on Delivery' },
@@ -188,23 +189,19 @@ export default function CartPage() {
                 <div className="flex items-center gap-3 mt-3">
                   <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                     <button
-                      onClick={() => {
-                        const step = /kg|kilo|gram|\bg\b|lb|liter|litre|ml/.test(item.unit.toLowerCase()) ? 0.25 : 1
-                        updateQuantity(item.productId, parseFloat((item.quantity - step).toFixed(2)))
-                      }}
+                      aria-label={`Less ${item.name}`}
+                      onClick={() => updateQuantity(item.productId, parseFloat((item.quantity - unitStep(item.unit)).toFixed(2)))}
                       className="px-2.5 py-1.5 hover:bg-gray-100 transition-colors text-gray-600"
                     >
                       <Minus size={14} />
                     </button>
                     <span className="px-3 py-1.5 text-sm font-medium text-gray-800 border-x border-gray-200">
-                      {parseFloat(item.quantity.toFixed(2))}
+                      {fmtQty(item.quantity)}
                     </span>
                     <button
-                      onClick={() => {
-                        const step = /kg|kilo|gram|\bg\b|lb|liter|litre|ml/.test(item.unit.toLowerCase()) ? 0.25 : 1
-                        updateQuantity(item.productId, parseFloat((item.quantity + step).toFixed(2)))
-                      }}
-                      disabled={item.quantity >= item.stock}
+                      aria-label={`More ${item.name}`}
+                      onClick={() => updateQuantity(item.productId, parseFloat((item.quantity + unitStep(item.unit)).toFixed(2)))}
+                      disabled={item.quantity + unitStep(item.unit) > maxBuyable(item.stock, item.unit) + 1e-9}
                       className="px-2.5 py-1.5 hover:bg-gray-100 transition-colors text-gray-600 disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       <Plus size={14} />

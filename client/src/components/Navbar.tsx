@@ -139,7 +139,7 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden lg:flex items-center gap-1 flex-1">
-            {!isStaff && <Link href="/products" className={linkCls}>Products</Link>}
+            {!isStaff && <Link href="/products" className={linkCls}>All Products</Link>}
             <Link href="/about" className={linkCls}>About</Link>
             {portal && <Link href={portal.href} className={linkCls}>{portal.label}</Link>}
 
@@ -216,7 +216,7 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 bg-soil text-white z-40 overflow-y-auto">
           <div className="px-4 py-4 space-y-1">
-            {!isStaff && <Link href="/products" className={mobileLinkCls}><ShoppingBag size={18} />Products</Link>}
+            {!isStaff && <Link href="/products" className={mobileLinkCls}><ShoppingBag size={18} />All Products</Link>}
             <Link href="/about" className={mobileLinkCls}><Info size={18} />About</Link>
             {portal && <Link href={portal.href} className={mobileLinkCls}><LayoutDashboard size={18} />{portal.label}</Link>}
 

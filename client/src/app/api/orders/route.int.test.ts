@@ -138,3 +138,33 @@ describe("POST /api/orders (checkout)", () => {
     });
   });
 });
+
+describe("POST /api/orders: amounts that suit the unit", () => {
+  it("refuses part of a counted unit and changes nothing", async () => {
+    const farmer = await createUser({ role: "farmer" });
+    const customer = await createUser();
+    const pechay = await createProduct(farmer.id, { name: "Pechay", stock: 10 }); // sold by the piece
+
+    const res = await checkout(customer, [{ productId: pechay.id, quantity: 2.5 }]);
+
+    expect(res.status).toBe(400);
+    expect((await res.json()).error).toMatch(/"Pechay" is sold in whole numbers/);
+    expect(await prisma.order.count()).toBe(0);
+    expect((await prisma.product.findUniqueOrThrow({ where: { id: pechay.id } })).stock).toBe(10);
+  });
+
+  it("sells kilos in quarters, but not in other fractions", async () => {
+    const farmer = await createUser({ role: "farmer" });
+    const customer = await createUser();
+    const tomato = await createProduct(farmer.id, { name: "Tomato", stock: 10 });
+    await prisma.product.update({ where: { id: tomato.id }, data: { unit: "kg" } });
+
+    const odd = await checkout(customer, [{ productId: tomato.id, quantity: 1.3 }]);
+    expect(odd.status).toBe(400);
+    expect((await odd.json()).error).toMatch(/steps of 0.25 kg/);
+
+    const ok = await checkout(customer, [{ productId: tomato.id, quantity: 1.25 }]);
+    expect(ok.status).toBe(201);
+    expect((await prisma.product.findUniqueOrThrow({ where: { id: tomato.id } })).stock).toBe(8.75);
+  });
+});

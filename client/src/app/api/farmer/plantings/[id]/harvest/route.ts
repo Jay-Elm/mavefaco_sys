@@ -3,6 +3,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { fromDateString, plantingInclude, serializePlanting, toDateString } from "@/lib/planting";
 import { NextRequest, NextResponse } from "next/server";
 import { harvestSchema } from "@/validators/crop";
+import { unitStep } from "@/lib/units";
 
 /** Thrown inside the transaction to roll it back. */
 class HarvestError extends Error {
@@ -48,6 +49,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       if (addToStock) {
         const { productId } = await tx.planting.findUniqueOrThrow({ where: { id }, select: { productId: true } });
         if (productId === null) throw new HarvestError("Link a listing to add the harvest to its stock", 400);
+        const listing = await tx.product.findUnique({ where: { id: productId }, select: { unit: true } });
+        if (listing && unitStep(listing.unit) === 1 && !Number.isInteger(addToStock))
+          throw new HarvestError(`The listing is sold by the ${listing.unit}: add a whole number to its stock`, 400);
         const stocked = await tx.product.updateMany({
           where: { id: productId, farmerId: actor.id, archivedAt: null },
           data: { stock: { increment: addToStock } },

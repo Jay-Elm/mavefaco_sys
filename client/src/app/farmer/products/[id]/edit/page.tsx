@@ -9,6 +9,7 @@ import SuggestionBanner from '@/components/SuggestionBanner'
 import { suggestCategory, suggestUnit } from '@/lib/productSuggestions'
 import { reasonLabels, suspensionDeadline } from '@/validators/productSuspension'
 import { useDialog } from '@/contexts/DialogContext'
+import { UNITS, numericText, unitStep } from '@/lib/units'
 
 interface Suspension { suspendedAt: string; reasons: string[]; note: string | null }
 
@@ -63,7 +64,10 @@ export default function EditProductPage() {
   }, [token, productId])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-    const { name, value } = e.target
+    const { name } = e.target
+    let { value } = e.target
+    if (name === 'price') value = numericText(value, true)
+    if (name === 'stock') value = numericText(value, unitStep(form.unit) < 1)
     setForm((prev) => ({ ...prev, [name]: value }))
     if (name === 'name') {
       setSuggestion(suggestCategory(value, categories))
@@ -200,23 +204,14 @@ export default function EditProductPage() {
               name="unit" value={form.unit} onChange={handleChange} required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy bg-white"
             >
-              <option value="piece">piece</option>
-              <option value="kg">kg</option>
-              <option value="gram">gram</option>
-              <option value="bundle">bundle</option>
-              <option value="pack">pack</option>
-              <option value="bag">bag</option>
-              <option value="tray">tray</option>
-              <option value="dozen">dozen</option>
-              <option value="liter">liter</option>
-              <option value="sack">sack</option>
-              <option value="bottle">bottle</option>
+              {(UNITS as readonly string[]).includes(form.unit) ? null : <option value={form.unit}>{form.unit}</option>}
+              {UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Price per {form.unit || 'unit'} (₱)</label>
             <input aria-label="Price per unit (₱)"
-              name="price" type="number" min="0" step="0.01" value={form.price} onChange={handleChange} required
+              name="price" type="text" inputMode="decimal" autoComplete="off" placeholder="0.00" value={form.price} onChange={handleChange} required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
             />
           </div>
@@ -225,9 +220,14 @@ export default function EditProductPage() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Stock (in {form.unit || 'units'})</label>
           <input aria-label="Stock"
-            name="stock" type="number" min="0" step="0.01" value={form.stock} onChange={handleChange} required
+            name="stock" type="text" inputMode={unitStep(form.unit) < 1 ? 'decimal' : 'numeric'} autoComplete="off" value={form.stock} onChange={handleChange} required
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
           />
+          <p className="text-xs text-gray-500 mt-1">
+            {unitStep(form.unit) < 1
+              ? `Customers can buy in steps of ${unitStep(form.unit)} ${form.unit}.`
+              : `Sold in whole ${form.unit === 'piece' ? 'pieces' : 'numbers'}: customers can't buy part of a ${form.unit}.`}
+          </p>
         </div>
 
         <div>

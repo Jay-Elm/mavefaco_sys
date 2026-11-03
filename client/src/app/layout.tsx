@@ -56,7 +56,7 @@ export default async function RootLayout({
       lang="en"
       className={`${bigShoulders.variable} ${bigShouldersStencil.variable} ${hanken.variable} ${geistMono.variable} antialiased`}
     >
-      <body className="min-h-screen flex flex-col bg-white font-sans text-soil">
+      <body className="min-h-screen flex flex-col font-sans text-soil">
         <Providers initialUser={user}>
           <Navbar />
           <main className="flex-1">{children}</main>

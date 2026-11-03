@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
+import { snapQuantity } from '@/lib/units'
 
 export interface CartItem {
   productId: number
@@ -83,11 +84,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (existing) {
         return prev.map(i =>
           i.productId === product.productId
-            ? { ...i, quantity: Math.min(i.quantity + qty, product.stock) }
+            ? { ...i, quantity: snapQuantity(Math.min(i.quantity + qty, product.stock), product.stock, product.unit) ?? i.quantity }
             : i
         )
       }
-      return [...prev, { ...product, quantity: Math.min(qty, product.stock) }]
+      const quantity = snapQuantity(qty, product.stock, product.unit)
+      return quantity === null ? prev : [...prev, { ...product, quantity }]
     })
     return 'ok'
   }
@@ -127,11 +129,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const newItems: CartItem[] = []
 
     for (const result of results) {
-      if (result.gone || result.stock === 0) {
+      if (result.gone || result.stock <= 0) {
         removed.push(result.item.name)
       } else {
-        const newQty = Math.min(result.item.quantity, result.stock)
-        if (newQty < result.item.quantity) adjusted.push(result.item.name)
+        // Fewer left than in the cart, or an amount that doesn't fit the
+        // unit's steps (carts saved before the rule): keep what can be bought.
+        const newQty = snapQuantity(Math.min(result.item.quantity, result.stock), result.stock, result.item.unit)
+        if (newQty === null) { removed.push(result.item.name); continue }
+        if (newQty !== result.item.quantity) adjusted.push(result.item.name)
         newItems.push({ ...result.item, stock: result.stock, quantity: newQty })
       }
     }

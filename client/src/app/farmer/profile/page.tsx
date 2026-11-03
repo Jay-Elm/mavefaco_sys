@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, CheckCircle, KeyRound, Mail, AlertTriangle } from 'lucide-react'
 import { useDialog } from '@/contexts/DialogContext'
 import IdVerificationSection from '@/components/idVerification/IdVerificationSection'
+import PasswordInput from '@/components/PasswordInput'
 
 
 export default function FarmerProfilePage() {
@@ -211,8 +212,7 @@ export default function FarmerProfilePage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-            <input aria-label="Current Password"
-              type="password"
+            <PasswordInput aria-label="Current Password"
               value={emailPassword}
               onChange={(e) => setEmailPassword(e.target.value)}
               required
@@ -256,8 +256,7 @@ export default function FarmerProfilePage() {
         <form onSubmit={handleChangePassword} className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-            <input aria-label="Current Password"
-              type="password"
+            <PasswordInput aria-label="Current Password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               required
@@ -266,8 +265,7 @@ export default function FarmerProfilePage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-            <input aria-label="New Password"
-              type="password"
+            <PasswordInput aria-label="New Password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
@@ -277,8 +275,7 @@ export default function FarmerProfilePage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-            <input aria-label="Confirm New Password"
-              type="password"
+            <PasswordInput aria-label="Confirm New Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -313,8 +310,7 @@ export default function FarmerProfilePage() {
         <form onSubmit={handleDeleteAccount} className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-            <input aria-label="Current Password"
-              type="password"
+            <PasswordInput aria-label="Current Password"
               value={deletePassword}
               onChange={(e) => setDeletePassword(e.target.value)}
               required
