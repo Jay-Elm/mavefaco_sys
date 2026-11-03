@@ -313,6 +313,12 @@ exports.Prisma.MessageScalarFieldEnum = {
   receiverId: 'receiverId'
 };
 
+exports.Prisma.ConversationHideScalarFieldEnum = {
+  userId: 'userId',
+  otherId: 'otherId',
+  hiddenAt: 'hiddenAt'
+};
+
 exports.Prisma.NoticeScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -388,6 +394,7 @@ exports.Prisma.ModelName = {
   SiteContent: 'SiteContent',
   Review: 'Review',
   Message: 'Message',
+  ConversationHide: 'ConversationHide',
   Notice: 'Notice',
   AuditLog: 'AuditLog',
   IdSubmission: 'IdSubmission'

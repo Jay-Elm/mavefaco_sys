@@ -22,12 +22,12 @@ This document states what the system covers (**scope**) and the boundaries it de
 | Role | Use-case items | Implemented | Partial | Not implemented |
 |---|---|---|---|---|
 | Customer | 32 | 23 | 3 | 6 |
-| Farmer | 51 | 32 | 6 | 13 |
+| Farmer | 51 | 33 | 6 | 12 |
 | Manager | 17 | 6 | 6 | 5 |
 | Administrator | 29 | 20 | 5 | 4 |
-| **Total** | **129** | **81** | **20** | **28** |
+| **Total** | **129** | **82** | **20** | **27** |
 
-The system fully supports the cooperative's core workflow: farmers list produce, staff review it, customers buy it, farmers and staff fulfil orders, and staff monitor the cooperative through reports and an audit log. The 28 items outside the scope fall into seven areas (see [section 4](#4-outside-the-current-scope)): payments, market intelligence, planning, customer convenience, farmer convenience, administration and localization.
+The system fully supports the cooperative's core workflow: farmers list produce, staff review it, customers buy it, farmers and staff fulfil orders, and staff monitor the cooperative through reports and an audit log. The 27 items outside the scope fall into seven areas (see [section 4](#4-outside-the-current-scope)): payments, market intelligence, planning, customer convenience, farmer convenience, administration and localization.
 
 ## 2. Scope by role
 
@@ -125,7 +125,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Mark ready for pickup | Partial | No separate "ready for pickup" status; "shipped" is used for both pickup and delivery |
 | Mark delivered | Implemented | |
 | **Communication** | | |
-| Chat with buyer | Implemented | |
+| Chat with buyer | Implemented | Conversations can be searched by name or message text, and removed from the farmer's own list |
 | Chat with admin | Not implemented | Staff have no message inbox |
 | Receive announcements | Partial | Shown on the farmer overview (announcements for everyone or for farmers only); no notifications |
 | **Reports** | | |
@@ -134,7 +134,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | View sold crop reports | Partial | Order history and CSV export; no per-crop summary |
 | **Minor actions** | | |
 | Search buyers | Not implemented | |
-| Filter order history | Not implemented | |
+| Filter order history | Implemented | Search by customer, product or order number; filter by status; sort by date or total |
 | Print sales receipt | Not implemented | |
 | Download reports | Implemented | Orders and products as CSV |
 | Enable notifications | Not implemented | |
@@ -280,7 +280,7 @@ The following capabilities from the use-case documents are not implemented. They
 | Market intelligence | Market prices and trends, demand and supply alerts, crop recommendations, demand forecasting, regional statistics, yearly growth comparison |
 | Planning | Pricing guidance, meeting and training scheduling, promotion approval |
 | Customer convenience | Product comparison, pre-orders, favorites, reorder, problem reports, order notifications |
-| Farmer convenience | Spoilage alerts, buyer search, order-history filters, sales receipts, notification settings, chat with staff |
+| Farmer convenience | Spoilage alerts, buyer search, sales receipts, notification settings, chat with staff |
 | Administration | Dispute and complaint handling, buyer approval, automated anomaly detection, automatic ID checks (reading ID details, PhilSys QR verification), in-app database backup and restore |
 | Localization | Languages other than English; AI translation of advisories |
 
@@ -298,7 +298,7 @@ The system has four user roles, listed from most to least privileged: Administra
 
 **Customer.** Customers can register with email verification, log in, reset their password, and update their profile. They can browse staff-approved products, which the home page arranges on a shelf for each category, search by product name, and filter by category and price range. Out-of-stock produce with a harvest on the way is marked "coming soon" with its expected harvest dates, and the home page shows which crops member farms expect to harvest that week. They can view each farmer's public seller page and keep a cart stored in their browser. At checkout, customers choose a payment method (cash on delivery, GCash, or bank transfer) and either pickup or delivery. They can track an order through its statuses and cancel it while it is still pending. They can also confirm receipt of a shipped order, review products from delivered orders, and message farmers within the system.
 
-**Farmer.** Farmers can register and manage their profile, and verify their identity with one of ten accepted government IDs, such as the RSBSA ID. They take photos of the front and back of the ID and a selfie holding it with the in-app camera, which checks each photo for blur and lighting before it is sent. The ID number is kept only as a fingerprint and its last four characters, so the same ID cannot verify two accounts. Once verified, they can create, edit, and delete product listings. Each listing has a photo, category, price per unit, and available quantity, and must be approved by staff before it goes live. The farmer dashboard warns when a product has five units or fewer left or is out of stock. Farmers can accept, reject, and update orders, and they can message customers. They can view sales history and an earnings summary and export their orders and products to CSV. Farmers record each planting of a crop as its own season, with the planting date and, optionally, the area planted and the expected yield. The system works out each planting's growth stage and expected harvest window from the crop's typical growing time, flags plantings that are ready to harvest or overdue, and lets the farmer record the harvest and add it directly to a listing's stock. Farmers also log pest, disease, weather, and damage problems with their severity, and see a community advisory that groups members' reports by crop and problem and shows how many farms reported each. Their dashboard also shows the cooperative's announcements for farmers. A widget shows the current weather in Tabaco City, Albay.
+**Farmer.** Farmers can register and manage their profile, and verify their identity with one of ten accepted government IDs, such as the RSBSA ID. They take photos of the front and back of the ID and a selfie holding it with the in-app camera, which checks each photo for blur and lighting before it is sent. The ID number is kept only as a fingerprint and its last four characters, so the same ID cannot verify two accounts. Once verified, they can create, edit, and delete product listings. Each listing has a photo, category, price per unit, and available quantity, and must be approved by staff before it goes live. The farmer dashboard warns when a product has five units or fewer left or is out of stock. Farmers can accept, reject, and update orders, and they can message customers, search their conversations by name or message content, and remove a conversation from their own list. They can search, filter, and sort their orders, products, and plantings, view sales history and an earnings summary, and export their orders and products to CSV. Farmers record each planting of a crop as its own season, with the planting date and, optionally, the area planted and the expected yield. The system works out each planting's growth stage and expected harvest window from the crop's typical growing time, flags plantings that are ready to harvest or overdue, and lets the farmer record the harvest and add it directly to a listing's stock. Farmers also log pest, disease, weather, and damage problems with their severity, and see a community advisory that groups members' reports by crop and problem and shows how many farms reported each. Their dashboard also shows the cooperative's announcements for farmers. A widget shows the current weather in Tabaco City, Albay.
 
 **Manager.** Managers review and approve product listings. They can suspend a listing with stated reasons, which notifies the farmer and gives them seven days to correct and resubmit it, and they can restore archived listings. Managers move orders through the order lifecycle. They review farmers' ID submissions, comparing the selfie with the ID, and approve them or reject them with stated reasons, which notifies the farmer; they can also mark a farmer as verified after checking the ID in person at the cooperative office. They also manage product categories and announcements, including alerts and advisories, each shown to everyone, to farmers only, or to customers only, remove inappropriate product reviews, and suspend customer and farmer accounts. They maintain the list of crop types and their typical growing times, and view the expected supply of each crop for the next eight weeks, with weeks flagged when many farms will harvest the same crop. They can view and print sales reports, farmer-performance summaries, and sales by month and by category, and export the reports to CSV.
 
@@ -313,7 +313,7 @@ The system includes several security measures:
 - private storage of ID photos and selfies, viewable by staff only through short-lived links
 - an audit trail of administrative actions
 
-Measured against the use-case requirements gathered at the start of the project, the system covers 129 use-case items. Eighty-one (81) are fully implemented, twenty (20) are partially implemented, and twenty-eight (28) are outside the scope of the current version.
+Measured against the use-case requirements gathered at the start of the project, the system covers 129 use-case items. Eighty-two (82) are fully implemented, twenty (20) are partially implemented, and twenty-seven (27) are outside the scope of the current version.
 
 [The study also covers the evaluation of the system by [respondents, e.g., cooperative officers, member farmers, customers, and IT experts] using [evaluation instrument, e.g., the ISO/IEC 25010 software quality model] in terms of [criteria, e.g., functional suitability, usability, reliability, and security].]
 
@@ -331,7 +331,7 @@ The study is limited to the following boundaries.
 
 **Crop monitoring.** Growth stages and harvest windows are estimated from approximate growing times for each crop, not observed in the field, and staff can correct those times. Expected yields are the farmers' own estimates in kilograms, and the expected harvest dates and weekly harvest totals shown to customers are estimates. The supply outlook covers only the next eight weeks and only the plantings farmers have recorded. It flags possible oversupply but does not schedule harvests or recommend what to plant.
 
-**Communication and notifications.** Email is used only for account and security events (account verification, password reset, email change, and two-factor authentication changes) and for notifying farmers of suspended listings and of the outcome of their ID review. The system has no order-status notifications, in-app or push notifications, SMS, or notification settings. In-system messaging is limited to one-to-one conversations between customers and farmers, and staff have no messaging inbox. The interface is in English only.
+**Communication and notifications.** Email is used only for account and security events (account verification, password reset, email change, and two-factor authentication changes) and for notifying farmers of suspended listings and of the outcome of their ID review. The system has no order-status notifications, in-app or push notifications, SMS, or notification settings. In-system messaging is limited to one-to-one conversations between customers and farmers, and staff have no messaging inbox. Open pages check for changes every 15 seconds and update by themselves, but this is not a notification: nothing is shown on a page that is not open. The interface is in English only.
 
 **Platform.** The system is a responsive web application used through a modern web browser on desktop or mobile devices. It has no native mobile application and no offline mode. It is hosted on Vercel (application) and Supabase (database and file storage), so its availability, capacity, and data backups depend on those providers. Rate limits on sign-in, registration, password reset, and uploads are tracked per server instance. They are therefore not strictly enforced across simultaneous instances.
 

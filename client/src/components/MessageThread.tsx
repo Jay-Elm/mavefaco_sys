@@ -20,6 +20,17 @@ interface Props {
   onOtherName?: (name: string) => void
 }
 
+/** "Today", "Yesterday", or the full date, for the line between days. */
+function dayLabel(d: Date): string {
+  const key = (x: Date) => x.toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' })
+  const today = new Date()
+  const yesterday = new Date(today.getTime() - 86_400_000)
+  if (key(d) === key(today)) return 'Today'
+  if (key(d) === key(yesterday)) return 'Yesterday'
+  return d.toLocaleDateString('en-PH', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'Asia/Manila' })
+}
+const dayKey = (iso: string) => new Date(iso).toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' })
+
 /** Within this many pixels of the bottom counts as "reading the latest". */
 const NEAR_BOTTOM_PX = 80
 
@@ -134,10 +145,18 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
         {messages.length === 0 ? (
           <p className="text-center text-sm text-gray-500 py-8">No messages yet. Say hello!</p>
         ) : (
-          messages.map((m) => {
+          messages.map((m, i) => {
             const isMe = m.sender.id === user?.id
+            const newDay = i === 0 || dayKey(messages[i - 1].createdAt) !== dayKey(m.createdAt)
             return (
               <div key={m.id}>
+                {newDay && (
+                  <div className="flex justify-center pt-1 pb-2">
+                    <span className="text-[11px] font-semibold text-gray-600 bg-white border border-gray-200 rounded-full px-3 py-0.5">
+                      {dayLabel(new Date(m.createdAt))}
+                    </span>
+                  </div>
+                )}
                 {m.id === firstUnreadId && (
                   <div ref={firstUnreadRef} className="flex items-center gap-2 text-xs font-medium text-red-600 pb-3">
                     <span className="flex-1 h-px bg-red-200" />
@@ -153,7 +172,9 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
                   }`}>
                     <p>{m.content}</p>
                     <p className={`text-xs mt-1 ${isMe ? 'text-shoot' : 'text-gray-500'}`}>
-                      {new Date(m.createdAt).toLocaleTimeString('en-PH', { timeStyle: 'short' })}
+                      <time dateTime={m.createdAt} title={new Date(m.createdAt).toLocaleString('en-PH', { dateStyle: 'full', timeStyle: 'short' })}>
+                        {new Date(m.createdAt).toLocaleTimeString('en-PH', { timeStyle: 'short' })}
+                      </time>
                     </p>
                   </div>
                 </div>

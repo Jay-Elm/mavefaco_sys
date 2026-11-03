@@ -372,6 +372,18 @@ model Message {
 // One-way notices from the system to a user (e.g. a listing suspension),
 // shown in the farmer's Messages as "MaVeFaCo notices" with no reply box.
 // Kept apart from Message because they have no sender to reply to.
+/// A conversation someone removed from their own Messages list. Messages up
+/// to hiddenAt stay hidden for that person only: the other side keeps theirs,
+/// and a newer message brings the conversation back. Plain ids, like
+/// Product.suspendedById: accounts are anonymized, never deleted.
+model ConversationHide {
+  userId   Int
+  otherId  Int
+  hiddenAt DateTime @default(now())
+
+  @@id([userId, otherId])
+}
+
 model Notice {
   id          Int      @id @default(autoincrement())
   title       String

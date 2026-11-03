@@ -1,6 +1,6 @@
 # Where We Left Off
 
-_Updated: 2026-10-31_
+_Updated: 2026-11-03_
 
 ## Current state
 
@@ -9,7 +9,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 1. **Phase 1–3 security review** (completed 2026-09-08, `SECURITY_REVIEW.md`): cookie-based sessions, admin-route guard, private ID storage, password reset, shared validators, email verification.
 2. **10-item gap list** (completed 2026-09-21): Next.js CVE patches, JWT secret validation, `Decimal` money, connection pooling, Dependabot + CI audit, mandatory TOTP MFA for staff, ID-image auto-purge, no email enumeration.
 3. **Whole-project review and fixes** (2026-10-03 to 2026-10-05, `PROJECT_REVIEW.md`): every finding fixed except L4. Highlights:
-   - **Integration tests** against a real Postgres database (`npm run test:integration`, now 281 tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron, crop monitoring, announcements, FAQ/banner order; now 84 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
+   - **Integration tests** against a real Postgres database (`npm run test:integration`, now 291 tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron, crop monitoring, announcements, FAQ/banner order; now 84 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
    - **MFA encryption key** separated from `JWT_SECRET` (`TOTP_ENCRYPTION_KEY`); all staff migrated.
    - **Preview deployments** have their own Supabase database and keys; Preview builds migrate only that database (`PREVIEW_DATABASE_ISOLATED`).
    - **Product archiving** (and staff restore) instead of deleting products with history.
@@ -40,7 +40,14 @@ Feature-complete for the capstone scope and through three structured hardening p
    - **Announcements have an audience:** everyone, farmers or customers (`Announcement.audience`); `GET /api/announcements` filters by the viewer's role.
    - **FAQ and banner order** uses move up/down buttons (`PUT /api/admin/faqs/order`, `/api/admin/banners/order`, `src/lib/reorder.ts`); new items go to the end; existing orders renumbered 1, 2, 3….
    - **Home page:** a hero photo of Mayon with a farmer ploughing a paddy, the harvest board laid over its sky on wide screens (33% tint), and a horizontal **shelf per category** (`src/components/ProductShelf.tsx`) whose "See all" opens `/products?categoryId=…` titled with that category. The photo is a **temporary** Wikimedia image (“Mount Mayon 2016” by Gcabig2024, CC BY-SA 4.0): its on-photo credit (`HERO_PHOTO` in `src/app/page.tsx`) is a licence condition and stays until the cooperative's own photos replace it.
-10. **Scope** is documented item by item in `SCOPE_AND_DELIMITATIONS.md` (129 use-case items: 81 implemented, 20 partial, 28 not implemented).
+10. **Changes 2026-11-03:**
+   - **Pages update by themselves:** open pages poll `GET /api/live` every 15 s and re-load when something the viewer can see changed (`src/contexts/LiveUpdatesContext.tsx`). `Order.updatedAt` added for it.
+   - **Quantities follow the unit** (`src/lib/units.ts`): kg and liter in steps of 0.25, everything else whole; enforced by the order API, and counted units need whole-number stock. Farmer price/stock are plain text boxes; no number box changes on scroll.
+   - Hold-to-show eye on every password box (`src/components/PasswordInput.tsx`); cream background with a sand grain; navbar "All Products"; farmers get My Farm, My Products, About.
+   - **Announcements** (`src/components/AnnouncementList.tsx`): gradient cards by type (advisory green, alert red, info blue), two columns, newest 4 on the home page (2 on phones and the farmer overview), "Read more" and "View all" windows with search, type filter and sort.
+   - **Farmer portal:** logo only in the navbar; weather as a see-through card beside the welcome line with announcements under it; search/filter/sort on My Products, Orders and Crop Monitor (`src/components/ListToolbar.tsx`); an opened order and its items read as one block; the timeline's "Today" label stays inside its card.
+   - **Messages:** date lines in threads; search over names and message text; delete a conversation for yourself only (`ConversationHide`; the other side keeps theirs, a new message brings it back). Notices stay first and can't be deleted.
+11. **Scope** is documented item by item in `SCOPE_AND_DELIMITATIONS.md` (129 use-case items: 82 implemented, 20 partial, 27 not implemented).
 
 ---
 
@@ -66,6 +73,10 @@ Feature-complete for the capstone scope and through three structured hardening p
 15. Site Content: move FAQs and banners up and down; the order holds after a refresh and on the About/home pages.
 16. Home page shelves: swipe on a phone; arrows on a laptop; "See all" opens that category.
 17. Receive any email (e.g. password reset): the logo and name show at the top. Some email apps hide images until "show images" is tapped.
+
+18. With two browsers open (customer and farmer), send a message or change an order: the other page updates within about 15 seconds without refreshing.
+19. Buy a kg product in 0.25 steps and a piece/bundle product in whole numbers; typing 2.5 for a bundle snaps to a whole number.
+20. As a farmer: delete a conversation, have the customer write again, and only the new message shows; search Messages for a word from an older message.
 
 **Waiting on the project owner:** the cooperative's own photos to replace the temporary hero photo (then remove its credit line).
 
@@ -248,8 +259,8 @@ src/validators/                          ← shared Zod schemas (client + server
   announcement.ts, reorder.ts           ← announcement audiences; move-button id lists
 
 prisma/
-  schema.prisma                         ← 21 models; generated/prisma custom output
-  migrations/ (33 applied — see DEVELOPMENT_STATUS.md for the full list)
+  schema.prisma                         ← 22 models; generated/prisma custom output
+  migrations/ (35 applied — see DEVELOPMENT_STATUS.md for the full list)
 
 public/logo.svg, logo-light.svg         ← the logo; public/email/logo.png is its PNG copy for emails
 public/photos/mount-mayon-2016.webp     ← TEMPORARY hero photo (CC BY-SA 4.0, credit required)

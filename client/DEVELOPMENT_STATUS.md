@@ -1,6 +1,6 @@
 # Development Status — MaVeFaCo Marketplace
 
-_Last updated: 2026-10-31_
+_Last updated: 2026-11-03_
 
 ---
 
@@ -49,7 +49,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 ## Database Schema (Prisma)
 
-18 models. `generated/prisma` is a custom client output path — **always run `npx prisma generate` after `npx prisma migrate dev`**, it does not auto-update. Use the Bash tool (not PowerShell) for Prisma CLI commands.
+22 models. `generated/prisma` is a custom client output path — **always run `npx prisma generate` after `npx prisma migrate dev`**, it does not auto-update. Use the Bash tool (not PowerShell) for Prisma CLI commands.
 
 - `User` — id, name, email, password, role, suspended, `verified`, `verifiedAt`, `verifiedInPersonAt`, `emailVerifiedAt`, `tokenVersion`, `totpSecret` (encrypted), `totpEnabled`, createdAt, updatedAt
 - `EmailVerificationToken` / `PasswordResetToken` — id, `tokenHash` (SHA-256, never the raw token), expiresAt, usedAt, userId
@@ -57,7 +57,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `TotpBackupCode` — id, `codeHash` (bcrypt — low-entropy human-typed codes need the slow hash), usedAt, userId
 - `Category` — id, name (unique), createdAt
 - `Product` — id, name, description, **price (`Decimal(10,2)`)**, stock (Float), unit, imageUrl, farmerId, categoryId, approved, archivedAt, suspendedAt, suspensionReasons (text[]), suspensionNote, suspendedById (plain id, for audit attribution)
-- `Order` — id, **totalAmount (`Decimal(10,2)`)**, status, paymentMethod, deliveryMethod, createdAt, customerId
+- `Order` — id, **totalAmount (`Decimal(10,2)`)**, status, paymentMethod, deliveryMethod, createdAt, updatedAt (so open pages notice status changes), customerId
 - `OrderItem` — id, quantity (Float), **price (`Decimal(10,2)`)**, orderId, productId
 - `AuditLog` — id, action, entityType, entityId, timestamp, userId
 - `Announcement` — id, title, body, type (info/alert/advisory), audience (everyone/farmers/customers, default everyone), createdAt, authorId
@@ -69,9 +69,10 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `Planting` — id, plantedOn/harvestStart/harvestEnd (`@db.Date`, Philippine calendar dates), areaSqm?, expectedYield? (kg), status (growing/harvested/failed), harvestedOn?, actualYield?, farmerId, cropTypeId, productId? (SetNull when the listing is deleted)
 - `CropLog` — id, type (weather_impact/pest_disease/damage/note), note, observedOn (date), severity? (low/medium/high), pest? (from `CROP_PESTS`), createdAt, plantingId (cascade)
 - `Message` — id, content, read, createdAt, senderId, receiverId
+- `ConversationHide` — userId + otherId (composite key), hiddenAt: a conversation the user removed from their own list; their messages up to hiddenAt stay hidden for them only
 - `Notice` — id, title, body, read, createdAt, recipientId, productId (set null if the listing is deleted), resolvedAt, resolution (`resubmitted` | `removed`) — one-way system notices, e.g. a listing suspension
 
-**Migrations applied (33, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`) → `add_id_submissions` (moves `User.idImagePath` into `IdSubmission`) → `normalize_order_audit_names` → `close_id_submissions_verified_in_person` → `announcement_audience` → `renumber_faq_banner_order`.
+**Migrations applied (35, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`) → `add_id_submissions` (moves `User.idImagePath` into `IdSubmission`) → `normalize_order_audit_names` → `close_id_submissions_verified_in_person` → `announcement_audience` → `renumber_faq_banner_order` → `order_updated_at` → `conversation_hide`.
 
 **Infra note:** `DIRECT_URL` cannot use Supabase's true direct-connection endpoint (`db.<ref>.supabase.co:5432`) — neither locally nor from Vercel's build infra can reach it (`P1001`), almost certainly Supabase's IPv6-only requirement for that endpoint. Fixed by pointing `DIRECT_URL` at the **Session pooler** instead (distinct from the Transaction pooler `DATABASE_URL` uses) — still holds `prisma migrate deploy`'s advisory lock, and is IPv4-compatible.
 
@@ -124,14 +125,14 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 ### Farmer Dashboard (`/farmer/`) — farmer role only
 - `layout.tsx` — green-accent sidebar (184px), auth guard, isolated scroll; red count badges on Messages (unread messages + notices), Orders (new), My Products (suspended), Crop Monitor (plantings whose harvest window has opened), Profile (no ID submitted)
 - `page.tsx` — product count, orders, revenue; **stock alerts** (out of stock + low stock); **weather widget** (Tabaco City, Albay via Open-Meteo); **community advisory** (top 5 groups of members' pest/weather/damage reports by crop and problem, last 30 days; "See all" → `advisory/`)
-- `products/` — table with stock badges (Out of Stock / Low / normal) and status (Approved / Pending / Suspended with its deletion date and reasons); alert banners for stock problems and suspended listings; Edit ("Fix & resubmit" when suspended)/Delete; CSV export
+- `products/` — search, status/stock/category filters and sort; table with stock badges (Out of Stock / Low / normal) and status (Approved / Pending / Suspended with its deletion date and reasons); alert banners for stock problems and suspended listings; Edit ("Fix & resubmit" when suspended)/Delete; CSV export
 - `products/new/` — create product form; requires `verified: true`
 - `products/[id]/edit/` — pre-filled edit form; content edits reset `approved: false`; on a suspended listing shows the reasons and deadline, saving a content change resubmits it; Delete button
-- `orders/` — orders with farmer's products; Accept/Reject/Ship/Deliver state machine; CSV export
-- `crops/` — Crop Monitor: "Needs attention" (harvest window open, overdue, high-severity report in 14 days), growing plantings with stage and progress to harvest, past seasons with expected vs actual yield
+- `orders/` — orders with farmer's products; search (customer, product, #ID), status filter, sort by date or total; an opened order and its items share one tinted block; Accept/Reject/Ship/Deliver state machine; CSV export
+- `crops/` — Crop Monitor (search, filters by state and crop, sort): "Needs attention" (harvest window open, overdue, high-severity report in 14 days), growing plantings with stage and progress to harvest, past seasons with expected vs actual yield
 - `crops/new/` — record a planting (crop type, date, optional area, expected yield, linked listing); previews the harvest window
 - `crops/[id]/` — planting detail: growth timeline, record harvest (optionally adding to the linked listing's stock) or mark failed, edit details/harvest window, structured crop log (pest from a list, severity, date seen), delete
-- `messages/` — conversation inbox with unread counts, plus a "MaVeFaCo notices" entry; `/farmer/messages/notices` — one-way system notices (no reply); an open suspension notice links to the listing's edit page, and once resolved (`Notice.resolvedAt`/`resolution`: resubmitted, or removed by a delete or the 7-day cleanup) it shows that outcome instead; `/farmer/messages/[userId]` — message thread
+- `messages/` — conversation inbox with unread counts, a search over names and message text, and a delete button per conversation, plus a "MaVeFaCo notices" entry pinned first (can't be deleted); `/farmer/messages/notices` — one-way system notices (no reply); an open suspension notice links to the listing's edit page, and once resolved (`Notice.resolvedAt`/`resolution`: resubmitted, or removed by a delete or the 7-day cleanup) it shows that outcome instead; `/farmer/messages/[userId]` — message thread
 - `profile/` — edit name/email; ID verification status and the camera capture flow (`components/idVerification/`); change password
 
 ### Customer Pages
@@ -229,9 +230,11 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/crop-types` | farmer/manager/admin | crop list |
 | POST | `/api/crop-types` · PUT/DELETE `/api/crop-types/[id]` | admin/manager | manage crop types; audit `CREATE/UPDATE/DELETE_CROP_TYPE` |
 | GET | `/api/admin/supply` | admin/manager | expected kg per crop per week (8 weeks), possible-oversupply flags, overdue plantings |
-| GET | `/api/messages` | authenticated | conversation list with unread counts |
+| GET | `/api/messages` | authenticated | conversation list with unread counts, newest first; leaves out messages from before the caller removed a conversation; `?q=` matches names and any message text (each result says which message matched) |
 | GET | `/api/messages/[userId]` | authenticated | message thread; marks received as read |
 | POST | `/api/messages/[userId]` | customer/farmer | send message; only between a customer and a farmer (403 otherwise) |
+| DELETE | `/api/messages/[userId]` | authenticated | remove the conversation from the caller's list only (the other side keeps it; a newer message brings it back); marks its unread messages read |
+| GET | `/api/live` | public | short hash of counts and latest ids/times of what the caller can see; open pages poll it to know when to re-load |
 | GET | `/api/users/me` | authenticated | |
 | PATCH | `/api/users/me` | authenticated | name/email/password change. Email change requires the current password and only starts a request: a link goes to the new address, a notice to the current one |
 | POST | `/api/auth/confirm-email-change` | public (token) | applies a requested email change, logs out every session, notifies the previous address |
@@ -265,6 +268,12 @@ After every `prisma migrate dev`, run `prisma generate` separately. The generate
 
 ### Messaging (polling, not WebSocket)
 `MessageThread` component polls `/api/messages/[userId]` every 8 seconds via `setInterval`. Not real-time but functional for a capstone. A thread opens at the earliest message that was unread (under a "New messages" line), or at the latest; new messages scroll into view only while the reader is at the bottom. Fetching a thread marks its incoming messages read, so nothing else should fetch it before `MessageThread` does (the conversation pages take the other person's name from it via `onOtherName`).
+
+### Live updates
+`LiveUpdatesProvider` (`src/contexts/LiveUpdatesContext.tsx`, in `Providers`) polls `GET /api/live` every 15 s while the tab is visible and on returning to it. When the hash changes it calls `router.refresh()` (server-rendered pages re-render in place), bumps `useLiveVersion()` (client pages list it in the dependencies of the effect that loads their data, so they re-fetch) and re-counts sidebar badges. Leave it out of pages built around an edit form, or a refresh could overwrite what's being typed. A new kind of data a page should follow needs a term in the hash in `src/app/api/live/route.ts`.
+
+### Units and quantities
+`src/lib/units.ts` holds the selling units (`UNITS`, the farmer form's list) and the rules: kg and liter sell in steps of 0.25, everything else in whole numbers (`unitStep`). `POST /api/orders` refuses other amounts; counted units need whole-number stock on create, edit and harvest-to-stock (`stockError`). The product page and cart snap to steps and cap at `maxBuyable(stock)`.
 
 ### Weather widget
 `WeatherWidget` calls Open-Meteo API client-side for Tabaco City (lat=13.3594, lon=123.7331). No API key required. Shown on farmer overview page.

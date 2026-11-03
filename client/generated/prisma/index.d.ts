@@ -104,6 +104,14 @@ export type Review = $Result.DefaultSelection<Prisma.$ReviewPayload>
  */
 export type Message = $Result.DefaultSelection<Prisma.$MessagePayload>
 /**
+ * Model ConversationHide
+ * A conversation someone removed from their own Messages list. Messages up
+ * to hiddenAt stay hidden for that person only: the other side keeps theirs,
+ * and a newer message brings the conversation back. Plain ids, like
+ * Product.suspendedById: accounts are anonymized, never deleted.
+ */
+export type ConversationHide = $Result.DefaultSelection<Prisma.$ConversationHidePayload>
+/**
  * Model Notice
  * 
  */
@@ -419,6 +427,16 @@ export class PrismaClient<
     * ```
     */
   get message(): Prisma.MessageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.conversationHide`: Exposes CRUD operations for the **ConversationHide** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ConversationHides
+    * const conversationHides = await prisma.conversationHide.findMany()
+    * ```
+    */
+  get conversationHide(): Prisma.ConversationHideDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.notice`: Exposes CRUD operations for the **Notice** model.
@@ -914,6 +932,7 @@ export namespace Prisma {
     SiteContent: 'SiteContent',
     Review: 'Review',
     Message: 'Message',
+    ConversationHide: 'ConversationHide',
     Notice: 'Notice',
     AuditLog: 'AuditLog',
     IdSubmission: 'IdSubmission'
@@ -932,7 +951,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "emailChangeToken" | "totpBackupCode" | "category" | "product" | "cropType" | "planting" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "notice" | "auditLog" | "idSubmission"
+      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "emailChangeToken" | "totpBackupCode" | "category" | "product" | "cropType" | "planting" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "conversationHide" | "notice" | "auditLog" | "idSubmission"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2268,6 +2287,80 @@ export namespace Prisma {
           }
         }
       }
+      ConversationHide: {
+        payload: Prisma.$ConversationHidePayload<ExtArgs>
+        fields: Prisma.ConversationHideFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConversationHideFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationHidePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConversationHideFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationHidePayload>
+          }
+          findFirst: {
+            args: Prisma.ConversationHideFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationHidePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConversationHideFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationHidePayload>
+          }
+          findMany: {
+            args: Prisma.ConversationHideFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationHidePayload>[]
+          }
+          create: {
+            args: Prisma.ConversationHideCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationHidePayload>
+          }
+          createMany: {
+            args: Prisma.ConversationHideCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConversationHideCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationHidePayload>[]
+          }
+          delete: {
+            args: Prisma.ConversationHideDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationHidePayload>
+          }
+          update: {
+            args: Prisma.ConversationHideUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationHidePayload>
+          }
+          deleteMany: {
+            args: Prisma.ConversationHideDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConversationHideUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConversationHideUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationHidePayload>[]
+          }
+          upsert: {
+            args: Prisma.ConversationHideUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConversationHidePayload>
+          }
+          aggregate: {
+            args: Prisma.ConversationHideAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConversationHide>
+          }
+          groupBy: {
+            args: Prisma.ConversationHideGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConversationHideGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConversationHideCountArgs<ExtArgs>
+            result: $Utils.Optional<ConversationHideCountAggregateOutputType> | number
+          }
+        }
+      }
       Notice: {
         payload: Prisma.$NoticePayload<ExtArgs>
         fields: Prisma.NoticeFieldRefs
@@ -2631,6 +2724,7 @@ export namespace Prisma {
     siteContent?: SiteContentOmit
     review?: ReviewOmit
     message?: MessageOmit
+    conversationHide?: ConversationHideOmit
     notice?: NoticeOmit
     auditLog?: AuditLogOmit
     idSubmission?: IdSubmissionOmit
@@ -23992,6 +24086,1018 @@ export namespace Prisma {
 
 
   /**
+   * Model ConversationHide
+   */
+
+  export type AggregateConversationHide = {
+    _count: ConversationHideCountAggregateOutputType | null
+    _avg: ConversationHideAvgAggregateOutputType | null
+    _sum: ConversationHideSumAggregateOutputType | null
+    _min: ConversationHideMinAggregateOutputType | null
+    _max: ConversationHideMaxAggregateOutputType | null
+  }
+
+  export type ConversationHideAvgAggregateOutputType = {
+    userId: number | null
+    otherId: number | null
+  }
+
+  export type ConversationHideSumAggregateOutputType = {
+    userId: number | null
+    otherId: number | null
+  }
+
+  export type ConversationHideMinAggregateOutputType = {
+    userId: number | null
+    otherId: number | null
+    hiddenAt: Date | null
+  }
+
+  export type ConversationHideMaxAggregateOutputType = {
+    userId: number | null
+    otherId: number | null
+    hiddenAt: Date | null
+  }
+
+  export type ConversationHideCountAggregateOutputType = {
+    userId: number
+    otherId: number
+    hiddenAt: number
+    _all: number
+  }
+
+
+  export type ConversationHideAvgAggregateInputType = {
+    userId?: true
+    otherId?: true
+  }
+
+  export type ConversationHideSumAggregateInputType = {
+    userId?: true
+    otherId?: true
+  }
+
+  export type ConversationHideMinAggregateInputType = {
+    userId?: true
+    otherId?: true
+    hiddenAt?: true
+  }
+
+  export type ConversationHideMaxAggregateInputType = {
+    userId?: true
+    otherId?: true
+    hiddenAt?: true
+  }
+
+  export type ConversationHideCountAggregateInputType = {
+    userId?: true
+    otherId?: true
+    hiddenAt?: true
+    _all?: true
+  }
+
+  export type ConversationHideAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConversationHide to aggregate.
+     */
+    where?: ConversationHideWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationHides to fetch.
+     */
+    orderBy?: ConversationHideOrderByWithRelationInput | ConversationHideOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConversationHideWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationHides from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationHides.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ConversationHides
+    **/
+    _count?: true | ConversationHideCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ConversationHideAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ConversationHideSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConversationHideMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConversationHideMaxAggregateInputType
+  }
+
+  export type GetConversationHideAggregateType<T extends ConversationHideAggregateArgs> = {
+        [P in keyof T & keyof AggregateConversationHide]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConversationHide[P]>
+      : GetScalarType<T[P], AggregateConversationHide[P]>
+  }
+
+
+
+
+  export type ConversationHideGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConversationHideWhereInput
+    orderBy?: ConversationHideOrderByWithAggregationInput | ConversationHideOrderByWithAggregationInput[]
+    by: ConversationHideScalarFieldEnum[] | ConversationHideScalarFieldEnum
+    having?: ConversationHideScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConversationHideCountAggregateInputType | true
+    _avg?: ConversationHideAvgAggregateInputType
+    _sum?: ConversationHideSumAggregateInputType
+    _min?: ConversationHideMinAggregateInputType
+    _max?: ConversationHideMaxAggregateInputType
+  }
+
+  export type ConversationHideGroupByOutputType = {
+    userId: number
+    otherId: number
+    hiddenAt: Date
+    _count: ConversationHideCountAggregateOutputType | null
+    _avg: ConversationHideAvgAggregateOutputType | null
+    _sum: ConversationHideSumAggregateOutputType | null
+    _min: ConversationHideMinAggregateOutputType | null
+    _max: ConversationHideMaxAggregateOutputType | null
+  }
+
+  type GetConversationHideGroupByPayload<T extends ConversationHideGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConversationHideGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConversationHideGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConversationHideGroupByOutputType[P]>
+            : GetScalarType<T[P], ConversationHideGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConversationHideSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    otherId?: boolean
+    hiddenAt?: boolean
+  }, ExtArgs["result"]["conversationHide"]>
+
+  export type ConversationHideSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    otherId?: boolean
+    hiddenAt?: boolean
+  }, ExtArgs["result"]["conversationHide"]>
+
+  export type ConversationHideSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    userId?: boolean
+    otherId?: boolean
+    hiddenAt?: boolean
+  }, ExtArgs["result"]["conversationHide"]>
+
+  export type ConversationHideSelectScalar = {
+    userId?: boolean
+    otherId?: boolean
+    hiddenAt?: boolean
+  }
+
+  export type ConversationHideOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "otherId" | "hiddenAt", ExtArgs["result"]["conversationHide"]>
+
+  export type $ConversationHidePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ConversationHide"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      userId: number
+      otherId: number
+      hiddenAt: Date
+    }, ExtArgs["result"]["conversationHide"]>
+    composites: {}
+  }
+
+  type ConversationHideGetPayload<S extends boolean | null | undefined | ConversationHideDefaultArgs> = $Result.GetResult<Prisma.$ConversationHidePayload, S>
+
+  type ConversationHideCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConversationHideFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConversationHideCountAggregateInputType | true
+    }
+
+  export interface ConversationHideDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ConversationHide'], meta: { name: 'ConversationHide' } }
+    /**
+     * Find zero or one ConversationHide that matches the filter.
+     * @param {ConversationHideFindUniqueArgs} args - Arguments to find a ConversationHide
+     * @example
+     * // Get one ConversationHide
+     * const conversationHide = await prisma.conversationHide.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConversationHideFindUniqueArgs>(args: SelectSubset<T, ConversationHideFindUniqueArgs<ExtArgs>>): Prisma__ConversationHideClient<$Result.GetResult<Prisma.$ConversationHidePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ConversationHide that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConversationHideFindUniqueOrThrowArgs} args - Arguments to find a ConversationHide
+     * @example
+     * // Get one ConversationHide
+     * const conversationHide = await prisma.conversationHide.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConversationHideFindUniqueOrThrowArgs>(args: SelectSubset<T, ConversationHideFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConversationHideClient<$Result.GetResult<Prisma.$ConversationHidePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConversationHide that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationHideFindFirstArgs} args - Arguments to find a ConversationHide
+     * @example
+     * // Get one ConversationHide
+     * const conversationHide = await prisma.conversationHide.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConversationHideFindFirstArgs>(args?: SelectSubset<T, ConversationHideFindFirstArgs<ExtArgs>>): Prisma__ConversationHideClient<$Result.GetResult<Prisma.$ConversationHidePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConversationHide that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationHideFindFirstOrThrowArgs} args - Arguments to find a ConversationHide
+     * @example
+     * // Get one ConversationHide
+     * const conversationHide = await prisma.conversationHide.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConversationHideFindFirstOrThrowArgs>(args?: SelectSubset<T, ConversationHideFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConversationHideClient<$Result.GetResult<Prisma.$ConversationHidePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ConversationHides that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationHideFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ConversationHides
+     * const conversationHides = await prisma.conversationHide.findMany()
+     * 
+     * // Get first 10 ConversationHides
+     * const conversationHides = await prisma.conversationHide.findMany({ take: 10 })
+     * 
+     * // Only select the `userId`
+     * const conversationHideWithUserIdOnly = await prisma.conversationHide.findMany({ select: { userId: true } })
+     * 
+     */
+    findMany<T extends ConversationHideFindManyArgs>(args?: SelectSubset<T, ConversationHideFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationHidePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ConversationHide.
+     * @param {ConversationHideCreateArgs} args - Arguments to create a ConversationHide.
+     * @example
+     * // Create one ConversationHide
+     * const ConversationHide = await prisma.conversationHide.create({
+     *   data: {
+     *     // ... data to create a ConversationHide
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConversationHideCreateArgs>(args: SelectSubset<T, ConversationHideCreateArgs<ExtArgs>>): Prisma__ConversationHideClient<$Result.GetResult<Prisma.$ConversationHidePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ConversationHides.
+     * @param {ConversationHideCreateManyArgs} args - Arguments to create many ConversationHides.
+     * @example
+     * // Create many ConversationHides
+     * const conversationHide = await prisma.conversationHide.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConversationHideCreateManyArgs>(args?: SelectSubset<T, ConversationHideCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ConversationHides and returns the data saved in the database.
+     * @param {ConversationHideCreateManyAndReturnArgs} args - Arguments to create many ConversationHides.
+     * @example
+     * // Create many ConversationHides
+     * const conversationHide = await prisma.conversationHide.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ConversationHides and only return the `userId`
+     * const conversationHideWithUserIdOnly = await prisma.conversationHide.createManyAndReturn({
+     *   select: { userId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConversationHideCreateManyAndReturnArgs>(args?: SelectSubset<T, ConversationHideCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationHidePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ConversationHide.
+     * @param {ConversationHideDeleteArgs} args - Arguments to delete one ConversationHide.
+     * @example
+     * // Delete one ConversationHide
+     * const ConversationHide = await prisma.conversationHide.delete({
+     *   where: {
+     *     // ... filter to delete one ConversationHide
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConversationHideDeleteArgs>(args: SelectSubset<T, ConversationHideDeleteArgs<ExtArgs>>): Prisma__ConversationHideClient<$Result.GetResult<Prisma.$ConversationHidePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ConversationHide.
+     * @param {ConversationHideUpdateArgs} args - Arguments to update one ConversationHide.
+     * @example
+     * // Update one ConversationHide
+     * const conversationHide = await prisma.conversationHide.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConversationHideUpdateArgs>(args: SelectSubset<T, ConversationHideUpdateArgs<ExtArgs>>): Prisma__ConversationHideClient<$Result.GetResult<Prisma.$ConversationHidePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ConversationHides.
+     * @param {ConversationHideDeleteManyArgs} args - Arguments to filter ConversationHides to delete.
+     * @example
+     * // Delete a few ConversationHides
+     * const { count } = await prisma.conversationHide.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConversationHideDeleteManyArgs>(args?: SelectSubset<T, ConversationHideDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConversationHides.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationHideUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ConversationHides
+     * const conversationHide = await prisma.conversationHide.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConversationHideUpdateManyArgs>(args: SelectSubset<T, ConversationHideUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConversationHides and returns the data updated in the database.
+     * @param {ConversationHideUpdateManyAndReturnArgs} args - Arguments to update many ConversationHides.
+     * @example
+     * // Update many ConversationHides
+     * const conversationHide = await prisma.conversationHide.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ConversationHides and only return the `userId`
+     * const conversationHideWithUserIdOnly = await prisma.conversationHide.updateManyAndReturn({
+     *   select: { userId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConversationHideUpdateManyAndReturnArgs>(args: SelectSubset<T, ConversationHideUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConversationHidePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ConversationHide.
+     * @param {ConversationHideUpsertArgs} args - Arguments to update or create a ConversationHide.
+     * @example
+     * // Update or create a ConversationHide
+     * const conversationHide = await prisma.conversationHide.upsert({
+     *   create: {
+     *     // ... data to create a ConversationHide
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ConversationHide we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConversationHideUpsertArgs>(args: SelectSubset<T, ConversationHideUpsertArgs<ExtArgs>>): Prisma__ConversationHideClient<$Result.GetResult<Prisma.$ConversationHidePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ConversationHides.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationHideCountArgs} args - Arguments to filter ConversationHides to count.
+     * @example
+     * // Count the number of ConversationHides
+     * const count = await prisma.conversationHide.count({
+     *   where: {
+     *     // ... the filter for the ConversationHides we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConversationHideCountArgs>(
+      args?: Subset<T, ConversationHideCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConversationHideCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ConversationHide.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationHideAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConversationHideAggregateArgs>(args: Subset<T, ConversationHideAggregateArgs>): Prisma.PrismaPromise<GetConversationHideAggregateType<T>>
+
+    /**
+     * Group by ConversationHide.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConversationHideGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConversationHideGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConversationHideGroupByArgs['orderBy'] }
+        : { orderBy?: ConversationHideGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConversationHideGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConversationHideGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ConversationHide model
+   */
+  readonly fields: ConversationHideFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ConversationHide.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConversationHideClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ConversationHide model
+   */
+  interface ConversationHideFieldRefs {
+    readonly userId: FieldRef<"ConversationHide", 'Int'>
+    readonly otherId: FieldRef<"ConversationHide", 'Int'>
+    readonly hiddenAt: FieldRef<"ConversationHide", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ConversationHide findUnique
+   */
+  export type ConversationHideFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationHide
+     */
+    select?: ConversationHideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationHide
+     */
+    omit?: ConversationHideOmit<ExtArgs> | null
+    /**
+     * Filter, which ConversationHide to fetch.
+     */
+    where: ConversationHideWhereUniqueInput
+  }
+
+  /**
+   * ConversationHide findUniqueOrThrow
+   */
+  export type ConversationHideFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationHide
+     */
+    select?: ConversationHideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationHide
+     */
+    omit?: ConversationHideOmit<ExtArgs> | null
+    /**
+     * Filter, which ConversationHide to fetch.
+     */
+    where: ConversationHideWhereUniqueInput
+  }
+
+  /**
+   * ConversationHide findFirst
+   */
+  export type ConversationHideFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationHide
+     */
+    select?: ConversationHideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationHide
+     */
+    omit?: ConversationHideOmit<ExtArgs> | null
+    /**
+     * Filter, which ConversationHide to fetch.
+     */
+    where?: ConversationHideWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationHides to fetch.
+     */
+    orderBy?: ConversationHideOrderByWithRelationInput | ConversationHideOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConversationHides.
+     */
+    cursor?: ConversationHideWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationHides from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationHides.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversationHides.
+     */
+    distinct?: ConversationHideScalarFieldEnum | ConversationHideScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationHide findFirstOrThrow
+   */
+  export type ConversationHideFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationHide
+     */
+    select?: ConversationHideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationHide
+     */
+    omit?: ConversationHideOmit<ExtArgs> | null
+    /**
+     * Filter, which ConversationHide to fetch.
+     */
+    where?: ConversationHideWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationHides to fetch.
+     */
+    orderBy?: ConversationHideOrderByWithRelationInput | ConversationHideOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConversationHides.
+     */
+    cursor?: ConversationHideWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationHides from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationHides.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversationHides.
+     */
+    distinct?: ConversationHideScalarFieldEnum | ConversationHideScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationHide findMany
+   */
+  export type ConversationHideFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationHide
+     */
+    select?: ConversationHideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationHide
+     */
+    omit?: ConversationHideOmit<ExtArgs> | null
+    /**
+     * Filter, which ConversationHides to fetch.
+     */
+    where?: ConversationHideWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConversationHides to fetch.
+     */
+    orderBy?: ConversationHideOrderByWithRelationInput | ConversationHideOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ConversationHides.
+     */
+    cursor?: ConversationHideWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConversationHides from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConversationHides.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConversationHides.
+     */
+    distinct?: ConversationHideScalarFieldEnum | ConversationHideScalarFieldEnum[]
+  }
+
+  /**
+   * ConversationHide create
+   */
+  export type ConversationHideCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationHide
+     */
+    select?: ConversationHideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationHide
+     */
+    omit?: ConversationHideOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ConversationHide.
+     */
+    data: XOR<ConversationHideCreateInput, ConversationHideUncheckedCreateInput>
+  }
+
+  /**
+   * ConversationHide createMany
+   */
+  export type ConversationHideCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ConversationHides.
+     */
+    data: ConversationHideCreateManyInput | ConversationHideCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ConversationHide createManyAndReturn
+   */
+  export type ConversationHideCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationHide
+     */
+    select?: ConversationHideSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationHide
+     */
+    omit?: ConversationHideOmit<ExtArgs> | null
+    /**
+     * The data used to create many ConversationHides.
+     */
+    data: ConversationHideCreateManyInput | ConversationHideCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ConversationHide update
+   */
+  export type ConversationHideUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationHide
+     */
+    select?: ConversationHideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationHide
+     */
+    omit?: ConversationHideOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ConversationHide.
+     */
+    data: XOR<ConversationHideUpdateInput, ConversationHideUncheckedUpdateInput>
+    /**
+     * Choose, which ConversationHide to update.
+     */
+    where: ConversationHideWhereUniqueInput
+  }
+
+  /**
+   * ConversationHide updateMany
+   */
+  export type ConversationHideUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ConversationHides.
+     */
+    data: XOR<ConversationHideUpdateManyMutationInput, ConversationHideUncheckedUpdateManyInput>
+    /**
+     * Filter which ConversationHides to update
+     */
+    where?: ConversationHideWhereInput
+    /**
+     * Limit how many ConversationHides to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversationHide updateManyAndReturn
+   */
+  export type ConversationHideUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationHide
+     */
+    select?: ConversationHideSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationHide
+     */
+    omit?: ConversationHideOmit<ExtArgs> | null
+    /**
+     * The data used to update ConversationHides.
+     */
+    data: XOR<ConversationHideUpdateManyMutationInput, ConversationHideUncheckedUpdateManyInput>
+    /**
+     * Filter which ConversationHides to update
+     */
+    where?: ConversationHideWhereInput
+    /**
+     * Limit how many ConversationHides to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversationHide upsert
+   */
+  export type ConversationHideUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationHide
+     */
+    select?: ConversationHideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationHide
+     */
+    omit?: ConversationHideOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ConversationHide to update in case it exists.
+     */
+    where: ConversationHideWhereUniqueInput
+    /**
+     * In case the ConversationHide found by the `where` argument doesn't exist, create a new ConversationHide with this data.
+     */
+    create: XOR<ConversationHideCreateInput, ConversationHideUncheckedCreateInput>
+    /**
+     * In case the ConversationHide was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConversationHideUpdateInput, ConversationHideUncheckedUpdateInput>
+  }
+
+  /**
+   * ConversationHide delete
+   */
+  export type ConversationHideDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationHide
+     */
+    select?: ConversationHideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationHide
+     */
+    omit?: ConversationHideOmit<ExtArgs> | null
+    /**
+     * Filter which ConversationHide to delete.
+     */
+    where: ConversationHideWhereUniqueInput
+  }
+
+  /**
+   * ConversationHide deleteMany
+   */
+  export type ConversationHideDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConversationHides to delete
+     */
+    where?: ConversationHideWhereInput
+    /**
+     * Limit how many ConversationHides to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConversationHide without action
+   */
+  export type ConversationHideDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConversationHide
+     */
+    select?: ConversationHideSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConversationHide
+     */
+    omit?: ConversationHideOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model Notice
    */
 
@@ -27798,6 +28904,15 @@ export namespace Prisma {
   export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
+  export const ConversationHideScalarFieldEnum: {
+    userId: 'userId',
+    otherId: 'otherId',
+    hiddenAt: 'hiddenAt'
+  };
+
+  export type ConversationHideScalarFieldEnum = (typeof ConversationHideScalarFieldEnum)[keyof typeof ConversationHideScalarFieldEnum]
+
+
   export const NoticeScalarFieldEnum: {
     id: 'id',
     title: 'title',
@@ -29290,6 +30405,51 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
     senderId?: IntWithAggregatesFilter<"Message"> | number
     receiverId?: IntWithAggregatesFilter<"Message"> | number
+  }
+
+  export type ConversationHideWhereInput = {
+    AND?: ConversationHideWhereInput | ConversationHideWhereInput[]
+    OR?: ConversationHideWhereInput[]
+    NOT?: ConversationHideWhereInput | ConversationHideWhereInput[]
+    userId?: IntFilter<"ConversationHide"> | number
+    otherId?: IntFilter<"ConversationHide"> | number
+    hiddenAt?: DateTimeFilter<"ConversationHide"> | Date | string
+  }
+
+  export type ConversationHideOrderByWithRelationInput = {
+    userId?: SortOrder
+    otherId?: SortOrder
+    hiddenAt?: SortOrder
+  }
+
+  export type ConversationHideWhereUniqueInput = Prisma.AtLeast<{
+    userId_otherId?: ConversationHideUserIdOtherIdCompoundUniqueInput
+    AND?: ConversationHideWhereInput | ConversationHideWhereInput[]
+    OR?: ConversationHideWhereInput[]
+    NOT?: ConversationHideWhereInput | ConversationHideWhereInput[]
+    userId?: IntFilter<"ConversationHide"> | number
+    otherId?: IntFilter<"ConversationHide"> | number
+    hiddenAt?: DateTimeFilter<"ConversationHide"> | Date | string
+  }, "userId_otherId">
+
+  export type ConversationHideOrderByWithAggregationInput = {
+    userId?: SortOrder
+    otherId?: SortOrder
+    hiddenAt?: SortOrder
+    _count?: ConversationHideCountOrderByAggregateInput
+    _avg?: ConversationHideAvgOrderByAggregateInput
+    _max?: ConversationHideMaxOrderByAggregateInput
+    _min?: ConversationHideMinOrderByAggregateInput
+    _sum?: ConversationHideSumOrderByAggregateInput
+  }
+
+  export type ConversationHideScalarWhereWithAggregatesInput = {
+    AND?: ConversationHideScalarWhereWithAggregatesInput | ConversationHideScalarWhereWithAggregatesInput[]
+    OR?: ConversationHideScalarWhereWithAggregatesInput[]
+    NOT?: ConversationHideScalarWhereWithAggregatesInput | ConversationHideScalarWhereWithAggregatesInput[]
+    userId?: IntWithAggregatesFilter<"ConversationHide"> | number
+    otherId?: IntWithAggregatesFilter<"ConversationHide"> | number
+    hiddenAt?: DateTimeWithAggregatesFilter<"ConversationHide"> | Date | string
   }
 
   export type NoticeWhereInput = {
@@ -30916,6 +32076,48 @@ export namespace Prisma {
     receiverId?: IntFieldUpdateOperationsInput | number
   }
 
+  export type ConversationHideCreateInput = {
+    userId: number
+    otherId: number
+    hiddenAt?: Date | string
+  }
+
+  export type ConversationHideUncheckedCreateInput = {
+    userId: number
+    otherId: number
+    hiddenAt?: Date | string
+  }
+
+  export type ConversationHideUpdateInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    otherId?: IntFieldUpdateOperationsInput | number
+    hiddenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationHideUncheckedUpdateInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    otherId?: IntFieldUpdateOperationsInput | number
+    hiddenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationHideCreateManyInput = {
+    userId: number
+    otherId: number
+    hiddenAt?: Date | string
+  }
+
+  export type ConversationHideUpdateManyMutationInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    otherId?: IntFieldUpdateOperationsInput | number
+    hiddenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConversationHideUncheckedUpdateManyInput = {
+    userId?: IntFieldUpdateOperationsInput | number
+    otherId?: IntFieldUpdateOperationsInput | number
+    hiddenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type NoticeCreateInput = {
     title: string
     body: string
@@ -32435,6 +33637,39 @@ export namespace Prisma {
     id?: SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
+  }
+
+  export type ConversationHideUserIdOtherIdCompoundUniqueInput = {
+    userId: number
+    otherId: number
+  }
+
+  export type ConversationHideCountOrderByAggregateInput = {
+    userId?: SortOrder
+    otherId?: SortOrder
+    hiddenAt?: SortOrder
+  }
+
+  export type ConversationHideAvgOrderByAggregateInput = {
+    userId?: SortOrder
+    otherId?: SortOrder
+  }
+
+  export type ConversationHideMaxOrderByAggregateInput = {
+    userId?: SortOrder
+    otherId?: SortOrder
+    hiddenAt?: SortOrder
+  }
+
+  export type ConversationHideMinOrderByAggregateInput = {
+    userId?: SortOrder
+    otherId?: SortOrder
+    hiddenAt?: SortOrder
+  }
+
+  export type ConversationHideSumOrderByAggregateInput = {
+    userId?: SortOrder
+    otherId?: SortOrder
   }
 
   export type NoticeCountOrderByAggregateInput = {

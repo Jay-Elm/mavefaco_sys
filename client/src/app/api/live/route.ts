@@ -43,8 +43,10 @@ export async function GET(req: NextRequest) {
           prisma.notice.aggregate({ where: { recipientId: actor.id }, _max: { id: true, resolvedAt: true }, _count: true }),
           prisma.notice.count({ where: { recipientId: actor.id, read: false } }),
           prisma.idSubmission.aggregate({ where: { userId: actor.id }, _max: { id: true, reviewedAt: true } }),
-        ]).then(([u, m, mUnread, n, nUnread, ids]): Part[] => [
+          prisma.conversationHide.aggregate({ where: { userId: actor.id }, _max: { hiddenAt: true } }),
+        ]).then(([u, m, mUnread, n, nUnread, ids, hides]): Part[] => [
           u?.updatedAt, m._max.id, m._count, mUnread, n._max.id, n._max.resolvedAt, n._count, nUnread, ids._max.id, ids._max.reviewedAt,
+          hides._max.hiddenAt,
         ]);
 
     // Orders, listings and crops, by role.

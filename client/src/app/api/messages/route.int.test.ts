@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { GET as conversations } from "./route";
-import { GET as thread, POST as send } from "./[userId]/route";
+import { DELETE as removeConversation, GET as thread, POST as send } from "./[userId]/route";
 import { prisma } from "@/lib/prisma";
 import { createUser, params, request, type SessionUser } from "@/test-utils/integration/helpers";
 
@@ -8,7 +8,10 @@ const post = (as: SessionUser | undefined, toId: number, content: unknown = "Hel
   send(request(`/api/messages/${toId}`, { method: "POST", as, body: { content } }), params({ userId: String(toId) }));
 const read = async (as: SessionUser, withId: number) =>
   (await thread(request(`/api/messages/${withId}`, { as }), params({ userId: String(withId) }))).json();
-const inbox = async (as: SessionUser) => (await conversations(request("/api/messages", { as }))).json();
+const inbox = async (as: SessionUser, q = "") =>
+  (await conversations(request(`/api/messages${q ? `?q=${encodeURIComponent(q)}` : ""}`, { as }))).json();
+const remove = (as: SessionUser, withId: number) =>
+  removeConversation(request(`/api/messages/${withId}`, { method: "DELETE", as }), params({ userId: String(withId) }));
 
 describe("POST /api/messages/[userId]", () => {
   it("sends a message as the logged-in user", async () => {
@@ -115,5 +118,62 @@ describe("GET /api/messages (conversation list)", () => {
     await read(farmer, alice.id);
     const after = await inbox(farmer);
     expect(after.find((c: { user: { id: number } }) => c.user.id === alice.id).unread).toBe(0);
+  });
+});
+
+describe("DELETE /api/messages/[userId] (remove a conversation)", () => {
+  it("hides it for the remover only, clears its unread, and a new message brings it back alone", async () => {
+    const customer = await createUser();
+    const farmer = await createUser({ role: "farmer" });
+    await post(customer, farmer.id, "Old question");
+    await post(farmer, customer.id, "Old answer");
+    await post(customer, farmer.id, "Unread follow-up");
+
+    expect((await remove(farmer, customer.id)).status).toBe(200);
+
+    expect(await inbox(farmer)).toEqual([]);
+    expect(await read(farmer, customer.id)).toEqual([]);
+    expect(await prisma.message.count({ where: { receiverId: farmer.id, read: false } })).toBe(0);
+    // The customer still has every message.
+    expect((await read(customer, farmer.id)).map((m: { content: string }) => m.content)).toEqual([
+      "Old question", "Old answer", "Unread follow-up",
+    ]);
+
+    await post(customer, farmer.id, "Still selling?");
+    const [conv] = await inbox(farmer);
+    expect(conv).toMatchObject({ user: { id: customer.id }, lastMessage: "Still selling?", unread: 1 });
+    expect((await read(farmer, customer.id)).map((m: { content: string }) => m.content)).toEqual(["Still selling?"]);
+  });
+
+  it("needs a session", async () => {
+    const farmer = await createUser({ role: "farmer" });
+    expect((await remove(undefined as unknown as SessionUser, farmer.id)).status).toBe(401);
+  });
+});
+
+describe("GET /api/messages?q= (search)", () => {
+  it("finds conversations by any message they contain, or by name", async () => {
+    const farmer = await createUser({ role: "farmer" });
+    const ana = await createUser({ name: "Ana Reyes" });
+    const ben = await createUser({ name: "Ben Cruz" });
+    await post(ana, farmer.id, "Do you have Ampalaya this week?");
+    await post(ana, farmer.id, "Thanks!");
+    await post(ben, farmer.id, "Two kilos of tomatoes please");
+
+    const byWord = await inbox(farmer, "ampalaya");
+    expect(byWord).toHaveLength(1);
+    expect(byWord[0]).toMatchObject({ user: { id: ana.id }, lastMessage: "Thanks!", match: { content: "Do you have Ampalaya this week?" } });
+
+    expect((await inbox(farmer, "ben")).map((c: { user: { id: number } }) => c.user.id)).toEqual([ben.id]);
+    expect(await inbox(farmer, "durian")).toEqual([]);
+  });
+
+  it("doesn't search messages the caller removed", async () => {
+    const farmer = await createUser({ role: "farmer" });
+    const customer = await createUser();
+    await post(customer, farmer.id, "Ampalaya, 2 kg");
+    await remove(farmer, customer.id);
+
+    expect(await inbox(farmer, "ampalaya")).toEqual([]);
   });
 });

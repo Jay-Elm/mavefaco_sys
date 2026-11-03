@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   try {
     if (actor.role === ROLES.FARMER) {
       const [unreadMessages, unreadNotices, pendingOrders, suspendedProducts, cropsToHarvest, me] = await Promise.all([
-        prisma.message.count({ where: { receiverId: actor.id, read: false } }),
+        unreadVisibleMessages(actor.id),
         prisma.notice.count({ where: { recipientId: actor.id, read: false } }),
         // New orders waiting for the farmer to accept or reject
         prisma.order.count({ where: { status: "pending", items: { some: { product: { farmerId: actor.id } } } } }),
@@ -63,4 +63,17 @@ export async function GET(req: NextRequest) {
   } catch {
     return NextResponse.json({ error: "Failed to fetch badges" }, { status: 500 });
   }
+}
+
+/** Unread messages to the user, leaving out conversations they removed. */
+async function unreadVisibleMessages(userId: number) {
+  const [unread, hides] = await Promise.all([
+    prisma.message.findMany({ where: { receiverId: userId, read: false }, select: { senderId: true, createdAt: true } }),
+    prisma.conversationHide.findMany({ where: { userId } }),
+  ]);
+  const hiddenUntil = new Map(hides.map((h) => [h.otherId, h.hiddenAt]));
+  return unread.filter((m) => {
+    const hidden = hiddenUntil.get(m.senderId);
+    return !hidden || m.createdAt > hidden;
+  }).length;
 }
