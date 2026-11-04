@@ -126,6 +126,11 @@ export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
  * 
  */
 export type IdSubmission = $Result.DefaultSelection<Prisma.$IdSubmissionPayload>
+/**
+ * Model AiReport
+ * 
+ */
+export type AiReport = $Result.DefaultSelection<Prisma.$AiReportPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -467,6 +472,16 @@ export class PrismaClient<
     * ```
     */
   get idSubmission(): Prisma.IdSubmissionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.aiReport`: Exposes CRUD operations for the **AiReport** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AiReports
+    * const aiReports = await prisma.aiReport.findMany()
+    * ```
+    */
+  get aiReport(): Prisma.AiReportDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -935,7 +950,8 @@ export namespace Prisma {
     ConversationHide: 'ConversationHide',
     Notice: 'Notice',
     AuditLog: 'AuditLog',
-    IdSubmission: 'IdSubmission'
+    IdSubmission: 'IdSubmission',
+    AiReport: 'AiReport'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -951,7 +967,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "emailChangeToken" | "totpBackupCode" | "category" | "product" | "cropType" | "planting" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "conversationHide" | "notice" | "auditLog" | "idSubmission"
+      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "emailChangeToken" | "totpBackupCode" | "category" | "product" | "cropType" | "planting" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "conversationHide" | "notice" | "auditLog" | "idSubmission" | "aiReport"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2583,6 +2599,80 @@ export namespace Prisma {
           }
         }
       }
+      AiReport: {
+        payload: Prisma.$AiReportPayload<ExtArgs>
+        fields: Prisma.AiReportFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AiReportFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiReportPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AiReportFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiReportPayload>
+          }
+          findFirst: {
+            args: Prisma.AiReportFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiReportPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AiReportFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiReportPayload>
+          }
+          findMany: {
+            args: Prisma.AiReportFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiReportPayload>[]
+          }
+          create: {
+            args: Prisma.AiReportCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiReportPayload>
+          }
+          createMany: {
+            args: Prisma.AiReportCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AiReportCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiReportPayload>[]
+          }
+          delete: {
+            args: Prisma.AiReportDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiReportPayload>
+          }
+          update: {
+            args: Prisma.AiReportUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiReportPayload>
+          }
+          deleteMany: {
+            args: Prisma.AiReportDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AiReportUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AiReportUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiReportPayload>[]
+          }
+          upsert: {
+            args: Prisma.AiReportUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AiReportPayload>
+          }
+          aggregate: {
+            args: Prisma.AiReportAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAiReport>
+          }
+          groupBy: {
+            args: Prisma.AiReportGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AiReportGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AiReportCountArgs<ExtArgs>
+            result: $Utils.Optional<AiReportCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2728,6 +2818,7 @@ export namespace Prisma {
     notice?: NoticeOmit
     auditLog?: AuditLogOmit
     idSubmission?: IdSubmissionOmit
+    aiReport?: AiReportOmit
   }
 
   /* Types for Logging */
@@ -2822,6 +2913,7 @@ export namespace Prisma {
     notices: number
     plantings: number
     idSubmissions: number
+    aiReports: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2839,6 +2931,7 @@ export namespace Prisma {
     notices?: boolean | UserCountOutputTypeCountNoticesArgs
     plantings?: boolean | UserCountOutputTypeCountPlantingsArgs
     idSubmissions?: boolean | UserCountOutputTypeCountIdSubmissionsArgs
+    aiReports?: boolean | UserCountOutputTypeCountAiReportsArgs
   }
 
   // Custom InputTypes
@@ -2948,6 +3041,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountIdSubmissionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: IdSubmissionWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAiReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AiReportWhereInput
   }
 
 
@@ -3453,6 +3553,7 @@ export namespace Prisma {
     notices?: boolean | User$noticesArgs<ExtArgs>
     plantings?: boolean | User$plantingsArgs<ExtArgs>
     idSubmissions?: boolean | User$idSubmissionsArgs<ExtArgs>
+    aiReports?: boolean | User$aiReportsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -3532,6 +3633,7 @@ export namespace Prisma {
     notices?: boolean | User$noticesArgs<ExtArgs>
     plantings?: boolean | User$plantingsArgs<ExtArgs>
     idSubmissions?: boolean | User$idSubmissionsArgs<ExtArgs>
+    aiReports?: boolean | User$aiReportsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3554,6 +3656,7 @@ export namespace Prisma {
       notices: Prisma.$NoticePayload<ExtArgs>[]
       plantings: Prisma.$PlantingPayload<ExtArgs>[]
       idSubmissions: Prisma.$IdSubmissionPayload<ExtArgs>[]
+      aiReports: Prisma.$AiReportPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3981,6 +4084,7 @@ export namespace Prisma {
     notices<T extends User$noticesArgs<ExtArgs> = {}>(args?: Subset<T, User$noticesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NoticePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     plantings<T extends User$plantingsArgs<ExtArgs> = {}>(args?: Subset<T, User$plantingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlantingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     idSubmissions<T extends User$idSubmissionsArgs<ExtArgs> = {}>(args?: Subset<T, User$idSubmissionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IdSubmissionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    aiReports<T extends User$aiReportsArgs<ExtArgs> = {}>(args?: Subset<T, User$aiReportsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4753,6 +4857,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: IdSubmissionScalarFieldEnum | IdSubmissionScalarFieldEnum[]
+  }
+
+  /**
+   * User.aiReports
+   */
+  export type User$aiReportsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportInclude<ExtArgs> | null
+    where?: AiReportWhereInput
+    orderBy?: AiReportOrderByWithRelationInput | AiReportOrderByWithRelationInput[]
+    cursor?: AiReportWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AiReportScalarFieldEnum | AiReportScalarFieldEnum[]
   }
 
   /**
@@ -28567,6 +28695,1156 @@ export namespace Prisma {
 
 
   /**
+   * Model AiReport
+   */
+
+  export type AggregateAiReport = {
+    _count: AiReportCountAggregateOutputType | null
+    _avg: AiReportAvgAggregateOutputType | null
+    _sum: AiReportSumAggregateOutputType | null
+    _min: AiReportMinAggregateOutputType | null
+    _max: AiReportMaxAggregateOutputType | null
+  }
+
+  export type AiReportAvgAggregateOutputType = {
+    id: number | null
+    reportCount: number | null
+    lastLogId: number | null
+    createdById: number | null
+  }
+
+  export type AiReportSumAggregateOutputType = {
+    id: number | null
+    reportCount: number | null
+    lastLogId: number | null
+    createdById: number | null
+  }
+
+  export type AiReportMinAggregateOutputType = {
+    id: number | null
+    model: string | null
+    reportCount: number | null
+    lastLogId: number | null
+    createdAt: Date | null
+    createdById: number | null
+  }
+
+  export type AiReportMaxAggregateOutputType = {
+    id: number | null
+    model: string | null
+    reportCount: number | null
+    lastLogId: number | null
+    createdAt: Date | null
+    createdById: number | null
+  }
+
+  export type AiReportCountAggregateOutputType = {
+    id: number
+    content: number
+    model: number
+    reportCount: number
+    lastLogId: number
+    createdAt: number
+    createdById: number
+    _all: number
+  }
+
+
+  export type AiReportAvgAggregateInputType = {
+    id?: true
+    reportCount?: true
+    lastLogId?: true
+    createdById?: true
+  }
+
+  export type AiReportSumAggregateInputType = {
+    id?: true
+    reportCount?: true
+    lastLogId?: true
+    createdById?: true
+  }
+
+  export type AiReportMinAggregateInputType = {
+    id?: true
+    model?: true
+    reportCount?: true
+    lastLogId?: true
+    createdAt?: true
+    createdById?: true
+  }
+
+  export type AiReportMaxAggregateInputType = {
+    id?: true
+    model?: true
+    reportCount?: true
+    lastLogId?: true
+    createdAt?: true
+    createdById?: true
+  }
+
+  export type AiReportCountAggregateInputType = {
+    id?: true
+    content?: true
+    model?: true
+    reportCount?: true
+    lastLogId?: true
+    createdAt?: true
+    createdById?: true
+    _all?: true
+  }
+
+  export type AiReportAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AiReport to aggregate.
+     */
+    where?: AiReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiReports to fetch.
+     */
+    orderBy?: AiReportOrderByWithRelationInput | AiReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AiReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AiReports
+    **/
+    _count?: true | AiReportCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AiReportAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AiReportSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AiReportMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AiReportMaxAggregateInputType
+  }
+
+  export type GetAiReportAggregateType<T extends AiReportAggregateArgs> = {
+        [P in keyof T & keyof AggregateAiReport]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAiReport[P]>
+      : GetScalarType<T[P], AggregateAiReport[P]>
+  }
+
+
+
+
+  export type AiReportGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AiReportWhereInput
+    orderBy?: AiReportOrderByWithAggregationInput | AiReportOrderByWithAggregationInput[]
+    by: AiReportScalarFieldEnum[] | AiReportScalarFieldEnum
+    having?: AiReportScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AiReportCountAggregateInputType | true
+    _avg?: AiReportAvgAggregateInputType
+    _sum?: AiReportSumAggregateInputType
+    _min?: AiReportMinAggregateInputType
+    _max?: AiReportMaxAggregateInputType
+  }
+
+  export type AiReportGroupByOutputType = {
+    id: number
+    content: JsonValue
+    model: string
+    reportCount: number
+    lastLogId: number | null
+    createdAt: Date
+    createdById: number | null
+    _count: AiReportCountAggregateOutputType | null
+    _avg: AiReportAvgAggregateOutputType | null
+    _sum: AiReportSumAggregateOutputType | null
+    _min: AiReportMinAggregateOutputType | null
+    _max: AiReportMaxAggregateOutputType | null
+  }
+
+  type GetAiReportGroupByPayload<T extends AiReportGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AiReportGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AiReportGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AiReportGroupByOutputType[P]>
+            : GetScalarType<T[P], AiReportGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AiReportSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    content?: boolean
+    model?: boolean
+    reportCount?: boolean
+    lastLogId?: boolean
+    createdAt?: boolean
+    createdById?: boolean
+    createdBy?: boolean | AiReport$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["aiReport"]>
+
+  export type AiReportSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    content?: boolean
+    model?: boolean
+    reportCount?: boolean
+    lastLogId?: boolean
+    createdAt?: boolean
+    createdById?: boolean
+    createdBy?: boolean | AiReport$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["aiReport"]>
+
+  export type AiReportSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    content?: boolean
+    model?: boolean
+    reportCount?: boolean
+    lastLogId?: boolean
+    createdAt?: boolean
+    createdById?: boolean
+    createdBy?: boolean | AiReport$createdByArgs<ExtArgs>
+  }, ExtArgs["result"]["aiReport"]>
+
+  export type AiReportSelectScalar = {
+    id?: boolean
+    content?: boolean
+    model?: boolean
+    reportCount?: boolean
+    lastLogId?: boolean
+    createdAt?: boolean
+    createdById?: boolean
+  }
+
+  export type AiReportOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "model" | "reportCount" | "lastLogId" | "createdAt" | "createdById", ExtArgs["result"]["aiReport"]>
+  export type AiReportInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | AiReport$createdByArgs<ExtArgs>
+  }
+  export type AiReportIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | AiReport$createdByArgs<ExtArgs>
+  }
+  export type AiReportIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    createdBy?: boolean | AiReport$createdByArgs<ExtArgs>
+  }
+
+  export type $AiReportPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AiReport"
+    objects: {
+      createdBy: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      content: Prisma.JsonValue
+      model: string
+      reportCount: number
+      lastLogId: number | null
+      createdAt: Date
+      createdById: number | null
+    }, ExtArgs["result"]["aiReport"]>
+    composites: {}
+  }
+
+  type AiReportGetPayload<S extends boolean | null | undefined | AiReportDefaultArgs> = $Result.GetResult<Prisma.$AiReportPayload, S>
+
+  type AiReportCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AiReportFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AiReportCountAggregateInputType | true
+    }
+
+  export interface AiReportDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AiReport'], meta: { name: 'AiReport' } }
+    /**
+     * Find zero or one AiReport that matches the filter.
+     * @param {AiReportFindUniqueArgs} args - Arguments to find a AiReport
+     * @example
+     * // Get one AiReport
+     * const aiReport = await prisma.aiReport.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AiReportFindUniqueArgs>(args: SelectSubset<T, AiReportFindUniqueArgs<ExtArgs>>): Prisma__AiReportClient<$Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AiReport that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AiReportFindUniqueOrThrowArgs} args - Arguments to find a AiReport
+     * @example
+     * // Get one AiReport
+     * const aiReport = await prisma.aiReport.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AiReportFindUniqueOrThrowArgs>(args: SelectSubset<T, AiReportFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AiReportClient<$Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AiReport that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiReportFindFirstArgs} args - Arguments to find a AiReport
+     * @example
+     * // Get one AiReport
+     * const aiReport = await prisma.aiReport.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AiReportFindFirstArgs>(args?: SelectSubset<T, AiReportFindFirstArgs<ExtArgs>>): Prisma__AiReportClient<$Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AiReport that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiReportFindFirstOrThrowArgs} args - Arguments to find a AiReport
+     * @example
+     * // Get one AiReport
+     * const aiReport = await prisma.aiReport.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AiReportFindFirstOrThrowArgs>(args?: SelectSubset<T, AiReportFindFirstOrThrowArgs<ExtArgs>>): Prisma__AiReportClient<$Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AiReports that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiReportFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AiReports
+     * const aiReports = await prisma.aiReport.findMany()
+     * 
+     * // Get first 10 AiReports
+     * const aiReports = await prisma.aiReport.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const aiReportWithIdOnly = await prisma.aiReport.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AiReportFindManyArgs>(args?: SelectSubset<T, AiReportFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AiReport.
+     * @param {AiReportCreateArgs} args - Arguments to create a AiReport.
+     * @example
+     * // Create one AiReport
+     * const AiReport = await prisma.aiReport.create({
+     *   data: {
+     *     // ... data to create a AiReport
+     *   }
+     * })
+     * 
+     */
+    create<T extends AiReportCreateArgs>(args: SelectSubset<T, AiReportCreateArgs<ExtArgs>>): Prisma__AiReportClient<$Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AiReports.
+     * @param {AiReportCreateManyArgs} args - Arguments to create many AiReports.
+     * @example
+     * // Create many AiReports
+     * const aiReport = await prisma.aiReport.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AiReportCreateManyArgs>(args?: SelectSubset<T, AiReportCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AiReports and returns the data saved in the database.
+     * @param {AiReportCreateManyAndReturnArgs} args - Arguments to create many AiReports.
+     * @example
+     * // Create many AiReports
+     * const aiReport = await prisma.aiReport.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AiReports and only return the `id`
+     * const aiReportWithIdOnly = await prisma.aiReport.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AiReportCreateManyAndReturnArgs>(args?: SelectSubset<T, AiReportCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AiReport.
+     * @param {AiReportDeleteArgs} args - Arguments to delete one AiReport.
+     * @example
+     * // Delete one AiReport
+     * const AiReport = await prisma.aiReport.delete({
+     *   where: {
+     *     // ... filter to delete one AiReport
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AiReportDeleteArgs>(args: SelectSubset<T, AiReportDeleteArgs<ExtArgs>>): Prisma__AiReportClient<$Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AiReport.
+     * @param {AiReportUpdateArgs} args - Arguments to update one AiReport.
+     * @example
+     * // Update one AiReport
+     * const aiReport = await prisma.aiReport.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AiReportUpdateArgs>(args: SelectSubset<T, AiReportUpdateArgs<ExtArgs>>): Prisma__AiReportClient<$Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AiReports.
+     * @param {AiReportDeleteManyArgs} args - Arguments to filter AiReports to delete.
+     * @example
+     * // Delete a few AiReports
+     * const { count } = await prisma.aiReport.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AiReportDeleteManyArgs>(args?: SelectSubset<T, AiReportDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AiReports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiReportUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AiReports
+     * const aiReport = await prisma.aiReport.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AiReportUpdateManyArgs>(args: SelectSubset<T, AiReportUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AiReports and returns the data updated in the database.
+     * @param {AiReportUpdateManyAndReturnArgs} args - Arguments to update many AiReports.
+     * @example
+     * // Update many AiReports
+     * const aiReport = await prisma.aiReport.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AiReports and only return the `id`
+     * const aiReportWithIdOnly = await prisma.aiReport.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AiReportUpdateManyAndReturnArgs>(args: SelectSubset<T, AiReportUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AiReport.
+     * @param {AiReportUpsertArgs} args - Arguments to update or create a AiReport.
+     * @example
+     * // Update or create a AiReport
+     * const aiReport = await prisma.aiReport.upsert({
+     *   create: {
+     *     // ... data to create a AiReport
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AiReport we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AiReportUpsertArgs>(args: SelectSubset<T, AiReportUpsertArgs<ExtArgs>>): Prisma__AiReportClient<$Result.GetResult<Prisma.$AiReportPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AiReports.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiReportCountArgs} args - Arguments to filter AiReports to count.
+     * @example
+     * // Count the number of AiReports
+     * const count = await prisma.aiReport.count({
+     *   where: {
+     *     // ... the filter for the AiReports we want to count
+     *   }
+     * })
+    **/
+    count<T extends AiReportCountArgs>(
+      args?: Subset<T, AiReportCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AiReportCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AiReport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiReportAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AiReportAggregateArgs>(args: Subset<T, AiReportAggregateArgs>): Prisma.PrismaPromise<GetAiReportAggregateType<T>>
+
+    /**
+     * Group by AiReport.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AiReportGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AiReportGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AiReportGroupByArgs['orderBy'] }
+        : { orderBy?: AiReportGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AiReportGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAiReportGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AiReport model
+   */
+  readonly fields: AiReportFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AiReport.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AiReportClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    createdBy<T extends AiReport$createdByArgs<ExtArgs> = {}>(args?: Subset<T, AiReport$createdByArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AiReport model
+   */
+  interface AiReportFieldRefs {
+    readonly id: FieldRef<"AiReport", 'Int'>
+    readonly content: FieldRef<"AiReport", 'Json'>
+    readonly model: FieldRef<"AiReport", 'String'>
+    readonly reportCount: FieldRef<"AiReport", 'Int'>
+    readonly lastLogId: FieldRef<"AiReport", 'Int'>
+    readonly createdAt: FieldRef<"AiReport", 'DateTime'>
+    readonly createdById: FieldRef<"AiReport", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AiReport findUnique
+   */
+  export type AiReportFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportInclude<ExtArgs> | null
+    /**
+     * Filter, which AiReport to fetch.
+     */
+    where: AiReportWhereUniqueInput
+  }
+
+  /**
+   * AiReport findUniqueOrThrow
+   */
+  export type AiReportFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportInclude<ExtArgs> | null
+    /**
+     * Filter, which AiReport to fetch.
+     */
+    where: AiReportWhereUniqueInput
+  }
+
+  /**
+   * AiReport findFirst
+   */
+  export type AiReportFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportInclude<ExtArgs> | null
+    /**
+     * Filter, which AiReport to fetch.
+     */
+    where?: AiReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiReports to fetch.
+     */
+    orderBy?: AiReportOrderByWithRelationInput | AiReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AiReports.
+     */
+    cursor?: AiReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AiReports.
+     */
+    distinct?: AiReportScalarFieldEnum | AiReportScalarFieldEnum[]
+  }
+
+  /**
+   * AiReport findFirstOrThrow
+   */
+  export type AiReportFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportInclude<ExtArgs> | null
+    /**
+     * Filter, which AiReport to fetch.
+     */
+    where?: AiReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiReports to fetch.
+     */
+    orderBy?: AiReportOrderByWithRelationInput | AiReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AiReports.
+     */
+    cursor?: AiReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AiReports.
+     */
+    distinct?: AiReportScalarFieldEnum | AiReportScalarFieldEnum[]
+  }
+
+  /**
+   * AiReport findMany
+   */
+  export type AiReportFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportInclude<ExtArgs> | null
+    /**
+     * Filter, which AiReports to fetch.
+     */
+    where?: AiReportWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AiReports to fetch.
+     */
+    orderBy?: AiReportOrderByWithRelationInput | AiReportOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AiReports.
+     */
+    cursor?: AiReportWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AiReports from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AiReports.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AiReports.
+     */
+    distinct?: AiReportScalarFieldEnum | AiReportScalarFieldEnum[]
+  }
+
+  /**
+   * AiReport create
+   */
+  export type AiReportCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AiReport.
+     */
+    data: XOR<AiReportCreateInput, AiReportUncheckedCreateInput>
+  }
+
+  /**
+   * AiReport createMany
+   */
+  export type AiReportCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AiReports.
+     */
+    data: AiReportCreateManyInput | AiReportCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AiReport createManyAndReturn
+   */
+  export type AiReportCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * The data used to create many AiReports.
+     */
+    data: AiReportCreateManyInput | AiReportCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AiReport update
+   */
+  export type AiReportUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AiReport.
+     */
+    data: XOR<AiReportUpdateInput, AiReportUncheckedUpdateInput>
+    /**
+     * Choose, which AiReport to update.
+     */
+    where: AiReportWhereUniqueInput
+  }
+
+  /**
+   * AiReport updateMany
+   */
+  export type AiReportUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AiReports.
+     */
+    data: XOR<AiReportUpdateManyMutationInput, AiReportUncheckedUpdateManyInput>
+    /**
+     * Filter which AiReports to update
+     */
+    where?: AiReportWhereInput
+    /**
+     * Limit how many AiReports to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AiReport updateManyAndReturn
+   */
+  export type AiReportUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * The data used to update AiReports.
+     */
+    data: XOR<AiReportUpdateManyMutationInput, AiReportUncheckedUpdateManyInput>
+    /**
+     * Filter which AiReports to update
+     */
+    where?: AiReportWhereInput
+    /**
+     * Limit how many AiReports to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AiReport upsert
+   */
+  export type AiReportUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AiReport to update in case it exists.
+     */
+    where: AiReportWhereUniqueInput
+    /**
+     * In case the AiReport found by the `where` argument doesn't exist, create a new AiReport with this data.
+     */
+    create: XOR<AiReportCreateInput, AiReportUncheckedCreateInput>
+    /**
+     * In case the AiReport was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AiReportUpdateInput, AiReportUncheckedUpdateInput>
+  }
+
+  /**
+   * AiReport delete
+   */
+  export type AiReportDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportInclude<ExtArgs> | null
+    /**
+     * Filter which AiReport to delete.
+     */
+    where: AiReportWhereUniqueInput
+  }
+
+  /**
+   * AiReport deleteMany
+   */
+  export type AiReportDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AiReports to delete
+     */
+    where?: AiReportWhereInput
+    /**
+     * Limit how many AiReports to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AiReport.createdBy
+   */
+  export type AiReport$createdByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * AiReport without action
+   */
+  export type AiReportDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AiReport
+     */
+    select?: AiReportSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AiReport
+     */
+    omit?: AiReportOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AiReportInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -28880,12 +30158,32 @@ export namespace Prisma {
   export type IdSubmissionScalarFieldEnum = (typeof IdSubmissionScalarFieldEnum)[keyof typeof IdSubmissionScalarFieldEnum]
 
 
+  export const AiReportScalarFieldEnum: {
+    id: 'id',
+    content: 'content',
+    model: 'model',
+    reportCount: 'reportCount',
+    lastLogId: 'lastLogId',
+    createdAt: 'createdAt',
+    createdById: 'createdById'
+  };
+
+  export type AiReportScalarFieldEnum = (typeof AiReportScalarFieldEnum)[keyof typeof AiReportScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const QueryMode: {
@@ -28902,6 +30200,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -28984,6 +30291,20 @@ export namespace Prisma {
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
   /**
    * Deep Input Types
    */
@@ -29024,6 +30345,7 @@ export namespace Prisma {
     notices?: NoticeListRelationFilter
     plantings?: PlantingListRelationFilter
     idSubmissions?: IdSubmissionListRelationFilter
+    aiReports?: AiReportListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -29058,6 +30380,7 @@ export namespace Prisma {
     notices?: NoticeOrderByRelationAggregateInput
     plantings?: PlantingOrderByRelationAggregateInput
     idSubmissions?: IdSubmissionOrderByRelationAggregateInput
+    aiReports?: AiReportOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -29095,6 +30418,7 @@ export namespace Prisma {
     notices?: NoticeListRelationFilter
     plantings?: PlantingListRelationFilter
     idSubmissions?: IdSubmissionListRelationFilter
+    aiReports?: AiReportListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -30599,6 +31923,73 @@ export namespace Prisma {
     userId?: IntWithAggregatesFilter<"IdSubmission"> | number
   }
 
+  export type AiReportWhereInput = {
+    AND?: AiReportWhereInput | AiReportWhereInput[]
+    OR?: AiReportWhereInput[]
+    NOT?: AiReportWhereInput | AiReportWhereInput[]
+    id?: IntFilter<"AiReport"> | number
+    content?: JsonFilter<"AiReport">
+    model?: StringFilter<"AiReport"> | string
+    reportCount?: IntFilter<"AiReport"> | number
+    lastLogId?: IntNullableFilter<"AiReport"> | number | null
+    createdAt?: DateTimeFilter<"AiReport"> | Date | string
+    createdById?: IntNullableFilter<"AiReport"> | number | null
+    createdBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type AiReportOrderByWithRelationInput = {
+    id?: SortOrder
+    content?: SortOrder
+    model?: SortOrder
+    reportCount?: SortOrder
+    lastLogId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdBy?: UserOrderByWithRelationInput
+  }
+
+  export type AiReportWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: AiReportWhereInput | AiReportWhereInput[]
+    OR?: AiReportWhereInput[]
+    NOT?: AiReportWhereInput | AiReportWhereInput[]
+    content?: JsonFilter<"AiReport">
+    model?: StringFilter<"AiReport"> | string
+    reportCount?: IntFilter<"AiReport"> | number
+    lastLogId?: IntNullableFilter<"AiReport"> | number | null
+    createdAt?: DateTimeFilter<"AiReport"> | Date | string
+    createdById?: IntNullableFilter<"AiReport"> | number | null
+    createdBy?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type AiReportOrderByWithAggregationInput = {
+    id?: SortOrder
+    content?: SortOrder
+    model?: SortOrder
+    reportCount?: SortOrder
+    lastLogId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    createdById?: SortOrderInput | SortOrder
+    _count?: AiReportCountOrderByAggregateInput
+    _avg?: AiReportAvgOrderByAggregateInput
+    _max?: AiReportMaxOrderByAggregateInput
+    _min?: AiReportMinOrderByAggregateInput
+    _sum?: AiReportSumOrderByAggregateInput
+  }
+
+  export type AiReportScalarWhereWithAggregatesInput = {
+    AND?: AiReportScalarWhereWithAggregatesInput | AiReportScalarWhereWithAggregatesInput[]
+    OR?: AiReportScalarWhereWithAggregatesInput[]
+    NOT?: AiReportScalarWhereWithAggregatesInput | AiReportScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"AiReport"> | number
+    content?: JsonWithAggregatesFilter<"AiReport">
+    model?: StringWithAggregatesFilter<"AiReport"> | string
+    reportCount?: IntWithAggregatesFilter<"AiReport"> | number
+    lastLogId?: IntNullableWithAggregatesFilter<"AiReport"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"AiReport"> | Date | string
+    createdById?: IntNullableWithAggregatesFilter<"AiReport"> | number | null
+  }
+
   export type UserCreateInput = {
     name: string
     email: string
@@ -30630,6 +32021,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -30664,6 +32056,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUpdateInput = {
@@ -30697,6 +32090,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -30731,6 +32125,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -32243,6 +33638,72 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
   }
 
+  export type AiReportCreateInput = {
+    content: JsonNullValueInput | InputJsonValue
+    model: string
+    reportCount: number
+    lastLogId?: number | null
+    createdAt?: Date | string
+    createdBy?: UserCreateNestedOneWithoutAiReportsInput
+  }
+
+  export type AiReportUncheckedCreateInput = {
+    id?: number
+    content: JsonNullValueInput | InputJsonValue
+    model: string
+    reportCount: number
+    lastLogId?: number | null
+    createdAt?: Date | string
+    createdById?: number | null
+  }
+
+  export type AiReportUpdateInput = {
+    content?: JsonNullValueInput | InputJsonValue
+    model?: StringFieldUpdateOperationsInput | string
+    reportCount?: IntFieldUpdateOperationsInput | number
+    lastLogId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdBy?: UserUpdateOneWithoutAiReportsNestedInput
+  }
+
+  export type AiReportUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    content?: JsonNullValueInput | InputJsonValue
+    model?: StringFieldUpdateOperationsInput | string
+    reportCount?: IntFieldUpdateOperationsInput | number
+    lastLogId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type AiReportCreateManyInput = {
+    id?: number
+    content: JsonNullValueInput | InputJsonValue
+    model: string
+    reportCount: number
+    lastLogId?: number | null
+    createdAt?: Date | string
+    createdById?: number | null
+  }
+
+  export type AiReportUpdateManyMutationInput = {
+    content?: JsonNullValueInput | InputJsonValue
+    model?: StringFieldUpdateOperationsInput | string
+    reportCount?: IntFieldUpdateOperationsInput | number
+    lastLogId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiReportUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    content?: JsonNullValueInput | InputJsonValue
+    model?: StringFieldUpdateOperationsInput | string
+    reportCount?: IntFieldUpdateOperationsInput | number
+    lastLogId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdById?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -32400,6 +33861,12 @@ export namespace Prisma {
     none?: IdSubmissionWhereInput
   }
 
+  export type AiReportListRelationFilter = {
+    every?: AiReportWhereInput
+    some?: AiReportWhereInput
+    none?: AiReportWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -32454,6 +33921,10 @@ export namespace Prisma {
   }
 
   export type IdSubmissionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AiReportOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -33662,6 +35133,102 @@ export namespace Prisma {
     reviewedById?: SortOrder
     userId?: SortOrder
   }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type AiReportCountOrderByAggregateInput = {
+    id?: SortOrder
+    content?: SortOrder
+    model?: SortOrder
+    reportCount?: SortOrder
+    lastLogId?: SortOrder
+    createdAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type AiReportAvgOrderByAggregateInput = {
+    id?: SortOrder
+    reportCount?: SortOrder
+    lastLogId?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type AiReportMaxOrderByAggregateInput = {
+    id?: SortOrder
+    model?: SortOrder
+    reportCount?: SortOrder
+    lastLogId?: SortOrder
+    createdAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type AiReportMinOrderByAggregateInput = {
+    id?: SortOrder
+    model?: SortOrder
+    reportCount?: SortOrder
+    lastLogId?: SortOrder
+    createdAt?: SortOrder
+    createdById?: SortOrder
+  }
+
+  export type AiReportSumOrderByAggregateInput = {
+    id?: SortOrder
+    reportCount?: SortOrder
+    lastLogId?: SortOrder
+    createdById?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
 
   export type ProductCreateNestedManyWithoutFarmerInput = {
     create?: XOR<ProductCreateWithoutFarmerInput, ProductUncheckedCreateWithoutFarmerInput> | ProductCreateWithoutFarmerInput[] | ProductUncheckedCreateWithoutFarmerInput[]
@@ -33761,6 +35328,13 @@ export namespace Prisma {
     connect?: IdSubmissionWhereUniqueInput | IdSubmissionWhereUniqueInput[]
   }
 
+  export type AiReportCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<AiReportCreateWithoutCreatedByInput, AiReportUncheckedCreateWithoutCreatedByInput> | AiReportCreateWithoutCreatedByInput[] | AiReportUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: AiReportCreateOrConnectWithoutCreatedByInput | AiReportCreateOrConnectWithoutCreatedByInput[]
+    createMany?: AiReportCreateManyCreatedByInputEnvelope
+    connect?: AiReportWhereUniqueInput | AiReportWhereUniqueInput[]
+  }
+
   export type ProductUncheckedCreateNestedManyWithoutFarmerInput = {
     create?: XOR<ProductCreateWithoutFarmerInput, ProductUncheckedCreateWithoutFarmerInput> | ProductCreateWithoutFarmerInput[] | ProductUncheckedCreateWithoutFarmerInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutFarmerInput | ProductCreateOrConnectWithoutFarmerInput[]
@@ -33857,6 +35431,13 @@ export namespace Prisma {
     connectOrCreate?: IdSubmissionCreateOrConnectWithoutUserInput | IdSubmissionCreateOrConnectWithoutUserInput[]
     createMany?: IdSubmissionCreateManyUserInputEnvelope
     connect?: IdSubmissionWhereUniqueInput | IdSubmissionWhereUniqueInput[]
+  }
+
+  export type AiReportUncheckedCreateNestedManyWithoutCreatedByInput = {
+    create?: XOR<AiReportCreateWithoutCreatedByInput, AiReportUncheckedCreateWithoutCreatedByInput> | AiReportCreateWithoutCreatedByInput[] | AiReportUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: AiReportCreateOrConnectWithoutCreatedByInput | AiReportCreateOrConnectWithoutCreatedByInput[]
+    createMany?: AiReportCreateManyCreatedByInputEnvelope
+    connect?: AiReportWhereUniqueInput | AiReportWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -34091,6 +35672,20 @@ export namespace Prisma {
     deleteMany?: IdSubmissionScalarWhereInput | IdSubmissionScalarWhereInput[]
   }
 
+  export type AiReportUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<AiReportCreateWithoutCreatedByInput, AiReportUncheckedCreateWithoutCreatedByInput> | AiReportCreateWithoutCreatedByInput[] | AiReportUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: AiReportCreateOrConnectWithoutCreatedByInput | AiReportCreateOrConnectWithoutCreatedByInput[]
+    upsert?: AiReportUpsertWithWhereUniqueWithoutCreatedByInput | AiReportUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: AiReportCreateManyCreatedByInputEnvelope
+    set?: AiReportWhereUniqueInput | AiReportWhereUniqueInput[]
+    disconnect?: AiReportWhereUniqueInput | AiReportWhereUniqueInput[]
+    delete?: AiReportWhereUniqueInput | AiReportWhereUniqueInput[]
+    connect?: AiReportWhereUniqueInput | AiReportWhereUniqueInput[]
+    update?: AiReportUpdateWithWhereUniqueWithoutCreatedByInput | AiReportUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: AiReportUpdateManyWithWhereWithoutCreatedByInput | AiReportUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: AiReportScalarWhereInput | AiReportScalarWhereInput[]
+  }
+
   export type ProductUncheckedUpdateManyWithoutFarmerNestedInput = {
     create?: XOR<ProductCreateWithoutFarmerInput, ProductUncheckedCreateWithoutFarmerInput> | ProductCreateWithoutFarmerInput[] | ProductUncheckedCreateWithoutFarmerInput[]
     connectOrCreate?: ProductCreateOrConnectWithoutFarmerInput | ProductCreateOrConnectWithoutFarmerInput[]
@@ -34285,6 +35880,20 @@ export namespace Prisma {
     update?: IdSubmissionUpdateWithWhereUniqueWithoutUserInput | IdSubmissionUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: IdSubmissionUpdateManyWithWhereWithoutUserInput | IdSubmissionUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: IdSubmissionScalarWhereInput | IdSubmissionScalarWhereInput[]
+  }
+
+  export type AiReportUncheckedUpdateManyWithoutCreatedByNestedInput = {
+    create?: XOR<AiReportCreateWithoutCreatedByInput, AiReportUncheckedCreateWithoutCreatedByInput> | AiReportCreateWithoutCreatedByInput[] | AiReportUncheckedCreateWithoutCreatedByInput[]
+    connectOrCreate?: AiReportCreateOrConnectWithoutCreatedByInput | AiReportCreateOrConnectWithoutCreatedByInput[]
+    upsert?: AiReportUpsertWithWhereUniqueWithoutCreatedByInput | AiReportUpsertWithWhereUniqueWithoutCreatedByInput[]
+    createMany?: AiReportCreateManyCreatedByInputEnvelope
+    set?: AiReportWhereUniqueInput | AiReportWhereUniqueInput[]
+    disconnect?: AiReportWhereUniqueInput | AiReportWhereUniqueInput[]
+    delete?: AiReportWhereUniqueInput | AiReportWhereUniqueInput[]
+    connect?: AiReportWhereUniqueInput | AiReportWhereUniqueInput[]
+    update?: AiReportUpdateWithWhereUniqueWithoutCreatedByInput | AiReportUpdateWithWhereUniqueWithoutCreatedByInput[]
+    updateMany?: AiReportUpdateManyWithWhereWithoutCreatedByInput | AiReportUpdateManyWithWhereWithoutCreatedByInput[]
+    deleteMany?: AiReportScalarWhereInput | AiReportScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutEmailVerificationTokensInput = {
@@ -34977,6 +36586,22 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutIdSubmissionsInput, UserUpdateWithoutIdSubmissionsInput>, UserUncheckedUpdateWithoutIdSubmissionsInput>
   }
 
+  export type UserCreateNestedOneWithoutAiReportsInput = {
+    create?: XOR<UserCreateWithoutAiReportsInput, UserUncheckedCreateWithoutAiReportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAiReportsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserUpdateOneWithoutAiReportsNestedInput = {
+    create?: XOR<UserCreateWithoutAiReportsInput, UserUncheckedCreateWithoutAiReportsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAiReportsInput
+    upsert?: UserUpsertWithoutAiReportsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAiReportsInput, UserUpdateWithoutAiReportsInput>, UserUncheckedUpdateWithoutAiReportsInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -35235,6 +36860,29 @@ export namespace Prisma {
     _sum?: NestedFloatNullableFilter<$PrismaModel>
     _min?: NestedFloatNullableFilter<$PrismaModel>
     _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type ProductCreateWithoutFarmerInput = {
@@ -35669,6 +37317,33 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AiReportCreateWithoutCreatedByInput = {
+    content: JsonNullValueInput | InputJsonValue
+    model: string
+    reportCount: number
+    lastLogId?: number | null
+    createdAt?: Date | string
+  }
+
+  export type AiReportUncheckedCreateWithoutCreatedByInput = {
+    id?: number
+    content: JsonNullValueInput | InputJsonValue
+    model: string
+    reportCount: number
+    lastLogId?: number | null
+    createdAt?: Date | string
+  }
+
+  export type AiReportCreateOrConnectWithoutCreatedByInput = {
+    where: AiReportWhereUniqueInput
+    create: XOR<AiReportCreateWithoutCreatedByInput, AiReportUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type AiReportCreateManyCreatedByInputEnvelope = {
+    data: AiReportCreateManyCreatedByInput | AiReportCreateManyCreatedByInput[]
+    skipDuplicates?: boolean
+  }
+
   export type ProductUpsertWithWhereUniqueWithoutFarmerInput = {
     where: ProductWhereUniqueInput
     update: XOR<ProductUpdateWithoutFarmerInput, ProductUncheckedUpdateWithoutFarmerInput>
@@ -36084,6 +37759,35 @@ export namespace Prisma {
     userId?: IntFilter<"IdSubmission"> | number
   }
 
+  export type AiReportUpsertWithWhereUniqueWithoutCreatedByInput = {
+    where: AiReportWhereUniqueInput
+    update: XOR<AiReportUpdateWithoutCreatedByInput, AiReportUncheckedUpdateWithoutCreatedByInput>
+    create: XOR<AiReportCreateWithoutCreatedByInput, AiReportUncheckedCreateWithoutCreatedByInput>
+  }
+
+  export type AiReportUpdateWithWhereUniqueWithoutCreatedByInput = {
+    where: AiReportWhereUniqueInput
+    data: XOR<AiReportUpdateWithoutCreatedByInput, AiReportUncheckedUpdateWithoutCreatedByInput>
+  }
+
+  export type AiReportUpdateManyWithWhereWithoutCreatedByInput = {
+    where: AiReportScalarWhereInput
+    data: XOR<AiReportUpdateManyMutationInput, AiReportUncheckedUpdateManyWithoutCreatedByInput>
+  }
+
+  export type AiReportScalarWhereInput = {
+    AND?: AiReportScalarWhereInput | AiReportScalarWhereInput[]
+    OR?: AiReportScalarWhereInput[]
+    NOT?: AiReportScalarWhereInput | AiReportScalarWhereInput[]
+    id?: IntFilter<"AiReport"> | number
+    content?: JsonFilter<"AiReport">
+    model?: StringFilter<"AiReport"> | string
+    reportCount?: IntFilter<"AiReport"> | number
+    lastLogId?: IntNullableFilter<"AiReport"> | number | null
+    createdAt?: DateTimeFilter<"AiReport"> | Date | string
+    createdById?: IntNullableFilter<"AiReport"> | number | null
+  }
+
   export type UserCreateWithoutEmailVerificationTokensInput = {
     name: string
     email: string
@@ -36114,6 +37818,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutEmailVerificationTokensInput = {
@@ -36147,6 +37852,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutEmailVerificationTokensInput = {
@@ -36195,6 +37901,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailVerificationTokensInput = {
@@ -36228,6 +37935,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutPasswordResetTokensInput = {
@@ -36260,6 +37968,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -36293,6 +38002,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -36341,6 +38051,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -36374,6 +38085,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutEmailChangeTokensInput = {
@@ -36406,6 +38118,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutEmailChangeTokensInput = {
@@ -36439,6 +38152,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutEmailChangeTokensInput = {
@@ -36487,6 +38201,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutEmailChangeTokensInput = {
@@ -36520,6 +38235,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutTotpBackupCodesInput = {
@@ -36552,6 +38268,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutTotpBackupCodesInput = {
@@ -36585,6 +38302,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutTotpBackupCodesInput = {
@@ -36633,6 +38351,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutTotpBackupCodesInput = {
@@ -36666,6 +38385,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProductCreateWithoutCategoryInput = {
@@ -36769,6 +38489,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutProductsInput = {
@@ -36802,6 +38523,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutProductsInput = {
@@ -36988,6 +38710,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutProductsInput = {
@@ -37021,6 +38744,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type CategoryUpsertWithoutProductsInput = {
@@ -37209,6 +38933,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutPlantingsInput = {
@@ -37242,6 +38967,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutPlantingsInput = {
@@ -37385,6 +39111,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPlantingsInput = {
@@ -37418,6 +39145,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type CropTypeUpsertWithoutPlantingsInput = {
@@ -37642,6 +39370,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -37675,6 +39404,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -37746,6 +39476,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -37779,6 +39510,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -37991,6 +39723,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutAnnouncementsInput = {
@@ -38024,6 +39757,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutAnnouncementsInput = {
@@ -38072,6 +39806,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAnnouncementsInput = {
@@ -38105,6 +39840,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutReviewsInput = {
@@ -38137,6 +39873,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -38170,6 +39907,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -38268,6 +40006,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -38301,6 +40040,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProductUpsertWithoutReviewsInput = {
@@ -38389,6 +40129,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -38422,6 +40163,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -38459,6 +40201,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutReceivedMessagesInput = {
@@ -38492,6 +40235,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutReceivedMessagesInput = {
@@ -38540,6 +40284,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -38573,6 +40318,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUpsertWithoutReceivedMessagesInput = {
@@ -38616,6 +40362,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
@@ -38649,6 +40396,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutNoticesInput = {
@@ -38681,6 +40429,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutNoticesInput = {
@@ -38714,6 +40463,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutNoticesInput = {
@@ -38812,6 +40562,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNoticesInput = {
@@ -38845,6 +40596,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type ProductUpsertWithoutNoticesInput = {
@@ -38933,6 +40685,7 @@ export namespace Prisma {
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -38966,6 +40719,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
     idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -39014,6 +40768,7 @@ export namespace Prisma {
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -39047,6 +40802,7 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserCreateWithoutIdSubmissionsInput = {
@@ -39079,6 +40835,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
     notices?: NoticeCreateNestedManyWithoutRecipientInput
     plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    aiReports?: AiReportCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserUncheckedCreateWithoutIdSubmissionsInput = {
@@ -39112,6 +40869,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
     notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    aiReports?: AiReportUncheckedCreateNestedManyWithoutCreatedByInput
   }
 
   export type UserCreateOrConnectWithoutIdSubmissionsInput = {
@@ -39160,6 +40918,7 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
     notices?: NoticeUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    aiReports?: AiReportUpdateManyWithoutCreatedByNestedInput
   }
 
   export type UserUncheckedUpdateWithoutIdSubmissionsInput = {
@@ -39193,6 +40952,157 @@ export namespace Prisma {
     totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    aiReports?: AiReportUncheckedUpdateManyWithoutCreatedByNestedInput
+  }
+
+  export type UserCreateWithoutAiReportsInput = {
+    name: string
+    email: string
+    password: string
+    role?: string
+    suspended?: boolean
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
+    emailVerifiedAt?: Date | string | null
+    tokenVersion?: number
+    deletedAt?: Date | string | null
+    totpSecret?: string | null
+    totpEnabled?: boolean
+    totpLastStep?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductCreateNestedManyWithoutFarmerInput
+    orders?: OrderCreateNestedManyWithoutCustomerInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    announcements?: AnnouncementCreateNestedManyWithoutAuthorInput
+    reviews?: ReviewCreateNestedManyWithoutCustomerInput
+    sentMessages?: MessageCreateNestedManyWithoutSenderInput
+    receivedMessages?: MessageCreateNestedManyWithoutReceiverInput
+    passwordResetTokens?: PasswordResetTokenCreateNestedManyWithoutUserInput
+    emailVerificationTokens?: EmailVerificationTokenCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeCreateNestedManyWithoutUserInput
+    notices?: NoticeCreateNestedManyWithoutRecipientInput
+    plantings?: PlantingCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAiReportsInput = {
+    id?: number
+    name: string
+    email: string
+    password: string
+    role?: string
+    suspended?: boolean
+    verified?: boolean
+    verifiedAt?: Date | string | null
+    verifiedInPersonAt?: Date | string | null
+    emailVerifiedAt?: Date | string | null
+    tokenVersion?: number
+    deletedAt?: Date | string | null
+    totpSecret?: string | null
+    totpEnabled?: boolean
+    totpLastStep?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
+    orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    announcements?: AnnouncementUncheckedCreateNestedManyWithoutAuthorInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutCustomerInput
+    sentMessages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    receivedMessages?: MessageUncheckedCreateNestedManyWithoutReceiverInput
+    passwordResetTokens?: PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+    emailVerificationTokens?: EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+    emailChangeTokens?: EmailChangeTokenUncheckedCreateNestedManyWithoutUserInput
+    totpBackupCodes?: TotpBackupCodeUncheckedCreateNestedManyWithoutUserInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutRecipientInput
+    plantings?: PlantingUncheckedCreateNestedManyWithoutFarmerInput
+    idSubmissions?: IdSubmissionUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAiReportsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAiReportsInput, UserUncheckedCreateWithoutAiReportsInput>
+  }
+
+  export type UserUpsertWithoutAiReportsInput = {
+    update: XOR<UserUpdateWithoutAiReportsInput, UserUncheckedUpdateWithoutAiReportsInput>
+    create: XOR<UserCreateWithoutAiReportsInput, UserUncheckedCreateWithoutAiReportsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAiReportsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAiReportsInput, UserUncheckedUpdateWithoutAiReportsInput>
+  }
+
+  export type UserUpdateWithoutAiReportsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUpdateManyWithoutFarmerNestedInput
+    orders?: OrderUpdateManyWithoutCustomerNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    announcements?: AnnouncementUpdateManyWithoutAuthorNestedInput
+    reviews?: ReviewUpdateManyWithoutCustomerNestedInput
+    sentMessages?: MessageUpdateManyWithoutSenderNestedInput
+    receivedMessages?: MessageUpdateManyWithoutReceiverNestedInput
+    passwordResetTokens?: PasswordResetTokenUpdateManyWithoutUserNestedInput
+    emailVerificationTokens?: EmailVerificationTokenUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUpdateManyWithoutUserNestedInput
+    notices?: NoticeUpdateManyWithoutRecipientNestedInput
+    plantings?: PlantingUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAiReportsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
+    suspended?: BoolFieldUpdateOperationsInput | boolean
+    verified?: BoolFieldUpdateOperationsInput | boolean
+    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    verifiedInPersonAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    emailVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tokenVersion?: IntFieldUpdateOperationsInput | number
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    totpEnabled?: BoolFieldUpdateOperationsInput | boolean
+    totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
+    orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    announcements?: AnnouncementUncheckedUpdateManyWithoutAuthorNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutCustomerNestedInput
+    sentMessages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    receivedMessages?: MessageUncheckedUpdateManyWithoutReceiverNestedInput
+    passwordResetTokens?: PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailVerificationTokens?: EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+    emailChangeTokens?: EmailChangeTokenUncheckedUpdateManyWithoutUserNestedInput
+    totpBackupCodes?: TotpBackupCodeUncheckedUpdateManyWithoutUserNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutRecipientNestedInput
+    plantings?: PlantingUncheckedUpdateManyWithoutFarmerNestedInput
+    idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type ProductCreateManyFarmerInput = {
@@ -39339,6 +41249,15 @@ export namespace Prisma {
     reviewedById?: number | null
     reviewedAt?: Date | string | null
     imagesPurgedAt?: Date | string | null
+    createdAt?: Date | string
+  }
+
+  export type AiReportCreateManyCreatedByInput = {
+    id?: number
+    content: JsonNullValueInput | InputJsonValue
+    model: string
+    reportCount: number
+    lastLogId?: number | null
     createdAt?: Date | string
   }
 
@@ -39778,6 +41697,32 @@ export namespace Prisma {
     reviewedById?: NullableIntFieldUpdateOperationsInput | number | null
     reviewedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     imagesPurgedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiReportUpdateWithoutCreatedByInput = {
+    content?: JsonNullValueInput | InputJsonValue
+    model?: StringFieldUpdateOperationsInput | string
+    reportCount?: IntFieldUpdateOperationsInput | number
+    lastLogId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiReportUncheckedUpdateWithoutCreatedByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    content?: JsonNullValueInput | InputJsonValue
+    model?: StringFieldUpdateOperationsInput | string
+    reportCount?: IntFieldUpdateOperationsInput | number
+    lastLogId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AiReportUncheckedUpdateManyWithoutCreatedByInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    content?: JsonNullValueInput | InputJsonValue
+    model?: StringFieldUpdateOperationsInput | string
+    reportCount?: IntFieldUpdateOperationsInput | number
+    lastLogId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

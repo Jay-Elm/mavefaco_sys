@@ -392,7 +392,10 @@ function LogSection({ planting: p, send, onChange }: { planting: Detail; send: S
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
       <h2 className="text-sm font-semibold text-gray-700 mb-1">Crop log</h2>
-      <p className="text-xs text-gray-500 mb-4">Pest, weather and damage reports are shared with other members in the community advisory, under the crop&apos;s name only.</p>
+      <p className="text-xs text-gray-500 mb-4">
+        Pest, weather and damage reports are shared with other members and staff in the community advisory, under the crop&apos;s name only,
+        and may be summarized by an AI service (Google Gemini). Don&apos;t include names or phone numbers in your notes.
+      </p>
 
       <form onSubmit={add} className="space-y-3 mb-6 pb-6 border-b border-gray-100">
         <div className="flex flex-wrap gap-2">

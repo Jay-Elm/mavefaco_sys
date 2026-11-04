@@ -134,6 +134,8 @@ The full list of what's in and out of scope is in [`SCOPE_AND_DELIMITATIONS.md`]
 | `BREVO_API_KEY` | Yes | Transactional email (verification, password reset, security notices) |
 | `SUPABASE_URL` | Yes | Supabase project URL, for product images and ID storage |
 | `SUPABASE_SERVICE_ROLE_KEY` | Yes | Server-side Storage access and sending instant-update signals; never expose to the browser |
+| `GEMINI_API_KEY` | No | Google Gemini API key (free tier, from Google AI Studio) for the AI crop report on Dashboard → Crop Advisory; without it the button says it isn't set up. Mark it secret |
+| `GEMINI_MODEL` | No | Overrides the Gemini model (default `gemini-3.5-flash-lite`) |
 | `SUPABASE_ANON_KEY` | No | Supabase's public key ("anon" or "publishable", under Project Settings → API Keys). Given to browsers so open pages hear change signals at once; without it pages check every 15 s. Realtime must allow public channels (Realtime → Settings) |
 | `ID_NUMBER_HASH_KEY` | Yes | Keys the fingerprint of farmers' ID numbers (used to stop one ID verifying two accounts); at least 32 random characters. Never change it once set: existing fingerprints would stop matching |
 | `CRON_SECRET` | Yes | Authenticates Vercel Cron calls to `/api/cron/purge-id-images` and `/api/cron/purge-suspended-products` |

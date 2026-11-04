@@ -8,7 +8,7 @@ import type { AdvisoryGroup } from '@/lib/advisory'
 const TYPE_TITLES: Record<string, string> = { pest_disease: 'Pest or disease', weather_impact: 'Weather impact', damage: 'Crop damage' }
 
 /** Advisory groups, each one line that opens to its latest notes. */
-export default function AdvisoryList({ groups }: { groups: AdvisoryGroup[] }) {
+export default function AdvisoryList({ groups, translations }: { groups: AdvisoryGroup[]; translations?: Record<number, string> }) {
   const [open, setOpen] = useState<string | null>(null)
 
   return (
@@ -41,6 +41,9 @@ export default function AdvisoryList({ groups }: { groups: AdvisoryGroup[] }) {
                   <li key={n.id} className="text-sm text-gray-700">
                     {n.note}
                     <span className="text-xs text-gray-500 ml-2">{fmtDate(n.observedOn)}</span>
+                    {translations?.[n.id] && (
+                      <span className="block text-xs text-gray-600 mt-0.5"><span className="font-semibold">In English (AI):</span> {translations[n.id]}</span>
+                    )}
                   </li>
                 ))}
                 {g.reports > g.notes.length && (

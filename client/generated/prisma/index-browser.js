@@ -354,9 +354,23 @@ exports.Prisma.IdSubmissionScalarFieldEnum = {
   userId: 'userId'
 };
 
+exports.Prisma.AiReportScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  model: 'model',
+  reportCount: 'reportCount',
+  lastLogId: 'lastLogId',
+  createdAt: 'createdAt',
+  createdById: 'createdById'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -367,6 +381,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 
 
@@ -392,7 +412,8 @@ exports.Prisma.ModelName = {
   ConversationHide: 'ConversationHide',
   Notice: 'Notice',
   AuditLog: 'AuditLog',
-  IdSubmission: 'IdSubmission'
+  IdSubmission: 'IdSubmission',
+  AiReport: 'AiReport'
 };
 
 /**

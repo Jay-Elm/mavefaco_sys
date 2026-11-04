@@ -74,6 +74,7 @@ BREVO_API_KEY=""              # emails (verification, password reset)
 SUPABASE_URL=""               # image uploads and ID verification
 SUPABASE_SERVICE_ROLE_KEY=""
 SUPABASE_ANON_KEY=""          # optional: instant page updates (else a 15 s poll)
+GEMINI_API_KEY=""             # optional: AI crop report for staff (Google Gemini free tier)
 CRON_SECRET=""                # the ID-photo and suspended-listing cleanup jobs
 ```
 

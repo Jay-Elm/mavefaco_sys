@@ -49,7 +49,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 ## Database Schema (Prisma)
 
-22 models. `generated/prisma` is a custom client output path — **always run `npx prisma generate` after `npx prisma migrate dev`**, it does not auto-update. Use the Bash tool (not PowerShell) for Prisma CLI commands.
+23 models. `generated/prisma` is a custom client output path — **always run `npx prisma generate` after `npx prisma migrate dev`**, it does not auto-update. Use the Bash tool (not PowerShell) for Prisma CLI commands.
 
 - `User` — id, name, email, password, role, suspended, `verified`, `verifiedAt`, `verifiedInPersonAt`, `emailVerifiedAt`, `tokenVersion`, `totpSecret` (encrypted), `totpEnabled`, createdAt, updatedAt
 - `EmailVerificationToken` / `PasswordResetToken` — id, `tokenHash` (SHA-256, never the raw token), expiresAt, usedAt, userId
@@ -68,11 +68,12 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `CropType` — id, name (unique), daysToHarvestMin/Max (approximate days from planting to harvest; staff-managed; seeded with 14 common crops)
 - `Planting` — id, plantedOn/harvestStart/harvestEnd (`@db.Date`, Philippine calendar dates), areaSqm?, expectedYield? (kg), status (growing/harvested/failed), harvestedOn?, actualYield?, farmerId, cropTypeId, productId? (SetNull when the listing is deleted)
 - `CropLog` — id, type (weather_impact/pest_disease/damage/note), note, observedOn (date), createdAt, plantingId (cascade)
+- `AiReport` — id, content (JSON: overview, items, actions, draft, translations; schema in `src/lib/aiReport.ts`), model, reportCount, lastLogId, createdAt, createdById (set null)
 - `Message` — id, content, read, createdAt, senderId, receiverId
 - `ConversationHide` — userId + otherId (composite key), hiddenAt: a conversation the user removed from their own list; their messages up to hiddenAt stay hidden for them only
 - `Notice` — id, title, body, read, createdAt, recipientId, productId (set null if the listing is deleted), resolvedAt, resolution (`resubmitted` | `removed`) — one-way system notices, e.g. a listing suspension
 
-**Migrations applied (36, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`) → `add_id_submissions` (moves `User.idImagePath` into `IdSubmission`) → `normalize_order_audit_names` → `close_id_submissions_verified_in_person` → `announcement_audience` → `renumber_faq_banner_order` → `order_updated_at` → `conversation_hide` → `simplify_crop_monitoring`.
+**Migrations applied (37, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`) → `add_id_submissions` (moves `User.idImagePath` into `IdSubmission`) → `normalize_order_audit_names` → `close_id_submissions_verified_in_person` → `announcement_audience` → `renumber_faq_banner_order` → `order_updated_at` → `conversation_hide` → `simplify_crop_monitoring` → `ai_report`.
 
 **Infra note:** `DIRECT_URL` cannot use Supabase's true direct-connection endpoint (`db.<ref>.supabase.co:5432`) — neither locally nor from Vercel's build infra can reach it (`P1001`), almost certainly Supabase's IPv6-only requirement for that endpoint. Fixed by pointing `DIRECT_URL` at the **Session pooler** instead (distinct from the Transaction pooler `DATABASE_URL` uses) — still holds `prisma migrate deploy`'s advisory lock, and is IPv4-compatible.
 
@@ -116,7 +117,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `announcements/` — post/delete announcements (info/alert/advisory types) for everyone, farmers only or customers only
 - `crop-types/` — add/edit/delete crop types and their approximate growing times (delete refused while plantings use one); audit logged
 - `supply/` — Upcoming Supply: expected kg per crop per week for 8 weeks (heat grid, hover details, expandable planting lists), 3+ farms in a week flagged as possible oversupply, overdue plantings listed separately; CSV export
-- `advisory/` — Crop Advisory: the same grouped community advisory farmers see (last 30 days, by crop and kind of problem, farms counted not named), with a link to post an announcement
+- `advisory/` — Crop Advisory: the same grouped community advisory farmers see (last 30 days, by crop and kind of problem, farms counted not named), with a link to post an announcement; **AI crop report** panel on top (`AiReportPanel`): Google Gemini writes an overview, per-problem reading, suggested actions, a draft advisory ("Edit and post it" hands it to Announcements through sessionStorage) and English versions of non-English notes, shown under each note
 - `reports/` — Sales, Crop Demand, Users, Farmers tabs; CSS bar charts; per-section CSV + full report export; print button
 - `site/` — **Admin only**: 3-tab CMS:
   - **Banners** — add/toggle/delete homepage banners (5 color themes, CTA link); move up/down to order them
@@ -232,6 +233,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | POST | `/api/crop-types` · PUT/DELETE `/api/crop-types/[id]` | admin/manager | manage crop types; audit `CREATE/UPDATE/DELETE_CROP_TYPE` |
 | GET | `/api/admin/supply` | admin/manager | expected kg per crop per week (8 weeks), possible-oversupply flags, overdue plantings |
 | GET | `/api/admin/advisory` | admin/manager | the community advisory (same data as `/api/farmer/advisory`, via `recentAdvisory()` in `src/lib/advisoryQuery.ts`) |
+| GET | `/api/admin/advisory/report` | admin/manager | the latest AI crop report (with how many reports came in since) and whether the AI is set up |
+| POST | `/api/admin/advisory/report` | admin/manager | ask Gemini for a new report from the last 30 days of crop logs; 1 per minute; saved and audited (`GENERATE_AI_REPORT`) |
 | GET | `/api/messages` | authenticated | conversation list with unread counts, newest first; leaves out messages from before the caller removed a conversation; `?q=` matches names and any message text (each result says which message matched) |
 | GET | `/api/messages/[userId]` | authenticated | message thread; marks received as read |
 | POST | `/api/messages/[userId]` | customer/farmer | send message; only between a customer and a farmer (403 otherwise) |

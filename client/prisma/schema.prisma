@@ -64,6 +64,7 @@ model User {
   notices                  Notice[]
   plantings                Planting[]
   idSubmissions            IdSubmission[]
+  aiReports                AiReport[]
 }
 
 model EmailVerificationToken {
@@ -453,4 +454,24 @@ model IdSubmission {
   @@index([userId, status])
   @@index([numberHash])
   @@index([status, reviewedAt])
+}
+
+// A crop report written by the AI from members' crop logs (Dashboard ->
+// Crop Advisory). Kept so staff see the last one without asking the AI again.
+model AiReport {
+  id          Int      @id @default(autoincrement())
+  // The checked report: overview, per-crop items, actions, draft, translations
+  // (shape in src/lib/aiReport.ts).
+  content     Json
+  model       String
+  // How many crop log entries it read, and the newest one's id, to tell
+  // staff when reports have come in since.
+  reportCount Int
+  lastLogId   Int?
+  createdAt   DateTime @default(now())
+
+  createdById Int?
+  createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
 }

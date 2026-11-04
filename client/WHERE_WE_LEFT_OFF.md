@@ -46,7 +46,7 @@ Feature-complete for the capstone scope and through three structured hardening p
    - Hold-to-show eye on every password box (`src/components/PasswordInput.tsx`); cream background with a sand grain; navbar "All Products"; farmers get My Farm, My Products, About.
    - **Announcements** (`src/components/AnnouncementList.tsx`): gradient cards by type (advisory green, alert red, info blue), two columns, newest 4 on the home page (2 on phones and the farmer overview), "Read more" and "View all" windows with search, type filter and sort.
    - **Farmer portal:** logo only in the navbar; weather as a see-through card beside the welcome line with announcements under it; search/filter/sort on My Products, Orders and Crop Monitor (`src/components/ListToolbar.tsx`); an opened order and its items read as one block; the timeline's "Today" label stays inside its card.
-   - **Crop monitoring simplified (2026-11-04):** crop types hold only a name and harvest range (growth stages removed); crop logs are type + note + date seen (severity and the pest list removed); the advisory groups by crop and kind of problem; "Needs attention" flags any pest, weather or damage report from the last 14 days; area and expected yield sit under "Optional details" when recording a planting. Migration `simplify_crop_monitoring`. Scope 81/21/27 ("Update crop growth stage" is now Partial). Staff get the same advisory at Dashboard → **Crop Advisory** (`/api/admin/advisory`); open pages now follow everyone's crop reports.
+   - **Crop monitoring simplified (2026-11-04):** crop types hold only a name and harvest range (growth stages removed); crop logs are type + note + date seen (severity and the pest list removed); the advisory groups by crop and kind of problem; "Needs attention" flags any pest, weather or damage report from the last 14 days; area and expected yield sit under "Optional details" when recording a planting. Migration `simplify_crop_monitoring`. Scope 81/21/27 ("Update crop growth stage" is now Partial). Staff get the same advisory at Dashboard → **Crop Advisory** (`/api/admin/advisory`); open pages now follow everyone's crop reports. **AI crop report** (`src/lib/aiReport.ts`, `/api/admin/advisory/report`, model `AiReport`, migration `ai_report`): Google Gemini's free tier (`GEMINI_API_KEY`, default model `gemini-3.5-flash-lite`) writes an overview, per-problem reading, suggested actions, a draft advisory and English versions of non-English notes; only crop, kind, date, note and anonymous farm labels are sent, phones/emails masked; farmers are told on the crop log form.
    - **Messages (customers and farmers):** date lines in threads; search over names and message text; delete a conversation for yourself only (`ConversationHide`; the other side keeps theirs, a new message brings it back). Notices stay first and can't be deleted.
 11. **Scope** is documented item by item in `SCOPE_AND_DELIMITATIONS.md` (129 use-case items: 81 implemented, 21 partial, 27 not implemented).
 
@@ -78,6 +78,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 18. With two browsers open (customer and farmer), send a message or change an order: the other page updates within about a second without refreshing. (Needs `SUPABASE_ANON_KEY` in Vercel; without it, within 15 seconds.)
 19. Buy a kg product in 0.25 steps and a piece/bundle product in whole numbers; typing 2.5 for a bundle snaps to a whole number.
 20. As a farmer, and again as a customer: delete a conversation, have the other side write again, and only the new message shows; search Messages for a word from an older message.
+21. As staff, open Dashboard → Crop Advisory and press "Make an AI report" (needs `GEMINI_API_KEY` in Vercel): a report appears; "Edit and post it in Announcements" fills the announcement form; a note written in Filipino shows an English line under it.
 
 **Waiting on the project owner:** the cooperative's own photos to replace the temporary hero photo (then remove its credit line).
 
@@ -260,8 +261,8 @@ src/validators/                          ← shared Zod schemas (client + server
   announcement.ts, reorder.ts           ← announcement audiences; move-button id lists
 
 prisma/
-  schema.prisma                         ← 22 models; generated/prisma custom output
-  migrations/ (36 applied — see DEVELOPMENT_STATUS.md for the full list)
+  schema.prisma                         ← 23 models; generated/prisma custom output
+  migrations/ (37 applied — see DEVELOPMENT_STATUS.md for the full list)
 
 public/logo.svg, logo-light.svg         ← the logo; public/email/logo.png is its PNG copy for emails
 public/photos/mount-mayon-2016.webp     ← TEMPORARY hero photo (CC BY-SA 4.0, credit required)

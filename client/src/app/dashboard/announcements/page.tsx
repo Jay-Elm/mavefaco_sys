@@ -6,6 +6,7 @@ import { Loader2, Megaphone, Trash2, AlertCircle, Plus, Info, AlertTriangle, Lea
 import { useDialog } from '@/contexts/DialogContext'
 import { ANNOUNCEMENT_AUDIENCES, type AnnouncementAudience } from '@/validators/announcement'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
+import { ANNOUNCEMENT_DRAFT_KEY } from '@/components/AiReportPanel'
 
 interface Announcement {
   id: number
@@ -47,6 +48,24 @@ export default function AnnouncementsPage() {
   const [postError, setPostError] = useState('')
   const [deletingId, setDeletingId] = useState<number | null>(null)
   const titleRef = useRef<HTMLInputElement>(null)
+
+  // A draft handed over from the AI crop report: fill the form once, then forget it.
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(ANNOUNCEMENT_DRAFT_KEY)
+      if (!raw) return
+      sessionStorage.removeItem(ANNOUNCEMENT_DRAFT_KEY)
+      const d = JSON.parse(raw) as { title?: string; body?: string; type?: string; audience?: string }
+      /* eslint-disable react-hooks/set-state-in-effect -- one-time hand-off from another page */
+      if (d.title) setTitle(d.title.slice(0, 150))
+      if (d.body) setBody(d.body.slice(0, 5000))
+      if (d.type && d.type in TYPE_CONFIG) setType(d.type as AnnouncementType)
+      if (d.audience && (ANNOUNCEMENT_AUDIENCES as readonly string[]).includes(d.audience)) setAudience(d.audience as AnnouncementAudience)
+      /* eslint-enable react-hooks/set-state-in-effect */
+    } catch {
+      // No storage, or a damaged draft: start with an empty form.
+    }
+  }, [])
 
   useEffect(() => {
     if (!token) return
