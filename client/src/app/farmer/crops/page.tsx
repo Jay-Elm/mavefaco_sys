@@ -4,15 +4,14 @@ import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { AlertTriangle, Bug, ChevronRight, Loader2, Plus, Sprout, Wheat } from 'lucide-react'
-import { PEST_LABELS } from '@/validators/crop'
 import { addDays, todayPH } from '@/lib/planting'
-import { STAGE_STYLES, STATUS_STYLES, fmtDate, fmtKg, fmtWindow, type Planting } from '@/components/cropDisplay'
+import { LOG_TYPES, STATUS_STYLES, fmtDate, fmtKg, fmtWindow, plantingBadge, type Planting } from '@/components/cropDisplay'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 import ListToolbar from '@/components/ListToolbar'
 
 type Row = Planting & {
   _count: { logs: number }
-  latestHighSeverity: { id: number; type: string; pest: string | null; note: string; observedOn: string } | null
+  latestProblem: { id: number; type: string; note: string; observedOn: string } | null
 }
 
 type Show = 'all' | 'growing' | 'ready' | 'overdue' | 'problem' | 'harvested' | 'failed'
@@ -43,7 +42,7 @@ export default function CropsPage() {
   const { growing, history, attention } = useMemo(() => {
     const twoWeeksAgo = addDays(todayPH(), -14)
     const q = search.trim().toLowerCase()
-    const hasProblem = (p: Row) => !!p.latestHighSeverity && p.latestHighSeverity.observedOn >= twoWeeksAgo
+    const hasProblem = (p: Row) => !!p.latestProblem && p.latestProblem.observedOn >= twoWeeksAgo
     const matches = (p: Row) =>
       (!q || p.cropType.name.toLowerCase().includes(q) || (p.product?.name.toLowerCase().includes(q) ?? false)) &&
       (!crop || p.cropType.name === crop) &&
@@ -75,10 +74,10 @@ export default function CropsPage() {
         else if (p.attention === 'harvest-now')
           items.push({ key: `h${p.id}`, planting: p, tone: 'amber', icon: Wheat, title: 'Ready to harvest',
             detail: `Harvest window ${fmtWindow(p.harvestStart, p.harvestEnd)}.` })
-        const log = p.latestHighSeverity
+        const log = p.latestProblem
         if (log && log.observedOn >= twoWeeksAgo)
           items.push({ key: `l${p.id}`, planting: p, tone: 'red', icon: Bug,
-            title: `${log.pest ? PEST_LABELS[log.pest as keyof typeof PEST_LABELS] ?? 'Problem' : 'Problem'} reported, high severity`,
+            title: `${LOG_TYPES.find((t) => t.value === log.type)?.label ?? 'Problem'} reported`,
             detail: `${fmtDate(log.observedOn)}: ${log.note}` })
         return items
       }),
@@ -116,8 +115,8 @@ export default function CropsPage() {
           <Sprout size={40} className="mx-auto mb-3 text-gray-300" />
           <p className="font-medium text-gray-700">No plantings yet</p>
           <p className="text-sm text-gray-500 mt-1 max-w-md mx-auto">
-            Record what you plant and when. The Crop Monitor works out each crop&apos;s growth stage and
-            harvest window, and tells you when it&apos;s time to harvest.
+            Record what you plant and when. The Crop Monitor works out each crop&apos;s harvest window
+            and tells you when it&apos;s time to harvest.
           </p>
           <Link href="/farmer/crops/new" className="mt-4 inline-block text-paddy text-sm font-medium hover:underline">
             Record your first planting →
@@ -236,9 +235,7 @@ export default function CropsPage() {
 }
 
 function GrowingCard({ planting: p }: { planting: Row }) {
-  const stage = p.attention === 'overdue'
-    ? { label: 'Overdue', cls: 'bg-red-100 text-red-700' }
-    : p.stage ? STAGE_STYLES[p.stage] : null
+  const badge = plantingBadge(p)
   const pct = Math.round((p.progress ?? 0) * 100)
   return (
     <Link
@@ -252,9 +249,7 @@ function GrowingCard({ planting: p }: { planting: Row }) {
             Planted {fmtDate(p.plantedOn)}{p.product ? ` · sold as ${p.product.name}` : ''}
           </p>
         </div>
-        {stage && (
-          <span className={`ml-auto shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${stage.cls}`}>{stage.label}</span>
-        )}
+        <span className={`ml-auto shrink-0 text-xs font-semibold px-2 py-0.5 rounded-full ${badge.cls}`}>{badge.label}</span>
       </div>
       <div className="mt-4">
         <div className="h-2 rounded-full bg-gray-100 overflow-hidden" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Progress to harvest">

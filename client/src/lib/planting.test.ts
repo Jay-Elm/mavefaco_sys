@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { addDays, attention, daysBetween, expectedSupply, growthStage, harvestBoard, harvestWindow, progress, todayPH, weekStart, type StageSchedule } from "./planting";
+import { addDays, attention, daysBetween, expectedSupply, harvestBoard, harvestWindow, progress, todayPH, weekStart } from "./planting";
 import { cropLogCreateSchema, cropTypeSchema, plantingUpdateSchema } from "@/validators/crop";
 
-const tomato = { vegetativeDay: 14, floweringDay: 35, fruitingDay: 50, daysToHarvestMin: 70, daysToHarvestMax: 90 };
-const pechay = { vegetativeDay: 7, floweringDay: null, fruitingDay: null, daysToHarvestMin: 30, daysToHarvestMax: 45 };
+const tomato = { daysToHarvestMin: 70, daysToHarvestMax: 90 };
 
 describe("calendar dates", () => {
   it("takes today in Philippine time, not UTC", () => {
@@ -22,34 +21,6 @@ describe("calendar dates", () => {
     expect(weekStart("2026-10-26")).toBe("2026-10-26"); // a Monday
     expect(weekStart("2026-11-01")).toBe("2026-10-26"); // the Sunday after
     expect(weekStart("2026-10-27")).toBe("2026-10-26");
-  });
-});
-
-describe("growth stage", () => {
-  const planted = "2026-08-01";
-  const { harvestStart } = harvestWindow(tomato, planted);
-  const stageOn = (day: number, schedule: StageSchedule = tomato, start = harvestStart) =>
-    growthStage(schedule, planted, start, addDays(planted, day));
-
-  it("follows the crop type's schedule, a stage starting on its day", () => {
-    expect(stageOn(0)).toBe("seedling");
-    expect(stageOn(13)).toBe("seedling");
-    expect(stageOn(14)).toBe("vegetative");
-    expect(stageOn(35)).toBe("flowering");
-    expect(stageOn(50)).toBe("fruiting");
-    expect(stageOn(69)).toBe("fruiting");
-    expect(stageOn(70)).toBe("harvest-ready");
-  });
-
-  it("skips flowering and fruiting for leafy crops", () => {
-    const start = harvestWindow(pechay, planted).harvestStart;
-    expect(stageOn(20, pechay, start)).toBe("vegetative");
-    expect(stageOn(29, pechay, start)).toBe("vegetative");
-    expect(stageOn(30, pechay, start)).toBe("harvest-ready");
-  });
-
-  it("is harvest-ready when the farmer's adjusted window opens, whatever the schedule says", () => {
-    expect(stageOn(40, tomato, addDays(planted, 40))).toBe("harvest-ready");
   });
 });
 
@@ -73,15 +44,12 @@ describe("harvest window and attention", () => {
 });
 
 describe("crop validation", () => {
-  it("requires growth stages in order, before harvest", () => {
+  it("needs a harvest range whose end isn't before its start", () => {
     expect(cropTypeSchema.safeParse({ name: "Tomato", ...tomato }).success).toBe(true);
-    expect(cropTypeSchema.safeParse({ name: "Pechay", ...pechay }).success).toBe(true);
+    expect(cropTypeSchema.safeParse({ name: "Pechay", daysToHarvestMin: 30, daysToHarvestMax: 30 }).success).toBe(true);
     const bad = (over: object) => cropTypeSchema.safeParse({ name: "X", ...tomato, ...over }).error?.issues[0].path[0];
     expect(bad({ daysToHarvestMax: 60 })).toBe("daysToHarvestMax");
-    expect(bad({ floweringDay: 10 })).toBe("floweringDay");
-    expect(bad({ fruitingDay: 30 })).toBe("fruitingDay");
-    expect(bad({ floweringDay: null })).toBe("fruitingDay"); // fruiting without flowering
-    expect(bad({ vegetativeDay: 70 })).toBe("vegetativeDay");
+    expect(bad({ daysToHarvestMin: 0 })).toBe("daysToHarvestMin");
   });
 
   it("rejects impossible and future dates, and a harvest window that ends before it starts", () => {
@@ -92,12 +60,11 @@ describe("crop validation", () => {
     expect(plantingUpdateSchema.safeParse({ harvestStart: "2026-10-10", harvestEnd: "2026-10-10" }).success).toBe(true);
   });
 
-  it("asks for severity on problems and the pest on pest reports, and drops them where they don't apply", () => {
+  it("takes a type, a note and the date seen, and nothing else", () => {
     const log = { note: "Seen on leaves", observedOn: "2026-10-01" };
-    expect(cropLogCreateSchema.safeParse({ ...log, type: "pest_disease", severity: "high" }).success).toBe(false);
-    expect(cropLogCreateSchema.safeParse({ ...log, type: "damage" }).success).toBe(false);
-    expect(cropLogCreateSchema.parse({ ...log, type: "note", severity: "high", pest: "aphids" })).toMatchObject({ severity: null, pest: null });
-    expect(cropLogCreateSchema.parse({ ...log, type: "damage", severity: "low", pest: "aphids" })).toMatchObject({ severity: "low", pest: null });
+    expect(cropLogCreateSchema.parse({ ...log, type: "pest_disease", severity: "high", pest: "aphids" })).toEqual({ ...log, type: "pest_disease" });
+    expect(cropLogCreateSchema.safeParse({ ...log, type: "flood" }).success).toBe(false);
+    expect(cropLogCreateSchema.safeParse({ ...log, type: "note", note: " " }).success).toBe(false);
   });
 });
 

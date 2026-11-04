@@ -30,31 +30,13 @@ const cropTypeFields = z.object({
   name: requiredString(z.string().trim().min(1, "Name is required").max(MAX.cropTypeName, tooLong("Name", MAX.cropTypeName))),
   daysToHarvestMin: day("Earliest harvest day").min(1, "Earliest harvest day must be at least 1"),
   daysToHarvestMax: day("Latest harvest day"),
-  vegetativeDay: day("Vegetative stage day"),
-  floweringDay: day("Flowering stage day").nullable().optional(),
-  fruitingDay: day("Fruiting stage day").nullable().optional(),
 });
 
-type CropTypeFields = z.infer<typeof cropTypeFields>;
-
-// Stages must start in order, all before the harvest window opens.
-function stagesInOrder(t: CropTypeFields, ctx: z.RefinementCtx) {
-  const issue = (path: string, message: string) => ctx.addIssue({ code: "custom", path: [path], message });
-  if (t.daysToHarvestMax < t.daysToHarvestMin) issue("daysToHarvestMax", "Latest harvest day can't be before the earliest");
-  if (t.vegetativeDay >= t.daysToHarvestMin) issue("vegetativeDay", "Vegetative stage must start before harvest");
-  const flowering = t.floweringDay ?? null;
-  const fruiting = t.fruitingDay ?? null;
-  if (flowering !== null && (flowering <= t.vegetativeDay || flowering >= t.daysToHarvestMin))
-    issue("floweringDay", "Flowering must start after the vegetative stage and before harvest");
-  if (fruiting !== null) {
-    if (flowering === null) issue("fruitingDay", "Set when flowering starts before fruiting");
-    else if (fruiting <= flowering || fruiting >= t.daysToHarvestMin)
-      issue("fruitingDay", "Fruiting must start after flowering and before harvest");
-  }
-}
-
 // POST /api/crop-types, PUT /api/crop-types/[id]
-export const cropTypeSchema = cropTypeFields.superRefine(stagesInOrder);
+export const cropTypeSchema = cropTypeFields.refine((t) => t.daysToHarvestMax >= t.daysToHarvestMin, {
+  message: "Latest harvest day can't be before the earliest",
+  path: ["daysToHarvestMax"],
+});
 export type CropTypeInput = z.infer<typeof cropTypeSchema>;
 
 // --- Plantings (farmer) -------------------------------------------------------
@@ -103,65 +85,11 @@ export type HarvestInput = z.infer<typeof harvestSchema>;
 // --- Crop logs ----------------------------------------------------------------
 
 export const CROP_LOG_TYPES = ["weather_impact", "pest_disease", "damage", "note"] as const;
-export const CROP_LOG_SEVERITIES = ["low", "medium", "high"] as const;
-
-// Common vegetable pests and diseases in the Philippines, for grouping
-// reports; anything else is "other" with the details in the note.
-export const CROP_PESTS = [
-  "aphids",
-  "armyworm",
-  "cutworm",
-  "fruit-and-shoot-borer",
-  "fruit-fly",
-  "leaf-miner",
-  "thrips",
-  "whitefly",
-  "diamondback-moth",
-  "bacterial-wilt",
-  "fusarium-wilt",
-  "leaf-spot",
-  "powdery-mildew",
-  "downy-mildew",
-  "damping-off",
-  "mosaic-virus",
-  "other",
-] as const;
-
-export const PEST_LABELS: Record<(typeof CROP_PESTS)[number], string> = {
-  aphids: "Aphids",
-  armyworm: "Armyworm",
-  cutworm: "Cutworm",
-  "fruit-and-shoot-borer": "Fruit and shoot borer",
-  "fruit-fly": "Fruit fly",
-  "leaf-miner": "Leaf miner",
-  thrips: "Thrips",
-  whitefly: "Whitefly",
-  "diamondback-moth": "Diamondback moth",
-  "bacterial-wilt": "Bacterial wilt",
-  "fusarium-wilt": "Fusarium wilt",
-  "leaf-spot": "Leaf spot",
-  "powdery-mildew": "Powdery mildew",
-  "downy-mildew": "Downy mildew",
-  "damping-off": "Damping-off",
-  "mosaic-virus": "Mosaic virus",
-  other: "Other",
-};
 
 // POST /api/farmer/plantings/[id]/logs
-export const cropLogCreateSchema = z
-  .object({
-    type: z.enum(CROP_LOG_TYPES),
-    note: requiredString(z.string().trim().min(1, "Note is required").max(MAX.cropNote, tooLong("Note", MAX.cropNote))),
-    observedOn: notInFuture("Date observed"),
-    severity: z.enum(CROP_LOG_SEVERITIES).nullish(),
-    pest: z.enum(CROP_PESTS).nullish(),
-  })
-  .refine((v) => v.type === "note" || v.severity, { message: "Choose how severe it is", path: ["severity"] })
-  .refine((v) => v.type !== "pest_disease" || v.pest, { message: "Choose the pest or disease", path: ["pest"] })
-  // General notes carry no severity, and only pest reports name a pest.
-  .transform((v) => ({
-    ...v,
-    severity: v.type === "note" ? null : (v.severity ?? null),
-    pest: v.type === "pest_disease" ? (v.pest ?? null) : null,
-  }));
+export const cropLogCreateSchema = z.object({
+  type: z.enum(CROP_LOG_TYPES),
+  note: requiredString(z.string().trim().min(1, "Note is required").max(MAX.cropNote, tooLong("Note", MAX.cropNote))),
+  observedOn: notInFuture("Date observed"),
+});
 export type CropLogCreateInput = z.infer<typeof cropLogCreateSchema>;

@@ -207,9 +207,6 @@ exports.Prisma.CropTypeScalarFieldEnum = {
   name: 'name',
   daysToHarvestMin: 'daysToHarvestMin',
   daysToHarvestMax: 'daysToHarvestMax',
-  vegetativeDay: 'vegetativeDay',
-  floweringDay: 'floweringDay',
-  fruitingDay: 'fruitingDay',
   createdAt: 'createdAt'
 };
 
@@ -235,8 +232,6 @@ exports.Prisma.CropLogScalarFieldEnum = {
   type: 'type',
   note: 'note',
   observedOn: 'observedOn',
-  severity: 'severity',
-  pest: 'pest',
   createdAt: 'createdAt',
   plantingId: 'plantingId'
 };

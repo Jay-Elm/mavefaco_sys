@@ -106,21 +106,9 @@ export default function NewPlantingPage() {
         {preview && (
           <div className="rounded-lg bg-field border border-paddy/10 px-4 py-3 text-sm text-gray-700">
             Expected harvest: <span className="font-semibold text-paddy">{fmtWindow(preview.harvestStart, preview.harvestEnd)}</span>
-            <span className="block text-xs text-gray-500 mt-0.5">You can adjust this later. Growing times are approximate.</span>
+            <span className="block text-xs text-gray-500 mt-0.5">You can adjust this later. Growing times are typical figures, not exact.</span>
           </div>
         )}
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="area" className="block text-xs font-medium text-gray-600 mb-1">Area planted (m²) <span className="text-gray-500">optional</span></label>
-            <input id="area" type="number" min="0" step="any" inputMode="decimal" value={areaSqm} onChange={(e) => setAreaSqm(e.target.value)} className={INPUT} />
-          </div>
-          <div>
-            <label htmlFor="yield" className="block text-xs font-medium text-gray-600 mb-1">Expected yield (kg) <span className="text-gray-500">optional</span></label>
-            <input id="yield" type="number" min="0" step="any" inputMode="decimal" value={expectedYield} onChange={(e) => setExpectedYield(e.target.value)} className={INPUT} />
-          </div>
-        </div>
-        <p className="text-xs text-gray-500 -mt-2">Your expected yield helps the cooperative plan for upcoming supply.</p>
 
         <div>
           <label htmlFor="listing" className="block text-xs font-medium text-gray-600 mb-1">Sold as <span className="text-gray-500">optional</span></label>
@@ -130,6 +118,23 @@ export default function NewPlantingPage() {
           </select>
           <p className="text-xs text-gray-500 mt-1">Link a listing to add the harvest to its stock in one step.</p>
         </div>
+
+        <details className="group rounded-lg border border-gray-200 px-4 py-3">
+          <summary className="cursor-pointer text-sm font-medium text-gray-700 marker:text-gray-400">
+            Optional details <span className="font-normal text-gray-500">area and expected yield</span>
+          </summary>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+            <div>
+              <label htmlFor="area" className="block text-xs font-medium text-gray-600 mb-1">Area planted (m²)</label>
+              <input id="area" type="number" min="0" step="any" inputMode="decimal" value={areaSqm} onChange={(e) => setAreaSqm(e.target.value)} className={INPUT} />
+            </div>
+            <div>
+              <label htmlFor="yield" className="block text-xs font-medium text-gray-600 mb-1">Expected yield (kg)</label>
+              <input id="yield" type="number" min="0" step="any" inputMode="decimal" value={expectedYield} onChange={(e) => setExpectedYield(e.target.value)} className={INPUT} />
+            </div>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">An expected yield lets the cooperative count this planting in its upcoming supply.</p>
+        </details>
 
         {error && <p className="text-red-600 text-sm">{error}</p>}
 

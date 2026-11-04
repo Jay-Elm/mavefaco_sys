@@ -16,12 +16,12 @@ export async function GET(req: NextRequest) {
       include: {
         ...plantingInclude,
         _count: { select: { logs: true } },
-        // The latest serious problem, for "Needs attention".
+        // The latest reported problem, for "Needs attention".
         logs: {
-          where: { severity: "high" },
+          where: { type: { in: ["pest_disease", "weather_impact", "damage"] } },
           orderBy: [{ observedOn: "desc" }, { id: "desc" }],
           take: 1,
-          select: { id: true, type: true, pest: true, note: true, observedOn: true },
+          select: { id: true, type: true, note: true, observedOn: true },
         },
       },
       orderBy: [{ plantedOn: "desc" }, { id: "desc" }],
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       plantings.map(({ logs, ...p }) => ({
         ...serializePlanting(p, today),
-        latestHighSeverity: logs[0] ? { ...logs[0], observedOn: logs[0].observedOn.toISOString().slice(0, 10) } : null,
+        latestProblem: logs[0] ? { ...logs[0], observedOn: logs[0].observedOn.toISOString().slice(0, 10) } : null,
       })),
     );
   } catch {

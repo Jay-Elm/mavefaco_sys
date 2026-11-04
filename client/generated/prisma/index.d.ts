@@ -11720,18 +11720,12 @@ export namespace Prisma {
     id: number | null
     daysToHarvestMin: number | null
     daysToHarvestMax: number | null
-    vegetativeDay: number | null
-    floweringDay: number | null
-    fruitingDay: number | null
   }
 
   export type CropTypeSumAggregateOutputType = {
     id: number | null
     daysToHarvestMin: number | null
     daysToHarvestMax: number | null
-    vegetativeDay: number | null
-    floweringDay: number | null
-    fruitingDay: number | null
   }
 
   export type CropTypeMinAggregateOutputType = {
@@ -11739,9 +11733,6 @@ export namespace Prisma {
     name: string | null
     daysToHarvestMin: number | null
     daysToHarvestMax: number | null
-    vegetativeDay: number | null
-    floweringDay: number | null
-    fruitingDay: number | null
     createdAt: Date | null
   }
 
@@ -11750,9 +11741,6 @@ export namespace Prisma {
     name: string | null
     daysToHarvestMin: number | null
     daysToHarvestMax: number | null
-    vegetativeDay: number | null
-    floweringDay: number | null
-    fruitingDay: number | null
     createdAt: Date | null
   }
 
@@ -11761,9 +11749,6 @@ export namespace Prisma {
     name: number
     daysToHarvestMin: number
     daysToHarvestMax: number
-    vegetativeDay: number
-    floweringDay: number
-    fruitingDay: number
     createdAt: number
     _all: number
   }
@@ -11773,18 +11758,12 @@ export namespace Prisma {
     id?: true
     daysToHarvestMin?: true
     daysToHarvestMax?: true
-    vegetativeDay?: true
-    floweringDay?: true
-    fruitingDay?: true
   }
 
   export type CropTypeSumAggregateInputType = {
     id?: true
     daysToHarvestMin?: true
     daysToHarvestMax?: true
-    vegetativeDay?: true
-    floweringDay?: true
-    fruitingDay?: true
   }
 
   export type CropTypeMinAggregateInputType = {
@@ -11792,9 +11771,6 @@ export namespace Prisma {
     name?: true
     daysToHarvestMin?: true
     daysToHarvestMax?: true
-    vegetativeDay?: true
-    floweringDay?: true
-    fruitingDay?: true
     createdAt?: true
   }
 
@@ -11803,9 +11779,6 @@ export namespace Prisma {
     name?: true
     daysToHarvestMin?: true
     daysToHarvestMax?: true
-    vegetativeDay?: true
-    floweringDay?: true
-    fruitingDay?: true
     createdAt?: true
   }
 
@@ -11814,9 +11787,6 @@ export namespace Prisma {
     name?: true
     daysToHarvestMin?: true
     daysToHarvestMax?: true
-    vegetativeDay?: true
-    floweringDay?: true
-    fruitingDay?: true
     createdAt?: true
     _all?: true
   }
@@ -11912,9 +11882,6 @@ export namespace Prisma {
     name: string
     daysToHarvestMin: number
     daysToHarvestMax: number
-    vegetativeDay: number
-    floweringDay: number | null
-    fruitingDay: number | null
     createdAt: Date
     _count: CropTypeCountAggregateOutputType | null
     _avg: CropTypeAvgAggregateOutputType | null
@@ -11942,9 +11909,6 @@ export namespace Prisma {
     name?: boolean
     daysToHarvestMin?: boolean
     daysToHarvestMax?: boolean
-    vegetativeDay?: boolean
-    floweringDay?: boolean
-    fruitingDay?: boolean
     createdAt?: boolean
     plantings?: boolean | CropType$plantingsArgs<ExtArgs>
     _count?: boolean | CropTypeCountOutputTypeDefaultArgs<ExtArgs>
@@ -11955,9 +11919,6 @@ export namespace Prisma {
     name?: boolean
     daysToHarvestMin?: boolean
     daysToHarvestMax?: boolean
-    vegetativeDay?: boolean
-    floweringDay?: boolean
-    fruitingDay?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["cropType"]>
 
@@ -11966,9 +11927,6 @@ export namespace Prisma {
     name?: boolean
     daysToHarvestMin?: boolean
     daysToHarvestMax?: boolean
-    vegetativeDay?: boolean
-    floweringDay?: boolean
-    fruitingDay?: boolean
     createdAt?: boolean
   }, ExtArgs["result"]["cropType"]>
 
@@ -11977,13 +11935,10 @@ export namespace Prisma {
     name?: boolean
     daysToHarvestMin?: boolean
     daysToHarvestMax?: boolean
-    vegetativeDay?: boolean
-    floweringDay?: boolean
-    fruitingDay?: boolean
     createdAt?: boolean
   }
 
-  export type CropTypeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "daysToHarvestMin" | "daysToHarvestMax" | "vegetativeDay" | "floweringDay" | "fruitingDay" | "createdAt", ExtArgs["result"]["cropType"]>
+  export type CropTypeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "daysToHarvestMin" | "daysToHarvestMax" | "createdAt", ExtArgs["result"]["cropType"]>
   export type CropTypeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     plantings?: boolean | CropType$plantingsArgs<ExtArgs>
     _count?: boolean | CropTypeCountOutputTypeDefaultArgs<ExtArgs>
@@ -12001,9 +11956,6 @@ export namespace Prisma {
       name: string
       daysToHarvestMin: number
       daysToHarvestMax: number
-      vegetativeDay: number
-      floweringDay: number | null
-      fruitingDay: number | null
       createdAt: Date
     }, ExtArgs["result"]["cropType"]>
     composites: {}
@@ -12433,9 +12385,6 @@ export namespace Prisma {
     readonly name: FieldRef<"CropType", 'String'>
     readonly daysToHarvestMin: FieldRef<"CropType", 'Int'>
     readonly daysToHarvestMax: FieldRef<"CropType", 'Int'>
-    readonly vegetativeDay: FieldRef<"CropType", 'Int'>
-    readonly floweringDay: FieldRef<"CropType", 'Int'>
-    readonly fruitingDay: FieldRef<"CropType", 'Int'>
     readonly createdAt: FieldRef<"CropType", 'DateTime'>
   }
     
@@ -14202,8 +14151,6 @@ export namespace Prisma {
     type: string | null
     note: string | null
     observedOn: Date | null
-    severity: string | null
-    pest: string | null
     createdAt: Date | null
     plantingId: number | null
   }
@@ -14213,8 +14160,6 @@ export namespace Prisma {
     type: string | null
     note: string | null
     observedOn: Date | null
-    severity: string | null
-    pest: string | null
     createdAt: Date | null
     plantingId: number | null
   }
@@ -14224,8 +14169,6 @@ export namespace Prisma {
     type: number
     note: number
     observedOn: number
-    severity: number
-    pest: number
     createdAt: number
     plantingId: number
     _all: number
@@ -14247,8 +14190,6 @@ export namespace Prisma {
     type?: true
     note?: true
     observedOn?: true
-    severity?: true
-    pest?: true
     createdAt?: true
     plantingId?: true
   }
@@ -14258,8 +14199,6 @@ export namespace Prisma {
     type?: true
     note?: true
     observedOn?: true
-    severity?: true
-    pest?: true
     createdAt?: true
     plantingId?: true
   }
@@ -14269,8 +14208,6 @@ export namespace Prisma {
     type?: true
     note?: true
     observedOn?: true
-    severity?: true
-    pest?: true
     createdAt?: true
     plantingId?: true
     _all?: true
@@ -14367,8 +14304,6 @@ export namespace Prisma {
     type: string
     note: string
     observedOn: Date
-    severity: string | null
-    pest: string | null
     createdAt: Date
     plantingId: number
     _count: CropLogCountAggregateOutputType | null
@@ -14397,8 +14332,6 @@ export namespace Prisma {
     type?: boolean
     note?: boolean
     observedOn?: boolean
-    severity?: boolean
-    pest?: boolean
     createdAt?: boolean
     plantingId?: boolean
     planting?: boolean | PlantingDefaultArgs<ExtArgs>
@@ -14409,8 +14342,6 @@ export namespace Prisma {
     type?: boolean
     note?: boolean
     observedOn?: boolean
-    severity?: boolean
-    pest?: boolean
     createdAt?: boolean
     plantingId?: boolean
     planting?: boolean | PlantingDefaultArgs<ExtArgs>
@@ -14421,8 +14352,6 @@ export namespace Prisma {
     type?: boolean
     note?: boolean
     observedOn?: boolean
-    severity?: boolean
-    pest?: boolean
     createdAt?: boolean
     plantingId?: boolean
     planting?: boolean | PlantingDefaultArgs<ExtArgs>
@@ -14433,13 +14362,11 @@ export namespace Prisma {
     type?: boolean
     note?: boolean
     observedOn?: boolean
-    severity?: boolean
-    pest?: boolean
     createdAt?: boolean
     plantingId?: boolean
   }
 
-  export type CropLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "note" | "observedOn" | "severity" | "pest" | "createdAt" | "plantingId", ExtArgs["result"]["cropLog"]>
+  export type CropLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "type" | "note" | "observedOn" | "createdAt" | "plantingId", ExtArgs["result"]["cropLog"]>
   export type CropLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     planting?: boolean | PlantingDefaultArgs<ExtArgs>
   }
@@ -14460,8 +14387,6 @@ export namespace Prisma {
       type: string
       note: string
       observedOn: Date
-      severity: string | null
-      pest: string | null
       createdAt: Date
       plantingId: number
     }, ExtArgs["result"]["cropLog"]>
@@ -14892,8 +14817,6 @@ export namespace Prisma {
     readonly type: FieldRef<"CropLog", 'String'>
     readonly note: FieldRef<"CropLog", 'String'>
     readonly observedOn: FieldRef<"CropLog", 'DateTime'>
-    readonly severity: FieldRef<"CropLog", 'String'>
-    readonly pest: FieldRef<"CropLog", 'String'>
     readonly createdAt: FieldRef<"CropLog", 'DateTime'>
     readonly plantingId: FieldRef<"CropLog", 'Int'>
   }
@@ -28765,9 +28688,6 @@ export namespace Prisma {
     name: 'name',
     daysToHarvestMin: 'daysToHarvestMin',
     daysToHarvestMax: 'daysToHarvestMax',
-    vegetativeDay: 'vegetativeDay',
-    floweringDay: 'floweringDay',
-    fruitingDay: 'fruitingDay',
     createdAt: 'createdAt'
   };
 
@@ -28799,8 +28719,6 @@ export namespace Prisma {
     type: 'type',
     note: 'note',
     observedOn: 'observedOn',
-    severity: 'severity',
-    pest: 'pest',
     createdAt: 'createdAt',
     plantingId: 'plantingId'
   };
@@ -29662,9 +29580,6 @@ export namespace Prisma {
     name?: StringFilter<"CropType"> | string
     daysToHarvestMin?: IntFilter<"CropType"> | number
     daysToHarvestMax?: IntFilter<"CropType"> | number
-    vegetativeDay?: IntFilter<"CropType"> | number
-    floweringDay?: IntNullableFilter<"CropType"> | number | null
-    fruitingDay?: IntNullableFilter<"CropType"> | number | null
     createdAt?: DateTimeFilter<"CropType"> | Date | string
     plantings?: PlantingListRelationFilter
   }
@@ -29674,9 +29589,6 @@ export namespace Prisma {
     name?: SortOrder
     daysToHarvestMin?: SortOrder
     daysToHarvestMax?: SortOrder
-    vegetativeDay?: SortOrder
-    floweringDay?: SortOrderInput | SortOrder
-    fruitingDay?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     plantings?: PlantingOrderByRelationAggregateInput
   }
@@ -29689,9 +29601,6 @@ export namespace Prisma {
     NOT?: CropTypeWhereInput | CropTypeWhereInput[]
     daysToHarvestMin?: IntFilter<"CropType"> | number
     daysToHarvestMax?: IntFilter<"CropType"> | number
-    vegetativeDay?: IntFilter<"CropType"> | number
-    floweringDay?: IntNullableFilter<"CropType"> | number | null
-    fruitingDay?: IntNullableFilter<"CropType"> | number | null
     createdAt?: DateTimeFilter<"CropType"> | Date | string
     plantings?: PlantingListRelationFilter
   }, "id" | "name">
@@ -29701,9 +29610,6 @@ export namespace Prisma {
     name?: SortOrder
     daysToHarvestMin?: SortOrder
     daysToHarvestMax?: SortOrder
-    vegetativeDay?: SortOrder
-    floweringDay?: SortOrderInput | SortOrder
-    fruitingDay?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     _count?: CropTypeCountOrderByAggregateInput
     _avg?: CropTypeAvgOrderByAggregateInput
@@ -29720,9 +29626,6 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"CropType"> | string
     daysToHarvestMin?: IntWithAggregatesFilter<"CropType"> | number
     daysToHarvestMax?: IntWithAggregatesFilter<"CropType"> | number
-    vegetativeDay?: IntWithAggregatesFilter<"CropType"> | number
-    floweringDay?: IntNullableWithAggregatesFilter<"CropType"> | number | null
-    fruitingDay?: IntNullableWithAggregatesFilter<"CropType"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"CropType"> | Date | string
   }
 
@@ -29845,8 +29748,6 @@ export namespace Prisma {
     type?: StringFilter<"CropLog"> | string
     note?: StringFilter<"CropLog"> | string
     observedOn?: DateTimeFilter<"CropLog"> | Date | string
-    severity?: StringNullableFilter<"CropLog"> | string | null
-    pest?: StringNullableFilter<"CropLog"> | string | null
     createdAt?: DateTimeFilter<"CropLog"> | Date | string
     plantingId?: IntFilter<"CropLog"> | number
     planting?: XOR<PlantingScalarRelationFilter, PlantingWhereInput>
@@ -29857,8 +29758,6 @@ export namespace Prisma {
     type?: SortOrder
     note?: SortOrder
     observedOn?: SortOrder
-    severity?: SortOrderInput | SortOrder
-    pest?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     plantingId?: SortOrder
     planting?: PlantingOrderByWithRelationInput
@@ -29872,8 +29771,6 @@ export namespace Prisma {
     type?: StringFilter<"CropLog"> | string
     note?: StringFilter<"CropLog"> | string
     observedOn?: DateTimeFilter<"CropLog"> | Date | string
-    severity?: StringNullableFilter<"CropLog"> | string | null
-    pest?: StringNullableFilter<"CropLog"> | string | null
     createdAt?: DateTimeFilter<"CropLog"> | Date | string
     plantingId?: IntFilter<"CropLog"> | number
     planting?: XOR<PlantingScalarRelationFilter, PlantingWhereInput>
@@ -29884,8 +29781,6 @@ export namespace Prisma {
     type?: SortOrder
     note?: SortOrder
     observedOn?: SortOrder
-    severity?: SortOrderInput | SortOrder
-    pest?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     plantingId?: SortOrder
     _count?: CropLogCountOrderByAggregateInput
@@ -29903,8 +29798,6 @@ export namespace Prisma {
     type?: StringWithAggregatesFilter<"CropLog"> | string
     note?: StringWithAggregatesFilter<"CropLog"> | string
     observedOn?: DateTimeWithAggregatesFilter<"CropLog"> | Date | string
-    severity?: StringNullableWithAggregatesFilter<"CropLog"> | string | null
-    pest?: StringNullableWithAggregatesFilter<"CropLog"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"CropLog"> | Date | string
     plantingId?: IntWithAggregatesFilter<"CropLog"> | number
   }
@@ -31333,9 +31226,6 @@ export namespace Prisma {
     name: string
     daysToHarvestMin: number
     daysToHarvestMax: number
-    vegetativeDay: number
-    floweringDay?: number | null
-    fruitingDay?: number | null
     createdAt?: Date | string
     plantings?: PlantingCreateNestedManyWithoutCropTypeInput
   }
@@ -31345,9 +31235,6 @@ export namespace Prisma {
     name: string
     daysToHarvestMin: number
     daysToHarvestMax: number
-    vegetativeDay: number
-    floweringDay?: number | null
-    fruitingDay?: number | null
     createdAt?: Date | string
     plantings?: PlantingUncheckedCreateNestedManyWithoutCropTypeInput
   }
@@ -31356,9 +31243,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     daysToHarvestMin?: IntFieldUpdateOperationsInput | number
     daysToHarvestMax?: IntFieldUpdateOperationsInput | number
-    vegetativeDay?: IntFieldUpdateOperationsInput | number
-    floweringDay?: NullableIntFieldUpdateOperationsInput | number | null
-    fruitingDay?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantings?: PlantingUpdateManyWithoutCropTypeNestedInput
   }
@@ -31368,9 +31252,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     daysToHarvestMin?: IntFieldUpdateOperationsInput | number
     daysToHarvestMax?: IntFieldUpdateOperationsInput | number
-    vegetativeDay?: IntFieldUpdateOperationsInput | number
-    floweringDay?: NullableIntFieldUpdateOperationsInput | number | null
-    fruitingDay?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantings?: PlantingUncheckedUpdateManyWithoutCropTypeNestedInput
   }
@@ -31380,9 +31261,6 @@ export namespace Prisma {
     name: string
     daysToHarvestMin: number
     daysToHarvestMax: number
-    vegetativeDay: number
-    floweringDay?: number | null
-    fruitingDay?: number | null
     createdAt?: Date | string
   }
 
@@ -31390,9 +31268,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     daysToHarvestMin?: IntFieldUpdateOperationsInput | number
     daysToHarvestMax?: IntFieldUpdateOperationsInput | number
-    vegetativeDay?: IntFieldUpdateOperationsInput | number
-    floweringDay?: NullableIntFieldUpdateOperationsInput | number | null
-    fruitingDay?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -31401,9 +31276,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     daysToHarvestMin?: IntFieldUpdateOperationsInput | number
     daysToHarvestMax?: IntFieldUpdateOperationsInput | number
-    vegetativeDay?: IntFieldUpdateOperationsInput | number
-    floweringDay?: NullableIntFieldUpdateOperationsInput | number | null
-    fruitingDay?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -31528,8 +31400,6 @@ export namespace Prisma {
     type: string
     note: string
     observedOn: Date | string
-    severity?: string | null
-    pest?: string | null
     createdAt?: Date | string
     planting: PlantingCreateNestedOneWithoutLogsInput
   }
@@ -31539,8 +31409,6 @@ export namespace Prisma {
     type: string
     note: string
     observedOn: Date | string
-    severity?: string | null
-    pest?: string | null
     createdAt?: Date | string
     plantingId: number
   }
@@ -31549,8 +31417,6 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     note?: StringFieldUpdateOperationsInput | string
     observedOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    severity?: NullableStringFieldUpdateOperationsInput | string | null
-    pest?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     planting?: PlantingUpdateOneRequiredWithoutLogsNestedInput
   }
@@ -31560,8 +31426,6 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     note?: StringFieldUpdateOperationsInput | string
     observedOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    severity?: NullableStringFieldUpdateOperationsInput | string | null
-    pest?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingId?: IntFieldUpdateOperationsInput | number
   }
@@ -31571,8 +31435,6 @@ export namespace Prisma {
     type: string
     note: string
     observedOn: Date | string
-    severity?: string | null
-    pest?: string | null
     createdAt?: Date | string
     plantingId: number
   }
@@ -31581,8 +31443,6 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     note?: StringFieldUpdateOperationsInput | string
     observedOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    severity?: NullableStringFieldUpdateOperationsInput | string | null
-    pest?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -31591,8 +31451,6 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     note?: StringFieldUpdateOperationsInput | string
     observedOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    severity?: NullableStringFieldUpdateOperationsInput | string | null
-    pest?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantingId?: IntFieldUpdateOperationsInput | number
   }
@@ -33112,9 +32970,6 @@ export namespace Prisma {
     name?: SortOrder
     daysToHarvestMin?: SortOrder
     daysToHarvestMax?: SortOrder
-    vegetativeDay?: SortOrder
-    floweringDay?: SortOrder
-    fruitingDay?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -33122,9 +32977,6 @@ export namespace Prisma {
     id?: SortOrder
     daysToHarvestMin?: SortOrder
     daysToHarvestMax?: SortOrder
-    vegetativeDay?: SortOrder
-    floweringDay?: SortOrder
-    fruitingDay?: SortOrder
   }
 
   export type CropTypeMaxOrderByAggregateInput = {
@@ -33132,9 +32984,6 @@ export namespace Prisma {
     name?: SortOrder
     daysToHarvestMin?: SortOrder
     daysToHarvestMax?: SortOrder
-    vegetativeDay?: SortOrder
-    floweringDay?: SortOrder
-    fruitingDay?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -33143,9 +32992,6 @@ export namespace Prisma {
     name?: SortOrder
     daysToHarvestMin?: SortOrder
     daysToHarvestMax?: SortOrder
-    vegetativeDay?: SortOrder
-    floweringDay?: SortOrder
-    fruitingDay?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -33153,9 +32999,6 @@ export namespace Prisma {
     id?: SortOrder
     daysToHarvestMin?: SortOrder
     daysToHarvestMax?: SortOrder
-    vegetativeDay?: SortOrder
-    floweringDay?: SortOrder
-    fruitingDay?: SortOrder
   }
 
   export type FloatNullableFilter<$PrismaModel = never> = {
@@ -33286,8 +33129,6 @@ export namespace Prisma {
     type?: SortOrder
     note?: SortOrder
     observedOn?: SortOrder
-    severity?: SortOrder
-    pest?: SortOrder
     createdAt?: SortOrder
     plantingId?: SortOrder
   }
@@ -33302,8 +33143,6 @@ export namespace Prisma {
     type?: SortOrder
     note?: SortOrder
     observedOn?: SortOrder
-    severity?: SortOrder
-    pest?: SortOrder
     createdAt?: SortOrder
     plantingId?: SortOrder
   }
@@ -33313,8 +33152,6 @@ export namespace Prisma {
     type?: SortOrder
     note?: SortOrder
     observedOn?: SortOrder
-    severity?: SortOrder
-    pest?: SortOrder
     createdAt?: SortOrder
     plantingId?: SortOrder
   }
@@ -37416,9 +37253,6 @@ export namespace Prisma {
     name: string
     daysToHarvestMin: number
     daysToHarvestMax: number
-    vegetativeDay: number
-    floweringDay?: number | null
-    fruitingDay?: number | null
     createdAt?: Date | string
   }
 
@@ -37427,9 +37261,6 @@ export namespace Prisma {
     name: string
     daysToHarvestMin: number
     daysToHarvestMax: number
-    vegetativeDay: number
-    floweringDay?: number | null
-    fruitingDay?: number | null
     createdAt?: Date | string
   }
 
@@ -37492,8 +37323,6 @@ export namespace Prisma {
     type: string
     note: string
     observedOn: Date | string
-    severity?: string | null
-    pest?: string | null
     createdAt?: Date | string
   }
 
@@ -37502,8 +37331,6 @@ export namespace Prisma {
     type: string
     note: string
     observedOn: Date | string
-    severity?: string | null
-    pest?: string | null
     createdAt?: Date | string
   }
 
@@ -37608,9 +37435,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     daysToHarvestMin?: IntFieldUpdateOperationsInput | number
     daysToHarvestMax?: IntFieldUpdateOperationsInput | number
-    vegetativeDay?: IntFieldUpdateOperationsInput | number
-    floweringDay?: NullableIntFieldUpdateOperationsInput | number | null
-    fruitingDay?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -37619,9 +37443,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     daysToHarvestMin?: IntFieldUpdateOperationsInput | number
     daysToHarvestMax?: IntFieldUpdateOperationsInput | number
-    vegetativeDay?: IntFieldUpdateOperationsInput | number
-    floweringDay?: NullableIntFieldUpdateOperationsInput | number | null
-    fruitingDay?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -37705,8 +37526,6 @@ export namespace Prisma {
     type?: StringFilter<"CropLog"> | string
     note?: StringFilter<"CropLog"> | string
     observedOn?: DateTimeFilter<"CropLog"> | Date | string
-    severity?: StringNullableFilter<"CropLog"> | string | null
-    pest?: StringNullableFilter<"CropLog"> | string | null
     createdAt?: DateTimeFilter<"CropLog"> | Date | string
     plantingId?: IntFilter<"CropLog"> | number
   }
@@ -40281,8 +40100,6 @@ export namespace Prisma {
     type: string
     note: string
     observedOn: Date | string
-    severity?: string | null
-    pest?: string | null
     createdAt?: Date | string
   }
 
@@ -40290,8 +40107,6 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     note?: StringFieldUpdateOperationsInput | string
     observedOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    severity?: NullableStringFieldUpdateOperationsInput | string | null
-    pest?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -40300,8 +40115,6 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     note?: StringFieldUpdateOperationsInput | string
     observedOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    severity?: NullableStringFieldUpdateOperationsInput | string | null
-    pest?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -40310,8 +40123,6 @@ export namespace Prisma {
     type?: StringFieldUpdateOperationsInput | string
     note?: StringFieldUpdateOperationsInput | string
     observedOn?: DateTimeFieldUpdateOperationsInput | Date | string
-    severity?: NullableStringFieldUpdateOperationsInput | string | null
-    pest?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

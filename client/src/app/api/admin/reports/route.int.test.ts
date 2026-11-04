@@ -92,13 +92,13 @@ describe("farmer advisory (L10)", () => {
     const eggplant = await createCropType({ name: "Eggplant" });
     const planting = await createPlanting(farmer.id, { cropTypeId: eggplant.id, productId: listing.id });
     await prisma.cropLog.create({
-      data: { plantingId: planting.id, type: "pest_disease", note: "Fruit borer", observedOn: new Date(), severity: "high", pest: "fruit-and-shoot-borer" },
+      data: { plantingId: planting.id, type: "pest_disease", note: "Fruit borer", observedOn: new Date() },
     });
 
     const res = await advisory(request("/api/farmer/advisory", { as: await createUser({ role: "farmer" }) }));
     const body = await res.text();
 
-    expect(JSON.parse(body)).toMatchObject([{ cropType: "Eggplant", pest: "fruit-and-shoot-borer", farms: 1, high: 1, notes: [{ note: "Fruit borer" }] }]);
+    expect(JSON.parse(body)).toMatchObject([{ cropType: "Eggplant", type: "pest_disease", farms: 1, notes: [{ note: "Fruit borer" }] }]);
     expect(body).not.toContain("Secret new variety");
     expect(body).not.toContain("Juan Farmer");
   });

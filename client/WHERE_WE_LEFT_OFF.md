@@ -46,8 +46,9 @@ Feature-complete for the capstone scope and through three structured hardening p
    - Hold-to-show eye on every password box (`src/components/PasswordInput.tsx`); cream background with a sand grain; navbar "All Products"; farmers get My Farm, My Products, About.
    - **Announcements** (`src/components/AnnouncementList.tsx`): gradient cards by type (advisory green, alert red, info blue), two columns, newest 4 on the home page (2 on phones and the farmer overview), "Read more" and "View all" windows with search, type filter and sort.
    - **Farmer portal:** logo only in the navbar; weather as a see-through card beside the welcome line with announcements under it; search/filter/sort on My Products, Orders and Crop Monitor (`src/components/ListToolbar.tsx`); an opened order and its items read as one block; the timeline's "Today" label stays inside its card.
+   - **Crop monitoring simplified (2026-11-04):** crop types hold only a name and harvest range (growth stages removed); crop logs are type + note + date seen (severity and the pest list removed); the advisory groups by crop and kind of problem; "Needs attention" flags any pest, weather or damage report from the last 14 days; area and expected yield sit under "Optional details" when recording a planting. Migration `simplify_crop_monitoring`. Scope 81/21/27 ("Update crop growth stage" is now Partial).
    - **Messages (customers and farmers):** date lines in threads; search over names and message text; delete a conversation for yourself only (`ConversationHide`; the other side keeps theirs, a new message brings it back). Notices stay first and can't be deleted.
-11. **Scope** is documented item by item in `SCOPE_AND_DELIMITATIONS.md` (129 use-case items: 82 implemented, 20 partial, 27 not implemented).
+11. **Scope** is documented item by item in `SCOPE_AND_DELIMITATIONS.md` (129 use-case items: 81 implemented, 21 partial, 27 not implemented).
 
 ---
 
@@ -260,7 +261,7 @@ src/validators/                          ← shared Zod schemas (client + server
 
 prisma/
   schema.prisma                         ← 22 models; generated/prisma custom output
-  migrations/ (35 applied — see DEVELOPMENT_STATUS.md for the full list)
+  migrations/ (36 applied — see DEVELOPMENT_STATUS.md for the full list)
 
 public/logo.svg, logo-light.svg         ← the logo; public/email/logo.png is its PNG copy for emails
 public/photos/mount-mayon-2016.webp     ← TEMPORARY hero photo (CC BY-SA 4.0, credit required)

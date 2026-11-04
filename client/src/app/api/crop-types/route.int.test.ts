@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { addDays, todayPH, weekStart } from "@/lib/planting";
 import { createCropType, createPlanting, createUser, params, request, type SessionUser } from "@/test-utils/integration/helpers";
 
-const pechay = { name: "Pechay", daysToHarvestMin: 30, daysToHarvestMax: 45, vegetativeDay: 7, floweringDay: null, fruitingDay: null };
+const pechay = { name: "Pechay", daysToHarvestMin: 30, daysToHarvestMax: 45 };
 const post = (as: SessionUser | undefined, body: unknown) => create(request("/api/crop-types", { method: "POST", as, body }));
 
 describe("crop types", () => {
@@ -21,7 +21,7 @@ describe("crop types", () => {
     expect(await edited.json()).toMatchObject({ daysToHarvestMax: 50 });
 
     expect((await post(manager, pechay)).status).toBe(409); // same name
-    expect((await post(manager, { ...pechay, name: "Bad", vegetativeDay: 40 })).status).toBe(400);
+    expect((await post(manager, { ...pechay, name: "Bad", daysToHarvestMax: 20 })).status).toBe(400); // ends before it starts
 
     const deleted = await remove(request(`/api/crop-types/${crop.id}`, { method: "DELETE", as: manager }), params({ id: String(crop.id) }));
     expect(deleted.status).toBe(200);

@@ -193,11 +193,6 @@ model CropType {
   // Typical range of days from planting to harvest.
   daysToHarvestMin Int
   daysToHarvestMax Int
-  // Day each growth stage starts; null for a stage the crop doesn't go
-  // through (leafy vegetables are harvested before flowering).
-  vegetativeDay    Int
-  floweringDay     Int?
-  fruitingDay      Int?
   createdAt        DateTime   @default(now())
 
   plantings        Planting[]
@@ -248,10 +243,6 @@ model CropLog {
   note       String
   // When it was seen in the field, which may be before it was entered.
   observedOn DateTime @db.Date
-  // low | medium | high; null for general notes.
-  severity   String?
-  // One of CROP_PESTS (src/validators/crop.ts), for pest_disease entries.
-  pest       String?
   createdAt  DateTime @default(now())
 
   plantingId Int

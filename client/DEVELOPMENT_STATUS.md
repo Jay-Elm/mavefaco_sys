@@ -65,14 +65,14 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `Faq` — id, question, answer, displayOrder, createdAt
 - `SiteContent` — key (PK), value (key-value store for cooperative info)
 - `Review` — id, rating (1–5), comment, createdAt, customerId, productId — `@@unique([customerId, productId])`
-- `CropType` — id, name (unique), daysToHarvestMin/Max, vegetativeDay, floweringDay?, fruitingDay? (approximate growing times; staff-managed; seeded with 14 common crops)
+- `CropType` — id, name (unique), daysToHarvestMin/Max (approximate days from planting to harvest; staff-managed; seeded with 14 common crops)
 - `Planting` — id, plantedOn/harvestStart/harvestEnd (`@db.Date`, Philippine calendar dates), areaSqm?, expectedYield? (kg), status (growing/harvested/failed), harvestedOn?, actualYield?, farmerId, cropTypeId, productId? (SetNull when the listing is deleted)
-- `CropLog` — id, type (weather_impact/pest_disease/damage/note), note, observedOn (date), severity? (low/medium/high), pest? (from `CROP_PESTS`), createdAt, plantingId (cascade)
+- `CropLog` — id, type (weather_impact/pest_disease/damage/note), note, observedOn (date), createdAt, plantingId (cascade)
 - `Message` — id, content, read, createdAt, senderId, receiverId
 - `ConversationHide` — userId + otherId (composite key), hiddenAt: a conversation the user removed from their own list; their messages up to hiddenAt stay hidden for them only
 - `Notice` — id, title, body, read, createdAt, recipientId, productId (set null if the listing is deleted), resolvedAt, resolution (`resubmitted` | `removed`) — one-way system notices, e.g. a listing suspension
 
-**Migrations applied (35, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`) → `add_id_submissions` (moves `User.idImagePath` into `IdSubmission`) → `normalize_order_audit_names` → `close_id_submissions_verified_in_person` → `announcement_audience` → `renumber_faq_banner_order` → `order_updated_at` → `conversation_hide`.
+**Migrations applied (36, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`) → `add_id_submissions` (moves `User.idImagePath` into `IdSubmission`) → `normalize_order_audit_names` → `close_id_submissions_verified_in_person` → `announcement_audience` → `renumber_faq_banner_order` → `order_updated_at` → `conversation_hide` → `simplify_crop_monitoring`.
 
 **Infra note:** `DIRECT_URL` cannot use Supabase's true direct-connection endpoint (`db.<ref>.supabase.co:5432`) — neither locally nor from Vercel's build infra can reach it (`P1001`), almost certainly Supabase's IPv6-only requirement for that endpoint. Fixed by pointing `DIRECT_URL` at the **Session pooler** instead (distinct from the Transaction pooler `DATABASE_URL` uses) — still holds `prisma migrate deploy`'s advisory lock, and is IPv4-compatible.
 
@@ -124,14 +124,14 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 ### Farmer Dashboard (`/farmer/`) — farmer role only
 - `layout.tsx` — green-accent sidebar (184px), auth guard, isolated scroll; red count badges on Messages (unread messages + notices), Orders (new), My Products (suspended), Crop Monitor (plantings whose harvest window has opened), Profile (no ID submitted)
-- `page.tsx` — product count, orders, revenue; **stock alerts** (out of stock + low stock); **weather widget** (Tabaco City, Albay via Open-Meteo); **community advisory** (top 5 groups of members' pest/weather/damage reports by crop and problem, last 30 days; "See all" → `advisory/`)
+- `page.tsx` — product count, orders, revenue; **stock alerts** (out of stock + low stock); **weather widget** (Tabaco City, Albay via Open-Meteo); **community advisory** (top 5 groups of members' pest/weather/damage reports by crop and kind of problem, last 30 days; "See all" → `advisory/`)
 - `products/` — search, status/stock/category filters and sort; table with stock badges (Out of Stock / Low / normal) and status (Approved / Pending / Suspended with its deletion date and reasons); alert banners for stock problems and suspended listings; Edit ("Fix & resubmit" when suspended)/Delete; CSV export
 - `products/new/` — create product form; requires `verified: true`
 - `products/[id]/edit/` — pre-filled edit form; content edits reset `approved: false`; on a suspended listing shows the reasons and deadline, saving a content change resubmits it; Delete button
 - `orders/` — orders with farmer's products; search (customer, product, #ID), status filter, sort by date or total; an opened order and its items share one tinted block; Accept/Reject/Ship/Deliver state machine; CSV export
-- `crops/` — Crop Monitor (search, filters by state and crop, sort): "Needs attention" (harvest window open, overdue, high-severity report in 14 days), growing plantings with stage and progress to harvest, past seasons with expected vs actual yield
+- `crops/` — Crop Monitor (search, filters by state and crop, sort): "Needs attention" (harvest window open, overdue, pest/weather/damage report in 14 days), growing plantings with a Growing / Ready to harvest / Overdue badge and progress to harvest, past seasons with expected vs actual yield
 - `crops/new/` — record a planting (crop type, date, optional area, expected yield, linked listing); previews the harvest window
-- `crops/[id]/` — planting detail: growth timeline, record harvest (optionally adding to the linked listing's stock) or mark failed, edit details/harvest window, structured crop log (pest from a list, severity, date seen), delete
+- `crops/[id]/` — planting detail: season bar (growing, then the harvest window, with today marked), record harvest (optionally adding to the linked listing's stock) or mark failed, edit details/harvest window, crop log (type, date seen, note), delete
 - `messages/` — conversation inbox (`src/components/ConversationList.tsx`, shared with customers) with unread counts, a search over names and message text, and a delete button per conversation, plus a "MaVeFaCo notices" entry pinned first (can't be deleted); `/farmer/messages/notices` — one-way system notices (no reply); an open suspension notice links to the listing's edit page, and once resolved (`Notice.resolvedAt`/`resolution`: resubmitted, or removed by a delete or the 7-day cleanup) it shows that outcome instead; `/farmer/messages/[userId]` — message thread
 - `profile/` — edit name/email; ID verification status and the camera capture flow (`components/idVerification/`); change password
 
@@ -218,15 +218,15 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | PATCH | `/api/customer/orders/[id]` | authenticated | pending→cancelled (stock restore); shipped→delivered |
 | GET | `/api/farmer/orders` | farmer | orders with farmer's products |
 | PATCH | `/api/farmer/orders/[id]` | farmer | state machine + stock restore on cancel |
-| GET | `/api/farmer/plantings` | farmer | own plantings with computed stage/attention/progress and latest high-severity report |
+| GET | `/api/farmer/plantings` | farmer | own plantings with computed attention/progress and the latest pest/weather/damage report |
 | POST | `/api/farmer/plantings` | farmer | record a planting; harvest window from the crop type |
 | GET | `/api/farmer/plantings/[id]` | farmer | one planting + its log |
 | PATCH | `/api/farmer/plantings/[id]` | farmer | details, harvest window (a new planting date shifts it), linked listing, status failed/growing; conditional on `updatedAt` |
 | DELETE | `/api/farmer/plantings/[id]` | farmer | with its log |
 | POST | `/api/farmer/plantings/[id]/harvest` | farmer | growing → harvested once (conditional update), optional `addToStock` to the linked listing in the same transaction |
-| POST | `/api/farmer/plantings/[id]/logs` | farmer | structured entry: type, note, observedOn, severity, pest |
+| POST | `/api/farmer/plantings/[id]/logs` | farmer | entry: type, note, observedOn |
 | DELETE | `/api/farmer/plantings/[id]/logs/[logId]` | farmer | |
-| GET | `/api/farmer/advisory` | farmer | last 30 days of pest/weather/damage reports from all farmers, grouped by crop and problem (farm counts, no names) |
+| GET | `/api/farmer/advisory` | farmer | last 30 days of pest/weather/damage reports from all farmers, grouped by crop and kind of problem (farm counts, no names) |
 | GET | `/api/crop-types` | farmer/manager/admin | crop list |
 | POST | `/api/crop-types` · PUT/DELETE `/api/crop-types/[id]` | admin/manager | manage crop types; audit `CREATE/UPDATE/DELETE_CROP_TYPE` |
 | GET | `/api/admin/supply` | admin/manager | expected kg per crop per week (8 weeks), possible-oversupply flags, overdue plantings |
@@ -279,13 +279,13 @@ After every `prisma migrate dev`, run `prisma generate` separately. The generate
 `WeatherWidget` calls Open-Meteo API client-side for Tabaco City (lat=13.3594, lon=123.7331). No API key required. Shown on farmer overview page.
 
 ### Community advisory
-`/api/farmer/advisory` groups crop logs of type `pest_disease`, `weather_impact`, or `damage` observed in the last 30 days (all farmers) by crop type and problem (`groupAdvisory()` in `src/lib/advisory.ts`): distinct farms, reports, high-severity count, latest date and the 5 newest notes — never the farmer or their listing. Top 5 groups on the farmer overview; all on `/farmer/advisory`.
+`/api/farmer/advisory` groups crop logs of type `pest_disease`, `weather_impact`, or `damage` observed in the last 30 days (all farmers) by crop type and log type (`groupAdvisory()` in `src/lib/advisory.ts`): distinct farms, reports, latest date and the 5 newest notes — never the farmer or their listing. Top 5 groups on the farmer overview; all on `/farmer/advisory`.
 
 ### Coming soon
 `withComingSoon()` (`src/lib/comingSoon.ts`) adds `comingSoon: { harvestStart, harvestEnd } | null` to storefront products: an out-of-stock listing gets the window of its earliest growing linked planting whose window hasn't closed. Used by the home page, `/products`, `/products/[id]` and `/sellers/[id]`; `ProductCard` shows a "Coming Soon" badge and the expected dates instead of "Out of Stock".
 
 ### Crop monitoring
-A `Planting` is one season of one crop. Its harvest window is copied from the `CropType` when recorded and is then the farmer's to adjust; the growth stage, "needs attention" flag and progress are computed per request in `src/lib/planting.ts` (`serializePlanting`), not stored. All planting dates are calendar dates in Philippine time (`todayPH()`), passed as `YYYY-MM-DD`. `expectedSupply()` spreads each growing planting's expected yield evenly over the remaining days of its window and sums by crop and Monday-to-Sunday week; `CLASH_FARMS` (3) farms in one week flags possible oversupply. Crop growing times are approximate seed values staff can correct on Dashboard → Crop Types.
+A `Planting` is one season of one crop. Its harvest window is copied from the `CropType` when recorded and is then the farmer's to adjust; the "needs attention" flag and progress are computed per request in `src/lib/planting.ts` (`serializePlanting`), not stored. All planting dates are calendar dates in Philippine time (`todayPH()`), passed as `YYYY-MM-DD`. `expectedSupply()` spreads each growing planting's expected yield evenly over the remaining days of its window and sums by crop and Monday-to-Sunday week; `CLASH_FARMS` (3) farms in one week flags possible oversupply. Crop growing times are approximate seed values staff can correct on Dashboard → Crop Types.
 
 ### Cart isolation
 `CartContext` uses `cart_${user.id}` as localStorage key. Waits for `authLoading` before loading cart to avoid guest-cart flash.

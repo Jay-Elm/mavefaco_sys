@@ -21,8 +21,8 @@ async function staffAndId(req: NextRequest, context: { params: Promise<{ id: str
 
 /**
  * PUT /api/crop-types/[id] — correct a crop's name or growing times.
- * Existing plantings keep the harvest window they were given; stages are
- * worked out from the new schedule.
+ * Existing plantings keep the harvest window they were given; only new
+ * plantings get the new one.
  */
 export async function PUT(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
@@ -35,7 +35,7 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
 
     const { count } = await prisma.cropType.updateMany({
       where: { id: auth.id },
-      data: { floweringDay: null, fruitingDay: null, ...parsed.data },
+      data: parsed.data,
     });
     if (count === 0) return NextResponse.json({ error: "Crop type not found" }, { status: 404 });
     await logAudit("UPDATE_CROP_TYPE", "CROP_TYPE", auth.id, auth.user.id);

@@ -7,9 +7,6 @@ export interface CropType {
   name: string
   daysToHarvestMin: number
   daysToHarvestMax: number
-  vegetativeDay: number
-  floweringDay: number | null
-  fruitingDay: number | null
 }
 
 export interface Planting {
@@ -24,7 +21,6 @@ export interface Planting {
   actualYield: number | null
   cropType: CropType
   product: { id: number; name: string; unit: string; archivedAt: string | null } | null
-  stage: string | null
   attention: 'harvest-now' | 'overdue' | null
   progress: number | null
   day: number
@@ -35,16 +31,6 @@ export interface CropLog {
   type: string
   note: string
   observedOn: string
-  severity: string | null
-  pest: string | null
-}
-
-export const STAGE_STYLES: Record<string, { label: string; cls: string }> = {
-  seedling:        { label: 'Seedling',      cls: 'bg-lime-100 text-lime-700' },
-  vegetative:      { label: 'Vegetative',    cls: 'bg-shoot text-paddy' },
-  flowering:       { label: 'Flowering',     cls: 'bg-pink-100 text-pink-700' },
-  fruiting:        { label: 'Fruiting',      cls: 'bg-orange-100 text-orange-700' },
-  'harvest-ready': { label: 'Harvest ready', cls: 'bg-amber-100 text-amber-800' },
 }
 
 export const STATUS_STYLES: Record<string, { label: string; cls: string }> = {
@@ -53,18 +39,20 @@ export const STATUS_STYLES: Record<string, { label: string; cls: string }> = {
   failed:    { label: 'Failed',    cls: 'bg-red-100 text-red-700' },
 }
 
+/** The badge a planting shows: where a growing one stands against its harvest window, else its status. */
+export function plantingBadge(p: Pick<Planting, 'status' | 'attention'>): { label: string; cls: string } {
+  if (p.status !== 'growing') return STATUS_STYLES[p.status]
+  if (p.attention === 'overdue') return { label: 'Overdue', cls: 'bg-red-100 text-red-700' }
+  if (p.attention === 'harvest-now') return { label: 'Ready to harvest', cls: 'bg-amber-100 text-amber-800' }
+  return STATUS_STYLES.growing
+}
+
 export const LOG_TYPES: { value: string; label: string; icon: ElementType; cls: string }[] = [
   { value: 'pest_disease',   label: 'Pest / Disease', icon: Bug,       cls: 'text-red-600' },
   { value: 'weather_impact', label: 'Weather Impact', icon: CloudRain, cls: 'text-blue-600' },
   { value: 'damage',         label: 'Crop Damage',    icon: Flame,     cls: 'text-orange-600' },
   { value: 'note',           label: 'General Note',   icon: FileText,  cls: 'text-gray-600' },
 ]
-
-export const SEVERITY_STYLES: Record<string, { label: string; cls: string }> = {
-  low:    { label: 'Low',    cls: 'bg-gray-100 text-gray-700' },
-  medium: { label: 'Medium', cls: 'bg-amber-100 text-amber-800' },
-  high:   { label: 'High',   cls: 'bg-red-100 text-red-700' },
-}
 
 /** A "YYYY-MM-DD" calendar date for display, e.g. "Oct 26, 2026". */
 export const fmtDate = (d: string | null) =>

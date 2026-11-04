@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 /**
  * GET /api/farmer/advisory — members' pest, weather and damage reports from
- * the last 30 days, grouped by crop and problem with how many farms saw it.
+ * the last 30 days, grouped by crop and kind of problem with how many farms saw it.
  * Named by crop type only: never the farmer or their listing.
  */
 export async function GET(req: NextRequest) {
@@ -26,8 +26,6 @@ export async function GET(req: NextRequest) {
         type: true,
         note: true,
         observedOn: true,
-        severity: true,
-        pest: true,
         planting: { select: { farmerId: true, cropType: { select: { id: true, name: true } } } },
       },
     });

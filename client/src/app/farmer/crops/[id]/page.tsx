@@ -6,10 +6,9 @@ import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { useDialog } from '@/contexts/DialogContext'
 import { ArrowLeft, CheckCircle2, Loader2, Plus, Save, Sprout, Trash2, Wheat, XCircle } from 'lucide-react'
-import { CROP_PESTS, PEST_LABELS } from '@/validators/crop'
-import { addDays, daysBetween, todayPH } from '@/lib/planting'
+import { daysBetween, todayPH } from '@/lib/planting'
 import {
-  INPUT, LOG_TYPES, SEVERITY_STYLES, STAGE_STYLES, STATUS_STYLES, fmtDate, fmtKg, fmtWindow,
+  INPUT, LOG_TYPES, fmtDate, fmtKg, fmtWindow, plantingBadge,
   type CropLog, type Planting,
 } from '@/components/cropDisplay'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
@@ -85,10 +84,7 @@ export default function PlantingPage() {
   if (error || !planting) return <div className="p-8 text-red-600 text-sm">{error || 'Planting not found'}</div>
 
   const p = planting
-  const stage = p.attention === 'overdue'
-    ? { label: 'Overdue', cls: 'bg-red-100 text-red-700' }
-    : p.stage ? STAGE_STYLES[p.stage] : null
-  const status = STATUS_STYLES[p.status]
+  const badge = plantingBadge(p)
 
   return (
     <div className="p-4 sm:p-8 max-w-3xl">
@@ -106,9 +102,7 @@ export default function PlantingPage() {
             {p.product && ` · sold as ${p.product.name}`}
           </p>
         </div>
-        <span className={`sm:ml-auto shrink-0 text-sm font-semibold px-3 py-1 rounded-full ${stage ? stage.cls : status.cls}`}>
-          {stage ? stage.label : status.label}
-        </span>
+        <span className={`sm:ml-auto shrink-0 text-sm font-semibold px-3 py-1 rounded-full ${badge.cls}`}>{badge.label}</span>
       </div>
 
       {p.status === 'growing' ? (
@@ -156,32 +150,21 @@ function Fact({ label, value }: { label: string; value: string }) {
   )
 }
 
-/** The planting's life so far: growth stages as segments, the harvest window, and today. */
+/** The season so far: growing up to the harvest window, the window itself, and today. */
 function Timeline({ planting: p }: { planting: Planting }) {
   const total = Math.max(daysBetween(p.plantedOn, p.harvestEnd), 1)
-  const harvestDay = daysBetween(p.plantedOn, p.harvestStart)
-  const t = p.cropType
-  const starts = [
-    { key: 'seedling', day: 0 },
-    { key: 'vegetative', day: t.vegetativeDay },
-    ...(t.floweringDay !== null ? [{ key: 'flowering', day: t.floweringDay }] : []),
-    ...(t.fruitingDay !== null ? [{ key: 'fruiting', day: t.fruitingDay }] : []),
-  ].filter((s) => s.day < harvestDay)
-  const segments = [
-    ...starts.map((s, i) => ({ ...s, end: i + 1 < starts.length ? starts[i + 1].day : harvestDay })),
-    { key: 'harvest-ready', day: harvestDay, end: total },
-  ]
+  const harvestDay = Math.min(daysBetween(p.plantedOn, p.harvestStart), total)
   const todayPct = Math.min(100, Math.max(0, (p.day / total) * 100))
-  const COLORS: Record<string, string> = {
-    seedling: 'bg-lime-300', vegetative: 'bg-paddy/70', flowering: 'bg-pink-300', fruiting: 'bg-orange-300', 'harvest-ready': 'bg-amber-400',
-  }
+  const harvestPct = (harvestDay / total) * 100
+  const overdue = p.attention === 'overdue'
+  const daysLeft = daysBetween(todayPH(), p.harvestStart)
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 mb-6">
       <div className="flex flex-wrap items-baseline justify-between gap-2 mb-4">
-        <h2 className="text-sm font-semibold text-gray-700">Growth timeline</h2>
-        <p className={`text-sm ${p.attention === 'overdue' ? 'text-red-600 font-medium' : 'text-gray-600'}`}>
-          Harvest {fmtWindow(p.harvestStart, p.harvestEnd)}
+        <h2 className="text-sm font-semibold text-gray-700">Season</h2>
+        <p className={`text-sm ${overdue ? 'text-red-600 font-medium' : 'text-gray-600'}`}>
+          {overdue ? 'Harvest window has passed' : daysLeft > 0 ? `Harvest in about ${daysLeft} ${daysLeft === 1 ? 'day' : 'days'}` : 'Harvest window is open'}
         </p>
       </div>
       <div className="relative pt-6">
@@ -192,21 +175,24 @@ function Timeline({ planting: p }: { planting: Planting }) {
           <span className="text-[11px] font-semibold text-paddy whitespace-nowrap">Today · day {Math.max(p.day, 0)}</span>
         </div>
         <div className="relative flex h-3 rounded-full overflow-hidden bg-gray-100">
-          {segments.map((s) => (
-            <div key={s.key} className={`${COLORS[s.key]} ${s.day / total * 100 > todayPct ? 'opacity-35' : ''}`} style={{ width: `${((s.end - s.day) / total) * 100}%` }} title={STAGE_STYLES[s.key].label} />
-          ))}
+          <div className="bg-paddy/70" style={{ width: `${harvestPct}%` }} title="Growing" />
+          <div className={`${overdue ? 'bg-red-400' : 'bg-amber-400'} ${harvestPct > todayPct ? 'opacity-35' : ''}`} style={{ width: `${100 - harvestPct}%` }} title="Harvest window" />
           <div className="absolute inset-y-0 w-0.5 bg-paddy" style={{ left: `${todayPct}%` }} />
         </div>
         <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3">
-          {segments.map((s) => (
-            <span key={s.key} className="inline-flex items-center gap-1.5 text-xs text-gray-600">
-              <span className={`w-2.5 h-2.5 rounded-sm ${COLORS[s.key]}`} />
-              {STAGE_STYLES[s.key].label} <span className="text-gray-500">{fmtDate(addDays(p.plantedOn, s.day))}</span>
-            </span>
-          ))}
+          <span className="inline-flex items-center gap-1.5 text-xs text-gray-600">
+            <span className="w-2.5 h-2.5 rounded-sm bg-paddy/70" />
+            Planted <span className="text-gray-500">{fmtDate(p.plantedOn)}</span>
+          </span>
+          <span className="inline-flex items-center gap-1.5 text-xs text-gray-600">
+            <span className={`w-2.5 h-2.5 rounded-sm ${overdue ? 'bg-red-400' : 'bg-amber-400'}`} />
+            Harvest <span className="text-gray-500">{fmtWindow(p.harvestStart, p.harvestEnd)}</span>
+          </span>
         </div>
       </div>
-      <p className="text-xs text-gray-500 mt-3">Stages are worked out from typical growing times for {p.cropType.name}; they&apos;re approximate.</p>
+      <p className="text-xs text-gray-500 mt-3">
+        The harvest window comes from typical growing times for {p.cropType.name}. If yours differs, change it under Planting details.
+      </p>
     </div>
   )
 }
@@ -378,8 +364,6 @@ function DetailsForm({ planting: p, listings, send, onSaved }: { planting: Plant
 function LogSection({ planting: p, send, onChange }: { planting: Detail; send: Send; onChange: (logs: CropLog[]) => void }) {
   const dialog = useDialog()
   const [type, setType] = useState('pest_disease')
-  const [pest, setPest] = useState('')
-  const [severity, setSeverity] = useState('')
   const [observedOn, setObservedOn] = useState(todayPH())
   const [note, setNote] = useState('')
   const [adding, setAdding] = useState(false)
@@ -389,15 +373,11 @@ function LogSection({ planting: p, send, onChange }: { planting: Detail; send: S
   async function add(e: React.FormEvent) {
     e.preventDefault()
     setAdding(true); setError('')
-    const { ok, data } = await send('/logs', 'POST', {
-      type, note: note.trim(), observedOn,
-      severity: type === 'note' ? null : severity || null,
-      pest: type === 'pest_disease' ? pest || null : null,
-    })
+    const { ok, data } = await send('/logs', 'POST', { type, note: note.trim(), observedOn })
     setAdding(false)
     if (!ok) { setError(data.error ?? 'Failed to add entry'); return }
     onChange([data, ...p.logs].sort((a, b) => b.observedOn.localeCompare(a.observedOn) || b.id - a.id))
-    setNote(''); setPest(''); setSeverity('')
+    setNote('')
   }
 
   async function remove(logId: number) {
@@ -432,36 +412,6 @@ function LogSection({ planting: p, send, onChange }: { planting: Detail; send: S
           ))}
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {type === 'pest_disease' && (
-            <div>
-              <label htmlFor="pest" className="block text-xs font-medium text-gray-600 mb-1">Pest or disease</label>
-              <select id="pest" required value={pest} onChange={(e) => setPest(e.target.value)} className={INPUT}>
-                <option value="">— Choose —</option>
-                {CROP_PESTS.map((k) => <option key={k} value={k}>{PEST_LABELS[k]}</option>)}
-              </select>
-            </div>
-          )}
-          {type !== 'note' && (
-            <div>
-              <span className="block text-xs font-medium text-gray-600 mb-1">Severity</span>
-              <div className="flex gap-1.5" role="radiogroup" aria-label="Severity">
-                {Object.entries(SEVERITY_STYLES).map(([value, s]) => (
-                  <button
-                    key={value}
-                    type="button"
-                    role="radio"
-                    aria-checked={severity === value}
-                    onClick={() => setSeverity(value)}
-                    className={`flex-1 px-2 py-2 rounded-lg text-xs font-medium border transition-colors ${
-                      severity === value ? `${s.cls} border-transparent ring-2 ring-paddy/40` : 'border-gray-200 text-gray-500 hover:border-gray-400'
-                    }`}
-                  >
-                    {s.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
           <div>
             <label htmlFor="observedOn" className="block text-xs font-medium text-gray-600 mb-1">Date seen</label>
             <input id="observedOn" type="date" required min={p.plantedOn} max={todayPH()} value={observedOn} onChange={(e) => setObservedOn(e.target.value)} className={INPUT} />
@@ -470,7 +420,7 @@ function LogSection({ planting: p, send, onChange }: { planting: Detail; send: S
         <textarea
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder="What did you see? How much of the crop is affected?"
+          placeholder={type === 'pest_disease' ? 'Which pest or disease? How much of the crop is affected?' : 'What did you see? How much of the crop is affected?'}
           rows={2}
           className={`${INPUT} resize-none`}
           aria-label="Note"
@@ -494,15 +444,11 @@ function LogSection({ planting: p, send, onChange }: { planting: Detail; send: S
           {p.logs.map((log) => {
             const info = LOG_TYPES.find((t) => t.value === log.type) ?? LOG_TYPES[3]
             const Icon = info.icon
-            const sev = log.severity ? SEVERITY_STYLES[log.severity] : null
             return (
               <div key={log.id} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-100">
                 <Icon size={15} className={`shrink-0 mt-0.5 ${info.cls}`} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-gray-600 mb-0.5 flex flex-wrap items-center gap-1.5">
-                    {log.pest ? PEST_LABELS[log.pest as keyof typeof PEST_LABELS] ?? log.pest : info.label}
-                    {sev && <span className={`px-1.5 py-px rounded text-[10px] font-semibold ${sev.cls}`}>{sev.label}</span>}
-                  </p>
+                  <p className="text-xs font-semibold text-gray-600 mb-0.5">{info.label}</p>
                   <p className="text-sm text-gray-800 whitespace-pre-wrap">{log.note}</p>
                   <p className="text-xs text-gray-500 mt-1">Seen {fmtDate(log.observedOn)}</p>
                 </div>

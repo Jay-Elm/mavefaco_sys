@@ -33,7 +33,7 @@ describe("POST /api/farmer/plantings", () => {
     expect(res.status).toBe(201);
     expect(await res.json()).toMatchObject({
       plantedOn: day(-10), harvestStart: day(60), harvestEnd: day(80), status: "growing",
-      stage: "seedling", attention: null, areaSqm: 200, expectedYield: 300, cropType: { name: "Tomato" },
+      attention: null, areaSqm: 200, expectedYield: 300, cropType: { name: "Tomato" },
     });
   });
 
@@ -69,7 +69,7 @@ describe("GET /api/farmer/plantings", () => {
     const late = await createPlanting(farmer.id, { harvestStart: day(-20), harvestEnd: day(-1) });
     const done = await createPlanting(farmer.id, { status: "harvested" });
     await prisma.cropLog.create({
-      data: { plantingId: due.id, type: "pest_disease", pest: "aphids", severity: "high", note: "Spreading", observedOn: new Date() },
+      data: { plantingId: due.id, type: "pest_disease", note: "Aphids spreading", observedOn: new Date() },
     });
     await createPlanting((await createUser({ role: "farmer" })).id);
 
@@ -77,9 +77,9 @@ describe("GET /api/farmer/plantings", () => {
 
     const byId = Object.fromEntries(rows.map((r: { id: number }) => [r.id, r]));
     expect(rows).toHaveLength(3);
-    expect(byId[due.id]).toMatchObject({ stage: "harvest-ready", attention: "harvest-now", latestHighSeverity: { pest: "aphids" } });
-    expect(byId[late.id]).toMatchObject({ attention: "overdue", latestHighSeverity: null });
-    expect(byId[done.id]).toMatchObject({ status: "harvested", stage: null, attention: null });
+    expect(byId[due.id]).toMatchObject({ attention: "harvest-now", latestProblem: { type: "pest_disease", note: "Aphids spreading" } });
+    expect(byId[late.id]).toMatchObject({ attention: "overdue", latestProblem: null });
+    expect(byId[done.id]).toMatchObject({ status: "harvested", attention: null });
   });
 });
 
@@ -165,17 +165,17 @@ describe("POST /api/farmer/plantings/[id]/harvest", () => {
 });
 
 describe("crop logs", () => {
-  it("records structured reports and deletes the farmer's own", async () => {
+  it("records reports and deletes the farmer's own", async () => {
     const farmer = await createUser({ role: "farmer" });
     const p = await createPlanting(farmer.id, { plantedOn: day(-30) });
 
-    const res = await log(p.id, farmer, { type: "pest_disease", pest: "whitefly", severity: "medium", note: "Under leaves", observedOn: day(-2) });
+    const res = await log(p.id, farmer, { type: "pest_disease", note: "Whitefly under leaves", observedOn: day(-2) });
     expect(res.status).toBe(201);
     const entry = await res.json();
-    expect(entry).toMatchObject({ pest: "whitefly", severity: "medium", observedOn: day(-2) });
+    expect(entry).toMatchObject({ type: "pest_disease", note: "Whitefly under leaves", observedOn: day(-2) });
 
-    expect((await log(p.id, farmer, { type: "pest_disease", severity: "low", note: "?", observedOn: today() })).status).toBe(400); // which pest?
-    expect((await log(p.id, farmer, { type: "damage", severity: "low", note: "Wind", observedOn: day(-31) })).status).toBe(400); // before planting
+    expect((await log(p.id, farmer, { type: "pest_disease", note: " ", observedOn: today() })).status).toBe(400); // no note
+    expect((await log(p.id, farmer, { type: "damage", note: "Wind", observedOn: day(-31) })).status).toBe(400); // before planting
 
     const other = await createUser({ role: "farmer" });
     const del = (as: SessionUser) =>

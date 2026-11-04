@@ -1,4 +1,4 @@
-// Calendar-date arithmetic and growth-stage logic for crop plantings.
+// Calendar-date arithmetic and harvest-window logic for crop plantings.
 // Planting dates are calendar dates in Philippine time, passed around as
 // "YYYY-MM-DD" strings; Prisma returns @db.Date columns as UTC midnight.
 
@@ -33,28 +33,6 @@ export function daysBetween(from: string, to: string): number {
 export function weekStart(date: string): string {
   const day = fromDateString(date).getUTCDay(); // 0 = Sunday
   return addDays(date, -((day + 6) % 7));
-}
-
-export const GROWTH_STAGES = ["seedling", "vegetative", "flowering", "fruiting", "harvest-ready"] as const;
-export type GrowthStage = (typeof GROWTH_STAGES)[number];
-
-export interface StageSchedule {
-  vegetativeDay: number;
-  floweringDay: number | null;
-  fruitingDay: number | null;
-}
-
-/**
- * The stage a growing planting is in today: harvest-ready once its harvest
- * window opens, otherwise the latest stage whose start day has passed.
- */
-export function growthStage(schedule: StageSchedule, plantedOn: string, harvestStart: string, today: string): GrowthStage {
-  if (today >= harvestStart) return "harvest-ready";
-  const day = daysBetween(plantedOn, today);
-  if (schedule.fruitingDay !== null && day >= schedule.fruitingDay) return "fruiting";
-  if (schedule.floweringDay !== null && day >= schedule.floweringDay) return "flowering";
-  if (day >= schedule.vegetativeDay) return "vegetative";
-  return "seedling";
 }
 
 /** The harvest window a crop type gives a planting. */
@@ -96,11 +74,11 @@ type PlantingRow = {
   harvestEnd: Date;
   harvestedOn: Date | null;
   status: string;
-  cropType: StageSchedule & { id: number; name: string; daysToHarvestMin: number; daysToHarvestMax: number };
+  cropType: { id: number; name: string; daysToHarvestMin: number; daysToHarvestMax: number };
 };
 
 /**
- * A planting as the API returns it: dates as "YYYY-MM-DD", plus the stage,
+ * A planting as the API returns it: dates as "YYYY-MM-DD", plus the
  * attention flag and progress worked out for today (growing plantings only).
  */
 export function serializePlanting<T extends PlantingRow>(p: T, today: string = todayPH()) {
@@ -114,7 +92,6 @@ export function serializePlanting<T extends PlantingRow>(p: T, today: string = t
     harvestStart,
     harvestEnd,
     harvestedOn: p.harvestedOn ? toDateString(p.harvestedOn) : null,
-    stage: growing ? growthStage(p.cropType, plantedOn, harvestStart, today) : null,
     attention: growing ? attention(harvestStart, harvestEnd, today) : null,
     progress: growing ? progress(plantedOn, harvestStart, today) : null,
     day: daysBetween(plantedOn, today),

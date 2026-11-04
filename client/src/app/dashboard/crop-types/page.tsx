@@ -8,26 +8,20 @@ import type { CropType } from '@/components/cropDisplay'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 type Row = CropType & { _count: { plantings: number } }
-type Form = { name: string; daysToHarvestMin: string; daysToHarvestMax: string; vegetativeDay: string; floweringDay: string; fruitingDay: string }
+type Form = { name: string; daysToHarvestMin: string; daysToHarvestMax: string }
 
-const EMPTY: Form = { name: '', daysToHarvestMin: '', daysToHarvestMax: '', vegetativeDay: '', floweringDay: '', fruitingDay: '' }
+const EMPTY: Form = { name: '', daysToHarvestMin: '', daysToHarvestMax: '' }
 const CELL_INPUT = 'w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-paddy'
 
 const toForm = (c: CropType): Form => ({
   name: c.name,
   daysToHarvestMin: String(c.daysToHarvestMin),
   daysToHarvestMax: String(c.daysToHarvestMax),
-  vegetativeDay: String(c.vegetativeDay),
-  floweringDay: c.floweringDay === null ? '' : String(c.floweringDay),
-  fruitingDay: c.fruitingDay === null ? '' : String(c.fruitingDay),
 })
 const toBody = (f: Form) => ({
   name: f.name.trim(),
   daysToHarvestMin: Number(f.daysToHarvestMin),
   daysToHarvestMax: Number(f.daysToHarvestMax),
-  vegetativeDay: Number(f.vegetativeDay),
-  floweringDay: f.floweringDay === '' ? null : Number(f.floweringDay),
-  fruitingDay: f.fruitingDay === '' ? null : Number(f.fruitingDay),
 })
 
 export default function CropTypesPage() {
@@ -111,17 +105,13 @@ export default function CropTypesPage() {
       {([
         ['daysToHarvestMin', 'Harvest from (day)'],
         ['daysToHarvestMax', 'Harvest until (day)'],
-        ['vegetativeDay', 'Vegetative (day)'],
-        ['floweringDay', 'Flowering (day)'],
-        ['fruitingDay', 'Fruiting (day)'],
       ] as const).map(([key, label]) => (
         <div key={key}>
           <label htmlFor={`${idPrefix}-${key}`} className="block text-xs font-medium text-gray-600 mb-1">{label}</label>
           <input
             id={`${idPrefix}-${key}`}
             type="number" min="0" step="1" inputMode="numeric"
-            required={key !== 'floweringDay' && key !== 'fruitingDay'}
-            placeholder={key === 'floweringDay' || key === 'fruitingDay' ? 'none' : ''}
+            required
             value={f[key]}
             onChange={(e) => set({ ...f, [key]: e.target.value })}
             className={CELL_INPUT}
@@ -138,22 +128,21 @@ export default function CropTypesPage() {
         <span className="text-sm text-gray-500">{rows.length} crops</span>
       </div>
       <p className="text-sm text-gray-500 mb-6 max-w-2xl">
-        The crops farmers record plantings of. Growing times are counted in days from planting and are approximate;
-        they set each planting&apos;s growth stages and expected harvest window. Leave flowering and fruiting empty for
-        leafy crops harvested before they flower.
+        The crops farmers record plantings of, with the usual number of days from planting (or transplanting) to
+        harvest. They set each new planting&apos;s expected harvest window, which the farmer can then adjust.
       </p>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
 
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 mb-6">
         <h2 className="text-sm font-semibold text-gray-700 mb-3">Add a crop</h2>
-        <form onSubmit={add} className="grid grid-cols-2 md:grid-cols-6 gap-3 items-end">
-          <div className="col-span-2 md:col-span-1">
+        <form onSubmit={add} className="grid grid-cols-2 md:grid-cols-4 gap-3 items-end">
+          <div className="col-span-2">
             <label htmlFor="new-name" className="block text-xs font-medium text-gray-600 mb-1">Name</label>
             <input id="new-name" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={CELL_INPUT} />
           </div>
           {fields(form, setForm, 'new')}
-          <div className="col-span-2 md:col-span-6 flex items-center gap-3">
+          <div className="col-span-2 md:col-span-4 flex items-center gap-3">
             <button
               type="submit"
               disabled={adding}
@@ -168,24 +157,23 @@ export default function CropTypesPage() {
 
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[720px] text-sm">
+          <table className="w-full min-w-[520px] text-sm">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-4 py-3 text-left font-medium text-gray-500">Crop</th>
                 <th className="px-4 py-3 text-left font-medium text-gray-500">Harvest (days after planting)</th>
-                <th className="px-4 py-3 text-left font-medium text-gray-500">Stages start on day</th>
                 <th className="px-4 py-3 text-center font-medium text-gray-500">Plantings</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {rows.length === 0 ? (
-                <tr><td colSpan={5} className="text-center py-12 text-gray-500"><Sprout size={32} className="mx-auto mb-2" />No crops yet</td></tr>
+                <tr><td colSpan={4} className="text-center py-12 text-gray-500"><Sprout size={32} className="mx-auto mb-2" />No crops yet</td></tr>
               ) : rows.map((r) => editingId === r.id ? (
                 <tr key={r.id} className="bg-field">
-                  <td colSpan={5} className="px-4 py-4">
-                    <div className="grid grid-cols-2 md:grid-cols-6 gap-3 items-end">
-                      <div className="col-span-2 md:col-span-1">
+                  <td colSpan={4} className="px-4 py-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 items-end">
+                      <div className="col-span-2">
                         <label htmlFor={`e-name-${r.id}`} className="block text-xs font-medium text-gray-600 mb-1">Name</label>
                         <input id={`e-name-${r.id}`} value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} className={CELL_INPUT} />
                       </div>
@@ -205,11 +193,6 @@ export default function CropTypesPage() {
                 <tr key={r.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3 font-medium text-soil">{r.name}</td>
                   <td className="px-4 py-3 text-gray-700 tabular-nums">{r.daysToHarvestMin}–{r.daysToHarvestMax}</td>
-                  <td className="px-4 py-3 text-gray-600 text-xs">
-                    Vegetative {r.vegetativeDay}
-                    {r.floweringDay !== null && <> · Flowering {r.floweringDay}</>}
-                    {r.fruitingDay !== null && <> · Fruiting {r.fruitingDay}</>}
-                  </td>
                   <td className="px-4 py-3 text-center text-gray-600">{r._count.plantings}</td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">
                     <button onClick={() => { setEditingId(r.id); setEditForm(toForm(r)) }} className="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-paddy mr-3">

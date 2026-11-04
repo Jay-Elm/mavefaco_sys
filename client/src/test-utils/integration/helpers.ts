@@ -131,9 +131,9 @@ export async function withRowLocked<T>(table: string, id: number, waiters: numbe
   }
 }
 
-/** A crop type with a tomato-like schedule unless overridden. */
+/** A crop type with a tomato-like harvest range unless overridden. */
 export async function createCropType(
-  overrides: Partial<{ name: string; daysToHarvestMin: number; daysToHarvestMax: number; vegetativeDay: number; floweringDay: number | null; fruitingDay: number | null }> = {},
+  overrides: Partial<{ name: string; daysToHarvestMin: number; daysToHarvestMax: number }> = {},
 ) {
   seq++;
   return prisma.cropType.create({
@@ -141,9 +141,6 @@ export async function createCropType(
       name: overrides.name ?? `Crop ${seq}`,
       daysToHarvestMin: overrides.daysToHarvestMin ?? 70,
       daysToHarvestMax: overrides.daysToHarvestMax ?? 90,
-      vegetativeDay: overrides.vegetativeDay ?? 14,
-      floweringDay: overrides.floweringDay === undefined ? 35 : overrides.floweringDay,
-      fruitingDay: overrides.fruitingDay === undefined ? 50 : overrides.fruitingDay,
     },
   });
 }
