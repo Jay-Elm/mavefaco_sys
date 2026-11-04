@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { GET } from "./route";
 import { DELETE as deleteCategory } from "@/app/api/categories/[id]/route";
 import { GET as advisory } from "@/app/api/farmer/advisory/route";
+import { GET as staffAdvisory } from "@/app/api/admin/advisory/route";
 import { POST as upload } from "@/app/api/upload/route";
 import { prisma } from "@/lib/prisma";
 import { createCropType, createPlanting, createProduct, createUser, params, request, sessionToken, type SessionUser } from "@/test-utils/integration/helpers";
@@ -101,6 +102,24 @@ describe("farmer advisory (L10)", () => {
     expect(JSON.parse(body)).toMatchObject([{ cropType: "Eggplant", type: "pest_disease", farms: 1, notes: [{ note: "Fruit borer" }] }]);
     expect(body).not.toContain("Secret new variety");
     expect(body).not.toContain("Juan Farmer");
+  });
+
+  it("is shown to staff the same way, still without naming farms; other roles can't use the staff one", async () => {
+    const farmer = await createUser({ role: "farmer", name: "Juan Farmer" });
+    const ampalaya = await createCropType({ name: "Ampalaya" });
+    const planting = await createPlanting(farmer.id, { cropTypeId: ampalaya.id });
+    await prisma.cropLog.create({ data: { plantingId: planting.id, type: "weather_impact", note: "Flooded rows", observedOn: new Date() } });
+
+    for (const role of ["admin", "manager"] as const) {
+      const res = await staffAdvisory(request("/api/admin/advisory", { as: await createUser({ role }) }));
+      const body = await res.text();
+      expect(JSON.parse(body)).toMatchObject([{ cropType: "Ampalaya", type: "weather_impact", farms: 1, notes: [{ note: "Flooded rows" }] }]);
+      expect(body).not.toContain("Juan Farmer");
+    }
+    expect((await staffAdvisory(request("/api/admin/advisory"))).status).toBe(401);
+    for (const role of ["customer", "farmer"] as const) {
+      expect((await staffAdvisory(request("/api/admin/advisory", { as: await createUser({ role }) }))).status).toBe(403);
+    }
   });
 });
 

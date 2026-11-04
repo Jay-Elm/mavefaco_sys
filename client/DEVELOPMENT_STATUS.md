@@ -116,6 +116,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `announcements/` — post/delete announcements (info/alert/advisory types) for everyone, farmers only or customers only
 - `crop-types/` — add/edit/delete crop types and their approximate growing times (delete refused while plantings use one); audit logged
 - `supply/` — Upcoming Supply: expected kg per crop per week for 8 weeks (heat grid, hover details, expandable planting lists), 3+ farms in a week flagged as possible oversupply, overdue plantings listed separately; CSV export
+- `advisory/` — Crop Advisory: the same grouped community advisory farmers see (last 30 days, by crop and kind of problem, farms counted not named), with a link to post an announcement
 - `reports/` — Sales, Crop Demand, Users, Farmers tabs; CSS bar charts; per-section CSV + full report export; print button
 - `site/` — **Admin only**: 3-tab CMS:
   - **Banners** — add/toggle/delete homepage banners (5 color themes, CTA link); move up/down to order them
@@ -230,6 +231,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/crop-types` | farmer/manager/admin | crop list |
 | POST | `/api/crop-types` · PUT/DELETE `/api/crop-types/[id]` | admin/manager | manage crop types; audit `CREATE/UPDATE/DELETE_CROP_TYPE` |
 | GET | `/api/admin/supply` | admin/manager | expected kg per crop per week (8 weeks), possible-oversupply flags, overdue plantings |
+| GET | `/api/admin/advisory` | admin/manager | the community advisory (same data as `/api/farmer/advisory`, via `recentAdvisory()` in `src/lib/advisoryQuery.ts`) |
 | GET | `/api/messages` | authenticated | conversation list with unread counts, newest first; leaves out messages from before the caller removed a conversation; `?q=` matches names and any message text (each result says which message matched) |
 | GET | `/api/messages/[userId]` | authenticated | message thread; marks received as read |
 | POST | `/api/messages/[userId]` | customer/farmer | send message; only between a customer and a farmer (403 otherwise) |

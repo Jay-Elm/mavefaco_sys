@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { MenuDot, NavBadge, useNavBadges } from '@/components/NavBadge'
 import {
   LayoutDashboard, Users, Tag, Package, ShoppingCart,
-  ScrollText, BarChart2, Megaphone, Globe, Loader2, Menu, Sprout, CalendarRange,
+  ScrollText, BarChart2, Megaphone, Globe, Loader2, Menu, Sprout, CalendarRange, Bug,
 } from 'lucide-react'
 import Logo from '@/components/Logo'
 
@@ -22,6 +22,7 @@ const ADMIN_NAV = [
   { href: '/dashboard/site', label: 'Site Content', icon: Globe },
   { href: '/dashboard/crop-types', label: 'Crop Types', icon: Sprout },
   { href: '/dashboard/supply', label: 'Supply', icon: CalendarRange },
+  { href: '/dashboard/advisory', label: 'Crop Advisory', icon: Bug },
   { href: '/dashboard/reports', label: 'Reports', icon: BarChart2 },
 ]
 
@@ -34,6 +35,7 @@ const MANAGER_NAV = [
   { href: '/dashboard/announcements', label: 'Announcements', icon: Megaphone },
   { href: '/dashboard/crop-types', label: 'Crop Types', icon: Sprout },
   { href: '/dashboard/supply', label: 'Supply', icon: CalendarRange },
+  { href: '/dashboard/advisory', label: 'Crop Advisory', icon: Bug },
   { href: '/dashboard/reports', label: 'Reports', icon: BarChart2 },
 ]
 

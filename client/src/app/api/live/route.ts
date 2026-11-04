@@ -68,7 +68,8 @@ export async function GET(req: NextRequest) {
         }),
         prisma.product.aggregate({ where: { farmerId: actor.id }, _max: { updatedAt: true }, _count: true }),
         prisma.planting.aggregate({ where: { farmerId: actor.id }, _max: { updatedAt: true }, _count: true }),
-        prisma.cropLog.aggregate({ where: { planting: { farmerId: actor.id } }, _max: { id: true }, _count: true }),
+        // Every member's reports, for the community advisory (own ones included).
+        prisma.cropLog.aggregate({ _max: { id: true }, _count: true }),
       ]).then(([o, p, pl, cl]) => [o._max.updatedAt, o._count, p._max.updatedAt, p._count, pl._max.updatedAt, pl._count, cl._max.id, cl._count]);
     } else if (actor?.role === ROLES.ADMIN || actor?.role === ROLES.MANAGER) {
       byRole = Promise.all([
@@ -78,9 +79,10 @@ export async function GET(req: NextRequest) {
         prisma.idSubmission.aggregate({ _max: { id: true, reviewedAt: true }, _count: true }),
         prisma.planting.aggregate({ _max: { updatedAt: true }, _count: true }),
         prisma.auditLog.aggregate({ _max: { id: true } }),
-      ]).then(([o, p, u, ids, pl, al]) => [
+        prisma.cropLog.aggregate({ _max: { id: true }, _count: true }),
+      ]).then(([o, p, u, ids, pl, al, cl]) => [
         o._max.updatedAt, o._count, p._max.updatedAt, p._count, u._max.updatedAt, u._count,
-        ids._max.id, ids._max.reviewedAt, ids._count, pl._max.updatedAt, pl._count, al._max.id,
+        ids._max.id, ids._max.reviewedAt, ids._count, pl._max.updatedAt, pl._count, al._max.id, cl._max.id, cl._count,
       ]);
     }
 
