@@ -82,13 +82,6 @@ export default function FarmerOverviewPage() {
         <WeatherWidget />
       </div>
 
-      {/* Announcements from the cooperative, in view straight away */}
-      {announcements.length > 0 && (
-        <div className="mb-8">
-          <AnnouncementBoard announcements={announcements} shown={ANNOUNCEMENTS_SHOWN} heading="From the cooperative" />
-        </div>
-      )}
-
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-3">
@@ -116,6 +109,13 @@ export default function FarmerOverviewPage() {
           </p>
         </div>
       </div>
+
+      {/* Announcements from the cooperative, under the farm's numbers */}
+      {announcements.length > 0 && (
+        <div className="mb-8">
+          <AnnouncementBoard announcements={announcements} shown={ANNOUNCEMENTS_SHOWN} heading="From the cooperative" />
+        </div>
+      )}
 
       {/* Stock alerts */}
       {((stats?.outOfStock ?? 0) > 0 || (stats?.lowStock ?? 0) > 0) && (

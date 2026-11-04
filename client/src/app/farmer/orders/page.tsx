@@ -3,7 +3,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { refreshNavBadges } from '@/components/NavBadge'
-import { Loader2, ShoppingCart, AlertTriangle, Download, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
+import { Loader2, ShoppingCart, AlertTriangle, Download, ChevronRight, MessageCircle } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
 import { useDialog } from '@/contexts/DialogContext'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
@@ -229,7 +230,18 @@ export default function FarmerOrdersPage() {
                       </span>
                     </td>
                     <td className="px-5 py-3">
-                      <p className="font-medium text-soil">{order.customer.name}</p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium text-soil">{order.customer.name}</p>
+                        <Link
+                          href={`/farmer/messages/${order.customer.id}`}
+                          onClick={(e) => e.stopPropagation()}
+                          aria-label={`Message ${order.customer.name}`}
+                          title={`Message ${order.customer.name}`}
+                          className="inline-flex items-center gap-1 text-xs font-medium text-paddy hover:text-paddy-deep border border-paddy/30 hover:bg-shoot rounded-full px-2 py-0.5"
+                        >
+                          <MessageCircle size={12} aria-hidden /> Message
+                        </Link>
+                      </div>
                       <p className="text-xs text-gray-500">{order.customer.email}</p>
                     </td>
                     <td className="px-5 py-3 text-right font-semibold text-paddy">

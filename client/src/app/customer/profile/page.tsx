@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, CheckCircle, User, KeyRound, Mail, AlertTriangle } from 'lucide-react'
 import { useDialog } from '@/contexts/DialogContext'
 import PasswordInput from '@/components/PasswordInput'
+import { maskEmail } from '@/lib/maskEmail'
 
 export default function CustomerProfilePage() {
   const { isAuthenticated, loading, token, user, login, logout } = useAuth()
@@ -46,7 +47,6 @@ export default function CustomerProfilePage() {
   if (user && user !== formUser) {
     setFormUser(user)
     setName(user.name ?? '')
-    setNewEmail(user.email ?? '')
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -226,7 +226,7 @@ export default function CustomerProfilePage() {
           <h2 className="text-lg font-semibold text-soil">Change Email</h2>
         </div>
         <p className="text-sm text-gray-500 mb-3">
-          Currently: <span className="font-medium text-gray-700">{user?.email}</span>. Changing your email requires your current password and will sign you out.
+          Currently: <span className="font-medium text-gray-700">{user?.email ? maskEmail(user.email) : ''}</span>. Changing your email requires your current password and will sign you out.
         </p>
 
         {emailError && (
@@ -245,7 +245,7 @@ export default function CustomerProfilePage() {
           <form onSubmit={handleEmailChange} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">New Email</label>
-              <input aria-label="New Email"
+              <input aria-label="New Email" autoComplete="off" name="new-email"
                 type="email"
                 value={newEmail}
                 onChange={e => setNewEmail(e.target.value)}
@@ -255,7 +255,7 @@ export default function CustomerProfilePage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-              <PasswordInput aria-label="Current Password"
+              <PasswordInput aria-label="Current Password" autoComplete="off"
                 value={emailPassword}
                 onChange={e => setEmailPassword(e.target.value)}
                 required
@@ -299,7 +299,7 @@ export default function CustomerProfilePage() {
           <form onSubmit={handlePasswordChange} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-              <PasswordInput aria-label="Current Password"
+              <PasswordInput aria-label="Current Password" autoComplete="off"
                 value={currentPassword}
                 onChange={e => setCurrentPassword(e.target.value)}
                 required
@@ -308,7 +308,7 @@ export default function CustomerProfilePage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-              <PasswordInput aria-label="New Password"
+              <PasswordInput aria-label="New Password" autoComplete="new-password"
                 value={newPassword}
                 onChange={e => setNewPassword(e.target.value)}
                 required
@@ -318,7 +318,7 @@ export default function CustomerProfilePage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-              <PasswordInput aria-label="Confirm New Password"
+              <PasswordInput aria-label="Confirm New Password" autoComplete="new-password"
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
                 required
@@ -359,7 +359,7 @@ export default function CustomerProfilePage() {
           <form onSubmit={handleDeleteAccount} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-              <PasswordInput aria-label="Current Password"
+              <PasswordInput aria-label="Current Password" autoComplete="off"
                 value={deletePassword}
                 onChange={e => setDeletePassword(e.target.value)}
                 required

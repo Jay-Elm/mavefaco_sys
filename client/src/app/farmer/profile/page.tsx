@@ -7,6 +7,7 @@ import { Loader2, CheckCircle, KeyRound, Mail, AlertTriangle } from 'lucide-reac
 import { useDialog } from '@/contexts/DialogContext'
 import IdVerificationSection from '@/components/idVerification/IdVerificationSection'
 import PasswordInput from '@/components/PasswordInput'
+import { maskEmail } from '@/lib/maskEmail'
 
 
 export default function FarmerProfilePage() {
@@ -18,7 +19,7 @@ export default function FarmerProfilePage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
 
-  const [newEmail, setNewEmail] = useState(user?.email ?? '')
+  const [newEmail, setNewEmail] = useState('')
   const [emailPassword, setEmailPassword] = useState('')
   const [emailSubmitting, setEmailSubmitting] = useState(false)
   const [emailError, setEmailError] = useState('')
@@ -189,7 +190,7 @@ export default function FarmerProfilePage() {
           <h2 className="text-lg font-semibold text-soil">Change Email</h2>
         </div>
         <p className="text-sm text-gray-500 mb-4">
-          Currently: <span className="font-medium text-gray-700">{user?.email}</span>. Changing your email requires your current password and will sign you out.
+          Currently: <span className="font-medium text-gray-700">{user?.email ? maskEmail(user.email) : ''}</span>. Changing your email requires your current password and will sign you out.
         </p>
 
         {emailError && <div className="mb-3 text-red-600 text-sm">{emailError}</div>}
@@ -202,7 +203,7 @@ export default function FarmerProfilePage() {
         <form onSubmit={handleEmailChange} className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">New Email</label>
-            <input aria-label="New Email"
+            <input aria-label="New Email" autoComplete="off" name="new-email"
               type="email"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
@@ -212,7 +213,7 @@ export default function FarmerProfilePage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-            <PasswordInput aria-label="Current Password"
+            <PasswordInput aria-label="Current Password" autoComplete="off"
               value={emailPassword}
               onChange={(e) => setEmailPassword(e.target.value)}
               required
@@ -256,7 +257,7 @@ export default function FarmerProfilePage() {
         <form onSubmit={handleChangePassword} className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-            <PasswordInput aria-label="Current Password"
+            <PasswordInput aria-label="Current Password" autoComplete="off"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               required
@@ -265,7 +266,7 @@ export default function FarmerProfilePage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-            <PasswordInput aria-label="New Password"
+            <PasswordInput aria-label="New Password" autoComplete="new-password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
@@ -275,7 +276,7 @@ export default function FarmerProfilePage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-            <PasswordInput aria-label="Confirm New Password"
+            <PasswordInput aria-label="Confirm New Password" autoComplete="new-password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -310,7 +311,7 @@ export default function FarmerProfilePage() {
         <form onSubmit={handleDeleteAccount} className="space-y-3">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-            <PasswordInput aria-label="Current Password"
+            <PasswordInput aria-label="Current Password" autoComplete="off"
               value={deletePassword}
               onChange={(e) => setDeletePassword(e.target.value)}
               required

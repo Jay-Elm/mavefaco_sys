@@ -9,34 +9,43 @@ import {
   LayoutDashboard, Users, Tag, Package, ShoppingCart,
   ScrollText, BarChart2, Megaphone, Globe, Loader2, Menu, Sprout, CalendarRange, Bug,
 } from 'lucide-react'
-import Logo from '@/components/Logo'
 
-const ADMIN_NAV = [
-  { href: '/dashboard', label: 'Overview', icon: LayoutDashboard, exact: true },
-  { href: '/dashboard/users', label: 'Users', icon: Users },
-  { href: '/dashboard/categories', label: 'Categories', icon: Tag },
-  { href: '/dashboard/products', label: 'Products', icon: Package },
-  { href: '/dashboard/orders', label: 'Orders', icon: ShoppingCart },
-  { href: '/dashboard/audit-logs', label: 'Audit Logs', icon: ScrollText },
-  { href: '/dashboard/announcements', label: 'Announcements', icon: Megaphone },
-  { href: '/dashboard/site', label: 'Site Content', icon: Globe },
-  { href: '/dashboard/crop-types', label: 'Crop Types', icon: Sprout },
-  { href: '/dashboard/supply', label: 'Supply', icon: CalendarRange },
-  { href: '/dashboard/advisory', label: 'Crop Advisory', icon: Bug },
-  { href: '/dashboard/reports', label: 'Reports', icon: BarChart2 },
-]
+type NavLink = { href: string; label: string; icon: typeof LayoutDashboard; exact?: boolean; adminOnly?: boolean }
 
-const MANAGER_NAV = [
-  { href: '/dashboard', label: 'Overview', icon: LayoutDashboard, exact: true },
-  { href: '/dashboard/users', label: 'Users', icon: Users },
-  { href: '/dashboard/categories', label: 'Categories', icon: Tag },
-  { href: '/dashboard/products', label: 'Products', icon: Package },
-  { href: '/dashboard/orders', label: 'Orders', icon: ShoppingCart },
-  { href: '/dashboard/announcements', label: 'Announcements', icon: Megaphone },
-  { href: '/dashboard/crop-types', label: 'Crop Types', icon: Sprout },
-  { href: '/dashboard/supply', label: 'Supply', icon: CalendarRange },
-  { href: '/dashboard/advisory', label: 'Crop Advisory', icon: Bug },
-  { href: '/dashboard/reports', label: 'Reports', icon: BarChart2 },
+// Grouped by job, most used first. Managers see everything but the admin-only links.
+const NAV_GROUPS: { heading: string | null; links: NavLink[] }[] = [
+  { heading: null, links: [{ href: '/dashboard', label: 'Overview', icon: LayoutDashboard, exact: true }] },
+  {
+    heading: 'Store',
+    links: [
+      { href: '/dashboard/orders', label: 'Orders', icon: ShoppingCart },
+      { href: '/dashboard/products', label: 'Products', icon: Package },
+      { href: '/dashboard/categories', label: 'Categories', icon: Tag },
+    ],
+  },
+  {
+    heading: 'Crops',
+    links: [
+      { href: '/dashboard/supply', label: 'Supply', icon: CalendarRange },
+      { href: '/dashboard/advisory', label: 'Crop Advisory', icon: Bug },
+      { href: '/dashboard/crop-types', label: 'Crop Types', icon: Sprout },
+    ],
+  },
+  { heading: 'People', links: [{ href: '/dashboard/users', label: 'Users', icon: Users }] },
+  {
+    heading: 'Content',
+    links: [
+      { href: '/dashboard/announcements', label: 'Announcements', icon: Megaphone },
+      { href: '/dashboard/site', label: 'Site Content', icon: Globe, adminOnly: true },
+    ],
+  },
+  {
+    heading: 'Records',
+    links: [
+      { href: '/dashboard/reports', label: 'Reports', icon: BarChart2 },
+      { href: '/dashboard/audit-logs', label: 'Audit Logs', icon: ScrollText, adminOnly: true },
+    ],
+  },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -70,7 +79,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (!isAuthenticated || (user?.role !== 'admin' && user?.role !== 'manager')) return null
 
-  const nav = user.role === 'admin' ? ADMIN_NAV : MANAGER_NAV
+  const groups = NAV_GROUPS
+    .map((g) => ({ ...g, links: g.links.filter((l) => !l.adminOnly || user.role === 'admin') }))
+    .filter((g) => g.links.length > 0)
 
   return (
     <div className="flex h-[calc(100vh-4rem)] overflow-hidden">
@@ -99,30 +110,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <p className="text-sm font-medium text-white mt-0.5 truncate">{user.name}</p>
         </div>
 
-        <nav className="flex-1 py-4 px-2 space-y-0.5">
-          {nav.map(({ href, label, icon: Icon, exact }) => {
-            const active = exact ? pathname === href : pathname.startsWith(href + '/') || pathname === href
-            return (
-              <Link
-                key={href}
-                href={href}
-                aria-current={active ? 'page' : undefined}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  active ? 'bg-white/10 text-white shadow-[inset_3px_0_0_var(--color-calamansi)]' : 'hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                <Icon size={16} className="shrink-0" />
-                <span className="whitespace-nowrap">{label}</span>
-                <NavBadge count={badges[href]} />
-              </Link>
-            )
-          })}
+        <nav className="flex-1 py-3 px-2" aria-label="Dashboard">
+          {groups.map((g) => (
+            <div key={g.heading ?? 'top'} className="mb-1">
+              {g.heading && <p className="px-3 pt-2 pb-0.5 text-[10.5px] font-semibold uppercase tracking-wider text-white/40">{g.heading}</p>}
+              <div className="space-y-0.5">
+                {g.links.map(({ href, label, icon: Icon, exact }) => {
+                  const active = exact ? pathname === href : pathname.startsWith(href + '/') || pathname === href
+                  return (
+                    <Link
+                      key={href}
+                      href={href}
+                      aria-current={active ? 'page' : undefined}
+                      className={`flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                        active ? 'bg-white/10 text-white shadow-[inset_3px_0_0_var(--color-calamansi)]' : 'hover:bg-white/10 hover:text-white'
+                      }`}
+                    >
+                      <Icon size={16} className="shrink-0" />
+                      <span className="whitespace-nowrap">{label}</span>
+                      <NavBadge count={badges[href]} />
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
-
-        <div className="px-4 py-4 border-t border-white/10 flex items-center gap-2 text-xs text-white/40">
-          <Logo variant="light" height={16} className="opacity-70" />
-          MaVeFaCo v0.1
-        </div>
       </aside>
 
       {/* Main content */}

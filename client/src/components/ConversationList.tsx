@@ -53,7 +53,7 @@ export default function ConversationList({
   basePath: string
   /** Shown when there are no conversations and no search. */
   empty: ReactNode
-  /** Pinned above the search box (the farmer's notices). */
+  /** Pinned first in the list, under the search box (the farmer's notices). */
   above?: ReactNode
 }) {
   const { token } = useAuth()
@@ -119,8 +119,6 @@ export default function ConversationList({
 
   return (
     <>
-      {above}
-
       <div className="relative mb-3">
         <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" aria-hidden />
         <input
@@ -137,6 +135,8 @@ export default function ConversationList({
           </button>
         )}
       </div>
+
+      {above}
 
       {error && <p className="mb-3 text-sm text-red-600">{error}</p>}
 

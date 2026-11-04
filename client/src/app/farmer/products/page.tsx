@@ -9,12 +9,14 @@ import { reasonLabels, suspensionDeadline } from '@/validators/productSuspension
 import { useDialog } from '@/contexts/DialogContext'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 import ListToolbar from '@/components/ListToolbar'
+import StockQuickEdit from '@/components/StockQuickEdit'
 
 interface ProductRow {
   id: number
   name: string
   price: number
   stock: number
+  unit: string
   approved: boolean
   createdAt: string
   suspendedAt: string | null
@@ -99,6 +101,23 @@ export default function FarmerProductsPage() {
       .catch(() => setError('Failed to load products'))
       .finally(() => setLoading(false))
   }, [token, user, live])
+
+  // Stock alone goes live at once: no review needed.
+  async function saveStock(id: number, stock: number): Promise<string | null> {
+    try {
+      const res = await fetch(`/api/products/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ stock }),
+      })
+      const data = await res.json()
+      if (!res.ok) return data.error ?? 'Could not save the stock'
+      setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, stock } : p)))
+      return null
+    } catch {
+      return 'Could not save the stock'
+    }
+  }
 
   async function handleDelete(id: number, name: string) {
     if (!(await dialog.confirm({ title: `Delete "${name}"?`, message: 'It will disappear from the shop. If it has past orders or reviews it is archived so order history stays intact; otherwise it is deleted. This cannot be undone.', confirmLabel: 'Delete listing', tone: 'danger' }))) return
@@ -278,7 +297,7 @@ export default function FarmerProductsPage() {
                       ₱{p.price.toFixed(2)}
                     </td>
                     <td className="px-5 py-3 text-center">
-                      <StockBadge stock={p.stock} />
+                      <StockQuickEdit stock={p.stock} unit={p.unit} badge={<StockBadge stock={p.stock} />} onSave={(stock) => saveStock(p.id, stock)} />
                     </td>
                     <td className="px-5 py-3 text-center">
                       {p.suspendedAt ? (

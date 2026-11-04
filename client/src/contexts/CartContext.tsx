@@ -145,7 +145,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return { removed, adjusted }
   }
 
-  const totalItems = items.reduce((sum, i) => sum + i.quantity, 0)
+  // How many different products, for the cart badge: quantities can't be
+  // added up across units (2.5 kg + 3 pieces is not 5.5 of anything).
+  const totalItems = items.length
   const totalAmount = items.reduce((sum, i) => sum + i.price * i.quantity, 0)
 
   return (

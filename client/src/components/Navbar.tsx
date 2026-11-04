@@ -149,9 +149,9 @@ export default function Navbar() {
               </>
             ) : (
               <>
+                {portal && <Link href={portal.href} className={linkCls}>{portal.label}</Link>}
                 {!isStaff && <Link href="/products" className={linkCls}>All Products</Link>}
                 <Link href="/about" className={linkCls}>About</Link>
-                {portal && <Link href={portal.href} className={linkCls}>{portal.label}</Link>}
               </>
             )}
 
@@ -236,9 +236,9 @@ export default function Navbar() {
               </>
             ) : (
               <>
+                {portal && <Link href={portal.href} className={mobileLinkCls}><LayoutDashboard size={18} />{portal.label}</Link>}
                 {!isStaff && <Link href="/products" className={mobileLinkCls}><ShoppingBag size={18} />All Products</Link>}
                 <Link href="/about" className={mobileLinkCls}><Info size={18} />About</Link>
-                {portal && <Link href={portal.href} className={mobileLinkCls}><LayoutDashboard size={18} />{portal.label}</Link>}
               </>
             )}
 
