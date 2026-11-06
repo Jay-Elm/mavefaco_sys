@@ -8,7 +8,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 
 1. **Phase 1–3 security review** (completed 2026-09-08, `SECURITY_REVIEW.md`): cookie-based sessions, admin-route guard, private ID storage, password reset, shared validators, email verification.
 2. **10-item gap list** (completed 2026-09-21): Next.js CVE patches, JWT secret validation, `Decimal` money, connection pooling, Dependabot + CI audit, mandatory TOTP MFA for staff, ID-image auto-purge, no email enumeration.
-3. **Whole-project review and fixes** (2026-10-03 to 2026-10-05, `PROJECT_REVIEW.md`): every finding fixed except L4. Highlights:
+3. **Whole-project review and fixes** (2026-10-03 to 2026-10-05, `PROJECT_REVIEW.md`): every finding fixed (L4 on 2026-11-07). Highlights:
    - **Integration tests** against a real Postgres database (`npm run test:integration`, now 291 tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron, crop monitoring, announcements, FAQ/banner order; now 84 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
    - **MFA encryption key** separated from `JWT_SECRET` (`TOTP_ENCRYPTION_KEY`); all staff migrated.
    - **Preview deployments** have their own Supabase database and keys; Preview builds migrate only that database (`PREVIEW_DATABASE_ISOLATED`).
@@ -87,7 +87,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 
 **Waiting on the project owner:** the cooperative's own photos to replace the temporary hero photo (then remove its credit line).
 
-**Remaining debt** (see `DEVELOPMENT_STATUS.md` → Known Technical Debt): per-instance rate limiting (L4, needs Upstash Redis credentials from the project owner), Prisma 8 upgrade when released, no UI/end-to-end tests.
+**Remaining debt** (see `DEVELOPMENT_STATUS.md` → Known Technical Debt): Prisma 8 upgrade once it is out of release candidate (8.0.0-rc.30 on 2026-11-07); end-to-end tests cover checkout only. Done 2026-11-07: rate limits counted in Postgres (L4, no Upstash needed); Playwright end-to-end tests (`npm run test:e2e`); DA growing times with sources on all 13 crop types.
 
 **Optional:** staff can rename their authenticator entry from "CoopMarket" to "MaVeFaCo"; Vercel's Preview toolbar can be turned off if its CSP violations clutter the logs.
 
@@ -266,8 +266,8 @@ src/validators/                          ← shared Zod schemas (client + server
   announcement.ts, reorder.ts           ← announcement audiences; move-button id lists
 
 prisma/
-  schema.prisma                         ← 23 models; generated/prisma custom output
-  migrations/ (38 applied — see DEVELOPMENT_STATUS.md for the full list)
+  schema.prisma                         ← 24 models; generated/prisma custom output
+  migrations/ (40 applied — see DEVELOPMENT_STATUS.md for the full list)
 
 public/logo.svg, logo-light.svg         ← the logo; public/email/logo.png is its PNG copy for emails
 public/photos/mount-mayon-2016.webp     ← TEMPORARY hero photo (CC BY-SA 4.0, credit required)
