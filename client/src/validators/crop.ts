@@ -30,6 +30,11 @@ const cropTypeFields = z.object({
   name: requiredString(z.string().trim().min(1, "Name is required").max(MAX.cropTypeName, tooLong("Name", MAX.cropTypeName))),
   daysToHarvestMin: day("Earliest harvest day").min(1, "Earliest harvest day must be at least 1"),
   daysToHarvestMax: day("Latest harvest day"),
+  // Optional citation for the range; blank clears it.
+  source: z.preprocess(
+    (v) => (typeof v === "string" && v.trim() ? v : null),
+    z.string().trim().max(MAX.cropSource, tooLong("Source", MAX.cropSource)).nullable(),
+  ).optional(),
 });
 
 // POST /api/crop-types, PUT /api/crop-types/[id]

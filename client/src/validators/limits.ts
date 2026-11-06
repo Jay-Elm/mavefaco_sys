@@ -27,6 +27,7 @@ export const MAX = {
   siteShort: 300,
   siteLong: 5000,
   address: 300,
+  cropSource: 300,
 } as const;
 
 export const tooLong = (field: string, max: number) => `${field} must be at most ${max} characters`;

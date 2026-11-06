@@ -8,20 +8,22 @@ import type { CropType } from '@/components/cropDisplay'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 type Row = CropType & { _count: { plantings: number } }
-type Form = { name: string; daysToHarvestMin: string; daysToHarvestMax: string }
+type Form = { name: string; daysToHarvestMin: string; daysToHarvestMax: string; source: string }
 
-const EMPTY: Form = { name: '', daysToHarvestMin: '', daysToHarvestMax: '' }
+const EMPTY: Form = { name: '', daysToHarvestMin: '', daysToHarvestMax: '', source: '' }
 const CELL_INPUT = 'w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-paddy'
 
 const toForm = (c: CropType): Form => ({
   name: c.name,
   daysToHarvestMin: String(c.daysToHarvestMin),
   daysToHarvestMax: String(c.daysToHarvestMax),
+  source: c.source ?? '',
 })
 const toBody = (f: Form) => ({
   name: f.name.trim(),
   daysToHarvestMin: Number(f.daysToHarvestMin),
   daysToHarvestMax: Number(f.daysToHarvestMax),
+  source: f.source.trim(),
 })
 
 export default function CropTypesPage() {
@@ -118,6 +120,18 @@ export default function CropTypesPage() {
           />
         </div>
       ))}
+      <div className="col-span-2 md:col-span-4">
+        <label htmlFor={`${idPrefix}-source`} className="block text-xs font-medium text-gray-600 mb-1">
+          Source <span className="font-normal text-gray-500">(optional, e.g. the DA production guide the days come from)</span>
+        </label>
+        <input
+          id={`${idPrefix}-source`}
+          maxLength={300}
+          value={f.source}
+          onChange={(e) => set({ ...f, source: e.target.value })}
+          className={CELL_INPUT}
+        />
+      </div>
     </>
   )
 
@@ -130,6 +144,7 @@ export default function CropTypesPage() {
       <p className="text-sm text-gray-500 mb-6 max-w-2xl">
         The crops farmers record plantings of, with the usual number of days from planting (or transplanting) to
         harvest. They set each new planting&apos;s expected harvest window, which the farmer can then adjust.
+        The starting figures come from Department of Agriculture production guides; each crop names its source.
       </p>
 
       {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
@@ -191,7 +206,10 @@ export default function CropTypesPage() {
                 </tr>
               ) : (
                 <tr key={r.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium text-soil">{r.name}</td>
+                  <td className="px-4 py-3">
+                    <p className="font-medium text-soil">{r.name}</p>
+                    {r.source && <p className="mt-0.5 text-xs text-gray-500 max-w-md">{r.source}</p>}
+                  </td>
                   <td className="px-4 py-3 text-gray-700 tabular-nums">{r.daysToHarvestMin}–{r.daysToHarvestMax}</td>
                   <td className="px-4 py-3 text-center text-gray-600">{r._count.plantings}</td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">

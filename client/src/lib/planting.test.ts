@@ -52,6 +52,15 @@ describe("crop validation", () => {
     expect(bad({ daysToHarvestMin: 0 })).toBe("daysToHarvestMin");
   });
 
+  it("takes an optional source, and a blank one clears it", () => {
+    const parse = (source: unknown) => cropTypeSchema.parse({ name: "Okra", daysToHarvestMin: 60, daysToHarvestMax: 75, source }).source;
+    expect(parse("  DA Bicol (2021)  ")).toBe("DA Bicol (2021)");
+    expect(parse("   ")).toBeNull();
+    // Left out: unchanged on an edit.
+    expect(parse(undefined)).toBeUndefined();
+    expect(cropTypeSchema.safeParse({ name: "Okra", daysToHarvestMin: 60, daysToHarvestMax: 75, source: "x".repeat(301) }).success).toBe(false);
+  });
+
   it("rejects impossible and future dates, and a harvest window that ends before it starts", () => {
     expect(plantingUpdateSchema.safeParse({ plantedOn: "2026-02-30" }).success).toBe(false);
     expect(plantingUpdateSchema.safeParse({ plantedOn: addDays(todayPH(), 1) }).success).toBe(false);

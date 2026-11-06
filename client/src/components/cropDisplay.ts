@@ -7,6 +7,7 @@ export interface CropType {
   name: string
   daysToHarvestMin: number
   daysToHarvestMax: number
+  source?: string | null
 }
 
 export interface Planting {
