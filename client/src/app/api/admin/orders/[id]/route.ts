@@ -3,6 +3,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
+import { paymentAfterCancel, paymentAfterReopen, shipBlockedReason } from "@/lib/payment";
 
 const VALID_STATUSES = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
 
@@ -42,7 +43,7 @@ export async function PATCH(
     if (!VALID_STATUSES.includes(status))
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
 
-    const existing = await prisma.order.findUnique({ where: { id: orderId }, select: { status: true } });
+    const existing = await prisma.order.findUnique({ where: { id: orderId }, select: { status: true, paymentMethod: true, paymentStatus: true } });
     if (!existing) return NextResponse.json({ error: "Order not found" }, { status: 404 });
 
     if (user.role === ROLES.MANAGER) {
@@ -52,20 +53,28 @@ export async function PATCH(
           { error: `Cannot move order from "${existing.status}" to "${status}"` },
           { status: 400 },
         );
+      // Administrators can override this; managers can't.
+      const blocked = status === "shipped" && shipBlockedReason(existing.paymentMethod, existing.paymentStatus);
+      if (blocked) return NextResponse.json({ error: blocked.replace("you confirm", "the farmer confirms") }, { status: 400 });
     }
+
+    const cancelling = status === "cancelled" && existing.status !== "cancelled";
+    // Only an admin can get here (managers can't leave "cancelled").
+    const reopening = existing.status === "cancelled" && status !== "cancelled";
+    const paymentStatus = cancelling
+      ? paymentAfterCancel(existing.paymentMethod, existing.paymentStatus)
+      : reopening
+        ? paymentAfterReopen(existing.paymentMethod, existing.paymentStatus)
+        : existing.paymentStatus;
 
     const order = await prisma.$transaction(async (tx) => {
       // Conditional on the status we validated against, so a concurrent
       // update can't make the stock adjustment below apply twice.
       const { count } = await tx.order.updateMany({
-        where: { id: orderId, status: existing.status },
-        data: { status },
+        where: { id: orderId, status: existing.status, paymentStatus: existing.paymentStatus },
+        data: { status, paymentStatus },
       });
       if (count === 0) throw new OrderUpdateError("Order status changed, please refresh", 409);
-
-      const cancelling = status === "cancelled" && existing.status !== "cancelled";
-      // Only an admin can get here (managers can't leave "cancelled").
-      const reopening = existing.status === "cancelled" && status !== "cancelled";
 
       if (cancelling || reopening) {
         const items = await tx.orderItem.findMany({ where: { orderId }, include: { product: true } });
@@ -96,7 +105,11 @@ export async function PATCH(
         },
       });
 
-      return tx.order.findUniqueOrThrow({ where: { id: orderId } });
+      return tx.order.findUniqueOrThrow({
+        where: { id: orderId },
+        // The delivery spot and the customer's GCash details are for the order's farmer only.
+        omit: { deliveryLat: true, deliveryLng: true, deliveryAddress: true, gcashReference: true, payerNumber: true },
+      });
     });
 
     return NextResponse.json({ ...order, totalAmount: Number(order.totalAmount) });

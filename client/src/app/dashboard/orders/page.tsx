@@ -6,12 +6,17 @@ import { Loader2, ShoppingCart, AlertTriangle, Search, ChevronUp, ChevronDown, C
 import { downloadCSV } from '@/lib/csv'
 import { useDialog } from '@/contexts/DialogContext'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
+import { PAYMENT_METHOD_LABELS, PAYMENT_STATUS_LABELS, type PaymentStatus } from '@/lib/payment'
 
 interface OrderRow {
   id: number
   status: string
   totalAmount: number
   createdAt: string
+  paymentMethod: string
+  paymentStatus: string
+  deliveryMethod: string
+  deliveryTown: string | null
   customer: { id: number; name: string; email: string }
   items: { id: number; quantity: number; price: number; product: { id: number; name: string; unit: string } }[]
 }
@@ -325,6 +330,12 @@ export default function OrdersPage() {
                   {expanded === order.id && (
                     <tr className="bg-gray-50">
                       <td colSpan={6} className="px-10 py-3">
+                        <p className="text-xs text-gray-600 mb-2">
+                          <span className="font-semibold text-gray-500">Payment:</span> {PAYMENT_METHOD_LABELS[order.paymentMethod] ?? order.paymentMethod}
+                          {order.paymentMethod === 'gcash' && <> ({PAYMENT_STATUS_LABELS[order.paymentStatus as PaymentStatus] ?? order.paymentStatus})</>}
+                          <span className="mx-2 text-gray-300">·</span>
+                          <span className="font-semibold text-gray-500">Fulfillment:</span> {order.deliveryMethod === 'delivery' ? `Delivery${order.deliveryTown ? ` to ${order.deliveryTown}` : ''}` : 'Pickup'}
+                        </p>
                         <p className="text-xs font-semibold text-gray-500 mb-2">Order items:</p>
                         <div className="space-y-1">
                           {order.items.map((item) => (

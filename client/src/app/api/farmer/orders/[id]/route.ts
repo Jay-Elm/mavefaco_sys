@@ -3,6 +3,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
+import { paymentAfterCancel, shipBlockedReason } from "@/lib/payment";
 
 const VALID_STATUSES = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
 
@@ -57,12 +58,18 @@ export async function PATCH(
         { status: 400 },
       );
 
+    const blocked = status === "shipped" && shipBlockedReason(order.paymentMethod, order.paymentStatus);
+    if (blocked) return NextResponse.json({ error: blocked }, { status: 400 });
+
     const updated = await prisma.$transaction(async (tx) => {
       // Conditional on the status we validated against, so two concurrent
       // requests can't both apply (and both restock).
       const { count } = await tx.order.updateMany({
-        where: { id: orderId, status: order.status },
-        data: { status },
+        where: { id: orderId, status: order.status, paymentStatus: order.paymentStatus },
+        data: {
+          status,
+          ...(status === "cancelled" && { paymentStatus: paymentAfterCancel(order.paymentMethod, order.paymentStatus) }),
+        },
       });
       if (count === 0) throw new StaleStatusError();
 

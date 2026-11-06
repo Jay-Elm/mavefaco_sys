@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import { getActiveAuthUser } from '@/lib/getActiveAuthUser'
 import { NextRequest, NextResponse } from 'next/server'
+import { paymentAfterCancel } from '@/lib/payment'
 
 // Customer-allowed status transitions
 const ALLOWED_TRANSITIONS: Record<string, string> = {
@@ -48,7 +49,8 @@ export async function PATCH(
     // and restock a second time.
     const { count } = await tx.order.updateMany({
       where: { id: orderId, status: order.status },
-      data: { status },
+      // A GCash payment already entered becomes a refund the farmer owes.
+      data: { status, ...(status === 'cancelled' && { paymentStatus: paymentAfterCancel(order.paymentMethod, order.paymentStatus) }) },
     })
     if (count === 0) return null
 

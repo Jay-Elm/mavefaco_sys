@@ -13,6 +13,9 @@ export async function GET(req: NextRequest) {
 
     const orders = await prisma.order.findMany({
       orderBy: { createdAt: "desc" },
+      // The delivery pin and address, and the customer's GCash number, are
+      // for the order's farmer only; staff see the town and payment status.
+      omit: { deliveryLat: true, deliveryLng: true, deliveryAddress: true, gcashReference: true, payerNumber: true },
       include: {
         customer: { select: { id: true, name: true, email: true } },
         items: {

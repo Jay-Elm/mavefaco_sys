@@ -7,8 +7,9 @@ const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  // Camera only for this site's own pages: the farmer ID capture flow.
-  { key: "Permissions-Policy", value: "camera=(self), microphone=(), geolocation=()" },
+  // Camera and location only for this site's own pages: the farmer ID
+  // capture flow, and "Use my location" when setting a delivery spot.
+  { key: "Permissions-Policy", value: "camera=(self), microphone=(), geolocation=(self)" },
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
   { key: "Reporting-Endpoints", value: 'csp="/api/csp-report"' },
 ];

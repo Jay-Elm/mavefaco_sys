@@ -7,6 +7,7 @@ import { Loader2, CheckCircle, User, KeyRound, Mail, AlertTriangle } from 'lucid
 import { useDialog } from '@/contexts/DialogContext'
 import PasswordInput from '@/components/PasswordInput'
 import { maskEmail } from '@/lib/maskEmail'
+import ProfilePaymentSections from '@/components/ProfilePaymentSections'
 
 export default function CustomerProfilePage() {
   const { isAuthenticated, loading, token, user, login, logout } = useAuth()
@@ -218,6 +219,8 @@ export default function CustomerProfilePage() {
           </div>
         </form>
       </div>
+
+      <ProfilePaymentSections token={token} forFarmer={false} />
 
       {/* Change email */}
       <div className="mt-6">

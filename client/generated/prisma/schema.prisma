@@ -47,6 +47,18 @@ model User {
   // (re)generated (setup, admin reset), since a step number only makes
   // sense relative to the secret it was verified against.
   totpLastStep       Int?
+  // GCash details. A farmer's are shown to customers paying them (the QR
+  // image is optional); a customer's prefill the payment form.
+  gcashName          String?
+  gcashNumber        String?
+  gcashQrUrl         String?
+  // A customer's saved delivery spot: the pin, the house/street/landmark
+  // details they typed, and the delivery-area town the pin is in (null when
+  // outside the area; see src/lib/deliveryArea.ts).
+  deliveryLat        Float?
+  deliveryLng        Float?
+  deliveryAddress    String?
+  deliveryTown       String?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 
@@ -254,14 +266,30 @@ model CropLog {
 }
 
 model Order {
-  id             Int      @id @default(autoincrement())
-  totalAmount    Decimal  @db.Decimal(10, 2)
-  status         String   @default("pending")
-  paymentMethod  String   @default("cod")
-  deliveryMethod String   @default("pickup")
-  createdAt      DateTime @default(now())
+  id              Int       @id @default(autoincrement())
+  totalAmount     Decimal   @db.Decimal(10, 2)
+  status          String    @default("pending")
+  paymentMethod   String    @default("cod")
+  deliveryMethod  String    @default("pickup")
+  // GCash orders only: unpaid | submitted | rejected | confirmed |
+  // refund_due | refunded (src/lib/payment.ts). Cash orders stay "unpaid".
+  paymentStatus   String    @default("unpaid")
+  // The 13-digit GCash reference the customer entered, and the GCash
+  // account they say they paid from.
+  gcashReference  String?   @unique
+  payerName       String?
+  payerNumber     String?
+  // When the farmer confirmed the money arrived.
+  paidAt          DateTime?
+  // Delivery orders: a copy of the customer's saved spot at checkout. Only
+  // the order's farmer is shown the pin and address.
+  deliveryLat     Float?
+  deliveryLng     Float?
+  deliveryAddress String?
+  deliveryTown    String?
+  createdAt       DateTime  @default(now())
   // Lets open pages notice a status change (see /api/live).
-  updatedAt      DateTime @default(now()) @updatedAt
+  updatedAt       DateTime  @default(now()) @updatedAt
 
   customerId Int
   customer   User @relation(fields: [customerId], references: [id])
@@ -270,6 +298,7 @@ model Order {
 
   @@index([customerId])
   @@index([status])
+  @@index([paymentStatus])
 }
 
 model OrderItem {

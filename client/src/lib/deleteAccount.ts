@@ -19,7 +19,8 @@ export type DeleteAccountResult =
  * records point at it — a customer's order for a farmer's product, the
  * audit log of what a staff member did — and deleting the row used to
  * mean deleting those records with it. Instead:
- *   - personal data goes: name, email, password, MFA, ID image, the
+ *   - personal data goes: name, email, password, MFA, ID image, GCash
+ *     details, saved and past delivery addresses, the
  *     user's own reviews, messages and notices, a farmer's plantings, crop
  *     logs and ID submissions, outstanding tokens and backup codes
  *   - shared history stays: orders and order items (on both the buyer's
@@ -51,6 +52,18 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
       ok: false,
       status: 409,
       error: "Cannot delete: products are in active orders. Wait for them to complete, then try again.",
+    };
+  }
+
+  // A farmer can't leave while they still owe a customer a GCash refund.
+  const refundOwed = await prisma.orderItem.findFirst({
+    where: { product: { farmerId: userId }, order: { paymentStatus: "refund_due" } },
+  });
+  if (refundOwed) {
+    return {
+      ok: false,
+      status: 409,
+      error: "Cannot delete: a customer is owed a GCash refund. Send it and mark it refunded first.",
     };
   }
 
@@ -88,6 +101,12 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
     // A farmer's own crop records (their logs go with them).
     prisma.planting.deleteMany({ where: { farmerId: userId } }),
     prisma.idSubmission.deleteMany({ where: { userId } }),
+    // Where a customer's orders were delivered, and the GCash account they
+    // paid from, are personal; the orders themselves stay.
+    prisma.order.updateMany({
+      where: { customerId: userId },
+      data: { deliveryLat: null, deliveryLng: null, deliveryAddress: null, payerName: null, payerNumber: null },
+    }),
     prisma.product.updateMany({ where: { farmerId: userId, archivedAt: null }, data: { archivedAt: now } }),
     prisma.user.update({
       where: { id: userId },
@@ -107,6 +126,13 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
         totpEnabled: false,
         totpSecret: null,
         totpLastStep: null,
+        gcashName: null,
+        gcashNumber: null,
+        gcashQrUrl: null,
+        deliveryLat: null,
+        deliveryLng: null,
+        deliveryAddress: null,
+        deliveryTown: null,
       },
     }),
   ]);

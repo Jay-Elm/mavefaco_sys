@@ -5,7 +5,8 @@ export const orderItemSchema = z.object({
   quantity: z.number().positive(),
 });
 
-export const PAYMENT_METHODS = ["cod", "gcash", "bank_transfer"] as const;
+// Bank transfer is no longer offered (old orders keep it).
+export const PAYMENT_METHODS = ["cod", "gcash"] as const;
 export const DELIVERY_METHODS = ["pickup", "delivery"] as const;
 
 // POST /api/orders

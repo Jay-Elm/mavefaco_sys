@@ -24,6 +24,8 @@ export async function GET(req: NextRequest) {
         prisma.order.findMany({
           take: 5,
           orderBy: { createdAt: "desc" },
+          // Delivery spot and GCash details are for the order's farmer only.
+          omit: { deliveryLat: true, deliveryLng: true, deliveryAddress: true, gcashReference: true, payerNumber: true },
           include: { customer: { select: { name: true, email: true } } },
         }),
       ]);

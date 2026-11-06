@@ -19,6 +19,8 @@ export async function GET(req: NextRequest) {
       where: { id: actor.id },
       select: {
         id: true, name: true, email: true, role: true, verified: true, verifiedInPersonAt: true, createdAt: true,
+        gcashName: true, gcashNumber: true, gcashQrUrl: true,
+        deliveryLat: true, deliveryLng: true, deliveryAddress: true, deliveryTown: true,
         idSubmissions: { where: { status: { not: "replaced" } }, orderBy: { createdAt: "desc" }, take: 1 },
       },
     });

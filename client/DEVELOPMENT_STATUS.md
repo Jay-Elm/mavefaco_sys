@@ -73,7 +73,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `ConversationHide` — userId + otherId (composite key), hiddenAt: a conversation the user removed from their own list; their messages up to hiddenAt stay hidden for them only
 - `Notice` — id, title, body, read, createdAt, recipientId, productId (set null if the listing is deleted), resolvedAt, resolution (`resubmitted` | `removed`) — one-way system notices, e.g. a listing suspension
 
-**Migrations applied (37, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`) → `add_id_submissions` (moves `User.idImagePath` into `IdSubmission`) → `normalize_order_audit_names` → `close_id_submissions_verified_in_person` → `announcement_audience` → `renumber_faq_banner_order` → `order_updated_at` → `conversation_hide` → `simplify_crop_monitoring` → `ai_report`.
+**Migrations applied (38, in order):** `init` → `update_user_model` → `cooperative_marketplace_models` → `add_user_suspended` → `add_user_id_verification` → `add_order_payment_delivery` → `add_product_approval` → `add_announcements` → `add_site_content` → `add_reviews` → `add_crop_monitoring` → `add_messages` → `add_unit_float_stock_quantity` → `add_token_version` → `rename_id_image_url_to_path` → `add_password_reset_token` → `add_email_verification` → `price_and_total_amount_to_decimal` → `add_totp_mfa` → `add_id_image_verified_at` → `add_totp_last_step` → `add_product_archived_at` → `add_user_deleted_at` → `add_email_change_token` → `add_indexes` → `add_product_suspension` → `add_notice_resolution` → `add_plantings` (moves crop fields and logs off `Product` into `Planting`, seeds `CropType`) → `add_id_submissions` (moves `User.idImagePath` into `IdSubmission`) → `normalize_order_audit_names` → `close_id_submissions_verified_in_person` → `announcement_audience` → `renumber_faq_banner_order` → `order_updated_at` → `conversation_hide` → `simplify_crop_monitoring` → `ai_report` → `gcash_and_delivery`.
 
 **Infra note:** `DIRECT_URL` cannot use Supabase's true direct-connection endpoint (`db.<ref>.supabase.co:5432`) — neither locally nor from Vercel's build infra can reach it (`P1001`), almost certainly Supabase's IPv6-only requirement for that endpoint. Fixed by pointing `DIRECT_URL` at the **Session pooler** instead (distinct from the Transaction pooler `DATABASE_URL` uses) — still holds `prisma migrate deploy`'s advisory lock, and is IPv4-compatible.
 
@@ -95,8 +95,8 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - Add to Cart → quantity modal → cart badge count in navbar
 - Multi-farmer conflict dialog (clear or keep cart)
 - `/cart` — item list, qty controls, payment/delivery method, Place Order
-- `/customer/orders` — order history, expandable items; **Cancel** (pending → cancelled, stock restored); **Confirm Received** (shipped → delivered)
-- `/customer/profile` — edit name/email (email change requires re-entering current password, kills the session); change password; self-service account deletion (password-gated, blocked while an active order exists)
+- `/customer/orders` — order history, expandable items; **Cancel** (pending → cancelled, stock restored); **Confirm Received** (shipped → delivered); GCash orders show where to pay (farmer's name, number, optional QR) and take the 13-digit reference (`GcashPayPanel`), then the farmer's answer or a refund due
+- `/customer/profile` — edit name/email (email change requires re-entering current password, kills the session); GCash name/number (prefills payments); delivery location on a Leaflet + OpenStreetMap map with the delivery area drawn (`LocationPicker`); change password; self-service account deletion (password-gated, blocked while an active order exists)
 - `/customer/messages` — conversation inbox with the same search and delete as the farmer's (`src/components/ConversationList.tsx`); `/customer/messages/[farmerId]` — message thread with farmer (polls every 8s)
 
 ### Ratings & Reviews
@@ -130,7 +130,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `products/` — search, status/stock/category filters and sort; stock changed in place from the table (`StockQuickEdit`; unit rules apply, no re-review); table with stock badges (Out of Stock / Low / normal) and status (Approved / Pending / Suspended with its deletion date and reasons); alert banners for stock problems and suspended listings; Edit ("Fix & resubmit" when suspended)/Delete; CSV export
 - `products/new/` — create product form; requires `verified: true`
 - `products/[id]/edit/` — pre-filled edit form; content edits reset `approved: false`; on a suspended listing shows the reasons and deadline, saving a content change resubmits it; Delete button
-- `orders/` — orders with farmer's products; a Message button beside each customer opens the conversation; search (customer, product, #ID), status filter, sort by date or total; an opened order and its items share one tinted block; Accept/Reject/Ship/Deliver state machine; CSV export
+- `orders/` — orders with farmer's products; a Message button beside each customer opens the conversation; search (customer, product, #ID), status filter, sort by date or total; an opened order and its items share one tinted block; Accept/Reject/Ship/Deliver state machine (Ship waits for a confirmed GCash payment); GCash chips and Payment received / Not received / Refund sent; the delivery town, address and a map link; CSV export
 - `crops/` — Crop Monitor (search, filters by state and crop, sort): "Needs attention" (harvest window open, overdue, pest/weather/damage report in 14 days), growing plantings with a Growing / Ready to harvest / Overdue badge and progress to harvest, past seasons with expected vs actual yield
 - `crops/new/` — record a planting (crop type, date, optional area, expected yield, linked listing); previews the harvest window
 - `crops/[id]/` — planting detail: season bar (growing, then the harvest window, with today marked), record harvest (optionally adding to the linked listing's stock) or mark failed, edit details/harvest window, crop log (type, date seen, note), delete
@@ -217,9 +217,14 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | POST | `/api/notices/read` | authenticated | marks own notices read |
 | GET | `/api/nav-badges` | authenticated | sidebar badge counts by path: farmer (unread messages + notices, new orders, suspended listings, plantings to harvest, ID not submitted), staff (listings to review, IDs to verify) |
 | GET | `/api/customer/orders` | authenticated | caller's own orders |
-| PATCH | `/api/customer/orders/[id]` | authenticated | pending→cancelled (stock restore); shipped→delivered |
+| PATCH | `/api/customer/orders/[id]` | authenticated | pending→cancelled (stock restore; a GCash payment entered becomes refund_due); shipped→delivered |
+| POST | `/api/customer/orders/[id]/payment` | order's customer | GCash reference (13 digits, unique) + payer name/number → submitted |
 | GET | `/api/farmer/orders` | farmer | orders with farmer's products |
-| PATCH | `/api/farmer/orders/[id]` | farmer | state machine + stock restore on cancel |
+| PATCH | `/api/farmer/orders/[id]` | farmer | state machine + stock restore on cancel; GCash orders ship only once paid |
+| POST | `/api/farmer/orders/[id]/payment` | order's farmer | confirm / reject / refunded (`src/lib/payment.ts`) |
+| GET | `/api/orders/options?farmerId=` | authenticated | `{ gcash }`: whether checkout can offer GCash |
+| PUT/DELETE | `/api/users/me/gcash` | farmer, customer | GCash name/number (+ QR for farmers) |
+| PUT/DELETE | `/api/users/me/location` | customer | delivery pin + address; server works out the delivery-area town (`src/lib/deliveryArea.ts`) |
 | GET | `/api/farmer/plantings` | farmer | own plantings with computed attention/progress and the latest pest/weather/damage report |
 | POST | `/api/farmer/plantings` | farmer | record a planting; harvest window from the crop type |
 | GET | `/api/farmer/plantings/[id]` | farmer | one planting + its log |

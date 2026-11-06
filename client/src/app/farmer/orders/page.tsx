@@ -4,17 +4,29 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { refreshNavBadges } from '@/components/NavBadge'
 import Link from 'next/link'
-import { Loader2, ShoppingCart, AlertTriangle, Download, ChevronRight, MessageCircle } from 'lucide-react'
+import { Loader2, ShoppingCart, AlertTriangle, Download, ChevronRight, MessageCircle, MapPin, ExternalLink } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
 import { useDialog } from '@/contexts/DialogContext'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 import ListToolbar from '@/components/ListToolbar'
+import { PAYMENT_METHOD_LABELS, fmtMobile, shipBlockedReason } from '@/lib/payment'
 
 interface OrderRow {
   id: number
   status: string
   totalAmount: number
   createdAt: string
+  paymentMethod: string
+  paymentStatus: string
+  gcashReference: string | null
+  payerName: string | null
+  payerNumber: string | null
+  paidAt: string | null
+  deliveryMethod: string
+  deliveryLat: number | null
+  deliveryLng: number | null
+  deliveryAddress: string | null
+  deliveryTown: string | null
   customer: { id: number; name: string; email: string }
   items: { id: number; quantity: number; price: number; product: { id: number; name: string; unit: string } }[]
 }
@@ -42,6 +54,16 @@ const ACTIONS: Record<string, { label: string; next: string; style: string }[]> 
   ],
   delivered: [],
   cancelled: [],
+}
+
+// How a GCash order's payment reads to the farmer, and what they can do about it.
+const GCASH_CHIP: Record<string, { label: string; style: string }> = {
+  unpaid: { label: 'GCash: not paid yet', style: 'bg-gray-100 text-gray-600' },
+  submitted: { label: 'GCash: check payment', style: 'bg-blue-100 text-blue-800' },
+  rejected: { label: 'GCash: not found', style: 'bg-red-100 text-red-700' },
+  confirmed: { label: 'GCash: paid', style: 'bg-shoot text-paddy-deep' },
+  refund_due: { label: 'Refund due', style: 'bg-amber-100 text-amber-800' },
+  refunded: { label: 'Refunded', style: 'bg-gray-100 text-gray-600' },
 }
 
 const STATUSES = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'] as const
@@ -101,7 +123,15 @@ export default function FarmerOrdersPage() {
 
   async function handleStatusChange(orderId: number, status: string) {
     if (!token) return
-    if (status === 'cancelled' && !(await dialog.confirm({ title: 'Cancel this order?', message: 'This cannot be undone.', confirmLabel: 'Cancel order', cancelLabel: 'Keep order', tone: 'danger' }))) return
+    const ps = orders.find((o) => o.id === orderId)?.paymentStatus
+    const owes = ps === 'submitted' || ps === 'confirmed'
+    if (status === 'cancelled' && !(await dialog.confirm({
+      title: 'Cancel this order?',
+      message: owes
+        ? "This cannot be undone. The customer entered a GCash payment, so you'll owe them a refund."
+        : 'This cannot be undone.',
+      confirmLabel: 'Cancel order', cancelLabel: 'Keep order', tone: 'danger',
+    }))) return
     setUpdatingId(orderId)
     setUpdateError(null)
     try {
@@ -116,6 +146,33 @@ export default function FarmerOrdersPage() {
       refreshNavBadges()
     } catch {
       setUpdateError({ id: orderId, msg: 'Request failed' })
+    } finally {
+      setUpdatingId(null)
+    }
+  }
+
+  async function handlePayment(order: OrderRow, action: 'confirm' | 'reject' | 'refunded') {
+    if (!token) return
+    const amount = `₱${order.totalAmount.toFixed(2)}`
+    const ask = {
+      confirm: { title: `Did ${amount} arrive in your GCash?`, message: `Check your GCash app for reference ${order.gcashReference} from ${order.payerName ?? 'the customer'} before confirming. Once confirmed it can't be undone.`, confirmLabel: 'Yes, it arrived', tone: 'default' as const },
+      reject: { title: 'Mark this payment as not received?', message: order.paymentStatus === 'refund_due' ? 'Use this only if no money ever arrived for this order. Nothing will be owed.' : 'The customer will be asked to check the reference number and enter it again.', confirmLabel: 'Not received', tone: 'danger' as const },
+      refunded: { title: `Mark ${amount} as refunded?`, message: `Only after you have sent the money back to ${order.payerName ?? 'the customer'} (${order.payerNumber ? fmtMobile(order.payerNumber) : 'their GCash'}).`, confirmLabel: 'Refund sent', tone: 'default' as const },
+    }[action]
+    if (!(await dialog.confirm({ ...ask, cancelLabel: 'Back' }))) return
+    setUpdatingId(order.id)
+    setUpdateError(null)
+    try {
+      const res = await fetch(`/api/farmer/orders/${order.id}/payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ action }),
+      })
+      const data = await res.json()
+      if (!res.ok) { setUpdateError({ id: order.id, msg: data.error ?? 'Failed to update the payment' }); return }
+      setOrders((prev) => prev.map((o) => (o.id === order.id ? { ...o, paymentStatus: data.paymentStatus, ...(action === 'confirm' && { paidAt: new Date().toISOString() }) } : o)))
+    } catch {
+      setUpdateError({ id: order.id, msg: 'Request failed' })
     } finally {
       setUpdatingId(null)
     }
@@ -137,10 +194,14 @@ export default function FarmerOrdersPage() {
           <button
             onClick={() => downloadCSV(
               'my-orders.csv',
-              ['Order ID', 'Customer', 'Email', 'Total (PHP)', 'Status', 'Items', 'Date'],
+              ['Order ID', 'Customer', 'Email', 'Total (PHP)', 'Status', 'Payment', 'Payment status', 'Fulfillment', 'Items', 'Date'],
               orders.map((o) => [
                 o.id, o.customer.name, o.customer.email,
-                o.totalAmount.toFixed(2), o.status, o.items.length,
+                o.totalAmount.toFixed(2), o.status,
+                PAYMENT_METHOD_LABELS[o.paymentMethod] ?? o.paymentMethod,
+                o.paymentMethod === 'gcash' ? o.paymentStatus : '',
+                o.deliveryMethod === 'delivery' ? `Delivery${o.deliveryTown ? ` (${o.deliveryTown})` : ''}` : 'Pickup',
+                o.items.length,
                 new Date(o.createdAt).toLocaleDateString('en-PH'),
               ])
             )}
@@ -251,23 +312,58 @@ export default function FarmerOrdersPage() {
                       <span className={`text-xs font-semibold px-2.5 py-1 rounded-full capitalize ${STATUS_COLORS[order.status] ?? 'bg-gray-100 text-gray-600'}`}>
                         {order.status}
                       </span>
+                      {order.paymentMethod === 'gcash' && GCASH_CHIP[order.paymentStatus] && (
+                        <span className={`block w-max mx-auto mt-1 text-[11px] font-semibold px-2 py-0.5 rounded-full ${GCASH_CHIP[order.paymentStatus].style}`}>
+                          {GCASH_CHIP[order.paymentStatus].label}
+                        </span>
+                      )}
                     </td>
                     <td className="px-5 py-3" onClick={(e) => e.stopPropagation()}>
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex flex-wrap items-center gap-1.5">
                         {updatingId === order.id && (
                           <Loader2 size={12} className="animate-spin text-gray-500" />
                         )}
-                        {(ACTIONS[order.status] ?? []).map((action) => (
-                          <button
-                            key={action.next}
-                            onClick={() => handleStatusChange(order.id, action.next)}
-                            disabled={updatingId === order.id}
-                            className={`text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 ${action.style}`}
-                          >
-                            {action.label}
-                          </button>
-                        ))}
-                        {(ACTIONS[order.status] ?? []).length === 0 && (
+                        {order.paymentMethod === 'gcash' && order.paymentStatus === 'submitted' && (
+                          <>
+                            <button onClick={() => handlePayment(order, 'confirm')} disabled={updatingId === order.id}
+                              className="text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 bg-shoot text-paddy-deep hover:bg-shoot/70">
+                              Payment received
+                            </button>
+                            <button onClick={() => handlePayment(order, 'reject')} disabled={updatingId === order.id}
+                              className="text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 bg-gray-100 text-gray-700 hover:bg-gray-200">
+                              Not received
+                            </button>
+                          </>
+                        )}
+                        {order.paymentStatus === 'refund_due' && (
+                          <>
+                            <button onClick={() => handlePayment(order, 'refunded')} disabled={updatingId === order.id}
+                              className="text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 bg-amber-100 text-amber-800 hover:bg-amber-200">
+                              Refund sent
+                            </button>
+                            {!order.paidAt && (
+                              <button onClick={() => handlePayment(order, 'reject')} disabled={updatingId === order.id}
+                                className="text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 bg-gray-100 text-gray-700 hover:bg-gray-200">
+                                No payment came
+                              </button>
+                            )}
+                          </>
+                        )}
+                        {(ACTIONS[order.status] ?? []).map((action) => {
+                          const blocked = action.next === 'shipped' ? shipBlockedReason(order.paymentMethod, order.paymentStatus) : null
+                          return (
+                            <button
+                              key={action.next}
+                              onClick={() => handleStatusChange(order.id, action.next)}
+                              disabled={updatingId === order.id || Boolean(blocked)}
+                              title={blocked ?? undefined}
+                              className={`text-xs font-medium px-2.5 py-1.5 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${action.style}`}
+                            >
+                              {action.label}
+                            </button>
+                          )
+                        })}
+                        {(ACTIONS[order.status] ?? []).length === 0 && order.paymentStatus !== 'refund_due' && (
                           <span className="text-xs text-gray-500 italic">—</span>
                         )}
                       </div>
@@ -282,7 +378,8 @@ export default function FarmerOrdersPage() {
                   {isOpen && (
                     <tr className="bg-shoot/50 shadow-[inset_4px_0_0_var(--color-paddy)] border-b-2 border-paddy/20">
                       <td colSpan={7} className="px-10 pt-1 pb-4">
-                        <div className="max-w-xl rounded-lg bg-white/80 border border-paddy/15 px-4 py-3">
+                        <div className="max-w-3xl grid gap-3 md:grid-cols-[3fr_2fr]">
+                        <div className="rounded-lg bg-white/80 border border-paddy/15 px-4 py-3">
                           <p className="text-xs font-semibold text-paddy-deep mb-2">Order #{order.id}: your items</p>
                           <div className="space-y-1">
                             {order.items.map((item) => (
@@ -292,6 +389,41 @@ export default function FarmerOrdersPage() {
                               </div>
                             ))}
                           </div>
+                        </div>
+                        <div className="rounded-lg bg-white/80 border border-paddy/15 px-4 py-3 text-sm text-gray-700 space-y-2">
+                          <div>
+                            <p className="text-xs font-semibold text-paddy-deep">Payment</p>
+                            <p>{PAYMENT_METHOD_LABELS[order.paymentMethod] ?? order.paymentMethod}</p>
+                            {order.paymentMethod === 'gcash' && order.gcashReference && (
+                              <p className="text-xs text-gray-600">
+                                Ref <span className="font-mono">{order.gcashReference}</span>
+                                {order.payerName && <> from {order.payerName}</>}
+                                {order.payerNumber && <> ({fmtMobile(order.payerNumber)})</>}
+                              </p>
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold text-paddy-deep">{order.deliveryMethod === 'delivery' ? 'Deliver to' : 'Fulfillment'}</p>
+                            {order.deliveryMethod === 'delivery' ? (
+                              <>
+                                {order.deliveryTown && <p className="font-medium">{order.deliveryTown}</p>}
+                                {order.deliveryAddress && <p className="text-xs text-gray-600 break-words">{order.deliveryAddress}</p>}
+                                {order.deliveryLat != null && order.deliveryLng != null && (
+                                  <a
+                                    href={`https://www.openstreetmap.org/?mlat=${order.deliveryLat}&mlon=${order.deliveryLng}#map=18/${order.deliveryLat}/${order.deliveryLng}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-paddy hover:underline"
+                                  >
+                                    <MapPin size={12} /> Open the pin on a map <ExternalLink size={11} />
+                                  </a>
+                                )}
+                              </>
+                            ) : (
+                              <p>Pickup</p>
+                            )}
+                          </div>
+                        </div>
                         </div>
                       </td>
                     </tr>

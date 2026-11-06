@@ -7,6 +7,8 @@ import { ShoppingBag, ChevronDown, ChevronUp, Loader2, Package, X, CheckCheck } 
 import { useAuth } from '@/contexts/AuthContext'
 import { useDialog } from '@/contexts/DialogContext'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
+import GcashPayPanel from '@/components/GcashPayPanel'
+import { PAYMENT_METHOD_LABELS, PAYMENT_STATUS_LABELS, type PaymentStatus } from '@/lib/payment'
 
 interface OrderItem {
   id: number
@@ -20,8 +22,14 @@ interface Order {
   totalAmount: number
   status: string
   paymentMethod: string
+  paymentStatus: string
+  gcashReference: string | null
   deliveryMethod: string
+  deliveryAddress: string | null
+  deliveryTown: string | null
   createdAt: string
+  farmer: { id: number; name: string } | null
+  payTo: { name: string | null; number: string; qrUrl: string | null } | null
   items: OrderItem[]
 }
 
@@ -31,12 +39,6 @@ const STATUS_COLORS: Record<string, string> = {
   shipped: 'bg-purple-100 text-purple-800',
   delivered: 'bg-shoot text-paddy-deep',
   cancelled: 'bg-red-100 text-red-700',
-}
-
-const PAYMENT_LABELS: Record<string, string> = {
-  cod: 'Cash on Delivery',
-  gcash: 'GCash',
-  bank_transfer: 'Bank Transfer',
 }
 
 const DELIVERY_LABELS: Record<string, string> = {
@@ -55,6 +57,16 @@ export default function CustomerOrdersPage() {
   const [expanded, setExpanded] = useState<Set<number>>(new Set())
   const [actingId, setActingId] = useState<number | null>(null)
   const [actionError, setActionError] = useState<{ id: number; msg: string } | null>(null)
+  // The customer's saved GCash details, to prefill the payment form.
+  const [payer, setPayer] = useState({ name: '', number: '' })
+
+  useEffect(() => {
+    if (!token) return
+    fetch('/api/users/me', { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(d => setPayer({ name: d.gcashName ?? '', number: d.gcashNumber ?? '' }))
+      .catch(() => {})
+  }, [token])
 
   useEffect(() => {
     if (loading) return
@@ -80,7 +92,14 @@ export default function CustomerOrdersPage() {
 
   async function handleAction(orderId: number, status: string) {
     if (!token) return
-    if (status === 'cancelled' && !(await dialog.confirm({ title: 'Cancel this order?', message: 'This cannot be undone.', confirmLabel: 'Cancel order', cancelLabel: 'Keep order', tone: 'danger' }))) return
+    const paid = orders.find(o => o.id === orderId)?.paymentStatus === 'submitted'
+    if (status === 'cancelled' && !(await dialog.confirm({
+      title: 'Cancel this order?',
+      message: paid
+        ? 'This cannot be undone. The farmer will owe you a refund of your GCash payment.'
+        : 'This cannot be undone.',
+      confirmLabel: 'Cancel order', cancelLabel: 'Keep order', tone: 'danger',
+    }))) return
     setActingId(orderId)
     setActionError(null)
     try {
@@ -160,6 +179,12 @@ export default function CustomerOrdersPage() {
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full capitalize ${STATUS_COLORS[order.status] ?? 'bg-gray-100 text-gray-700'}`}>
                     {order.status}
                   </span>
+                  {order.paymentMethod === 'gcash' && ['unpaid', 'rejected'].includes(order.paymentStatus) && ['pending', 'confirmed'].includes(order.status) && (
+                    <span className="max-sm:hidden text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-blue-800">Pay by GCash</span>
+                  )}
+                  {order.paymentStatus === 'refund_due' && (
+                    <span className="max-sm:hidden text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">Refund due</span>
+                  )}
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0 ml-4">
                   <span className="font-bold text-paddy">₱{order.totalAmount.toFixed(2)}</span>
@@ -197,13 +222,28 @@ export default function CustomerOrdersPage() {
                   <div className="grid grid-cols-2 gap-3 text-xs text-gray-500 bg-gray-50 rounded-lg px-4 py-3">
                     <div>
                       <p className="font-medium text-gray-700 mb-0.5">Payment</p>
-                      <p>{PAYMENT_LABELS[order.paymentMethod] ?? order.paymentMethod}</p>
+                      <p>{PAYMENT_METHOD_LABELS[order.paymentMethod] ?? order.paymentMethod}</p>
+                      {order.paymentMethod === 'gcash' && (
+                        <p className="mt-0.5 text-gray-600">{PAYMENT_STATUS_LABELS[order.paymentStatus as PaymentStatus] ?? order.paymentStatus}</p>
+                      )}
                     </div>
                     <div>
                       <p className="font-medium text-gray-700 mb-0.5">Fulfillment</p>
-                      <p>{DELIVERY_LABELS[order.deliveryMethod] ?? order.deliveryMethod}</p>
+                      <p>{DELIVERY_LABELS[order.deliveryMethod] ?? order.deliveryMethod}{order.deliveryTown ? `, ${order.deliveryTown}` : ''}</p>
+                      {order.deliveryAddress && <p className="mt-0.5 text-gray-600 break-words">{order.deliveryAddress}</p>}
                     </div>
                   </div>
+
+                  {order.paymentMethod === 'gcash' && (
+                    <GcashPayPanel
+                      order={order}
+                      token={token}
+                      payer={payer}
+                      onChanged={(paymentStatus, gcashReference) =>
+                        setOrders(prev => prev.map(o => (o.id === order.id ? { ...o, paymentStatus, gcashReference } : o)))
+                      }
+                    />
+                  )}
 
                   {/* Customer actions */}
                   {actionError?.id === order.id && (

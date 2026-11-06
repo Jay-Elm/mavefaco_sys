@@ -8,6 +8,7 @@ import { useDialog } from '@/contexts/DialogContext'
 import IdVerificationSection from '@/components/idVerification/IdVerificationSection'
 import PasswordInput from '@/components/PasswordInput'
 import { maskEmail } from '@/lib/maskEmail'
+import ProfilePaymentSections from '@/components/ProfilePaymentSections'
 
 
 export default function FarmerProfilePage() {
@@ -182,6 +183,8 @@ export default function FarmerProfilePage() {
           </div>
         </form>
       </div>
+
+      <ProfilePaymentSections token={token} forFarmer={true} />
 
       {/* Change Email */}
       <div className="border-t border-gray-200 pt-8">

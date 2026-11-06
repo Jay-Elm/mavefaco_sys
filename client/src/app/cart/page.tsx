@@ -4,16 +4,12 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Trash2, Plus, Minus, ShoppingCart, Package, ArrowLeft, Loader2, Wallet, MapPin, AlertTriangle, LogIn, UserPlus } from 'lucide-react'
+import { Trash2, Plus, Minus, ShoppingCart, Package, ArrowLeft, Loader2, Wallet, MapPin, AlertTriangle, LogIn, UserPlus, X, Info } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useCart } from '@/contexts/CartContext'
 import { fmtQty, maxBuyable, unitStep } from '@/lib/units'
-
-const PAYMENT_METHODS = [
-  { value: 'cod', label: 'Cash on Delivery' },
-  { value: 'gcash', label: 'GCash' },
-  { value: 'bank_transfer', label: 'Bank Transfer' },
-]
+import { DELIVERY_AREA_TEXT } from '@/lib/deliveryArea'
+import LocationPicker, { type SavedLocation } from '@/components/LocationPicker'
 
 const DELIVERY_METHODS = [
   { value: 'pickup', label: 'Pickup' },
@@ -31,6 +27,33 @@ export default function CartPage() {
   const [stockWarning, setStockWarning] = useState<string | null>(null)
   const [checkingStock, setCheckingStock] = useState(false)
   const stockChecked = useRef(false)
+  // GCash only when this farmer has set it up (null while checking).
+  const [gcashOk, setGcashOk] = useState<boolean | null>(null)
+  const [location, setLocation] = useState<SavedLocation | null>(null)
+  const [picking, setPicking] = useState(false)
+  const farmerId = items[0]?.farmerId
+
+  useEffect(() => {
+    if (!token || !farmerId) return
+    fetch(`/api/orders/options?farmerId=${farmerId}`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(d => {
+        setGcashOk(Boolean(d.gcash))
+        if (!d.gcash) setPaymentMethod(m => (m === 'gcash' ? 'cod' : m))
+      })
+      .catch(() => setGcashOk(false))
+  }, [token, farmerId])
+
+  useEffect(() => {
+    if (!token) return
+    fetch('/api/users/me', { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.json())
+      .then(d => { if (!d.error) setLocation(d) })
+      .catch(() => {})
+  }, [token])
+
+  const hasSpot = location?.deliveryLat != null && Boolean(location?.deliveryAddress)
+  const deliveryBlocked = deliveryMethod === 'delivery' && !(hasSpot && location?.deliveryTown)
 
   useEffect(() => {
     if (!cartReady || stockChecked.current || items.length === 0) return
@@ -259,10 +282,19 @@ export default function CartPage() {
                 onChange={e => setPaymentMethod(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
               >
-                {PAYMENT_METHODS.map(m => (
-                  <option key={m.value} value={m.value}>{m.label}</option>
-                ))}
+                <option value="cod">Cash on Delivery</option>
+                <option value="gcash" disabled={!gcashOk}>
+                  {gcashOk === false ? 'GCash (unavailable)' : 'GCash'}
+                </option>
               </select>
+              {gcashOk === false && (
+                <p className="mt-1.5 text-xs text-gray-500">GCash is unavailable: this farmer hasn&apos;t set up GCash.</p>
+              )}
+              {paymentMethod === 'gcash' && (
+                <p className="mt-1.5 text-xs text-gray-600">
+                  After you place the order, send the amount to the farmer&apos;s GCash and enter the reference number in My Orders.
+                </p>
+              )}
             </div>
 
             {/* Delivery method */}
@@ -286,6 +318,26 @@ export default function CartPage() {
                   </button>
                 ))}
               </div>
+              <p className="mt-1.5 flex items-start gap-1 text-xs text-gray-500">
+                <Info size={12} className="shrink-0 mt-0.5" /> Delivery only within {DELIVERY_AREA_TEXT}.
+              </p>
+
+              {deliveryMethod === 'delivery' && (
+                <div className={`mt-3 rounded-lg border px-3 py-2.5 text-xs ${hasSpot && !location?.deliveryTown ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-gray-200 bg-gray-50 text-gray-600'}`}>
+                  {hasSpot ? (
+                    <>
+                      <p className="font-medium text-soil">{location?.deliveryTown ?? 'Outside the delivery area'}</p>
+                      <p className="mt-0.5 break-words">{location?.deliveryAddress}</p>
+                      {!location?.deliveryTown && <p className="mt-1">This spot is outside the area, so this order can only be picked up. Choose Pickup, or set a spot inside the area.</p>}
+                    </>
+                  ) : (
+                    <p>Set where to deliver before placing the order.</p>
+                  )}
+                  <button type="button" onClick={() => setPicking(true)} className="mt-1.5 font-medium text-paddy hover:underline">
+                    {hasSpot ? 'Change location' : 'Set delivery location'}
+                  </button>
+                </div>
+              )}
             </div>
 
             {error && (
@@ -302,7 +354,7 @@ export default function CartPage() {
 
             <button
               onClick={handleCheckout}
-              disabled={placing}
+              disabled={placing || deliveryBlocked}
               className="w-full bg-paddy hover:bg-paddy-deep disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
             >
               {placing && <Loader2 size={16} className="animate-spin" />}
@@ -318,6 +370,30 @@ export default function CartPage() {
           </div>
         </div>
       </div>
+
+      {picking && (
+        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/40 p-0 sm:p-4" onClick={() => setPicking(false)}>
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="pick-title"
+            className="w-full sm:max-w-xl max-h-[92vh] overflow-y-auto bg-white rounded-t-card sm:rounded-card shadow-xl p-4 sm:p-6"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <h2 id="pick-title" className="font-display text-xl font-bold text-soil flex items-center gap-2"><MapPin size={18} /> Delivery location</h2>
+              <button type="button" onClick={() => setPicking(false)} aria-label="Close" className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100"><X size={18} /></button>
+            </div>
+            <LocationPicker
+              initial={location}
+              token={token}
+              saveLabel="Save and use this location"
+              onSaved={loc => { setLocation(l => ({ ...l, ...loc })); setPicking(false) }}
+            />
+            <p className="mt-3 text-xs text-gray-500">Saved to your profile. Only the farmer of this order sees it.</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

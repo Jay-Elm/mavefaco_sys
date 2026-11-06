@@ -5,7 +5,13 @@ import { createProduct, createUser } from "./helpers";
  * A farmer, a customer and one order of `quantity` units already placed,
  * with stock decremented the way checkout leaves it.
  */
-export async function placedOrder({ status = "pending", stock = 10, quantity = 3 } = {}) {
+export async function placedOrder({
+  status = "pending",
+  stock = 10,
+  quantity = 3,
+  paymentMethod = "cod",
+  paymentStatus = "unpaid",
+}: { status?: string; stock?: number; quantity?: number; paymentMethod?: string; paymentStatus?: string } = {}) {
   const farmer = await createUser({ role: "farmer" });
   const customer = await createUser();
   const product = await createProduct(farmer.id, { stock: stock - quantity });
@@ -14,6 +20,8 @@ export async function placedOrder({ status = "pending", stock = 10, quantity = 3
       customerId: customer.id,
       totalAmount: 50 * quantity,
       status,
+      paymentMethod,
+      paymentStatus,
       items: { create: [{ productId: product.id, quantity, price: 50 }] },
     },
   });

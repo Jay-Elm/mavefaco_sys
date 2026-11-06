@@ -3253,12 +3253,16 @@ export namespace Prisma {
     id: number | null
     tokenVersion: number | null
     totpLastStep: number | null
+    deliveryLat: number | null
+    deliveryLng: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: number | null
     tokenVersion: number | null
     totpLastStep: number | null
+    deliveryLat: number | null
+    deliveryLng: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -3277,6 +3281,13 @@ export namespace Prisma {
     totpSecret: string | null
     totpEnabled: boolean | null
     totpLastStep: number | null
+    gcashName: string | null
+    gcashNumber: string | null
+    gcashQrUrl: string | null
+    deliveryLat: number | null
+    deliveryLng: number | null
+    deliveryAddress: string | null
+    deliveryTown: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3297,6 +3308,13 @@ export namespace Prisma {
     totpSecret: string | null
     totpEnabled: boolean | null
     totpLastStep: number | null
+    gcashName: string | null
+    gcashNumber: string | null
+    gcashQrUrl: string | null
+    deliveryLat: number | null
+    deliveryLng: number | null
+    deliveryAddress: string | null
+    deliveryTown: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -3317,6 +3335,13 @@ export namespace Prisma {
     totpSecret: number
     totpEnabled: number
     totpLastStep: number
+    gcashName: number
+    gcashNumber: number
+    gcashQrUrl: number
+    deliveryLat: number
+    deliveryLng: number
+    deliveryAddress: number
+    deliveryTown: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -3327,12 +3352,16 @@ export namespace Prisma {
     id?: true
     tokenVersion?: true
     totpLastStep?: true
+    deliveryLat?: true
+    deliveryLng?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
     tokenVersion?: true
     totpLastStep?: true
+    deliveryLat?: true
+    deliveryLng?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -3351,6 +3380,13 @@ export namespace Prisma {
     totpSecret?: true
     totpEnabled?: true
     totpLastStep?: true
+    gcashName?: true
+    gcashNumber?: true
+    gcashQrUrl?: true
+    deliveryLat?: true
+    deliveryLng?: true
+    deliveryAddress?: true
+    deliveryTown?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3371,6 +3407,13 @@ export namespace Prisma {
     totpSecret?: true
     totpEnabled?: true
     totpLastStep?: true
+    gcashName?: true
+    gcashNumber?: true
+    gcashQrUrl?: true
+    deliveryLat?: true
+    deliveryLng?: true
+    deliveryAddress?: true
+    deliveryTown?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -3391,6 +3434,13 @@ export namespace Prisma {
     totpSecret?: true
     totpEnabled?: true
     totpLastStep?: true
+    gcashName?: true
+    gcashNumber?: true
+    gcashQrUrl?: true
+    deliveryLat?: true
+    deliveryLng?: true
+    deliveryAddress?: true
+    deliveryTown?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -3498,6 +3548,13 @@ export namespace Prisma {
     totpSecret: string | null
     totpEnabled: boolean
     totpLastStep: number | null
+    gcashName: string | null
+    gcashNumber: string | null
+    gcashQrUrl: string | null
+    deliveryLat: number | null
+    deliveryLng: number | null
+    deliveryAddress: string | null
+    deliveryTown: string | null
     createdAt: Date
     updatedAt: Date
     _count: UserCountAggregateOutputType | null
@@ -3537,6 +3594,13 @@ export namespace Prisma {
     totpSecret?: boolean
     totpEnabled?: boolean
     totpLastStep?: boolean
+    gcashName?: boolean
+    gcashNumber?: boolean
+    gcashQrUrl?: boolean
+    deliveryLat?: boolean
+    deliveryLng?: boolean
+    deliveryAddress?: boolean
+    deliveryTown?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     products?: boolean | User$productsArgs<ExtArgs>
@@ -3573,6 +3637,13 @@ export namespace Prisma {
     totpSecret?: boolean
     totpEnabled?: boolean
     totpLastStep?: boolean
+    gcashName?: boolean
+    gcashNumber?: boolean
+    gcashQrUrl?: boolean
+    deliveryLat?: boolean
+    deliveryLng?: boolean
+    deliveryAddress?: boolean
+    deliveryTown?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -3593,6 +3664,13 @@ export namespace Prisma {
     totpSecret?: boolean
     totpEnabled?: boolean
     totpLastStep?: boolean
+    gcashName?: boolean
+    gcashNumber?: boolean
+    gcashQrUrl?: boolean
+    deliveryLat?: boolean
+    deliveryLng?: boolean
+    deliveryAddress?: boolean
+    deliveryTown?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["user"]>
@@ -3613,11 +3691,18 @@ export namespace Prisma {
     totpSecret?: boolean
     totpEnabled?: boolean
     totpLastStep?: boolean
+    gcashName?: boolean
+    gcashNumber?: boolean
+    gcashQrUrl?: boolean
+    deliveryLat?: boolean
+    deliveryLng?: boolean
+    deliveryAddress?: boolean
+    deliveryTown?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "verified" | "verifiedAt" | "verifiedInPersonAt" | "emailVerifiedAt" | "tokenVersion" | "deletedAt" | "totpSecret" | "totpEnabled" | "totpLastStep" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "verified" | "verifiedAt" | "verifiedInPersonAt" | "emailVerifiedAt" | "tokenVersion" | "deletedAt" | "totpSecret" | "totpEnabled" | "totpLastStep" | "gcashName" | "gcashNumber" | "gcashQrUrl" | "deliveryLat" | "deliveryLng" | "deliveryAddress" | "deliveryTown" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | User$productsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -3674,6 +3759,13 @@ export namespace Prisma {
       totpSecret: string | null
       totpEnabled: boolean
       totpLastStep: number | null
+      gcashName: string | null
+      gcashNumber: string | null
+      gcashQrUrl: string | null
+      deliveryLat: number | null
+      deliveryLng: number | null
+      deliveryAddress: string | null
+      deliveryTown: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["user"]>
@@ -4129,6 +4221,13 @@ export namespace Prisma {
     readonly totpSecret: FieldRef<"User", 'String'>
     readonly totpEnabled: FieldRef<"User", 'Boolean'>
     readonly totpLastStep: FieldRef<"User", 'Int'>
+    readonly gcashName: FieldRef<"User", 'String'>
+    readonly gcashNumber: FieldRef<"User", 'String'>
+    readonly gcashQrUrl: FieldRef<"User", 'String'>
+    readonly deliveryLat: FieldRef<"User", 'Float'>
+    readonly deliveryLng: FieldRef<"User", 'Float'>
+    readonly deliveryAddress: FieldRef<"User", 'String'>
+    readonly deliveryTown: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
   }
@@ -15381,12 +15480,16 @@ export namespace Prisma {
   export type OrderAvgAggregateOutputType = {
     id: number | null
     totalAmount: Decimal | null
+    deliveryLat: number | null
+    deliveryLng: number | null
     customerId: number | null
   }
 
   export type OrderSumAggregateOutputType = {
     id: number | null
     totalAmount: Decimal | null
+    deliveryLat: number | null
+    deliveryLng: number | null
     customerId: number | null
   }
 
@@ -15396,6 +15499,15 @@ export namespace Prisma {
     status: string | null
     paymentMethod: string | null
     deliveryMethod: string | null
+    paymentStatus: string | null
+    gcashReference: string | null
+    payerName: string | null
+    payerNumber: string | null
+    paidAt: Date | null
+    deliveryLat: number | null
+    deliveryLng: number | null
+    deliveryAddress: string | null
+    deliveryTown: string | null
     createdAt: Date | null
     updatedAt: Date | null
     customerId: number | null
@@ -15407,6 +15519,15 @@ export namespace Prisma {
     status: string | null
     paymentMethod: string | null
     deliveryMethod: string | null
+    paymentStatus: string | null
+    gcashReference: string | null
+    payerName: string | null
+    payerNumber: string | null
+    paidAt: Date | null
+    deliveryLat: number | null
+    deliveryLng: number | null
+    deliveryAddress: string | null
+    deliveryTown: string | null
     createdAt: Date | null
     updatedAt: Date | null
     customerId: number | null
@@ -15418,6 +15539,15 @@ export namespace Prisma {
     status: number
     paymentMethod: number
     deliveryMethod: number
+    paymentStatus: number
+    gcashReference: number
+    payerName: number
+    payerNumber: number
+    paidAt: number
+    deliveryLat: number
+    deliveryLng: number
+    deliveryAddress: number
+    deliveryTown: number
     createdAt: number
     updatedAt: number
     customerId: number
@@ -15428,12 +15558,16 @@ export namespace Prisma {
   export type OrderAvgAggregateInputType = {
     id?: true
     totalAmount?: true
+    deliveryLat?: true
+    deliveryLng?: true
     customerId?: true
   }
 
   export type OrderSumAggregateInputType = {
     id?: true
     totalAmount?: true
+    deliveryLat?: true
+    deliveryLng?: true
     customerId?: true
   }
 
@@ -15443,6 +15577,15 @@ export namespace Prisma {
     status?: true
     paymentMethod?: true
     deliveryMethod?: true
+    paymentStatus?: true
+    gcashReference?: true
+    payerName?: true
+    payerNumber?: true
+    paidAt?: true
+    deliveryLat?: true
+    deliveryLng?: true
+    deliveryAddress?: true
+    deliveryTown?: true
     createdAt?: true
     updatedAt?: true
     customerId?: true
@@ -15454,6 +15597,15 @@ export namespace Prisma {
     status?: true
     paymentMethod?: true
     deliveryMethod?: true
+    paymentStatus?: true
+    gcashReference?: true
+    payerName?: true
+    payerNumber?: true
+    paidAt?: true
+    deliveryLat?: true
+    deliveryLng?: true
+    deliveryAddress?: true
+    deliveryTown?: true
     createdAt?: true
     updatedAt?: true
     customerId?: true
@@ -15465,6 +15617,15 @@ export namespace Prisma {
     status?: true
     paymentMethod?: true
     deliveryMethod?: true
+    paymentStatus?: true
+    gcashReference?: true
+    payerName?: true
+    payerNumber?: true
+    paidAt?: true
+    deliveryLat?: true
+    deliveryLng?: true
+    deliveryAddress?: true
+    deliveryTown?: true
     createdAt?: true
     updatedAt?: true
     customerId?: true
@@ -15563,6 +15724,15 @@ export namespace Prisma {
     status: string
     paymentMethod: string
     deliveryMethod: string
+    paymentStatus: string
+    gcashReference: string | null
+    payerName: string | null
+    payerNumber: string | null
+    paidAt: Date | null
+    deliveryLat: number | null
+    deliveryLng: number | null
+    deliveryAddress: string | null
+    deliveryTown: string | null
     createdAt: Date
     updatedAt: Date
     customerId: number
@@ -15593,6 +15763,15 @@ export namespace Prisma {
     status?: boolean
     paymentMethod?: boolean
     deliveryMethod?: boolean
+    paymentStatus?: boolean
+    gcashReference?: boolean
+    payerName?: boolean
+    payerNumber?: boolean
+    paidAt?: boolean
+    deliveryLat?: boolean
+    deliveryLng?: boolean
+    deliveryAddress?: boolean
+    deliveryTown?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     customerId?: boolean
@@ -15607,6 +15786,15 @@ export namespace Prisma {
     status?: boolean
     paymentMethod?: boolean
     deliveryMethod?: boolean
+    paymentStatus?: boolean
+    gcashReference?: boolean
+    payerName?: boolean
+    payerNumber?: boolean
+    paidAt?: boolean
+    deliveryLat?: boolean
+    deliveryLng?: boolean
+    deliveryAddress?: boolean
+    deliveryTown?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     customerId?: boolean
@@ -15619,6 +15807,15 @@ export namespace Prisma {
     status?: boolean
     paymentMethod?: boolean
     deliveryMethod?: boolean
+    paymentStatus?: boolean
+    gcashReference?: boolean
+    payerName?: boolean
+    payerNumber?: boolean
+    paidAt?: boolean
+    deliveryLat?: boolean
+    deliveryLng?: boolean
+    deliveryAddress?: boolean
+    deliveryTown?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     customerId?: boolean
@@ -15631,12 +15828,21 @@ export namespace Prisma {
     status?: boolean
     paymentMethod?: boolean
     deliveryMethod?: boolean
+    paymentStatus?: boolean
+    gcashReference?: boolean
+    payerName?: boolean
+    payerNumber?: boolean
+    paidAt?: boolean
+    deliveryLat?: boolean
+    deliveryLng?: boolean
+    deliveryAddress?: boolean
+    deliveryTown?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     customerId?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "totalAmount" | "status" | "paymentMethod" | "deliveryMethod" | "createdAt" | "updatedAt" | "customerId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "totalAmount" | "status" | "paymentMethod" | "deliveryMethod" | "paymentStatus" | "gcashReference" | "payerName" | "payerNumber" | "paidAt" | "deliveryLat" | "deliveryLng" | "deliveryAddress" | "deliveryTown" | "createdAt" | "updatedAt" | "customerId", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | UserDefaultArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
@@ -15661,6 +15867,15 @@ export namespace Prisma {
       status: string
       paymentMethod: string
       deliveryMethod: string
+      paymentStatus: string
+      gcashReference: string | null
+      payerName: string | null
+      payerNumber: string | null
+      paidAt: Date | null
+      deliveryLat: number | null
+      deliveryLng: number | null
+      deliveryAddress: string | null
+      deliveryTown: string | null
       createdAt: Date
       updatedAt: Date
       customerId: number
@@ -16094,6 +16309,15 @@ export namespace Prisma {
     readonly status: FieldRef<"Order", 'String'>
     readonly paymentMethod: FieldRef<"Order", 'String'>
     readonly deliveryMethod: FieldRef<"Order", 'String'>
+    readonly paymentStatus: FieldRef<"Order", 'String'>
+    readonly gcashReference: FieldRef<"Order", 'String'>
+    readonly payerName: FieldRef<"Order", 'String'>
+    readonly payerNumber: FieldRef<"Order", 'String'>
+    readonly paidAt: FieldRef<"Order", 'DateTime'>
+    readonly deliveryLat: FieldRef<"Order", 'Float'>
+    readonly deliveryLng: FieldRef<"Order", 'Float'>
+    readonly deliveryAddress: FieldRef<"Order", 'String'>
+    readonly deliveryTown: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
     readonly customerId: FieldRef<"Order", 'Int'>
@@ -29874,6 +30098,13 @@ export namespace Prisma {
     totpSecret: 'totpSecret',
     totpEnabled: 'totpEnabled',
     totpLastStep: 'totpLastStep',
+    gcashName: 'gcashName',
+    gcashNumber: 'gcashNumber',
+    gcashQrUrl: 'gcashQrUrl',
+    deliveryLat: 'deliveryLat',
+    deliveryLng: 'deliveryLng',
+    deliveryAddress: 'deliveryAddress',
+    deliveryTown: 'deliveryTown',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -30010,6 +30241,15 @@ export namespace Prisma {
     status: 'status',
     paymentMethod: 'paymentMethod',
     deliveryMethod: 'deliveryMethod',
+    paymentStatus: 'paymentStatus',
+    gcashReference: 'gcashReference',
+    payerName: 'payerName',
+    payerNumber: 'payerNumber',
+    paidAt: 'paidAt',
+    deliveryLat: 'deliveryLat',
+    deliveryLng: 'deliveryLng',
+    deliveryAddress: 'deliveryAddress',
+    deliveryTown: 'deliveryTown',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     customerId: 'customerId'
@@ -30266,20 +30506,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Decimal'
-   */
-  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-  /**
-   * Reference to a field of type 'Decimal[]'
-   */
-  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -30290,6 +30516,20 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal'
+   */
+  export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+  /**
+   * Reference to a field of type 'Decimal[]'
+   */
+  export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -30329,6 +30569,13 @@ export namespace Prisma {
     totpSecret?: StringNullableFilter<"User"> | string | null
     totpEnabled?: BoolFilter<"User"> | boolean
     totpLastStep?: IntNullableFilter<"User"> | number | null
+    gcashName?: StringNullableFilter<"User"> | string | null
+    gcashNumber?: StringNullableFilter<"User"> | string | null
+    gcashQrUrl?: StringNullableFilter<"User"> | string | null
+    deliveryLat?: FloatNullableFilter<"User"> | number | null
+    deliveryLng?: FloatNullableFilter<"User"> | number | null
+    deliveryAddress?: StringNullableFilter<"User"> | string | null
+    deliveryTown?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     products?: ProductListRelationFilter
@@ -30364,6 +30611,13 @@ export namespace Prisma {
     totpSecret?: SortOrderInput | SortOrder
     totpEnabled?: SortOrder
     totpLastStep?: SortOrderInput | SortOrder
+    gcashName?: SortOrderInput | SortOrder
+    gcashNumber?: SortOrderInput | SortOrder
+    gcashQrUrl?: SortOrderInput | SortOrder
+    deliveryLat?: SortOrderInput | SortOrder
+    deliveryLng?: SortOrderInput | SortOrder
+    deliveryAddress?: SortOrderInput | SortOrder
+    deliveryTown?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     products?: ProductOrderByRelationAggregateInput
@@ -30402,6 +30656,13 @@ export namespace Prisma {
     totpSecret?: StringNullableFilter<"User"> | string | null
     totpEnabled?: BoolFilter<"User"> | boolean
     totpLastStep?: IntNullableFilter<"User"> | number | null
+    gcashName?: StringNullableFilter<"User"> | string | null
+    gcashNumber?: StringNullableFilter<"User"> | string | null
+    gcashQrUrl?: StringNullableFilter<"User"> | string | null
+    deliveryLat?: FloatNullableFilter<"User"> | number | null
+    deliveryLng?: FloatNullableFilter<"User"> | number | null
+    deliveryAddress?: StringNullableFilter<"User"> | string | null
+    deliveryTown?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     products?: ProductListRelationFilter
@@ -30437,6 +30698,13 @@ export namespace Prisma {
     totpSecret?: SortOrderInput | SortOrder
     totpEnabled?: SortOrder
     totpLastStep?: SortOrderInput | SortOrder
+    gcashName?: SortOrderInput | SortOrder
+    gcashNumber?: SortOrderInput | SortOrder
+    gcashQrUrl?: SortOrderInput | SortOrder
+    deliveryLat?: SortOrderInput | SortOrder
+    deliveryLng?: SortOrderInput | SortOrder
+    deliveryAddress?: SortOrderInput | SortOrder
+    deliveryTown?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -30465,6 +30733,13 @@ export namespace Prisma {
     totpSecret?: StringNullableWithAggregatesFilter<"User"> | string | null
     totpEnabled?: BoolWithAggregatesFilter<"User"> | boolean
     totpLastStep?: IntNullableWithAggregatesFilter<"User"> | number | null
+    gcashName?: StringNullableWithAggregatesFilter<"User"> | string | null
+    gcashNumber?: StringNullableWithAggregatesFilter<"User"> | string | null
+    gcashQrUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
+    deliveryLat?: FloatNullableWithAggregatesFilter<"User"> | number | null
+    deliveryLng?: FloatNullableWithAggregatesFilter<"User"> | number | null
+    deliveryAddress?: StringNullableWithAggregatesFilter<"User"> | string | null
+    deliveryTown?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
@@ -31135,6 +31410,15 @@ export namespace Prisma {
     status?: StringFilter<"Order"> | string
     paymentMethod?: StringFilter<"Order"> | string
     deliveryMethod?: StringFilter<"Order"> | string
+    paymentStatus?: StringFilter<"Order"> | string
+    gcashReference?: StringNullableFilter<"Order"> | string | null
+    payerName?: StringNullableFilter<"Order"> | string | null
+    payerNumber?: StringNullableFilter<"Order"> | string | null
+    paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    deliveryLat?: FloatNullableFilter<"Order"> | number | null
+    deliveryLng?: FloatNullableFilter<"Order"> | number | null
+    deliveryAddress?: StringNullableFilter<"Order"> | string | null
+    deliveryTown?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     customerId?: IntFilter<"Order"> | number
@@ -31148,6 +31432,15 @@ export namespace Prisma {
     status?: SortOrder
     paymentMethod?: SortOrder
     deliveryMethod?: SortOrder
+    paymentStatus?: SortOrder
+    gcashReference?: SortOrderInput | SortOrder
+    payerName?: SortOrderInput | SortOrder
+    payerNumber?: SortOrderInput | SortOrder
+    paidAt?: SortOrderInput | SortOrder
+    deliveryLat?: SortOrderInput | SortOrder
+    deliveryLng?: SortOrderInput | SortOrder
+    deliveryAddress?: SortOrderInput | SortOrder
+    deliveryTown?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     customerId?: SortOrder
@@ -31157,6 +31450,7 @@ export namespace Prisma {
 
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    gcashReference?: string
     AND?: OrderWhereInput | OrderWhereInput[]
     OR?: OrderWhereInput[]
     NOT?: OrderWhereInput | OrderWhereInput[]
@@ -31164,12 +31458,20 @@ export namespace Prisma {
     status?: StringFilter<"Order"> | string
     paymentMethod?: StringFilter<"Order"> | string
     deliveryMethod?: StringFilter<"Order"> | string
+    paymentStatus?: StringFilter<"Order"> | string
+    payerName?: StringNullableFilter<"Order"> | string | null
+    payerNumber?: StringNullableFilter<"Order"> | string | null
+    paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    deliveryLat?: FloatNullableFilter<"Order"> | number | null
+    deliveryLng?: FloatNullableFilter<"Order"> | number | null
+    deliveryAddress?: StringNullableFilter<"Order"> | string | null
+    deliveryTown?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     customerId?: IntFilter<"Order"> | number
     customer?: XOR<UserScalarRelationFilter, UserWhereInput>
     items?: OrderItemListRelationFilter
-  }, "id">
+  }, "id" | "gcashReference">
 
   export type OrderOrderByWithAggregationInput = {
     id?: SortOrder
@@ -31177,6 +31479,15 @@ export namespace Prisma {
     status?: SortOrder
     paymentMethod?: SortOrder
     deliveryMethod?: SortOrder
+    paymentStatus?: SortOrder
+    gcashReference?: SortOrderInput | SortOrder
+    payerName?: SortOrderInput | SortOrder
+    payerNumber?: SortOrderInput | SortOrder
+    paidAt?: SortOrderInput | SortOrder
+    deliveryLat?: SortOrderInput | SortOrder
+    deliveryLng?: SortOrderInput | SortOrder
+    deliveryAddress?: SortOrderInput | SortOrder
+    deliveryTown?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     customerId?: SortOrder
@@ -31196,6 +31507,15 @@ export namespace Prisma {
     status?: StringWithAggregatesFilter<"Order"> | string
     paymentMethod?: StringWithAggregatesFilter<"Order"> | string
     deliveryMethod?: StringWithAggregatesFilter<"Order"> | string
+    paymentStatus?: StringWithAggregatesFilter<"Order"> | string
+    gcashReference?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    payerName?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    payerNumber?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    paidAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    deliveryLat?: FloatNullableWithAggregatesFilter<"Order"> | number | null
+    deliveryLng?: FloatNullableWithAggregatesFilter<"Order"> | number | null
+    deliveryAddress?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    deliveryTown?: StringNullableWithAggregatesFilter<"Order"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     customerId?: IntWithAggregatesFilter<"Order"> | number
@@ -32005,6 +32325,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -32040,6 +32367,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -32074,6 +32408,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -32109,6 +32450,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -32144,6 +32492,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32163,6 +32518,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32183,6 +32545,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32855,6 +33224,15 @@ export namespace Prisma {
     status?: string
     paymentMethod?: string
     deliveryMethod?: string
+    paymentStatus?: string
+    gcashReference?: string | null
+    payerName?: string | null
+    payerNumber?: string | null
+    paidAt?: Date | string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     customer: UserCreateNestedOneWithoutOrdersInput
@@ -32867,6 +33245,15 @@ export namespace Prisma {
     status?: string
     paymentMethod?: string
     deliveryMethod?: string
+    paymentStatus?: string
+    gcashReference?: string | null
+    payerName?: string | null
+    payerNumber?: string | null
+    paidAt?: Date | string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     customerId: number
@@ -32878,6 +33265,15 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    gcashReference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: UserUpdateOneRequiredWithoutOrdersNestedInput
@@ -32890,6 +33286,15 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    gcashReference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerId?: IntFieldUpdateOperationsInput | number
@@ -32902,6 +33307,15 @@ export namespace Prisma {
     status?: string
     paymentMethod?: string
     deliveryMethod?: string
+    paymentStatus?: string
+    gcashReference?: string | null
+    payerName?: string | null
+    payerNumber?: string | null
+    paidAt?: Date | string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     customerId: number
@@ -32912,6 +33326,15 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    gcashReference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32922,6 +33345,15 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    gcashReference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerId?: IntFieldUpdateOperationsInput | number
@@ -33772,6 +34204,17 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -33944,6 +34387,13 @@ export namespace Prisma {
     totpSecret?: SortOrder
     totpEnabled?: SortOrder
     totpLastStep?: SortOrder
+    gcashName?: SortOrder
+    gcashNumber?: SortOrder
+    gcashQrUrl?: SortOrder
+    deliveryLat?: SortOrder
+    deliveryLng?: SortOrder
+    deliveryAddress?: SortOrder
+    deliveryTown?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -33952,6 +34402,8 @@ export namespace Prisma {
     id?: SortOrder
     tokenVersion?: SortOrder
     totpLastStep?: SortOrder
+    deliveryLat?: SortOrder
+    deliveryLng?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -33970,6 +34422,13 @@ export namespace Prisma {
     totpSecret?: SortOrder
     totpEnabled?: SortOrder
     totpLastStep?: SortOrder
+    gcashName?: SortOrder
+    gcashNumber?: SortOrder
+    gcashQrUrl?: SortOrder
+    deliveryLat?: SortOrder
+    deliveryLng?: SortOrder
+    deliveryAddress?: SortOrder
+    deliveryTown?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -33990,6 +34449,13 @@ export namespace Prisma {
     totpSecret?: SortOrder
     totpEnabled?: SortOrder
     totpLastStep?: SortOrder
+    gcashName?: SortOrder
+    gcashNumber?: SortOrder
+    gcashQrUrl?: SortOrder
+    deliveryLat?: SortOrder
+    deliveryLng?: SortOrder
+    deliveryAddress?: SortOrder
+    deliveryTown?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -33998,6 +34464,8 @@ export namespace Prisma {
     id?: SortOrder
     tokenVersion?: SortOrder
     totpLastStep?: SortOrder
+    deliveryLat?: SortOrder
+    deliveryLng?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -34088,6 +34556,22 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -34472,17 +34956,6 @@ export namespace Prisma {
     daysToHarvestMax?: SortOrder
   }
 
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type CropTypeScalarRelationFilter = {
     is?: CropTypeWhereInput
     isNot?: CropTypeWhereInput
@@ -34574,22 +35047,6 @@ export namespace Prisma {
     productId?: SortOrder
   }
 
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
-  }
-
   export type PlantingScalarRelationFilter = {
     is?: PlantingWhereInput
     isNot?: PlantingWhereInput
@@ -34638,6 +35095,15 @@ export namespace Prisma {
     status?: SortOrder
     paymentMethod?: SortOrder
     deliveryMethod?: SortOrder
+    paymentStatus?: SortOrder
+    gcashReference?: SortOrder
+    payerName?: SortOrder
+    payerNumber?: SortOrder
+    paidAt?: SortOrder
+    deliveryLat?: SortOrder
+    deliveryLng?: SortOrder
+    deliveryAddress?: SortOrder
+    deliveryTown?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     customerId?: SortOrder
@@ -34646,6 +35112,8 @@ export namespace Prisma {
   export type OrderAvgOrderByAggregateInput = {
     id?: SortOrder
     totalAmount?: SortOrder
+    deliveryLat?: SortOrder
+    deliveryLng?: SortOrder
     customerId?: SortOrder
   }
 
@@ -34655,6 +35123,15 @@ export namespace Prisma {
     status?: SortOrder
     paymentMethod?: SortOrder
     deliveryMethod?: SortOrder
+    paymentStatus?: SortOrder
+    gcashReference?: SortOrder
+    payerName?: SortOrder
+    payerNumber?: SortOrder
+    paidAt?: SortOrder
+    deliveryLat?: SortOrder
+    deliveryLng?: SortOrder
+    deliveryAddress?: SortOrder
+    deliveryTown?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     customerId?: SortOrder
@@ -34666,6 +35143,15 @@ export namespace Prisma {
     status?: SortOrder
     paymentMethod?: SortOrder
     deliveryMethod?: SortOrder
+    paymentStatus?: SortOrder
+    gcashReference?: SortOrder
+    payerName?: SortOrder
+    payerNumber?: SortOrder
+    paidAt?: SortOrder
+    deliveryLat?: SortOrder
+    deliveryLng?: SortOrder
+    deliveryAddress?: SortOrder
+    deliveryTown?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     customerId?: SortOrder
@@ -34674,6 +35160,8 @@ export namespace Prisma {
   export type OrderSumOrderByAggregateInput = {
     id?: SortOrder
     totalAmount?: SortOrder
+    deliveryLat?: SortOrder
+    deliveryLng?: SortOrder
     customerId?: SortOrder
   }
 
@@ -35465,6 +35953,14 @@ export namespace Prisma {
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
     set?: number | null
     increment?: number
     decrement?: number
@@ -36289,14 +36785,6 @@ export namespace Prisma {
     connect?: CropLogWhereUniqueInput | CropLogWhereUniqueInput[]
   }
 
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type UserUpdateOneRequiredWithoutPlantingsNestedInput = {
     create?: XOR<UserCreateWithoutPlantingsInput, UserUncheckedCreateWithoutPlantingsInput>
     connectOrCreate?: UserCreateOrConnectWithoutPlantingsInput
@@ -36668,6 +37156,17 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -36778,7 +37277,7 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | FloatFieldRefInput<$PrismaModel> | null
     in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
     notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
@@ -36786,7 +37285,12 @@ export namespace Prisma {
     lte?: number | FloatFieldRefInput<$PrismaModel>
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -36844,22 +37348,6 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
   export type NestedJsonFilter<$PrismaModel = never> =
     | PatchUndefined<
@@ -36945,6 +37433,15 @@ export namespace Prisma {
     status?: string
     paymentMethod?: string
     deliveryMethod?: string
+    paymentStatus?: string
+    gcashReference?: string | null
+    payerName?: string | null
+    payerNumber?: string | null
+    paidAt?: Date | string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemCreateNestedManyWithoutOrderInput
@@ -36956,6 +37453,15 @@ export namespace Prisma {
     status?: string
     paymentMethod?: string
     deliveryMethod?: string
+    paymentStatus?: string
+    gcashReference?: string | null
+    payerName?: string | null
+    payerNumber?: string | null
+    paidAt?: Date | string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
@@ -37408,6 +37914,15 @@ export namespace Prisma {
     status?: StringFilter<"Order"> | string
     paymentMethod?: StringFilter<"Order"> | string
     deliveryMethod?: StringFilter<"Order"> | string
+    paymentStatus?: StringFilter<"Order"> | string
+    gcashReference?: StringNullableFilter<"Order"> | string | null
+    payerName?: StringNullableFilter<"Order"> | string | null
+    payerNumber?: StringNullableFilter<"Order"> | string | null
+    paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    deliveryLat?: FloatNullableFilter<"Order"> | number | null
+    deliveryLng?: FloatNullableFilter<"Order"> | number | null
+    deliveryAddress?: StringNullableFilter<"Order"> | string | null
+    deliveryTown?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     customerId?: IntFilter<"Order"> | number
@@ -37803,6 +38318,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -37837,6 +38359,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -37886,6 +38415,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -37920,6 +38456,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -37953,6 +38496,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -37987,6 +38537,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -38036,6 +38593,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -38070,6 +38634,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -38103,6 +38674,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -38137,6 +38715,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -38186,6 +38771,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -38220,6 +38812,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -38253,6 +38852,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -38287,6 +38893,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -38336,6 +38949,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -38370,6 +38990,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -38474,6 +39101,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCustomerInput
@@ -38508,6 +39142,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCustomerInput
@@ -38695,6 +39336,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCustomerNestedInput
@@ -38729,6 +39377,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCustomerNestedInput
@@ -38918,6 +39573,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -38952,6 +39614,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -39096,6 +39765,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -39130,6 +39806,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -39355,6 +40038,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -39389,6 +40079,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -39461,6 +40158,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -39495,6 +40199,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -39534,6 +40245,15 @@ export namespace Prisma {
     status?: string
     paymentMethod?: string
     deliveryMethod?: string
+    paymentStatus?: string
+    gcashReference?: string | null
+    payerName?: string | null
+    payerNumber?: string | null
+    paidAt?: Date | string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     customer: UserCreateNestedOneWithoutOrdersInput
@@ -39545,6 +40265,15 @@ export namespace Prisma {
     status?: string
     paymentMethod?: string
     deliveryMethod?: string
+    paymentStatus?: string
+    gcashReference?: string | null
+    payerName?: string | null
+    payerNumber?: string | null
+    paidAt?: Date | string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     customerId: number
@@ -39621,6 +40350,15 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    gcashReference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: UserUpdateOneRequiredWithoutOrdersNestedInput
@@ -39632,6 +40370,15 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    gcashReference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerId?: IntFieldUpdateOperationsInput | number
@@ -39708,6 +40455,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -39742,6 +40496,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -39791,6 +40552,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -39825,6 +40593,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -39858,6 +40633,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -39892,6 +40674,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -39991,6 +40780,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -40025,6 +40821,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -40114,6 +40917,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -40148,6 +40958,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -40186,6 +41003,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -40220,6 +41044,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -40269,6 +41100,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -40303,6 +41141,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -40347,6 +41192,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -40381,6 +41233,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -40414,6 +41273,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -40448,6 +41314,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -40547,6 +41420,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -40581,6 +41461,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -40670,6 +41557,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -40704,6 +41598,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -40753,6 +41654,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -40787,6 +41695,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -40820,6 +41735,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -40854,6 +41776,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -40903,6 +41832,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -40937,6 +41873,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -40970,6 +41913,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductCreateNestedManyWithoutFarmerInput
@@ -41004,6 +41954,13 @@ export namespace Prisma {
     totpSecret?: string | null
     totpEnabled?: boolean
     totpLastStep?: number | null
+    gcashName?: string | null
+    gcashNumber?: string | null
+    gcashQrUrl?: string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutFarmerInput
@@ -41053,6 +42010,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutFarmerNestedInput
@@ -41087,6 +42051,13 @@ export namespace Prisma {
     totpSecret?: NullableStringFieldUpdateOperationsInput | string | null
     totpEnabled?: BoolFieldUpdateOperationsInput | boolean
     totpLastStep?: NullableIntFieldUpdateOperationsInput | number | null
+    gcashName?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutFarmerNestedInput
@@ -41130,6 +42101,15 @@ export namespace Prisma {
     status?: string
     paymentMethod?: string
     deliveryMethod?: string
+    paymentStatus?: string
+    gcashReference?: string | null
+    payerName?: string | null
+    payerNumber?: string | null
+    paidAt?: Date | string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -41330,6 +42310,15 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    gcashReference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUpdateManyWithoutOrderNestedInput
@@ -41341,6 +42330,15 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    gcashReference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
@@ -41352,6 +42350,15 @@ export namespace Prisma {
     status?: StringFieldUpdateOperationsInput | string
     paymentMethod?: StringFieldUpdateOperationsInput | string
     deliveryMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    gcashReference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

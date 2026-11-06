@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { orderSchema } from '@/validators/order'
 import { ROLES } from '@/lib/roles'
 import { isValidQuantity, unitStep } from '@/lib/units'
+import { DELIVERY_AREA_TEXT } from '@/lib/deliveryArea'
 
 export async function POST(req: NextRequest) {
   const user = await getActiveAuthUser(req)
@@ -49,6 +50,27 @@ export async function POST(req: NextRequest) {
         throw new Error('All items in an order must be from the same farmer')
       }
 
+      // GCash goes straight to the farmer, so they must have set it up.
+      if (paymentMethod === 'gcash') {
+        const farmer = await tx.user.findUnique({ where: { id: products[0].farmerId }, select: { gcashName: true, gcashNumber: true } })
+        if (!farmer?.gcashName || !farmer.gcashNumber)
+          throw new Error("GCash is unavailable: this farmer hasn't set up GCash. Choose Cash on Delivery.")
+      }
+
+      // Delivery goes to the customer's saved spot, which must be in the area.
+      let deliverTo = {}
+      if (deliveryMethod === 'delivery') {
+        const me = await tx.user.findUniqueOrThrow({
+          where: { id: user.id },
+          select: { deliveryLat: true, deliveryLng: true, deliveryAddress: true, deliveryTown: true },
+        })
+        if (me.deliveryLat === null || me.deliveryLng === null || !me.deliveryAddress)
+          throw new Error('Set your delivery location first, or choose Pickup')
+        if (!me.deliveryTown)
+          throw new Error(`Delivery is only within ${DELIVERY_AREA_TEXT}. Your saved location is outside it, so choose Pickup.`)
+        deliverTo = me
+      }
+
       const totalAmount = items.reduce((sum, item) => {
         const product = products.find(p => p.id === item.productId)!
         return sum + Number(product.price) * item.quantity
@@ -61,6 +83,7 @@ export async function POST(req: NextRequest) {
           status: 'pending',
           paymentMethod,
           deliveryMethod,
+          ...deliverTo,
           items: {
             create: items.map(item => {
               const product = products.find(p => p.id === item.productId)!
