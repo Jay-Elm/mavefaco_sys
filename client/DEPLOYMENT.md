@@ -114,7 +114,6 @@ On their next login, admins and managers must set up two-factor authentication w
 | Item | Notes |
 |---|---|
 | Every page renders per request | Required by the nonce-based Content-Security-Policy; pages aren't served from a CDN cache. Fine at the cooperative's traffic |
-| Rate limits are per server instance | In-memory, so not strict across simultaneous Vercel instances. A shared store (e.g. Upstash Redis) would fix this |
 | Messaging uses polling (8s) | Not real-time; functional for the cooperative's use |
 | No online payments | Payment method is recorded on the order; payment happens outside the system |
 

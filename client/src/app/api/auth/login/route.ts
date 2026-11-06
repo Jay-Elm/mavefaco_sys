@@ -10,7 +10,7 @@ import { issueSessionResponse } from "@/lib/session";
 export async function POST(req: Request) {
   try {
     const ip = getClientIp(req);
-    const { allowed, retryAfterSeconds } = rateLimit(`login:${ip}`, 10, 10 * 60 * 1000);
+    const { allowed, retryAfterSeconds } = await rateLimit(`login:${ip}`, 10, 10 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: "Too many login attempts. Please try again later." },

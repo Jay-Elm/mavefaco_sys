@@ -33,7 +33,7 @@ function violations(body: unknown): Violation[] {
  * rate-limited per IP and size-capped, and never stores anything.
  */
 export async function POST(req: NextRequest) {
-  const { allowed } = rateLimit(`csp-report:${getClientIp(req)}`, 30, 60 * 1000);
+  const { allowed } = await rateLimit(`csp-report:${getClientIp(req)}`, 30, 60 * 1000);
   if (!allowed) return new NextResponse(null, { status: 429 });
 
   const text = await req.text();

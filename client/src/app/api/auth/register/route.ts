@@ -9,7 +9,7 @@ import { emailHtml, sendEmail } from "@/lib/email";
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req);
-    const { allowed, retryAfterSeconds } = rateLimit(`register:${ip}`, 5, 60 * 60 * 1000);
+    const { allowed, retryAfterSeconds } = await rateLimit(`register:${ip}`, 5, 60 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: "Too many registration attempts. Please try again later." },

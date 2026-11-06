@@ -16,7 +16,7 @@ const INVALID = "This confirmation link is invalid or has expired. Request the c
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req);
-    const { allowed, retryAfterSeconds } = rateLimit(`confirm-email-change:${ip}`, 10, 60 * 60 * 1000);
+    const { allowed, retryAfterSeconds } = await rateLimit(`confirm-email-change:${ip}`, 10, 60 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: "Too many attempts. Please try again later." },

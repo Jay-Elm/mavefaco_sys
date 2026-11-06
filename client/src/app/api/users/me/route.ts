@@ -172,7 +172,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     const ip = getClientIp(req);
-    const { allowed, retryAfterSeconds } = rateLimit(`delete-account:${actor.id}:${ip}`, 5, 60 * 60 * 1000);
+    const { allowed, retryAfterSeconds } = await rateLimit(`delete-account:${actor.id}:${ip}`, 5, 60 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: "Too many attempts. Please try again later." },

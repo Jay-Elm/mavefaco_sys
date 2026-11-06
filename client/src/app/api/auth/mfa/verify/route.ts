@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     // proves the password was known, but a stolen/replayed pending token
     // shouldn't get unlimited code guesses either.
     const ip = getClientIp(req);
-    const { allowed, retryAfterSeconds } = rateLimit(`mfa-verify:${ip}:${userId}`, 10, 10 * 60 * 1000);
+    const { allowed, retryAfterSeconds } = await rateLimit(`mfa-verify:${ip}:${userId}`, 10, 10 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: "Too many attempts. Please try again later." },

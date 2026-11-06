@@ -16,7 +16,7 @@ import { rateLimit, getClientIp } from "@/lib/rateLimit";
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req);
-    const { allowed, retryAfterSeconds } = rateLimit(`mfa-setup:${ip}`, 10, 10 * 60 * 1000);
+    const { allowed, retryAfterSeconds } = await rateLimit(`mfa-setup:${ip}`, 10, 10 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: "Too many attempts. Please try again later." },

@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   if (!authorize(actor, [ROLES.FARMER, ROLES.MANAGER, ROLES.ADMIN]))
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-  const { allowed, retryAfterSeconds } = rateLimit(`upload:${actor.id}`, 20, 60 * 60 * 1000)
+  const { allowed, retryAfterSeconds } = await rateLimit(`upload:${actor.id}`, 20, 60 * 60 * 1000)
   if (!allowed) {
     return NextResponse.json(
       { error: 'Too many uploads. Please try again later.' },

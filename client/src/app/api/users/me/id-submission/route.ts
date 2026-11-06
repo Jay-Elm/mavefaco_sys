@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
   if (!actor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   if (actor.role !== ROLES.FARMER) return NextResponse.json({ error: "Only farmers verify an ID" }, { status: 403 });
 
-  const { allowed, retryAfterSeconds } = rateLimit(`id-image:${actor.id}`, 10, 60 * 60 * 1000);
+  const { allowed, retryAfterSeconds } = await rateLimit(`id-image:${actor.id}`, 10, 60 * 60 * 1000);
   if (!allowed)
     return NextResponse.json(
       { error: "Too many attempts. Please try again later." },

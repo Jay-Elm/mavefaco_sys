@@ -8,7 +8,7 @@ import { hashToken } from "@/lib/token";
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req);
-    const { allowed, retryAfterSeconds } = rateLimit(`reset-password:${ip}`, 10, 60 * 60 * 1000);
+    const { allowed, retryAfterSeconds } = await rateLimit(`reset-password:${ip}`, 10, 60 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: "Too many attempts. Please try again later." },

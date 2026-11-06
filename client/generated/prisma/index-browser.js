@@ -214,6 +214,7 @@ exports.Prisma.CropTypeScalarFieldEnum = {
   name: 'name',
   daysToHarvestMin: 'daysToHarvestMin',
   daysToHarvestMax: 'daysToHarvestMax',
+  source: 'source',
   createdAt: 'createdAt'
 };
 
@@ -380,6 +381,12 @@ exports.Prisma.AiReportScalarFieldEnum = {
   createdById: 'createdById'
 };
 
+exports.Prisma.RateLimitScalarFieldEnum = {
+  key: 'key',
+  count: 'count',
+  resetAt: 'resetAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -429,7 +436,8 @@ exports.Prisma.ModelName = {
   Notice: 'Notice',
   AuditLog: 'AuditLog',
   IdSubmission: 'IdSubmission',
-  AiReport: 'AiReport'
+  AiReport: 'AiReport',
+  RateLimit: 'RateLimit'
 };
 
 /**

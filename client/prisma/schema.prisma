@@ -206,6 +206,8 @@ model CropType {
   // Typical range of days from planting to harvest.
   daysToHarvestMin Int
   daysToHarvestMax Int
+  // Where the range comes from (e.g. a Department of Agriculture guide).
+  source           String?
   createdAt        DateTime   @default(now())
 
   plantings        Planting[]
@@ -503,4 +505,14 @@ model AiReport {
   createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
 
   @@index([createdAt])
+}
+
+// Rate-limit counters, shared by every server instance (src/lib/rateLimit.ts).
+// Written with raw SQL only, so they don't trigger live-update signals.
+model RateLimit {
+  key     String   @id
+  count   Int
+  resetAt DateTime
+
+  @@index([resetAt])
 }

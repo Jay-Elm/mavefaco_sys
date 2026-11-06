@@ -19,7 +19,7 @@ import { emailHtml, sendEmail } from "@/lib/email";
 export async function POST(req: NextRequest) {
   try {
     const ip = getClientIp(req);
-    const { allowed, retryAfterSeconds } = rateLimit(`mfa-confirm:${ip}`, 10, 10 * 60 * 1000);
+    const { allowed, retryAfterSeconds } = await rateLimit(`mfa-confirm:${ip}`, 10, 10 * 60 * 1000);
     if (!allowed) {
       return NextResponse.json(
         { error: "Too many attempts. Please try again later." },
