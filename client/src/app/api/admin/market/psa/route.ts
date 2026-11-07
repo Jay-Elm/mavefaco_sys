@@ -28,6 +28,6 @@ export async function POST(req: NextRequest) {
   const result = await syncPsaMarket();
   await prisma.auditLog.create({ data: { action: "SYNC_PSA_MARKET", entityType: "MARKET", entityId: 0, userId: user.id } });
   if (result.prices + result.production === 0 && result.errors.length)
-    return NextResponse.json({ error: "Couldn't reach PSA OpenSTAT. Try again later.", ...result }, { status: 502 });
+    return NextResponse.json({ error: `Couldn't get figures from PSA OpenSTAT: ${result.errors[0]}. Try again later.`, ...result }, { status: 502 });
   return NextResponse.json(result);
 }

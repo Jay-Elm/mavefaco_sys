@@ -39,9 +39,17 @@ export default function MarketBoard({ forStaff }: { forStaff: boolean }) {
     setSyncNote('')
     try {
       const res = await fetch('/api/admin/market/psa', { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
-      const d = await res.json()
-      if (!res.ok) { setSyncNote(d.error ?? 'Could not update PSA figures'); return }
-      setSyncNote(d.errors?.length ? `Updated ${d.prices + d.production} figures; some PSA tables didn't answer.` : `Updated ${d.prices} prices and ${d.production} production figures.`)
+      const d = await res.json().catch(() => null)
+      if (!res.ok || !d) {
+        setSyncNote(
+          d?.error ??
+            (res.status === 504
+              ? 'The update ran out of time on the server. Try again in a minute.'
+              : `Could not update PSA figures (server answered ${res.status}).`),
+        )
+        return
+      }
+      setSyncNote(d.errors?.length ? `Updated ${d.prices + d.production} figures; some PSA tables didn't answer (${d.errors[0]}).` : `Updated ${d.prices} prices and ${d.production} production figures.`)
       setReload((n) => n + 1)
     } catch {
       setSyncNote('Could not update PSA figures')

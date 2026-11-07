@@ -118,13 +118,27 @@ export function parsePsaCsv(text: string): PsaCell[] {
 
 type Fetch = typeof fetch;
 
+/** Each PSA request gives up after this long (the whole run must fit in 60 s). */
+export const PSA_TIMEOUT_MS = 15_000;
+
+const describe = (table: string, what: string, err: unknown) => {
+  if (err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError"))
+    return `PSA ${table}: ${what} took over ${PSA_TIMEOUT_MS / 1000} s`;
+  return `PSA ${table}: ${what} failed (${err instanceof Error ? err.message : String(err)})`;
+};
+
 interface PxVariable { code: string; text: string; values: string[]; valueTexts: string[] }
 
 /** Builds the PX-Web query for these commodities, our two areas and the last `years` years. */
 async function query(fetchImpl: Fetch, table: string, commodities: string[], periodFilter: (p: string) => boolean, years = 2) {
-  const meta = await fetchImpl(`${PSA_API}/${table}`, { cache: "no-store" });
-  if (!meta.ok) throw new Error(`PSA ${table}: metadata ${meta.status}`);
-  const vars = ((await meta.json()) as { variables: PxVariable[] }).variables;
+  let vars: PxVariable[];
+  try {
+    const meta = await fetchImpl(`${PSA_API}/${table}`, { cache: "no-store", signal: AbortSignal.timeout(PSA_TIMEOUT_MS) });
+    if (!meta.ok) throw new Error(`HTTP ${meta.status}`);
+    vars = ((await meta.json()) as { variables: PxVariable[] }).variables;
+  } catch (err) {
+    throw new Error(describe(table, "metadata", err));
+  }
   const pick = (v: PxVariable, keep: (text: string) => boolean) => v.values.filter((_, i) => keep(v.valueTexts[i]));
 
   const selection = vars.map((v) => {
@@ -138,14 +152,43 @@ async function query(fetchImpl: Fetch, table: string, commodities: string[], per
     return { code: v.code, selection: { filter: "item", values } };
   });
 
-  const res = await fetchImpl(`${PSA_API}/${table}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query: selection, response: { format: "csv" } }),
-    cache: "no-store",
-  });
-  if (!res.ok) throw new Error(`PSA ${table}: data ${res.status}`);
-  return parsePsaCsv(await res.text());
+  try {
+    const res = await fetchImpl(`${PSA_API}/${table}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: selection, response: { format: "csv" } }),
+      cache: "no-store",
+      signal: AbortSignal.timeout(PSA_TIMEOUT_MS),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return parsePsaCsv(await res.text());
+  } catch (err) {
+    throw new Error(describe(table, "data", err));
+  }
+}
+
+/** Saves farmgate prices in one statement (insert, or update the price). */
+async function savePrices(rows: { cropTypeId: number; area: string; year: number; month: number; value: number }[]) {
+  if (rows.length === 0) return;
+  await prisma.$executeRaw`
+    INSERT INTO "MarketPrice" ("cropTypeId", "area", "year", "month", "pricePerKg", "fetchedAt")
+    SELECT * , now() FROM unnest(
+      ${rows.map((r) => r.cropTypeId)}::int[], ${rows.map((r) => r.area)}::text[],
+      ${rows.map((r) => r.year)}::int[], ${rows.map((r) => r.month)}::int[], ${rows.map((r) => r.value)}::float8[])
+    ON CONFLICT ("cropTypeId", "area", "year", "month")
+    DO UPDATE SET "pricePerKg" = EXCLUDED."pricePerKg", "fetchedAt" = now()`;
+}
+
+/** Saves production volumes in one statement. */
+async function saveProduction(rows: { cropTypeId: number; area: string; year: number; quarter: number; value: number }[]) {
+  if (rows.length === 0) return;
+  await prisma.$executeRaw`
+    INSERT INTO "MarketProduction" ("cropTypeId", "area", "year", "quarter", "tonnes", "fetchedAt")
+    SELECT * , now() FROM unnest(
+      ${rows.map((r) => r.cropTypeId)}::int[], ${rows.map((r) => r.area)}::text[],
+      ${rows.map((r) => r.year)}::int[], ${rows.map((r) => r.quarter)}::int[], ${rows.map((r) => r.value)}::float8[])
+    ON CONFLICT ("cropTypeId", "area", "year", "quarter")
+    DO UPDATE SET "tonnes" = EXCLUDED."tonnes", "fetchedAt" = now()`;
 }
 
 /**
@@ -161,42 +204,33 @@ export async function syncPsaMarket(fetchImpl: Fetch = fetch) {
   let production = 0;
 
   const priceTables = [...new Set(known.map((c) => PSA_SERIES[c.name].priceTable))];
-  for (const table of priceTables) {
+  await Promise.all([...priceTables.map(async (table) => {
     const inTable = known.filter((c) => PSA_SERIES[c.name].priceTable === table);
     try {
       const cells = await query(fetchImpl, table, inTable.map((c) => PSA_SERIES[c.name].price), (p) => MONTHS.includes(p));
-      for (const cell of cells) {
+      const rows = cells.flatMap((cell) => {
         const crop = inTable.find((c) => PSA_SERIES[c.name].price === cell.commodity);
         const month = MONTHS.indexOf(cell.period) + 1;
-        if (!crop || month < 1) continue;
-        await prisma.marketPrice.upsert({
-          where: { cropTypeId_area_year_month: { cropTypeId: crop.id, area: cell.area, year: cell.year, month } },
-          create: { cropTypeId: crop.id, area: cell.area, year: cell.year, month, pricePerKg: cell.value },
-          update: { pricePerKg: cell.value },
-        });
-        prices++;
-      }
+        return crop && month >= 1 ? [{ cropTypeId: crop.id, area: cell.area, year: cell.year, month, value: cell.value }] : [];
+      });
+      await savePrices(rows);
+      prices += rows.length;
     } catch (err) {
       errors.push(err instanceof Error ? err.message : String(err));
     }
-  }
-
+  }), (async () => {
   try {
     const cells = await query(fetchImpl, PRODUCTION_TABLE, known.map((c) => PSA_SERIES[c.name].production), (p) => /^Quarter[1-4]$/.test(p));
-    for (const cell of cells) {
+    const rows = cells.flatMap((cell) => {
       const crop = known.find((c) => PSA_SERIES[c.name].production === cell.commodity);
-      const quarter = Number(cell.period.replace("Quarter", ""));
-      if (!crop) continue;
-      await prisma.marketProduction.upsert({
-        where: { cropTypeId_area_year_quarter: { cropTypeId: crop.id, area: cell.area, year: cell.year, quarter } },
-        create: { cropTypeId: crop.id, area: cell.area, year: cell.year, quarter, tonnes: cell.value },
-        update: { tonnes: cell.value },
-      });
-      production++;
-    }
+      return crop ? [{ cropTypeId: crop.id, area: cell.area, year: cell.year, quarter: Number(cell.period.replace("Quarter", "")), value: cell.value }] : [];
+    });
+    await saveProduction(rows);
+    production += rows.length;
   } catch (err) {
     errors.push(err instanceof Error ? err.message : String(err));
   }
+  })()]);
 
   return { prices, production, errors };
 }
