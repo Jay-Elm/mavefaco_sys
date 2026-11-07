@@ -185,6 +185,11 @@ model Product {
   categoryId    Int
   category      Category    @relation(fields: [categoryId], references: [id])
 
+  // Which crop this listing sells, so sales count toward that crop's market
+  // demand (src/lib/market.ts). Not shown to customers.
+  cropTypeId    Int?
+  cropType      CropType?   @relation(fields: [cropTypeId], references: [id], onDelete: SetNull)
+
   orderItems    OrderItem[]
   reviews       Review[]
   plantings     Planting[]
@@ -192,6 +197,7 @@ model Product {
 
   @@index([farmerId])
   @@index([categoryId])
+  @@index([cropTypeId])
   // Storefront listings: approved, not archived, newest first.
   @@index([approved, archivedAt, createdAt])
   @@index([suspendedAt])
@@ -211,6 +217,7 @@ model CropType {
   createdAt        DateTime   @default(now())
 
   plantings        Planting[]
+  products         Product[]
 }
 
 // One planting of one crop by one farmer: a season. Replanting is a new row,

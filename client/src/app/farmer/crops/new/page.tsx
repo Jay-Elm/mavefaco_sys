@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { ArrowLeft, Loader2, Sprout } from 'lucide-react'
 import { harvestWindow, todayPH } from '@/lib/planting'
+import PlantingMarketHint from '@/components/market/PlantingMarketHint'
 import { INPUT, fmtWindow, type CropType } from '@/components/cropDisplay'
 
 interface Listing { id: number; name: string }
@@ -102,6 +103,8 @@ export default function NewPlantingPage() {
           <input id="plantedOn" type="date" required max={todayPH()} value={plantedOn} onChange={(e) => setPlantedOn(e.target.value)} className={INPUT} />
           <p className="text-xs text-gray-500 mt-1">For seedlings, the day they went into the field.</p>
         </div>
+
+        {cropTypeId && <PlantingMarketHint token={token} cropTypeId={cropTypeId} />}
 
         {preview && (
           <div className="rounded-lg bg-field border border-paddy/10 px-4 py-3 text-sm text-gray-700">

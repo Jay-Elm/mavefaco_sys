@@ -20,6 +20,11 @@ export const productCreateSchema = z.object({
   unit: z.preprocess((v) => (typeof v === "string" && v.trim() ? v : "piece"), z.string().trim().max(MAX.unit, tooLong("Unit", MAX.unit))),
   categoryId: z.coerce.number().int().positive("Valid category is required"),
   imageUrl: imageUrlField,
+  // Which crop the listing sells (market demand); blank or null: none.
+  cropTypeId: z.preprocess(
+    (v) => (v === "" || v === null ? null : v),
+    z.coerce.number().int().positive("Choose a crop from the list").nullable(),
+  ).optional(),
 });
 
 export type ProductCreateInput = z.infer<typeof productCreateSchema>;
@@ -33,6 +38,11 @@ export const productUpdateSchema = z.object({
   unit: z.string().trim().min(1).max(MAX.unit, tooLong("Unit", MAX.unit)).optional(),
   categoryId: z.coerce.number().int().positive("Valid category is required").optional(),
   imageUrl: imageUrlField,
+  // Which crop the listing sells (market demand); blank or null: none.
+  cropTypeId: z.preprocess(
+    (v) => (v === "" || v === null ? null : v),
+    z.coerce.number().int().positive("Choose a crop from the list").nullable(),
+  ).optional(),
 });
 
 export type ProductUpdateInput = z.infer<typeof productUpdateSchema>;

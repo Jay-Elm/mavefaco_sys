@@ -23,9 +23,11 @@ export async function POST(req: NextRequest) {
     const parsed = productCreateSchema.safeParse(await req.json());
     if (!parsed.success)
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
-    const { name, description, price, stock, unit, categoryId, imageUrl } = parsed.data;
+    const { name, description, price, stock, unit, categoryId, imageUrl, cropTypeId } = parsed.data;
     const badStock = stockError(stock, unit);
     if (badStock) return NextResponse.json({ error: badStock }, { status: 400 });
+    if (cropTypeId && !(await prisma.cropType.findUnique({ where: { id: cropTypeId }, select: { id: true } })))
+      return NextResponse.json({ error: "Choose a crop from the list" }, { status: 400 });
 
     const product = await prisma.product.create({
       data: {
@@ -35,6 +37,7 @@ export async function POST(req: NextRequest) {
         stock,
         unit,
         categoryId,
+        cropTypeId: cropTypeId ?? null,
         imageUrl: imageUrl || null,
         farmerId: actor.id,
         approved: false,

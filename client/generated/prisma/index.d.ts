@@ -3237,10 +3237,12 @@ export namespace Prisma {
 
   export type CropTypeCountOutputType = {
     plantings: number
+    products: number
   }
 
   export type CropTypeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     plantings?: boolean | CropTypeCountOutputTypeCountPlantingsArgs
+    products?: boolean | CropTypeCountOutputTypeCountProductsArgs
   }
 
   // Custom InputTypes
@@ -3259,6 +3261,13 @@ export namespace Prisma {
    */
   export type CropTypeCountOutputTypeCountPlantingsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PlantingWhereInput
+  }
+
+  /**
+   * CropTypeCountOutputType without action
+   */
+  export type CropTypeCountOutputTypeCountProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProductWhereInput
   }
 
 
@@ -10650,6 +10659,7 @@ export namespace Prisma {
     suspendedById: number | null
     farmerId: number | null
     categoryId: number | null
+    cropTypeId: number | null
   }
 
   export type ProductSumAggregateOutputType = {
@@ -10659,6 +10669,7 @@ export namespace Prisma {
     suspendedById: number | null
     farmerId: number | null
     categoryId: number | null
+    cropTypeId: number | null
   }
 
   export type ProductMinAggregateOutputType = {
@@ -10678,6 +10689,7 @@ export namespace Prisma {
     updatedAt: Date | null
     farmerId: number | null
     categoryId: number | null
+    cropTypeId: number | null
   }
 
   export type ProductMaxAggregateOutputType = {
@@ -10697,6 +10709,7 @@ export namespace Prisma {
     updatedAt: Date | null
     farmerId: number | null
     categoryId: number | null
+    cropTypeId: number | null
   }
 
   export type ProductCountAggregateOutputType = {
@@ -10717,6 +10730,7 @@ export namespace Prisma {
     updatedAt: number
     farmerId: number
     categoryId: number
+    cropTypeId: number
     _all: number
   }
 
@@ -10728,6 +10742,7 @@ export namespace Prisma {
     suspendedById?: true
     farmerId?: true
     categoryId?: true
+    cropTypeId?: true
   }
 
   export type ProductSumAggregateInputType = {
@@ -10737,6 +10752,7 @@ export namespace Prisma {
     suspendedById?: true
     farmerId?: true
     categoryId?: true
+    cropTypeId?: true
   }
 
   export type ProductMinAggregateInputType = {
@@ -10756,6 +10772,7 @@ export namespace Prisma {
     updatedAt?: true
     farmerId?: true
     categoryId?: true
+    cropTypeId?: true
   }
 
   export type ProductMaxAggregateInputType = {
@@ -10775,6 +10792,7 @@ export namespace Prisma {
     updatedAt?: true
     farmerId?: true
     categoryId?: true
+    cropTypeId?: true
   }
 
   export type ProductCountAggregateInputType = {
@@ -10795,6 +10813,7 @@ export namespace Prisma {
     updatedAt?: true
     farmerId?: true
     categoryId?: true
+    cropTypeId?: true
     _all?: true
   }
 
@@ -10902,6 +10921,7 @@ export namespace Prisma {
     updatedAt: Date
     farmerId: number
     categoryId: number
+    cropTypeId: number | null
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -10941,8 +10961,10 @@ export namespace Prisma {
     updatedAt?: boolean
     farmerId?: boolean
     categoryId?: boolean
+    cropTypeId?: boolean
     farmer?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
+    cropType?: boolean | Product$cropTypeArgs<ExtArgs>
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
     plantings?: boolean | Product$plantingsArgs<ExtArgs>
@@ -10968,8 +10990,10 @@ export namespace Prisma {
     updatedAt?: boolean
     farmerId?: boolean
     categoryId?: boolean
+    cropTypeId?: boolean
     farmer?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
+    cropType?: boolean | Product$cropTypeArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
   export type ProductSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10990,8 +11014,10 @@ export namespace Prisma {
     updatedAt?: boolean
     farmerId?: boolean
     categoryId?: boolean
+    cropTypeId?: boolean
     farmer?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
+    cropType?: boolean | Product$cropTypeArgs<ExtArgs>
   }, ExtArgs["result"]["product"]>
 
   export type ProductSelectScalar = {
@@ -11012,12 +11038,14 @@ export namespace Prisma {
     updatedAt?: boolean
     farmerId?: boolean
     categoryId?: boolean
+    cropTypeId?: boolean
   }
 
-  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "stock" | "unit" | "imageUrl" | "approved" | "archivedAt" | "suspendedAt" | "suspensionReasons" | "suspensionNote" | "suspendedById" | "createdAt" | "updatedAt" | "farmerId" | "categoryId", ExtArgs["result"]["product"]>
+  export type ProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "price" | "stock" | "unit" | "imageUrl" | "approved" | "archivedAt" | "suspendedAt" | "suspensionReasons" | "suspensionNote" | "suspendedById" | "createdAt" | "updatedAt" | "farmerId" | "categoryId" | "cropTypeId", ExtArgs["result"]["product"]>
   export type ProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     farmer?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
+    cropType?: boolean | Product$cropTypeArgs<ExtArgs>
     orderItems?: boolean | Product$orderItemsArgs<ExtArgs>
     reviews?: boolean | Product$reviewsArgs<ExtArgs>
     plantings?: boolean | Product$plantingsArgs<ExtArgs>
@@ -11027,10 +11055,12 @@ export namespace Prisma {
   export type ProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     farmer?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
+    cropType?: boolean | Product$cropTypeArgs<ExtArgs>
   }
   export type ProductIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     farmer?: boolean | UserDefaultArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
+    cropType?: boolean | Product$cropTypeArgs<ExtArgs>
   }
 
   export type $ProductPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11038,6 +11068,7 @@ export namespace Prisma {
     objects: {
       farmer: Prisma.$UserPayload<ExtArgs>
       category: Prisma.$CategoryPayload<ExtArgs>
+      cropType: Prisma.$CropTypePayload<ExtArgs> | null
       orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
       reviews: Prisma.$ReviewPayload<ExtArgs>[]
       plantings: Prisma.$PlantingPayload<ExtArgs>[]
@@ -11061,6 +11092,7 @@ export namespace Prisma {
       updatedAt: Date
       farmerId: number
       categoryId: number
+      cropTypeId: number | null
     }, ExtArgs["result"]["product"]>
     composites: {}
   }
@@ -11457,6 +11489,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     farmer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     category<T extends CategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoryDefaultArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    cropType<T extends Product$cropTypeArgs<ExtArgs> = {}>(args?: Subset<T, Product$cropTypeArgs<ExtArgs>>): Prisma__CropTypeClient<$Result.GetResult<Prisma.$CropTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     orderItems<T extends Product$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, Product$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     reviews<T extends Product$reviewsArgs<ExtArgs> = {}>(args?: Subset<T, Product$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     plantings<T extends Product$plantingsArgs<ExtArgs> = {}>(args?: Subset<T, Product$plantingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlantingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -11507,6 +11540,7 @@ export namespace Prisma {
     readonly updatedAt: FieldRef<"Product", 'DateTime'>
     readonly farmerId: FieldRef<"Product", 'Int'>
     readonly categoryId: FieldRef<"Product", 'Int'>
+    readonly cropTypeId: FieldRef<"Product", 'Int'>
   }
     
 
@@ -11908,6 +11942,25 @@ export namespace Prisma {
   }
 
   /**
+   * Product.cropType
+   */
+  export type Product$cropTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CropType
+     */
+    select?: CropTypeSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CropType
+     */
+    omit?: CropTypeOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CropTypeInclude<ExtArgs> | null
+    where?: CropTypeWhereInput
+  }
+
+  /**
    * Product.orderItems
    */
   export type Product$orderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12237,6 +12290,7 @@ export namespace Prisma {
     source?: boolean
     createdAt?: boolean
     plantings?: boolean | CropType$plantingsArgs<ExtArgs>
+    products?: boolean | CropType$productsArgs<ExtArgs>
     _count?: boolean | CropTypeCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cropType"]>
 
@@ -12270,6 +12324,7 @@ export namespace Prisma {
   export type CropTypeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "daysToHarvestMin" | "daysToHarvestMax" | "source" | "createdAt", ExtArgs["result"]["cropType"]>
   export type CropTypeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     plantings?: boolean | CropType$plantingsArgs<ExtArgs>
+    products?: boolean | CropType$productsArgs<ExtArgs>
     _count?: boolean | CropTypeCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CropTypeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -12279,6 +12334,7 @@ export namespace Prisma {
     name: "CropType"
     objects: {
       plantings: Prisma.$PlantingPayload<ExtArgs>[]
+      products: Prisma.$ProductPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -12682,6 +12738,7 @@ export namespace Prisma {
   export interface Prisma__CropTypeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     plantings<T extends CropType$plantingsArgs<ExtArgs> = {}>(args?: Subset<T, CropType$plantingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlantingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    products<T extends CropType$productsArgs<ExtArgs> = {}>(args?: Subset<T, CropType$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13131,6 +13188,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PlantingScalarFieldEnum | PlantingScalarFieldEnum[]
+  }
+
+  /**
+   * CropType.products
+   */
+  export type CropType$productsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Product
+     */
+    select?: ProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Product
+     */
+    omit?: ProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProductInclude<ExtArgs> | null
+    where?: ProductWhereInput
+    orderBy?: ProductOrderByWithRelationInput | ProductOrderByWithRelationInput[]
+    cursor?: ProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
   }
 
   /**
@@ -31298,7 +31379,8 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     farmerId: 'farmerId',
-    categoryId: 'categoryId'
+    categoryId: 'categoryId',
+    cropTypeId: 'cropTypeId'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -32182,8 +32264,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     farmerId?: IntFilter<"Product"> | number
     categoryId?: IntFilter<"Product"> | number
+    cropTypeId?: IntNullableFilter<"Product"> | number | null
     farmer?: XOR<UserScalarRelationFilter, UserWhereInput>
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
+    cropType?: XOR<CropTypeNullableScalarRelationFilter, CropTypeWhereInput> | null
     orderItems?: OrderItemListRelationFilter
     reviews?: ReviewListRelationFilter
     plantings?: PlantingListRelationFilter
@@ -32208,8 +32292,10 @@ export namespace Prisma {
     updatedAt?: SortOrder
     farmerId?: SortOrder
     categoryId?: SortOrder
+    cropTypeId?: SortOrderInput | SortOrder
     farmer?: UserOrderByWithRelationInput
     category?: CategoryOrderByWithRelationInput
+    cropType?: CropTypeOrderByWithRelationInput
     orderItems?: OrderItemOrderByRelationAggregateInput
     reviews?: ReviewOrderByRelationAggregateInput
     plantings?: PlantingOrderByRelationAggregateInput
@@ -32237,8 +32323,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     farmerId?: IntFilter<"Product"> | number
     categoryId?: IntFilter<"Product"> | number
+    cropTypeId?: IntNullableFilter<"Product"> | number | null
     farmer?: XOR<UserScalarRelationFilter, UserWhereInput>
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
+    cropType?: XOR<CropTypeNullableScalarRelationFilter, CropTypeWhereInput> | null
     orderItems?: OrderItemListRelationFilter
     reviews?: ReviewListRelationFilter
     plantings?: PlantingListRelationFilter
@@ -32263,6 +32351,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     farmerId?: SortOrder
     categoryId?: SortOrder
+    cropTypeId?: SortOrderInput | SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -32291,6 +32380,7 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Product"> | Date | string
     farmerId?: IntWithAggregatesFilter<"Product"> | number
     categoryId?: IntWithAggregatesFilter<"Product"> | number
+    cropTypeId?: IntNullableWithAggregatesFilter<"Product"> | number | null
   }
 
   export type CropTypeWhereInput = {
@@ -32304,6 +32394,7 @@ export namespace Prisma {
     source?: StringNullableFilter<"CropType"> | string | null
     createdAt?: DateTimeFilter<"CropType"> | Date | string
     plantings?: PlantingListRelationFilter
+    products?: ProductListRelationFilter
   }
 
   export type CropTypeOrderByWithRelationInput = {
@@ -32314,6 +32405,7 @@ export namespace Prisma {
     source?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     plantings?: PlantingOrderByRelationAggregateInput
+    products?: ProductOrderByRelationAggregateInput
   }
 
   export type CropTypeWhereUniqueInput = Prisma.AtLeast<{
@@ -32327,6 +32419,7 @@ export namespace Prisma {
     source?: StringNullableFilter<"CropType"> | string | null
     createdAt?: DateTimeFilter<"CropType"> | Date | string
     plantings?: PlantingListRelationFilter
+    products?: ProductListRelationFilter
   }, "id" | "name">
 
   export type CropTypeOrderByWithAggregationInput = {
@@ -34023,6 +34116,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     farmer: UserCreateNestedOneWithoutProductsInput
     category: CategoryCreateNestedOneWithoutProductsInput
+    cropType?: CropTypeCreateNestedOneWithoutProductsInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     plantings?: PlantingCreateNestedManyWithoutProductInput
@@ -34047,6 +34141,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     farmerId: number
     categoryId: number
+    cropTypeId?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutProductInput
@@ -34070,6 +34165,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmer?: UserUpdateOneRequiredWithoutProductsNestedInput
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    cropType?: CropTypeUpdateOneWithoutProductsNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     plantings?: PlantingUpdateManyWithoutProductNestedInput
@@ -34094,6 +34190,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmerId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutProductNestedInput
@@ -34118,6 +34215,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     farmerId: number
     categoryId: number
+    cropTypeId?: number | null
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -34155,6 +34253,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmerId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type CropTypeCreateInput = {
@@ -34164,6 +34263,7 @@ export namespace Prisma {
     source?: string | null
     createdAt?: Date | string
     plantings?: PlantingCreateNestedManyWithoutCropTypeInput
+    products?: ProductCreateNestedManyWithoutCropTypeInput
   }
 
   export type CropTypeUncheckedCreateInput = {
@@ -34174,6 +34274,7 @@ export namespace Prisma {
     source?: string | null
     createdAt?: Date | string
     plantings?: PlantingUncheckedCreateNestedManyWithoutCropTypeInput
+    products?: ProductUncheckedCreateNestedManyWithoutCropTypeInput
   }
 
   export type CropTypeUpdateInput = {
@@ -34183,6 +34284,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantings?: PlantingUpdateManyWithoutCropTypeNestedInput
+    products?: ProductUpdateManyWithoutCropTypeNestedInput
   }
 
   export type CropTypeUncheckedUpdateInput = {
@@ -34193,6 +34295,7 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantings?: PlantingUncheckedUpdateManyWithoutCropTypeNestedInput
+    products?: ProductUncheckedUpdateManyWithoutCropTypeNestedInput
   }
 
   export type CropTypeCreateManyInput = {
@@ -36022,6 +36125,11 @@ export namespace Prisma {
     isNot?: CategoryWhereInput
   }
 
+  export type CropTypeNullableScalarRelationFilter = {
+    is?: CropTypeWhereInput | null
+    isNot?: CropTypeWhereInput | null
+  }
+
   export type OrderItemListRelationFilter = {
     every?: OrderItemWhereInput
     some?: OrderItemWhereInput
@@ -36050,6 +36158,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     farmerId?: SortOrder
     categoryId?: SortOrder
+    cropTypeId?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
@@ -36059,6 +36168,7 @@ export namespace Prisma {
     suspendedById?: SortOrder
     farmerId?: SortOrder
     categoryId?: SortOrder
+    cropTypeId?: SortOrder
   }
 
   export type ProductMaxOrderByAggregateInput = {
@@ -36078,6 +36188,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     farmerId?: SortOrder
     categoryId?: SortOrder
+    cropTypeId?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
@@ -36097,6 +36208,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     farmerId?: SortOrder
     categoryId?: SortOrder
+    cropTypeId?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
@@ -36106,6 +36218,7 @@ export namespace Prisma {
     suspendedById?: SortOrder
     farmerId?: SortOrder
     categoryId?: SortOrder
+    cropTypeId?: SortOrder
   }
 
   export type DecimalWithAggregatesFilter<$PrismaModel = never> = {
@@ -37755,6 +37868,12 @@ export namespace Prisma {
     connect?: CategoryWhereUniqueInput
   }
 
+  export type CropTypeCreateNestedOneWithoutProductsInput = {
+    create?: XOR<CropTypeCreateWithoutProductsInput, CropTypeUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: CropTypeCreateOrConnectWithoutProductsInput
+    connect?: CropTypeWhereUniqueInput
+  }
+
   export type OrderItemCreateNestedManyWithoutProductInput = {
     create?: XOR<OrderItemCreateWithoutProductInput, OrderItemUncheckedCreateWithoutProductInput> | OrderItemCreateWithoutProductInput[] | OrderItemUncheckedCreateWithoutProductInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutProductInput | OrderItemCreateOrConnectWithoutProductInput[]
@@ -37846,6 +37965,16 @@ export namespace Prisma {
     upsert?: CategoryUpsertWithoutProductsInput
     connect?: CategoryWhereUniqueInput
     update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutProductsInput, CategoryUpdateWithoutProductsInput>, CategoryUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type CropTypeUpdateOneWithoutProductsNestedInput = {
+    create?: XOR<CropTypeCreateWithoutProductsInput, CropTypeUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: CropTypeCreateOrConnectWithoutProductsInput
+    upsert?: CropTypeUpsertWithoutProductsInput
+    disconnect?: CropTypeWhereInput | boolean
+    delete?: CropTypeWhereInput | boolean
+    connect?: CropTypeWhereUniqueInput
+    update?: XOR<XOR<CropTypeUpdateToOneWithWhereWithoutProductsInput, CropTypeUpdateWithoutProductsInput>, CropTypeUncheckedUpdateWithoutProductsInput>
   }
 
   export type OrderItemUpdateManyWithoutProductNestedInput = {
@@ -37967,11 +38096,25 @@ export namespace Prisma {
     connect?: PlantingWhereUniqueInput | PlantingWhereUniqueInput[]
   }
 
+  export type ProductCreateNestedManyWithoutCropTypeInput = {
+    create?: XOR<ProductCreateWithoutCropTypeInput, ProductUncheckedCreateWithoutCropTypeInput> | ProductCreateWithoutCropTypeInput[] | ProductUncheckedCreateWithoutCropTypeInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutCropTypeInput | ProductCreateOrConnectWithoutCropTypeInput[]
+    createMany?: ProductCreateManyCropTypeInputEnvelope
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
   export type PlantingUncheckedCreateNestedManyWithoutCropTypeInput = {
     create?: XOR<PlantingCreateWithoutCropTypeInput, PlantingUncheckedCreateWithoutCropTypeInput> | PlantingCreateWithoutCropTypeInput[] | PlantingUncheckedCreateWithoutCropTypeInput[]
     connectOrCreate?: PlantingCreateOrConnectWithoutCropTypeInput | PlantingCreateOrConnectWithoutCropTypeInput[]
     createMany?: PlantingCreateManyCropTypeInputEnvelope
     connect?: PlantingWhereUniqueInput | PlantingWhereUniqueInput[]
+  }
+
+  export type ProductUncheckedCreateNestedManyWithoutCropTypeInput = {
+    create?: XOR<ProductCreateWithoutCropTypeInput, ProductUncheckedCreateWithoutCropTypeInput> | ProductCreateWithoutCropTypeInput[] | ProductUncheckedCreateWithoutCropTypeInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutCropTypeInput | ProductCreateOrConnectWithoutCropTypeInput[]
+    createMany?: ProductCreateManyCropTypeInputEnvelope
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
   }
 
   export type PlantingUpdateManyWithoutCropTypeNestedInput = {
@@ -37988,6 +38131,20 @@ export namespace Prisma {
     deleteMany?: PlantingScalarWhereInput | PlantingScalarWhereInput[]
   }
 
+  export type ProductUpdateManyWithoutCropTypeNestedInput = {
+    create?: XOR<ProductCreateWithoutCropTypeInput, ProductUncheckedCreateWithoutCropTypeInput> | ProductCreateWithoutCropTypeInput[] | ProductUncheckedCreateWithoutCropTypeInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutCropTypeInput | ProductCreateOrConnectWithoutCropTypeInput[]
+    upsert?: ProductUpsertWithWhereUniqueWithoutCropTypeInput | ProductUpsertWithWhereUniqueWithoutCropTypeInput[]
+    createMany?: ProductCreateManyCropTypeInputEnvelope
+    set?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    disconnect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    delete?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    update?: ProductUpdateWithWhereUniqueWithoutCropTypeInput | ProductUpdateWithWhereUniqueWithoutCropTypeInput[]
+    updateMany?: ProductUpdateManyWithWhereWithoutCropTypeInput | ProductUpdateManyWithWhereWithoutCropTypeInput[]
+    deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
   export type PlantingUncheckedUpdateManyWithoutCropTypeNestedInput = {
     create?: XOR<PlantingCreateWithoutCropTypeInput, PlantingUncheckedCreateWithoutCropTypeInput> | PlantingCreateWithoutCropTypeInput[] | PlantingUncheckedCreateWithoutCropTypeInput[]
     connectOrCreate?: PlantingCreateOrConnectWithoutCropTypeInput | PlantingCreateOrConnectWithoutCropTypeInput[]
@@ -38000,6 +38157,20 @@ export namespace Prisma {
     update?: PlantingUpdateWithWhereUniqueWithoutCropTypeInput | PlantingUpdateWithWhereUniqueWithoutCropTypeInput[]
     updateMany?: PlantingUpdateManyWithWhereWithoutCropTypeInput | PlantingUpdateManyWithWhereWithoutCropTypeInput[]
     deleteMany?: PlantingScalarWhereInput | PlantingScalarWhereInput[]
+  }
+
+  export type ProductUncheckedUpdateManyWithoutCropTypeNestedInput = {
+    create?: XOR<ProductCreateWithoutCropTypeInput, ProductUncheckedCreateWithoutCropTypeInput> | ProductCreateWithoutCropTypeInput[] | ProductUncheckedCreateWithoutCropTypeInput[]
+    connectOrCreate?: ProductCreateOrConnectWithoutCropTypeInput | ProductCreateOrConnectWithoutCropTypeInput[]
+    upsert?: ProductUpsertWithWhereUniqueWithoutCropTypeInput | ProductUpsertWithWhereUniqueWithoutCropTypeInput[]
+    createMany?: ProductCreateManyCropTypeInputEnvelope
+    set?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    disconnect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    delete?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+    update?: ProductUpdateWithWhereUniqueWithoutCropTypeInput | ProductUpdateWithWhereUniqueWithoutCropTypeInput[]
+    updateMany?: ProductUpdateManyWithWhereWithoutCropTypeInput | ProductUpdateManyWithWhereWithoutCropTypeInput[]
+    deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutPlantingsInput = {
@@ -38638,6 +38809,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutProductsInput
+    cropType?: CropTypeCreateNestedOneWithoutProductsInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     plantings?: PlantingCreateNestedManyWithoutProductInput
@@ -38661,6 +38833,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     categoryId: number
+    cropTypeId?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutProductInput
@@ -39136,6 +39309,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Product"> | Date | string
     farmerId?: IntFilter<"Product"> | number
     categoryId?: IntFilter<"Product"> | number
+    cropTypeId?: IntNullableFilter<"Product"> | number | null
   }
 
   export type OrderUpsertWithWhereUniqueWithoutCustomerInput = {
@@ -40280,6 +40454,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     farmer: UserCreateNestedOneWithoutProductsInput
+    cropType?: CropTypeCreateNestedOneWithoutProductsInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     plantings?: PlantingCreateNestedManyWithoutProductInput
@@ -40303,6 +40478,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     farmerId: number
+    cropTypeId?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutProductInput
@@ -40435,6 +40611,30 @@ export namespace Prisma {
   export type CategoryCreateOrConnectWithoutProductsInput = {
     where: CategoryWhereUniqueInput
     create: XOR<CategoryCreateWithoutProductsInput, CategoryUncheckedCreateWithoutProductsInput>
+  }
+
+  export type CropTypeCreateWithoutProductsInput = {
+    name: string
+    daysToHarvestMin: number
+    daysToHarvestMax: number
+    source?: string | null
+    createdAt?: Date | string
+    plantings?: PlantingCreateNestedManyWithoutCropTypeInput
+  }
+
+  export type CropTypeUncheckedCreateWithoutProductsInput = {
+    id?: number
+    name: string
+    daysToHarvestMin: number
+    daysToHarvestMax: number
+    source?: string | null
+    createdAt?: Date | string
+    plantings?: PlantingUncheckedCreateNestedManyWithoutCropTypeInput
+  }
+
+  export type CropTypeCreateOrConnectWithoutProductsInput = {
+    where: CropTypeWhereUniqueInput
+    create: XOR<CropTypeCreateWithoutProductsInput, CropTypeUncheckedCreateWithoutProductsInput>
   }
 
   export type OrderItemCreateWithoutProductInput = {
@@ -40673,6 +40873,36 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CropTypeUpsertWithoutProductsInput = {
+    update: XOR<CropTypeUpdateWithoutProductsInput, CropTypeUncheckedUpdateWithoutProductsInput>
+    create: XOR<CropTypeCreateWithoutProductsInput, CropTypeUncheckedCreateWithoutProductsInput>
+    where?: CropTypeWhereInput
+  }
+
+  export type CropTypeUpdateToOneWithWhereWithoutProductsInput = {
+    where?: CropTypeWhereInput
+    data: XOR<CropTypeUpdateWithoutProductsInput, CropTypeUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type CropTypeUpdateWithoutProductsInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    daysToHarvestMin?: IntFieldUpdateOperationsInput | number
+    daysToHarvestMax?: IntFieldUpdateOperationsInput | number
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    plantings?: PlantingUpdateManyWithoutCropTypeNestedInput
+  }
+
+  export type CropTypeUncheckedUpdateWithoutProductsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    daysToHarvestMin?: IntFieldUpdateOperationsInput | number
+    daysToHarvestMax?: IntFieldUpdateOperationsInput | number
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    plantings?: PlantingUncheckedUpdateManyWithoutCropTypeNestedInput
+  }
+
   export type OrderItemUpsertWithWhereUniqueWithoutProductInput = {
     where: OrderItemWhereUniqueInput
     update: XOR<OrderItemUpdateWithoutProductInput, OrderItemUncheckedUpdateWithoutProductInput>
@@ -40791,6 +41021,63 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProductCreateWithoutCropTypeInput = {
+    name: string
+    description: string
+    price: Decimal | DecimalJsLike | number | string
+    stock: number
+    unit?: string
+    imageUrl?: string | null
+    approved?: boolean
+    archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmer: UserCreateNestedOneWithoutProductsInput
+    category: CategoryCreateNestedOneWithoutProductsInput
+    orderItems?: OrderItemCreateNestedManyWithoutProductInput
+    reviews?: ReviewCreateNestedManyWithoutProductInput
+    plantings?: PlantingCreateNestedManyWithoutProductInput
+    notices?: NoticeCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutCropTypeInput = {
+    id?: number
+    name: string
+    description: string
+    price: Decimal | DecimalJsLike | number | string
+    stock: number
+    unit?: string
+    imageUrl?: string | null
+    approved?: boolean
+    archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerId: number
+    categoryId: number
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
+    plantings?: PlantingUncheckedCreateNestedManyWithoutProductInput
+    notices?: NoticeUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutCropTypeInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutCropTypeInput, ProductUncheckedCreateWithoutCropTypeInput>
+  }
+
+  export type ProductCreateManyCropTypeInputEnvelope = {
+    data: ProductCreateManyCropTypeInput | ProductCreateManyCropTypeInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PlantingUpsertWithWhereUniqueWithoutCropTypeInput = {
     where: PlantingWhereUniqueInput
     update: XOR<PlantingUpdateWithoutCropTypeInput, PlantingUncheckedUpdateWithoutCropTypeInput>
@@ -40805,6 +41092,22 @@ export namespace Prisma {
   export type PlantingUpdateManyWithWhereWithoutCropTypeInput = {
     where: PlantingScalarWhereInput
     data: XOR<PlantingUpdateManyMutationInput, PlantingUncheckedUpdateManyWithoutCropTypeInput>
+  }
+
+  export type ProductUpsertWithWhereUniqueWithoutCropTypeInput = {
+    where: ProductWhereUniqueInput
+    update: XOR<ProductUpdateWithoutCropTypeInput, ProductUncheckedUpdateWithoutCropTypeInput>
+    create: XOR<ProductCreateWithoutCropTypeInput, ProductUncheckedCreateWithoutCropTypeInput>
+  }
+
+  export type ProductUpdateWithWhereUniqueWithoutCropTypeInput = {
+    where: ProductWhereUniqueInput
+    data: XOR<ProductUpdateWithoutCropTypeInput, ProductUncheckedUpdateWithoutCropTypeInput>
+  }
+
+  export type ProductUpdateManyWithWhereWithoutCropTypeInput = {
+    where: ProductScalarWhereInput
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutCropTypeInput>
   }
 
   export type UserCreateWithoutPlantingsInput = {
@@ -40899,6 +41202,7 @@ export namespace Prisma {
     daysToHarvestMax: number
     source?: string | null
     createdAt?: Date | string
+    products?: ProductCreateNestedManyWithoutCropTypeInput
   }
 
   export type CropTypeUncheckedCreateWithoutPlantingsInput = {
@@ -40908,6 +41212,7 @@ export namespace Prisma {
     daysToHarvestMax: number
     source?: string | null
     createdAt?: Date | string
+    products?: ProductUncheckedCreateNestedManyWithoutCropTypeInput
   }
 
   export type CropTypeCreateOrConnectWithoutPlantingsInput = {
@@ -40932,6 +41237,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     farmer: UserCreateNestedOneWithoutProductsInput
     category: CategoryCreateNestedOneWithoutProductsInput
+    cropType?: CropTypeCreateNestedOneWithoutProductsInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     notices?: NoticeCreateNestedManyWithoutProductInput
@@ -40955,6 +41261,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     farmerId: number
     categoryId: number
+    cropTypeId?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     notices?: NoticeUncheckedCreateNestedManyWithoutProductInput
@@ -41099,6 +41406,7 @@ export namespace Prisma {
     daysToHarvestMax?: IntFieldUpdateOperationsInput | number
     source?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUpdateManyWithoutCropTypeNestedInput
   }
 
   export type CropTypeUncheckedUpdateWithoutPlantingsInput = {
@@ -41108,6 +41416,7 @@ export namespace Prisma {
     daysToHarvestMax?: IntFieldUpdateOperationsInput | number
     source?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    products?: ProductUncheckedUpdateManyWithoutCropTypeNestedInput
   }
 
   export type ProductUpsertWithoutPlantingsInput = {
@@ -41138,6 +41447,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmer?: UserUpdateOneRequiredWithoutProductsNestedInput
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    cropType?: CropTypeUpdateOneWithoutProductsNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     notices?: NoticeUpdateManyWithoutProductNestedInput
@@ -41161,6 +41471,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmerId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutProductNestedInput
@@ -41554,6 +41865,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     farmer: UserCreateNestedOneWithoutProductsInput
     category: CategoryCreateNestedOneWithoutProductsInput
+    cropType?: CropTypeCreateNestedOneWithoutProductsInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     plantings?: PlantingCreateNestedManyWithoutProductInput
     notices?: NoticeCreateNestedManyWithoutProductInput
@@ -41577,6 +41889,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     farmerId: number
     categoryId: number
+    cropTypeId?: number | null
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutProductInput
     notices?: NoticeUncheckedCreateNestedManyWithoutProductInput
@@ -41665,6 +41978,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmer?: UserUpdateOneRequiredWithoutProductsNestedInput
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    cropType?: CropTypeUpdateOneWithoutProductsNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     plantings?: PlantingUpdateManyWithoutProductNestedInput
     notices?: NoticeUpdateManyWithoutProductNestedInput
@@ -41688,6 +42002,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmerId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutProductNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutProductNestedInput
@@ -41974,6 +42289,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     farmer: UserCreateNestedOneWithoutProductsInput
     category: CategoryCreateNestedOneWithoutProductsInput
+    cropType?: CropTypeCreateNestedOneWithoutProductsInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     plantings?: PlantingCreateNestedManyWithoutProductInput
     notices?: NoticeCreateNestedManyWithoutProductInput
@@ -41997,6 +42313,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     farmerId: number
     categoryId: number
+    cropTypeId?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutProductInput
     notices?: NoticeUncheckedCreateNestedManyWithoutProductInput
@@ -42127,6 +42444,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmer?: UserUpdateOneRequiredWithoutProductsNestedInput
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    cropType?: CropTypeUpdateOneWithoutProductsNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     plantings?: PlantingUpdateManyWithoutProductNestedInput
     notices?: NoticeUpdateManyWithoutProductNestedInput
@@ -42150,6 +42468,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmerId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutProductNestedInput
     notices?: NoticeUncheckedUpdateManyWithoutProductNestedInput
@@ -42614,6 +42933,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     farmer: UserCreateNestedOneWithoutProductsInput
     category: CategoryCreateNestedOneWithoutProductsInput
+    cropType?: CropTypeCreateNestedOneWithoutProductsInput
     orderItems?: OrderItemCreateNestedManyWithoutProductInput
     reviews?: ReviewCreateNestedManyWithoutProductInput
     plantings?: PlantingCreateNestedManyWithoutProductInput
@@ -42637,6 +42957,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     farmerId: number
     categoryId: number
+    cropTypeId?: number | null
     orderItems?: OrderItemUncheckedCreateNestedManyWithoutProductInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutProductInput
     plantings?: PlantingUncheckedCreateNestedManyWithoutProductInput
@@ -42767,6 +43088,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmer?: UserUpdateOneRequiredWithoutProductsNestedInput
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    cropType?: CropTypeUpdateOneWithoutProductsNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     plantings?: PlantingUpdateManyWithoutProductNestedInput
@@ -42790,6 +43112,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmerId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutProductNestedInput
@@ -43346,6 +43669,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     categoryId: number
+    cropTypeId?: number | null
   }
 
   export type OrderCreateManyCustomerInput = {
@@ -43510,6 +43834,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    cropType?: CropTypeUpdateOneWithoutProductsNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     plantings?: PlantingUpdateManyWithoutProductNestedInput
@@ -43533,6 +43858,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categoryId?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutProductNestedInput
@@ -43556,6 +43882,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     categoryId?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type OrderUpdateWithoutCustomerInput = {
@@ -44003,6 +44330,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     farmerId: number
+    cropTypeId?: number | null
   }
 
   export type ProductUpdateWithoutCategoryInput = {
@@ -44021,6 +44349,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmer?: UserUpdateOneRequiredWithoutProductsNestedInput
+    cropType?: CropTypeUpdateOneWithoutProductsNestedInput
     orderItems?: OrderItemUpdateManyWithoutProductNestedInput
     reviews?: ReviewUpdateManyWithoutProductNestedInput
     plantings?: PlantingUpdateManyWithoutProductNestedInput
@@ -44044,6 +44373,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmerId?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: NullableIntFieldUpdateOperationsInput | number | null
     orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
     plantings?: PlantingUncheckedUpdateManyWithoutProductNestedInput
@@ -44067,6 +44397,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmerId?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type OrderItemCreateManyProductInput = {
@@ -44251,6 +44582,26 @@ export namespace Prisma {
     productId?: number | null
   }
 
+  export type ProductCreateManyCropTypeInput = {
+    id?: number
+    name: string
+    description: string
+    price: Decimal | DecimalJsLike | number | string
+    stock: number
+    unit?: string
+    imageUrl?: string | null
+    approved?: boolean
+    archivedAt?: Date | string | null
+    suspendedAt?: Date | string | null
+    suspensionReasons?: ProductCreatesuspensionReasonsInput | string[]
+    suspensionNote?: string | null
+    suspendedById?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    farmerId: number
+    categoryId: number
+  }
+
   export type PlantingUpdateWithoutCropTypeInput = {
     plantedOn?: DateTimeFieldUpdateOperationsInput | Date | string
     harvestStart?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44298,6 +44649,73 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmerId?: IntFieldUpdateOperationsInput | number
     productId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type ProductUpdateWithoutCropTypeInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmer?: UserUpdateOneRequiredWithoutProductsNestedInput
+    category?: CategoryUpdateOneRequiredWithoutProductsNestedInput
+    orderItems?: OrderItemUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUpdateManyWithoutProductNestedInput
+    plantings?: PlantingUpdateManyWithoutProductNestedInput
+    notices?: NoticeUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutCropTypeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerId?: IntFieldUpdateOperationsInput | number
+    categoryId?: IntFieldUpdateOperationsInput | number
+    orderItems?: OrderItemUncheckedUpdateManyWithoutProductNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutProductNestedInput
+    plantings?: PlantingUncheckedUpdateManyWithoutProductNestedInput
+    notices?: NoticeUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateManyWithoutCropTypeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    stock?: FloatFieldUpdateOperationsInput | number
+    unit?: StringFieldUpdateOperationsInput | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    approved?: BoolFieldUpdateOperationsInput | boolean
+    archivedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspendedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    suspensionReasons?: ProductUpdatesuspensionReasonsInput | string[]
+    suspensionNote?: NullableStringFieldUpdateOperationsInput | string | null
+    suspendedById?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    farmerId?: IntFieldUpdateOperationsInput | number
+    categoryId?: IntFieldUpdateOperationsInput | number
   }
 
   export type CropLogCreateManyPlantingInput = {

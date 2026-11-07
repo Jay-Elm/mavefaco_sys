@@ -72,6 +72,9 @@ export async function POST(req: NextRequest) {
       },
       include: plantingInclude,
     });
+    // A listing with no crop yet is counted under this planting's crop.
+    if (productId != null)
+      await prisma.product.updateMany({ where: { id: productId, cropTypeId: null }, data: { cropTypeId } });
     return NextResponse.json(serializePlanting(planting), { status: 201 });
   } catch {
     return NextResponse.json({ error: "Failed to record planting" }, { status: 500 });

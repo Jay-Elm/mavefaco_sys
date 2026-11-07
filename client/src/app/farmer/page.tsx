@@ -9,6 +9,7 @@ import AdvisoryList from '@/components/AdvisoryList'
 import AnnouncementBoard, { type AnnouncementItem } from '@/components/AnnouncementList'
 import type { AdvisoryGroup } from '@/lib/advisory'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
+import MarketAlertsCard from '@/components/market/MarketAlertsCard'
 
 const LOW_STOCK_THRESHOLD = 5
 /** Newest announcements shown as cards; the rest are under "View all". */
@@ -109,6 +110,8 @@ export default function FarmerOverviewPage() {
           </p>
         </div>
       </div>
+
+      <MarketAlertsCard token={token} />
 
       {/* Announcements from the cooperative, under the farm's numbers */}
       {announcements.length > 0 && (

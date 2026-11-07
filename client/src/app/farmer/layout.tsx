@@ -6,13 +6,14 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import LogoutConfirmModal from '@/components/LogoutConfirmModal'
 import { MenuDot, NavBadge, useNavBadges } from '@/components/NavBadge'
-import { Loader2, LayoutDashboard, Package, ShoppingCart, User, Sprout, MessageCircle, Menu } from 'lucide-react'
+import { Loader2, LayoutDashboard, Package, ShoppingCart, User, Sprout, MessageCircle, Menu, TrendingUp } from 'lucide-react'
 
 const NAV = [
   { href: '/farmer', label: 'Overview', icon: LayoutDashboard, exact: true },
   { href: '/farmer/products', label: 'My Products', icon: Package },
   { href: '/farmer/orders', label: 'Orders', icon: ShoppingCart },
   { href: '/farmer/crops', label: 'Crop Monitor', icon: Sprout },
+  { href: '/farmer/market', label: 'Market', icon: TrendingUp },
   { href: '/farmer/messages', label: 'Messages', icon: MessageCircle },
   { href: '/farmer/profile', label: 'Profile', icon: User },
 ]

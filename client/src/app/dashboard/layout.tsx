@@ -7,7 +7,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { MenuDot, NavBadge, useNavBadges } from '@/components/NavBadge'
 import {
   LayoutDashboard, Users, Tag, Package, ShoppingCart,
-  ScrollText, BarChart2, Megaphone, Globe, Loader2, Menu, Sprout, CalendarRange, Bug,
+  ScrollText, BarChart2, Megaphone, Globe, Loader2, Menu, Sprout, CalendarRange, Bug, TrendingUp,
 } from 'lucide-react'
 
 type NavLink = { href: string; label: string; icon: typeof LayoutDashboard; exact?: boolean; adminOnly?: boolean }
@@ -26,6 +26,7 @@ const NAV_GROUPS: { heading: string | null; links: NavLink[] }[] = [
   {
     heading: 'Crops',
     links: [
+      { href: '/dashboard/market', label: 'Market', icon: TrendingUp },
       { href: '/dashboard/supply', label: 'Supply', icon: CalendarRange },
       { href: '/dashboard/advisory', label: 'Crop Advisory', icon: Bug },
       { href: '/dashboard/crop-types', label: 'Crop Types', icon: Sprout },

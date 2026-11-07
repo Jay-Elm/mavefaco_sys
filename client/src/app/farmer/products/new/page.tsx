@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2 } from 'lucide-react'
 import ImageUploader from '@/components/ImageUploader'
+import CropTypeSelect from '@/components/CropTypeSelect'
 import SuggestionBanner from '@/components/SuggestionBanner'
 import { suggestCategory, suggestUnit } from '@/lib/productSuggestions'
 import { UNITS, numericText, unitStep } from '@/lib/units'
@@ -23,7 +24,7 @@ export default function NewProductPage() {
   const [unitSuggestionDismissed, setUnitSuggestionDismissed] = useState(false)
 
   const [form, setForm] = useState({
-    name: '', description: '', price: '', stock: '', unit: 'piece', categoryId: '', imageUrl: '',
+    name: '', description: '', price: '', stock: '', unit: 'piece', categoryId: '', imageUrl: '', cropTypeId: '',
   })
 
   useEffect(() => {
@@ -79,6 +80,7 @@ export default function NewProductPage() {
           unit: form.unit.trim() || 'piece',
           categoryId: parseInt(form.categoryId, 10),
           imageUrl: form.imageUrl.trim() || null,
+          cropTypeId: form.cropTypeId ? Number(form.cropTypeId) : null,
         }),
       })
       const data = await res.json()
@@ -166,6 +168,13 @@ export default function NewProductPage() {
             {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
+
+        <CropTypeSelect
+          token={token}
+          listingName={form.name}
+          value={form.cropTypeId}
+          onChange={(v) => setForm((prev) => ({ ...prev, cropTypeId: v }))}
+        />
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Product Photo <span className="text-gray-500">(optional)</span></label>

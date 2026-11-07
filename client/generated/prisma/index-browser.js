@@ -206,7 +206,8 @@ exports.Prisma.ProductScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   farmerId: 'farmerId',
-  categoryId: 'categoryId'
+  categoryId: 'categoryId',
+  cropTypeId: 'cropTypeId'
 };
 
 exports.Prisma.CropTypeScalarFieldEnum = {
