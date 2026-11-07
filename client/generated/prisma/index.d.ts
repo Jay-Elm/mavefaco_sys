@@ -136,6 +136,16 @@ export type AiReport = $Result.DefaultSelection<Prisma.$AiReportPayload>
  * 
  */
 export type RateLimit = $Result.DefaultSelection<Prisma.$RateLimitPayload>
+/**
+ * Model MarketPrice
+ * 
+ */
+export type MarketPrice = $Result.DefaultSelection<Prisma.$MarketPricePayload>
+/**
+ * Model MarketProduction
+ * 
+ */
+export type MarketProduction = $Result.DefaultSelection<Prisma.$MarketProductionPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -497,6 +507,26 @@ export class PrismaClient<
     * ```
     */
   get rateLimit(): Prisma.RateLimitDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.marketPrice`: Exposes CRUD operations for the **MarketPrice** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MarketPrices
+    * const marketPrices = await prisma.marketPrice.findMany()
+    * ```
+    */
+  get marketPrice(): Prisma.MarketPriceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.marketProduction`: Exposes CRUD operations for the **MarketProduction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MarketProductions
+    * const marketProductions = await prisma.marketProduction.findMany()
+    * ```
+    */
+  get marketProduction(): Prisma.MarketProductionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -967,7 +997,9 @@ export namespace Prisma {
     AuditLog: 'AuditLog',
     IdSubmission: 'IdSubmission',
     AiReport: 'AiReport',
-    RateLimit: 'RateLimit'
+    RateLimit: 'RateLimit',
+    MarketPrice: 'MarketPrice',
+    MarketProduction: 'MarketProduction'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -983,7 +1015,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "emailChangeToken" | "totpBackupCode" | "category" | "product" | "cropType" | "planting" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "conversationHide" | "notice" | "auditLog" | "idSubmission" | "aiReport" | "rateLimit"
+      modelProps: "user" | "emailVerificationToken" | "passwordResetToken" | "emailChangeToken" | "totpBackupCode" | "category" | "product" | "cropType" | "planting" | "cropLog" | "order" | "orderItem" | "announcement" | "banner" | "faq" | "siteContent" | "review" | "message" | "conversationHide" | "notice" | "auditLog" | "idSubmission" | "aiReport" | "rateLimit" | "marketPrice" | "marketProduction"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2763,6 +2795,154 @@ export namespace Prisma {
           }
         }
       }
+      MarketPrice: {
+        payload: Prisma.$MarketPricePayload<ExtArgs>
+        fields: Prisma.MarketPriceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MarketPriceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketPricePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MarketPriceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketPricePayload>
+          }
+          findFirst: {
+            args: Prisma.MarketPriceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketPricePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MarketPriceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketPricePayload>
+          }
+          findMany: {
+            args: Prisma.MarketPriceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketPricePayload>[]
+          }
+          create: {
+            args: Prisma.MarketPriceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketPricePayload>
+          }
+          createMany: {
+            args: Prisma.MarketPriceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MarketPriceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketPricePayload>[]
+          }
+          delete: {
+            args: Prisma.MarketPriceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketPricePayload>
+          }
+          update: {
+            args: Prisma.MarketPriceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketPricePayload>
+          }
+          deleteMany: {
+            args: Prisma.MarketPriceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MarketPriceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MarketPriceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketPricePayload>[]
+          }
+          upsert: {
+            args: Prisma.MarketPriceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketPricePayload>
+          }
+          aggregate: {
+            args: Prisma.MarketPriceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMarketPrice>
+          }
+          groupBy: {
+            args: Prisma.MarketPriceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MarketPriceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MarketPriceCountArgs<ExtArgs>
+            result: $Utils.Optional<MarketPriceCountAggregateOutputType> | number
+          }
+        }
+      }
+      MarketProduction: {
+        payload: Prisma.$MarketProductionPayload<ExtArgs>
+        fields: Prisma.MarketProductionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MarketProductionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketProductionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MarketProductionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketProductionPayload>
+          }
+          findFirst: {
+            args: Prisma.MarketProductionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketProductionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MarketProductionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketProductionPayload>
+          }
+          findMany: {
+            args: Prisma.MarketProductionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketProductionPayload>[]
+          }
+          create: {
+            args: Prisma.MarketProductionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketProductionPayload>
+          }
+          createMany: {
+            args: Prisma.MarketProductionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MarketProductionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketProductionPayload>[]
+          }
+          delete: {
+            args: Prisma.MarketProductionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketProductionPayload>
+          }
+          update: {
+            args: Prisma.MarketProductionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketProductionPayload>
+          }
+          deleteMany: {
+            args: Prisma.MarketProductionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MarketProductionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MarketProductionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketProductionPayload>[]
+          }
+          upsert: {
+            args: Prisma.MarketProductionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MarketProductionPayload>
+          }
+          aggregate: {
+            args: Prisma.MarketProductionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMarketProduction>
+          }
+          groupBy: {
+            args: Prisma.MarketProductionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MarketProductionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MarketProductionCountArgs<ExtArgs>
+            result: $Utils.Optional<MarketProductionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2910,6 +3090,8 @@ export namespace Prisma {
     idSubmission?: IdSubmissionOmit
     aiReport?: AiReportOmit
     rateLimit?: RateLimitOmit
+    marketPrice?: MarketPriceOmit
+    marketProduction?: MarketProductionOmit
   }
 
   /* Types for Logging */
@@ -3238,11 +3420,15 @@ export namespace Prisma {
   export type CropTypeCountOutputType = {
     plantings: number
     products: number
+    marketPrices: number
+    marketProduction: number
   }
 
   export type CropTypeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     plantings?: boolean | CropTypeCountOutputTypeCountPlantingsArgs
     products?: boolean | CropTypeCountOutputTypeCountProductsArgs
+    marketPrices?: boolean | CropTypeCountOutputTypeCountMarketPricesArgs
+    marketProduction?: boolean | CropTypeCountOutputTypeCountMarketProductionArgs
   }
 
   // Custom InputTypes
@@ -3268,6 +3454,20 @@ export namespace Prisma {
    */
   export type CropTypeCountOutputTypeCountProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProductWhereInput
+  }
+
+  /**
+   * CropTypeCountOutputType without action
+   */
+  export type CropTypeCountOutputTypeCountMarketPricesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketPriceWhereInput
+  }
+
+  /**
+   * CropTypeCountOutputType without action
+   */
+  export type CropTypeCountOutputTypeCountMarketProductionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketProductionWhereInput
   }
 
 
@@ -12291,6 +12491,8 @@ export namespace Prisma {
     createdAt?: boolean
     plantings?: boolean | CropType$plantingsArgs<ExtArgs>
     products?: boolean | CropType$productsArgs<ExtArgs>
+    marketPrices?: boolean | CropType$marketPricesArgs<ExtArgs>
+    marketProduction?: boolean | CropType$marketProductionArgs<ExtArgs>
     _count?: boolean | CropTypeCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cropType"]>
 
@@ -12325,6 +12527,8 @@ export namespace Prisma {
   export type CropTypeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     plantings?: boolean | CropType$plantingsArgs<ExtArgs>
     products?: boolean | CropType$productsArgs<ExtArgs>
+    marketPrices?: boolean | CropType$marketPricesArgs<ExtArgs>
+    marketProduction?: boolean | CropType$marketProductionArgs<ExtArgs>
     _count?: boolean | CropTypeCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type CropTypeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -12335,6 +12539,8 @@ export namespace Prisma {
     objects: {
       plantings: Prisma.$PlantingPayload<ExtArgs>[]
       products: Prisma.$ProductPayload<ExtArgs>[]
+      marketPrices: Prisma.$MarketPricePayload<ExtArgs>[]
+      marketProduction: Prisma.$MarketProductionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -12739,6 +12945,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     plantings<T extends CropType$plantingsArgs<ExtArgs> = {}>(args?: Subset<T, CropType$plantingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PlantingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     products<T extends CropType$productsArgs<ExtArgs> = {}>(args?: Subset<T, CropType$productsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    marketPrices<T extends CropType$marketPricesArgs<ExtArgs> = {}>(args?: Subset<T, CropType$marketPricesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketPricePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    marketProduction<T extends CropType$marketProductionArgs<ExtArgs> = {}>(args?: Subset<T, CropType$marketProductionArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketProductionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -13212,6 +13420,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ProductScalarFieldEnum | ProductScalarFieldEnum[]
+  }
+
+  /**
+   * CropType.marketPrices
+   */
+  export type CropType$marketPricesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceInclude<ExtArgs> | null
+    where?: MarketPriceWhereInput
+    orderBy?: MarketPriceOrderByWithRelationInput | MarketPriceOrderByWithRelationInput[]
+    cursor?: MarketPriceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MarketPriceScalarFieldEnum | MarketPriceScalarFieldEnum[]
+  }
+
+  /**
+   * CropType.marketProduction
+   */
+  export type CropType$marketProductionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionInclude<ExtArgs> | null
+    where?: MarketProductionWhereInput
+    orderBy?: MarketProductionOrderByWithRelationInput | MarketProductionOrderByWithRelationInput[]
+    cursor?: MarketProductionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MarketProductionScalarFieldEnum | MarketProductionScalarFieldEnum[]
   }
 
   /**
@@ -31262,6 +31518,2284 @@ export namespace Prisma {
 
 
   /**
+   * Model MarketPrice
+   */
+
+  export type AggregateMarketPrice = {
+    _count: MarketPriceCountAggregateOutputType | null
+    _avg: MarketPriceAvgAggregateOutputType | null
+    _sum: MarketPriceSumAggregateOutputType | null
+    _min: MarketPriceMinAggregateOutputType | null
+    _max: MarketPriceMaxAggregateOutputType | null
+  }
+
+  export type MarketPriceAvgAggregateOutputType = {
+    id: number | null
+    cropTypeId: number | null
+    year: number | null
+    month: number | null
+    pricePerKg: number | null
+  }
+
+  export type MarketPriceSumAggregateOutputType = {
+    id: number | null
+    cropTypeId: number | null
+    year: number | null
+    month: number | null
+    pricePerKg: number | null
+  }
+
+  export type MarketPriceMinAggregateOutputType = {
+    id: number | null
+    cropTypeId: number | null
+    area: string | null
+    year: number | null
+    month: number | null
+    pricePerKg: number | null
+    fetchedAt: Date | null
+  }
+
+  export type MarketPriceMaxAggregateOutputType = {
+    id: number | null
+    cropTypeId: number | null
+    area: string | null
+    year: number | null
+    month: number | null
+    pricePerKg: number | null
+    fetchedAt: Date | null
+  }
+
+  export type MarketPriceCountAggregateOutputType = {
+    id: number
+    cropTypeId: number
+    area: number
+    year: number
+    month: number
+    pricePerKg: number
+    fetchedAt: number
+    _all: number
+  }
+
+
+  export type MarketPriceAvgAggregateInputType = {
+    id?: true
+    cropTypeId?: true
+    year?: true
+    month?: true
+    pricePerKg?: true
+  }
+
+  export type MarketPriceSumAggregateInputType = {
+    id?: true
+    cropTypeId?: true
+    year?: true
+    month?: true
+    pricePerKg?: true
+  }
+
+  export type MarketPriceMinAggregateInputType = {
+    id?: true
+    cropTypeId?: true
+    area?: true
+    year?: true
+    month?: true
+    pricePerKg?: true
+    fetchedAt?: true
+  }
+
+  export type MarketPriceMaxAggregateInputType = {
+    id?: true
+    cropTypeId?: true
+    area?: true
+    year?: true
+    month?: true
+    pricePerKg?: true
+    fetchedAt?: true
+  }
+
+  export type MarketPriceCountAggregateInputType = {
+    id?: true
+    cropTypeId?: true
+    area?: true
+    year?: true
+    month?: true
+    pricePerKg?: true
+    fetchedAt?: true
+    _all?: true
+  }
+
+  export type MarketPriceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MarketPrice to aggregate.
+     */
+    where?: MarketPriceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketPrices to fetch.
+     */
+    orderBy?: MarketPriceOrderByWithRelationInput | MarketPriceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MarketPriceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketPrices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketPrices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MarketPrices
+    **/
+    _count?: true | MarketPriceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MarketPriceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MarketPriceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MarketPriceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MarketPriceMaxAggregateInputType
+  }
+
+  export type GetMarketPriceAggregateType<T extends MarketPriceAggregateArgs> = {
+        [P in keyof T & keyof AggregateMarketPrice]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMarketPrice[P]>
+      : GetScalarType<T[P], AggregateMarketPrice[P]>
+  }
+
+
+
+
+  export type MarketPriceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketPriceWhereInput
+    orderBy?: MarketPriceOrderByWithAggregationInput | MarketPriceOrderByWithAggregationInput[]
+    by: MarketPriceScalarFieldEnum[] | MarketPriceScalarFieldEnum
+    having?: MarketPriceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MarketPriceCountAggregateInputType | true
+    _avg?: MarketPriceAvgAggregateInputType
+    _sum?: MarketPriceSumAggregateInputType
+    _min?: MarketPriceMinAggregateInputType
+    _max?: MarketPriceMaxAggregateInputType
+  }
+
+  export type MarketPriceGroupByOutputType = {
+    id: number
+    cropTypeId: number
+    area: string
+    year: number
+    month: number
+    pricePerKg: number
+    fetchedAt: Date
+    _count: MarketPriceCountAggregateOutputType | null
+    _avg: MarketPriceAvgAggregateOutputType | null
+    _sum: MarketPriceSumAggregateOutputType | null
+    _min: MarketPriceMinAggregateOutputType | null
+    _max: MarketPriceMaxAggregateOutputType | null
+  }
+
+  type GetMarketPriceGroupByPayload<T extends MarketPriceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MarketPriceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MarketPriceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MarketPriceGroupByOutputType[P]>
+            : GetScalarType<T[P], MarketPriceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MarketPriceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cropTypeId?: boolean
+    area?: boolean
+    year?: boolean
+    month?: boolean
+    pricePerKg?: boolean
+    fetchedAt?: boolean
+    cropType?: boolean | CropTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketPrice"]>
+
+  export type MarketPriceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cropTypeId?: boolean
+    area?: boolean
+    year?: boolean
+    month?: boolean
+    pricePerKg?: boolean
+    fetchedAt?: boolean
+    cropType?: boolean | CropTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketPrice"]>
+
+  export type MarketPriceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cropTypeId?: boolean
+    area?: boolean
+    year?: boolean
+    month?: boolean
+    pricePerKg?: boolean
+    fetchedAt?: boolean
+    cropType?: boolean | CropTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketPrice"]>
+
+  export type MarketPriceSelectScalar = {
+    id?: boolean
+    cropTypeId?: boolean
+    area?: boolean
+    year?: boolean
+    month?: boolean
+    pricePerKg?: boolean
+    fetchedAt?: boolean
+  }
+
+  export type MarketPriceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cropTypeId" | "area" | "year" | "month" | "pricePerKg" | "fetchedAt", ExtArgs["result"]["marketPrice"]>
+  export type MarketPriceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cropType?: boolean | CropTypeDefaultArgs<ExtArgs>
+  }
+  export type MarketPriceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cropType?: boolean | CropTypeDefaultArgs<ExtArgs>
+  }
+  export type MarketPriceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cropType?: boolean | CropTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $MarketPricePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MarketPrice"
+    objects: {
+      cropType: Prisma.$CropTypePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      cropTypeId: number
+      area: string
+      year: number
+      month: number
+      pricePerKg: number
+      fetchedAt: Date
+    }, ExtArgs["result"]["marketPrice"]>
+    composites: {}
+  }
+
+  type MarketPriceGetPayload<S extends boolean | null | undefined | MarketPriceDefaultArgs> = $Result.GetResult<Prisma.$MarketPricePayload, S>
+
+  type MarketPriceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MarketPriceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MarketPriceCountAggregateInputType | true
+    }
+
+  export interface MarketPriceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MarketPrice'], meta: { name: 'MarketPrice' } }
+    /**
+     * Find zero or one MarketPrice that matches the filter.
+     * @param {MarketPriceFindUniqueArgs} args - Arguments to find a MarketPrice
+     * @example
+     * // Get one MarketPrice
+     * const marketPrice = await prisma.marketPrice.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MarketPriceFindUniqueArgs>(args: SelectSubset<T, MarketPriceFindUniqueArgs<ExtArgs>>): Prisma__MarketPriceClient<$Result.GetResult<Prisma.$MarketPricePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MarketPrice that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MarketPriceFindUniqueOrThrowArgs} args - Arguments to find a MarketPrice
+     * @example
+     * // Get one MarketPrice
+     * const marketPrice = await prisma.marketPrice.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MarketPriceFindUniqueOrThrowArgs>(args: SelectSubset<T, MarketPriceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MarketPriceClient<$Result.GetResult<Prisma.$MarketPricePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MarketPrice that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketPriceFindFirstArgs} args - Arguments to find a MarketPrice
+     * @example
+     * // Get one MarketPrice
+     * const marketPrice = await prisma.marketPrice.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MarketPriceFindFirstArgs>(args?: SelectSubset<T, MarketPriceFindFirstArgs<ExtArgs>>): Prisma__MarketPriceClient<$Result.GetResult<Prisma.$MarketPricePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MarketPrice that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketPriceFindFirstOrThrowArgs} args - Arguments to find a MarketPrice
+     * @example
+     * // Get one MarketPrice
+     * const marketPrice = await prisma.marketPrice.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MarketPriceFindFirstOrThrowArgs>(args?: SelectSubset<T, MarketPriceFindFirstOrThrowArgs<ExtArgs>>): Prisma__MarketPriceClient<$Result.GetResult<Prisma.$MarketPricePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MarketPrices that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketPriceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MarketPrices
+     * const marketPrices = await prisma.marketPrice.findMany()
+     * 
+     * // Get first 10 MarketPrices
+     * const marketPrices = await prisma.marketPrice.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const marketPriceWithIdOnly = await prisma.marketPrice.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MarketPriceFindManyArgs>(args?: SelectSubset<T, MarketPriceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketPricePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MarketPrice.
+     * @param {MarketPriceCreateArgs} args - Arguments to create a MarketPrice.
+     * @example
+     * // Create one MarketPrice
+     * const MarketPrice = await prisma.marketPrice.create({
+     *   data: {
+     *     // ... data to create a MarketPrice
+     *   }
+     * })
+     * 
+     */
+    create<T extends MarketPriceCreateArgs>(args: SelectSubset<T, MarketPriceCreateArgs<ExtArgs>>): Prisma__MarketPriceClient<$Result.GetResult<Prisma.$MarketPricePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MarketPrices.
+     * @param {MarketPriceCreateManyArgs} args - Arguments to create many MarketPrices.
+     * @example
+     * // Create many MarketPrices
+     * const marketPrice = await prisma.marketPrice.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MarketPriceCreateManyArgs>(args?: SelectSubset<T, MarketPriceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MarketPrices and returns the data saved in the database.
+     * @param {MarketPriceCreateManyAndReturnArgs} args - Arguments to create many MarketPrices.
+     * @example
+     * // Create many MarketPrices
+     * const marketPrice = await prisma.marketPrice.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MarketPrices and only return the `id`
+     * const marketPriceWithIdOnly = await prisma.marketPrice.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MarketPriceCreateManyAndReturnArgs>(args?: SelectSubset<T, MarketPriceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketPricePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MarketPrice.
+     * @param {MarketPriceDeleteArgs} args - Arguments to delete one MarketPrice.
+     * @example
+     * // Delete one MarketPrice
+     * const MarketPrice = await prisma.marketPrice.delete({
+     *   where: {
+     *     // ... filter to delete one MarketPrice
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MarketPriceDeleteArgs>(args: SelectSubset<T, MarketPriceDeleteArgs<ExtArgs>>): Prisma__MarketPriceClient<$Result.GetResult<Prisma.$MarketPricePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MarketPrice.
+     * @param {MarketPriceUpdateArgs} args - Arguments to update one MarketPrice.
+     * @example
+     * // Update one MarketPrice
+     * const marketPrice = await prisma.marketPrice.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MarketPriceUpdateArgs>(args: SelectSubset<T, MarketPriceUpdateArgs<ExtArgs>>): Prisma__MarketPriceClient<$Result.GetResult<Prisma.$MarketPricePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MarketPrices.
+     * @param {MarketPriceDeleteManyArgs} args - Arguments to filter MarketPrices to delete.
+     * @example
+     * // Delete a few MarketPrices
+     * const { count } = await prisma.marketPrice.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MarketPriceDeleteManyArgs>(args?: SelectSubset<T, MarketPriceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MarketPrices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketPriceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MarketPrices
+     * const marketPrice = await prisma.marketPrice.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MarketPriceUpdateManyArgs>(args: SelectSubset<T, MarketPriceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MarketPrices and returns the data updated in the database.
+     * @param {MarketPriceUpdateManyAndReturnArgs} args - Arguments to update many MarketPrices.
+     * @example
+     * // Update many MarketPrices
+     * const marketPrice = await prisma.marketPrice.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MarketPrices and only return the `id`
+     * const marketPriceWithIdOnly = await prisma.marketPrice.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MarketPriceUpdateManyAndReturnArgs>(args: SelectSubset<T, MarketPriceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketPricePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MarketPrice.
+     * @param {MarketPriceUpsertArgs} args - Arguments to update or create a MarketPrice.
+     * @example
+     * // Update or create a MarketPrice
+     * const marketPrice = await prisma.marketPrice.upsert({
+     *   create: {
+     *     // ... data to create a MarketPrice
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MarketPrice we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MarketPriceUpsertArgs>(args: SelectSubset<T, MarketPriceUpsertArgs<ExtArgs>>): Prisma__MarketPriceClient<$Result.GetResult<Prisma.$MarketPricePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MarketPrices.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketPriceCountArgs} args - Arguments to filter MarketPrices to count.
+     * @example
+     * // Count the number of MarketPrices
+     * const count = await prisma.marketPrice.count({
+     *   where: {
+     *     // ... the filter for the MarketPrices we want to count
+     *   }
+     * })
+    **/
+    count<T extends MarketPriceCountArgs>(
+      args?: Subset<T, MarketPriceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MarketPriceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MarketPrice.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketPriceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MarketPriceAggregateArgs>(args: Subset<T, MarketPriceAggregateArgs>): Prisma.PrismaPromise<GetMarketPriceAggregateType<T>>
+
+    /**
+     * Group by MarketPrice.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketPriceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MarketPriceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MarketPriceGroupByArgs['orderBy'] }
+        : { orderBy?: MarketPriceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MarketPriceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMarketPriceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MarketPrice model
+   */
+  readonly fields: MarketPriceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MarketPrice.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MarketPriceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cropType<T extends CropTypeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CropTypeDefaultArgs<ExtArgs>>): Prisma__CropTypeClient<$Result.GetResult<Prisma.$CropTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MarketPrice model
+   */
+  interface MarketPriceFieldRefs {
+    readonly id: FieldRef<"MarketPrice", 'Int'>
+    readonly cropTypeId: FieldRef<"MarketPrice", 'Int'>
+    readonly area: FieldRef<"MarketPrice", 'String'>
+    readonly year: FieldRef<"MarketPrice", 'Int'>
+    readonly month: FieldRef<"MarketPrice", 'Int'>
+    readonly pricePerKg: FieldRef<"MarketPrice", 'Float'>
+    readonly fetchedAt: FieldRef<"MarketPrice", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MarketPrice findUnique
+   */
+  export type MarketPriceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketPrice to fetch.
+     */
+    where: MarketPriceWhereUniqueInput
+  }
+
+  /**
+   * MarketPrice findUniqueOrThrow
+   */
+  export type MarketPriceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketPrice to fetch.
+     */
+    where: MarketPriceWhereUniqueInput
+  }
+
+  /**
+   * MarketPrice findFirst
+   */
+  export type MarketPriceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketPrice to fetch.
+     */
+    where?: MarketPriceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketPrices to fetch.
+     */
+    orderBy?: MarketPriceOrderByWithRelationInput | MarketPriceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MarketPrices.
+     */
+    cursor?: MarketPriceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketPrices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketPrices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketPrices.
+     */
+    distinct?: MarketPriceScalarFieldEnum | MarketPriceScalarFieldEnum[]
+  }
+
+  /**
+   * MarketPrice findFirstOrThrow
+   */
+  export type MarketPriceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketPrice to fetch.
+     */
+    where?: MarketPriceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketPrices to fetch.
+     */
+    orderBy?: MarketPriceOrderByWithRelationInput | MarketPriceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MarketPrices.
+     */
+    cursor?: MarketPriceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketPrices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketPrices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketPrices.
+     */
+    distinct?: MarketPriceScalarFieldEnum | MarketPriceScalarFieldEnum[]
+  }
+
+  /**
+   * MarketPrice findMany
+   */
+  export type MarketPriceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketPrices to fetch.
+     */
+    where?: MarketPriceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketPrices to fetch.
+     */
+    orderBy?: MarketPriceOrderByWithRelationInput | MarketPriceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MarketPrices.
+     */
+    cursor?: MarketPriceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketPrices from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketPrices.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketPrices.
+     */
+    distinct?: MarketPriceScalarFieldEnum | MarketPriceScalarFieldEnum[]
+  }
+
+  /**
+   * MarketPrice create
+   */
+  export type MarketPriceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MarketPrice.
+     */
+    data: XOR<MarketPriceCreateInput, MarketPriceUncheckedCreateInput>
+  }
+
+  /**
+   * MarketPrice createMany
+   */
+  export type MarketPriceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MarketPrices.
+     */
+    data: MarketPriceCreateManyInput | MarketPriceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MarketPrice createManyAndReturn
+   */
+  export type MarketPriceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * The data used to create many MarketPrices.
+     */
+    data: MarketPriceCreateManyInput | MarketPriceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MarketPrice update
+   */
+  export type MarketPriceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MarketPrice.
+     */
+    data: XOR<MarketPriceUpdateInput, MarketPriceUncheckedUpdateInput>
+    /**
+     * Choose, which MarketPrice to update.
+     */
+    where: MarketPriceWhereUniqueInput
+  }
+
+  /**
+   * MarketPrice updateMany
+   */
+  export type MarketPriceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MarketPrices.
+     */
+    data: XOR<MarketPriceUpdateManyMutationInput, MarketPriceUncheckedUpdateManyInput>
+    /**
+     * Filter which MarketPrices to update
+     */
+    where?: MarketPriceWhereInput
+    /**
+     * Limit how many MarketPrices to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MarketPrice updateManyAndReturn
+   */
+  export type MarketPriceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * The data used to update MarketPrices.
+     */
+    data: XOR<MarketPriceUpdateManyMutationInput, MarketPriceUncheckedUpdateManyInput>
+    /**
+     * Filter which MarketPrices to update
+     */
+    where?: MarketPriceWhereInput
+    /**
+     * Limit how many MarketPrices to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MarketPrice upsert
+   */
+  export type MarketPriceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MarketPrice to update in case it exists.
+     */
+    where: MarketPriceWhereUniqueInput
+    /**
+     * In case the MarketPrice found by the `where` argument doesn't exist, create a new MarketPrice with this data.
+     */
+    create: XOR<MarketPriceCreateInput, MarketPriceUncheckedCreateInput>
+    /**
+     * In case the MarketPrice was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MarketPriceUpdateInput, MarketPriceUncheckedUpdateInput>
+  }
+
+  /**
+   * MarketPrice delete
+   */
+  export type MarketPriceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceInclude<ExtArgs> | null
+    /**
+     * Filter which MarketPrice to delete.
+     */
+    where: MarketPriceWhereUniqueInput
+  }
+
+  /**
+   * MarketPrice deleteMany
+   */
+  export type MarketPriceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MarketPrices to delete
+     */
+    where?: MarketPriceWhereInput
+    /**
+     * Limit how many MarketPrices to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MarketPrice without action
+   */
+  export type MarketPriceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketPrice
+     */
+    select?: MarketPriceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketPrice
+     */
+    omit?: MarketPriceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketPriceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model MarketProduction
+   */
+
+  export type AggregateMarketProduction = {
+    _count: MarketProductionCountAggregateOutputType | null
+    _avg: MarketProductionAvgAggregateOutputType | null
+    _sum: MarketProductionSumAggregateOutputType | null
+    _min: MarketProductionMinAggregateOutputType | null
+    _max: MarketProductionMaxAggregateOutputType | null
+  }
+
+  export type MarketProductionAvgAggregateOutputType = {
+    id: number | null
+    cropTypeId: number | null
+    year: number | null
+    quarter: number | null
+    tonnes: number | null
+  }
+
+  export type MarketProductionSumAggregateOutputType = {
+    id: number | null
+    cropTypeId: number | null
+    year: number | null
+    quarter: number | null
+    tonnes: number | null
+  }
+
+  export type MarketProductionMinAggregateOutputType = {
+    id: number | null
+    cropTypeId: number | null
+    area: string | null
+    year: number | null
+    quarter: number | null
+    tonnes: number | null
+    fetchedAt: Date | null
+  }
+
+  export type MarketProductionMaxAggregateOutputType = {
+    id: number | null
+    cropTypeId: number | null
+    area: string | null
+    year: number | null
+    quarter: number | null
+    tonnes: number | null
+    fetchedAt: Date | null
+  }
+
+  export type MarketProductionCountAggregateOutputType = {
+    id: number
+    cropTypeId: number
+    area: number
+    year: number
+    quarter: number
+    tonnes: number
+    fetchedAt: number
+    _all: number
+  }
+
+
+  export type MarketProductionAvgAggregateInputType = {
+    id?: true
+    cropTypeId?: true
+    year?: true
+    quarter?: true
+    tonnes?: true
+  }
+
+  export type MarketProductionSumAggregateInputType = {
+    id?: true
+    cropTypeId?: true
+    year?: true
+    quarter?: true
+    tonnes?: true
+  }
+
+  export type MarketProductionMinAggregateInputType = {
+    id?: true
+    cropTypeId?: true
+    area?: true
+    year?: true
+    quarter?: true
+    tonnes?: true
+    fetchedAt?: true
+  }
+
+  export type MarketProductionMaxAggregateInputType = {
+    id?: true
+    cropTypeId?: true
+    area?: true
+    year?: true
+    quarter?: true
+    tonnes?: true
+    fetchedAt?: true
+  }
+
+  export type MarketProductionCountAggregateInputType = {
+    id?: true
+    cropTypeId?: true
+    area?: true
+    year?: true
+    quarter?: true
+    tonnes?: true
+    fetchedAt?: true
+    _all?: true
+  }
+
+  export type MarketProductionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MarketProduction to aggregate.
+     */
+    where?: MarketProductionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketProductions to fetch.
+     */
+    orderBy?: MarketProductionOrderByWithRelationInput | MarketProductionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MarketProductionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketProductions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketProductions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MarketProductions
+    **/
+    _count?: true | MarketProductionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MarketProductionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MarketProductionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MarketProductionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MarketProductionMaxAggregateInputType
+  }
+
+  export type GetMarketProductionAggregateType<T extends MarketProductionAggregateArgs> = {
+        [P in keyof T & keyof AggregateMarketProduction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMarketProduction[P]>
+      : GetScalarType<T[P], AggregateMarketProduction[P]>
+  }
+
+
+
+
+  export type MarketProductionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketProductionWhereInput
+    orderBy?: MarketProductionOrderByWithAggregationInput | MarketProductionOrderByWithAggregationInput[]
+    by: MarketProductionScalarFieldEnum[] | MarketProductionScalarFieldEnum
+    having?: MarketProductionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MarketProductionCountAggregateInputType | true
+    _avg?: MarketProductionAvgAggregateInputType
+    _sum?: MarketProductionSumAggregateInputType
+    _min?: MarketProductionMinAggregateInputType
+    _max?: MarketProductionMaxAggregateInputType
+  }
+
+  export type MarketProductionGroupByOutputType = {
+    id: number
+    cropTypeId: number
+    area: string
+    year: number
+    quarter: number
+    tonnes: number
+    fetchedAt: Date
+    _count: MarketProductionCountAggregateOutputType | null
+    _avg: MarketProductionAvgAggregateOutputType | null
+    _sum: MarketProductionSumAggregateOutputType | null
+    _min: MarketProductionMinAggregateOutputType | null
+    _max: MarketProductionMaxAggregateOutputType | null
+  }
+
+  type GetMarketProductionGroupByPayload<T extends MarketProductionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MarketProductionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MarketProductionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MarketProductionGroupByOutputType[P]>
+            : GetScalarType<T[P], MarketProductionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MarketProductionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cropTypeId?: boolean
+    area?: boolean
+    year?: boolean
+    quarter?: boolean
+    tonnes?: boolean
+    fetchedAt?: boolean
+    cropType?: boolean | CropTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketProduction"]>
+
+  export type MarketProductionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cropTypeId?: boolean
+    area?: boolean
+    year?: boolean
+    quarter?: boolean
+    tonnes?: boolean
+    fetchedAt?: boolean
+    cropType?: boolean | CropTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketProduction"]>
+
+  export type MarketProductionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    cropTypeId?: boolean
+    area?: boolean
+    year?: boolean
+    quarter?: boolean
+    tonnes?: boolean
+    fetchedAt?: boolean
+    cropType?: boolean | CropTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["marketProduction"]>
+
+  export type MarketProductionSelectScalar = {
+    id?: boolean
+    cropTypeId?: boolean
+    area?: boolean
+    year?: boolean
+    quarter?: boolean
+    tonnes?: boolean
+    fetchedAt?: boolean
+  }
+
+  export type MarketProductionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cropTypeId" | "area" | "year" | "quarter" | "tonnes" | "fetchedAt", ExtArgs["result"]["marketProduction"]>
+  export type MarketProductionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cropType?: boolean | CropTypeDefaultArgs<ExtArgs>
+  }
+  export type MarketProductionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cropType?: boolean | CropTypeDefaultArgs<ExtArgs>
+  }
+  export type MarketProductionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cropType?: boolean | CropTypeDefaultArgs<ExtArgs>
+  }
+
+  export type $MarketProductionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MarketProduction"
+    objects: {
+      cropType: Prisma.$CropTypePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      cropTypeId: number
+      area: string
+      year: number
+      quarter: number
+      tonnes: number
+      fetchedAt: Date
+    }, ExtArgs["result"]["marketProduction"]>
+    composites: {}
+  }
+
+  type MarketProductionGetPayload<S extends boolean | null | undefined | MarketProductionDefaultArgs> = $Result.GetResult<Prisma.$MarketProductionPayload, S>
+
+  type MarketProductionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MarketProductionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MarketProductionCountAggregateInputType | true
+    }
+
+  export interface MarketProductionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MarketProduction'], meta: { name: 'MarketProduction' } }
+    /**
+     * Find zero or one MarketProduction that matches the filter.
+     * @param {MarketProductionFindUniqueArgs} args - Arguments to find a MarketProduction
+     * @example
+     * // Get one MarketProduction
+     * const marketProduction = await prisma.marketProduction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MarketProductionFindUniqueArgs>(args: SelectSubset<T, MarketProductionFindUniqueArgs<ExtArgs>>): Prisma__MarketProductionClient<$Result.GetResult<Prisma.$MarketProductionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MarketProduction that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MarketProductionFindUniqueOrThrowArgs} args - Arguments to find a MarketProduction
+     * @example
+     * // Get one MarketProduction
+     * const marketProduction = await prisma.marketProduction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MarketProductionFindUniqueOrThrowArgs>(args: SelectSubset<T, MarketProductionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MarketProductionClient<$Result.GetResult<Prisma.$MarketProductionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MarketProduction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketProductionFindFirstArgs} args - Arguments to find a MarketProduction
+     * @example
+     * // Get one MarketProduction
+     * const marketProduction = await prisma.marketProduction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MarketProductionFindFirstArgs>(args?: SelectSubset<T, MarketProductionFindFirstArgs<ExtArgs>>): Prisma__MarketProductionClient<$Result.GetResult<Prisma.$MarketProductionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MarketProduction that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketProductionFindFirstOrThrowArgs} args - Arguments to find a MarketProduction
+     * @example
+     * // Get one MarketProduction
+     * const marketProduction = await prisma.marketProduction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MarketProductionFindFirstOrThrowArgs>(args?: SelectSubset<T, MarketProductionFindFirstOrThrowArgs<ExtArgs>>): Prisma__MarketProductionClient<$Result.GetResult<Prisma.$MarketProductionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MarketProductions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketProductionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MarketProductions
+     * const marketProductions = await prisma.marketProduction.findMany()
+     * 
+     * // Get first 10 MarketProductions
+     * const marketProductions = await prisma.marketProduction.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const marketProductionWithIdOnly = await prisma.marketProduction.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MarketProductionFindManyArgs>(args?: SelectSubset<T, MarketProductionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketProductionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MarketProduction.
+     * @param {MarketProductionCreateArgs} args - Arguments to create a MarketProduction.
+     * @example
+     * // Create one MarketProduction
+     * const MarketProduction = await prisma.marketProduction.create({
+     *   data: {
+     *     // ... data to create a MarketProduction
+     *   }
+     * })
+     * 
+     */
+    create<T extends MarketProductionCreateArgs>(args: SelectSubset<T, MarketProductionCreateArgs<ExtArgs>>): Prisma__MarketProductionClient<$Result.GetResult<Prisma.$MarketProductionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MarketProductions.
+     * @param {MarketProductionCreateManyArgs} args - Arguments to create many MarketProductions.
+     * @example
+     * // Create many MarketProductions
+     * const marketProduction = await prisma.marketProduction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MarketProductionCreateManyArgs>(args?: SelectSubset<T, MarketProductionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MarketProductions and returns the data saved in the database.
+     * @param {MarketProductionCreateManyAndReturnArgs} args - Arguments to create many MarketProductions.
+     * @example
+     * // Create many MarketProductions
+     * const marketProduction = await prisma.marketProduction.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MarketProductions and only return the `id`
+     * const marketProductionWithIdOnly = await prisma.marketProduction.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MarketProductionCreateManyAndReturnArgs>(args?: SelectSubset<T, MarketProductionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketProductionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MarketProduction.
+     * @param {MarketProductionDeleteArgs} args - Arguments to delete one MarketProduction.
+     * @example
+     * // Delete one MarketProduction
+     * const MarketProduction = await prisma.marketProduction.delete({
+     *   where: {
+     *     // ... filter to delete one MarketProduction
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MarketProductionDeleteArgs>(args: SelectSubset<T, MarketProductionDeleteArgs<ExtArgs>>): Prisma__MarketProductionClient<$Result.GetResult<Prisma.$MarketProductionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MarketProduction.
+     * @param {MarketProductionUpdateArgs} args - Arguments to update one MarketProduction.
+     * @example
+     * // Update one MarketProduction
+     * const marketProduction = await prisma.marketProduction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MarketProductionUpdateArgs>(args: SelectSubset<T, MarketProductionUpdateArgs<ExtArgs>>): Prisma__MarketProductionClient<$Result.GetResult<Prisma.$MarketProductionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MarketProductions.
+     * @param {MarketProductionDeleteManyArgs} args - Arguments to filter MarketProductions to delete.
+     * @example
+     * // Delete a few MarketProductions
+     * const { count } = await prisma.marketProduction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MarketProductionDeleteManyArgs>(args?: SelectSubset<T, MarketProductionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MarketProductions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketProductionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MarketProductions
+     * const marketProduction = await prisma.marketProduction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MarketProductionUpdateManyArgs>(args: SelectSubset<T, MarketProductionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MarketProductions and returns the data updated in the database.
+     * @param {MarketProductionUpdateManyAndReturnArgs} args - Arguments to update many MarketProductions.
+     * @example
+     * // Update many MarketProductions
+     * const marketProduction = await prisma.marketProduction.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MarketProductions and only return the `id`
+     * const marketProductionWithIdOnly = await prisma.marketProduction.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MarketProductionUpdateManyAndReturnArgs>(args: SelectSubset<T, MarketProductionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketProductionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MarketProduction.
+     * @param {MarketProductionUpsertArgs} args - Arguments to update or create a MarketProduction.
+     * @example
+     * // Update or create a MarketProduction
+     * const marketProduction = await prisma.marketProduction.upsert({
+     *   create: {
+     *     // ... data to create a MarketProduction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MarketProduction we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MarketProductionUpsertArgs>(args: SelectSubset<T, MarketProductionUpsertArgs<ExtArgs>>): Prisma__MarketProductionClient<$Result.GetResult<Prisma.$MarketProductionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MarketProductions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketProductionCountArgs} args - Arguments to filter MarketProductions to count.
+     * @example
+     * // Count the number of MarketProductions
+     * const count = await prisma.marketProduction.count({
+     *   where: {
+     *     // ... the filter for the MarketProductions we want to count
+     *   }
+     * })
+    **/
+    count<T extends MarketProductionCountArgs>(
+      args?: Subset<T, MarketProductionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MarketProductionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MarketProduction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketProductionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MarketProductionAggregateArgs>(args: Subset<T, MarketProductionAggregateArgs>): Prisma.PrismaPromise<GetMarketProductionAggregateType<T>>
+
+    /**
+     * Group by MarketProduction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MarketProductionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MarketProductionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MarketProductionGroupByArgs['orderBy'] }
+        : { orderBy?: MarketProductionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MarketProductionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMarketProductionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MarketProduction model
+   */
+  readonly fields: MarketProductionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MarketProduction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MarketProductionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cropType<T extends CropTypeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CropTypeDefaultArgs<ExtArgs>>): Prisma__CropTypeClient<$Result.GetResult<Prisma.$CropTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MarketProduction model
+   */
+  interface MarketProductionFieldRefs {
+    readonly id: FieldRef<"MarketProduction", 'Int'>
+    readonly cropTypeId: FieldRef<"MarketProduction", 'Int'>
+    readonly area: FieldRef<"MarketProduction", 'String'>
+    readonly year: FieldRef<"MarketProduction", 'Int'>
+    readonly quarter: FieldRef<"MarketProduction", 'Int'>
+    readonly tonnes: FieldRef<"MarketProduction", 'Float'>
+    readonly fetchedAt: FieldRef<"MarketProduction", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MarketProduction findUnique
+   */
+  export type MarketProductionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketProduction to fetch.
+     */
+    where: MarketProductionWhereUniqueInput
+  }
+
+  /**
+   * MarketProduction findUniqueOrThrow
+   */
+  export type MarketProductionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketProduction to fetch.
+     */
+    where: MarketProductionWhereUniqueInput
+  }
+
+  /**
+   * MarketProduction findFirst
+   */
+  export type MarketProductionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketProduction to fetch.
+     */
+    where?: MarketProductionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketProductions to fetch.
+     */
+    orderBy?: MarketProductionOrderByWithRelationInput | MarketProductionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MarketProductions.
+     */
+    cursor?: MarketProductionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketProductions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketProductions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketProductions.
+     */
+    distinct?: MarketProductionScalarFieldEnum | MarketProductionScalarFieldEnum[]
+  }
+
+  /**
+   * MarketProduction findFirstOrThrow
+   */
+  export type MarketProductionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketProduction to fetch.
+     */
+    where?: MarketProductionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketProductions to fetch.
+     */
+    orderBy?: MarketProductionOrderByWithRelationInput | MarketProductionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MarketProductions.
+     */
+    cursor?: MarketProductionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketProductions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketProductions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketProductions.
+     */
+    distinct?: MarketProductionScalarFieldEnum | MarketProductionScalarFieldEnum[]
+  }
+
+  /**
+   * MarketProduction findMany
+   */
+  export type MarketProductionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionInclude<ExtArgs> | null
+    /**
+     * Filter, which MarketProductions to fetch.
+     */
+    where?: MarketProductionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MarketProductions to fetch.
+     */
+    orderBy?: MarketProductionOrderByWithRelationInput | MarketProductionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MarketProductions.
+     */
+    cursor?: MarketProductionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MarketProductions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MarketProductions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MarketProductions.
+     */
+    distinct?: MarketProductionScalarFieldEnum | MarketProductionScalarFieldEnum[]
+  }
+
+  /**
+   * MarketProduction create
+   */
+  export type MarketProductionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MarketProduction.
+     */
+    data: XOR<MarketProductionCreateInput, MarketProductionUncheckedCreateInput>
+  }
+
+  /**
+   * MarketProduction createMany
+   */
+  export type MarketProductionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MarketProductions.
+     */
+    data: MarketProductionCreateManyInput | MarketProductionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MarketProduction createManyAndReturn
+   */
+  export type MarketProductionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * The data used to create many MarketProductions.
+     */
+    data: MarketProductionCreateManyInput | MarketProductionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MarketProduction update
+   */
+  export type MarketProductionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MarketProduction.
+     */
+    data: XOR<MarketProductionUpdateInput, MarketProductionUncheckedUpdateInput>
+    /**
+     * Choose, which MarketProduction to update.
+     */
+    where: MarketProductionWhereUniqueInput
+  }
+
+  /**
+   * MarketProduction updateMany
+   */
+  export type MarketProductionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MarketProductions.
+     */
+    data: XOR<MarketProductionUpdateManyMutationInput, MarketProductionUncheckedUpdateManyInput>
+    /**
+     * Filter which MarketProductions to update
+     */
+    where?: MarketProductionWhereInput
+    /**
+     * Limit how many MarketProductions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MarketProduction updateManyAndReturn
+   */
+  export type MarketProductionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * The data used to update MarketProductions.
+     */
+    data: XOR<MarketProductionUpdateManyMutationInput, MarketProductionUncheckedUpdateManyInput>
+    /**
+     * Filter which MarketProductions to update
+     */
+    where?: MarketProductionWhereInput
+    /**
+     * Limit how many MarketProductions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MarketProduction upsert
+   */
+  export type MarketProductionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MarketProduction to update in case it exists.
+     */
+    where: MarketProductionWhereUniqueInput
+    /**
+     * In case the MarketProduction found by the `where` argument doesn't exist, create a new MarketProduction with this data.
+     */
+    create: XOR<MarketProductionCreateInput, MarketProductionUncheckedCreateInput>
+    /**
+     * In case the MarketProduction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MarketProductionUpdateInput, MarketProductionUncheckedUpdateInput>
+  }
+
+  /**
+   * MarketProduction delete
+   */
+  export type MarketProductionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionInclude<ExtArgs> | null
+    /**
+     * Filter which MarketProduction to delete.
+     */
+    where: MarketProductionWhereUniqueInput
+  }
+
+  /**
+   * MarketProduction deleteMany
+   */
+  export type MarketProductionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MarketProductions to delete
+     */
+    where?: MarketProductionWhereInput
+    /**
+     * Limit how many MarketProductions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MarketProduction without action
+   */
+  export type MarketProductionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketProduction
+     */
+    select?: MarketProductionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketProduction
+     */
+    omit?: MarketProductionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketProductionInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -31613,6 +34147,32 @@ export namespace Prisma {
   };
 
   export type RateLimitScalarFieldEnum = (typeof RateLimitScalarFieldEnum)[keyof typeof RateLimitScalarFieldEnum]
+
+
+  export const MarketPriceScalarFieldEnum: {
+    id: 'id',
+    cropTypeId: 'cropTypeId',
+    area: 'area',
+    year: 'year',
+    month: 'month',
+    pricePerKg: 'pricePerKg',
+    fetchedAt: 'fetchedAt'
+  };
+
+  export type MarketPriceScalarFieldEnum = (typeof MarketPriceScalarFieldEnum)[keyof typeof MarketPriceScalarFieldEnum]
+
+
+  export const MarketProductionScalarFieldEnum: {
+    id: 'id',
+    cropTypeId: 'cropTypeId',
+    area: 'area',
+    year: 'year',
+    quarter: 'quarter',
+    tonnes: 'tonnes',
+    fetchedAt: 'fetchedAt'
+  };
+
+  export type MarketProductionScalarFieldEnum = (typeof MarketProductionScalarFieldEnum)[keyof typeof MarketProductionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -32395,6 +34955,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"CropType"> | Date | string
     plantings?: PlantingListRelationFilter
     products?: ProductListRelationFilter
+    marketPrices?: MarketPriceListRelationFilter
+    marketProduction?: MarketProductionListRelationFilter
   }
 
   export type CropTypeOrderByWithRelationInput = {
@@ -32406,6 +34968,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     plantings?: PlantingOrderByRelationAggregateInput
     products?: ProductOrderByRelationAggregateInput
+    marketPrices?: MarketPriceOrderByRelationAggregateInput
+    marketProduction?: MarketProductionOrderByRelationAggregateInput
   }
 
   export type CropTypeWhereUniqueInput = Prisma.AtLeast<{
@@ -32420,6 +34984,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"CropType"> | Date | string
     plantings?: PlantingListRelationFilter
     products?: ProductListRelationFilter
+    marketPrices?: MarketPriceListRelationFilter
+    marketProduction?: MarketProductionListRelationFilter
   }, "id" | "name">
 
   export type CropTypeOrderByWithAggregationInput = {
@@ -33574,6 +36140,142 @@ export namespace Prisma {
     resetAt?: DateTimeWithAggregatesFilter<"RateLimit"> | Date | string
   }
 
+  export type MarketPriceWhereInput = {
+    AND?: MarketPriceWhereInput | MarketPriceWhereInput[]
+    OR?: MarketPriceWhereInput[]
+    NOT?: MarketPriceWhereInput | MarketPriceWhereInput[]
+    id?: IntFilter<"MarketPrice"> | number
+    cropTypeId?: IntFilter<"MarketPrice"> | number
+    area?: StringFilter<"MarketPrice"> | string
+    year?: IntFilter<"MarketPrice"> | number
+    month?: IntFilter<"MarketPrice"> | number
+    pricePerKg?: FloatFilter<"MarketPrice"> | number
+    fetchedAt?: DateTimeFilter<"MarketPrice"> | Date | string
+    cropType?: XOR<CropTypeScalarRelationFilter, CropTypeWhereInput>
+  }
+
+  export type MarketPriceOrderByWithRelationInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    area?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    pricePerKg?: SortOrder
+    fetchedAt?: SortOrder
+    cropType?: CropTypeOrderByWithRelationInput
+  }
+
+  export type MarketPriceWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    cropTypeId_area_year_month?: MarketPriceCropTypeIdAreaYearMonthCompoundUniqueInput
+    AND?: MarketPriceWhereInput | MarketPriceWhereInput[]
+    OR?: MarketPriceWhereInput[]
+    NOT?: MarketPriceWhereInput | MarketPriceWhereInput[]
+    cropTypeId?: IntFilter<"MarketPrice"> | number
+    area?: StringFilter<"MarketPrice"> | string
+    year?: IntFilter<"MarketPrice"> | number
+    month?: IntFilter<"MarketPrice"> | number
+    pricePerKg?: FloatFilter<"MarketPrice"> | number
+    fetchedAt?: DateTimeFilter<"MarketPrice"> | Date | string
+    cropType?: XOR<CropTypeScalarRelationFilter, CropTypeWhereInput>
+  }, "id" | "cropTypeId_area_year_month">
+
+  export type MarketPriceOrderByWithAggregationInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    area?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    pricePerKg?: SortOrder
+    fetchedAt?: SortOrder
+    _count?: MarketPriceCountOrderByAggregateInput
+    _avg?: MarketPriceAvgOrderByAggregateInput
+    _max?: MarketPriceMaxOrderByAggregateInput
+    _min?: MarketPriceMinOrderByAggregateInput
+    _sum?: MarketPriceSumOrderByAggregateInput
+  }
+
+  export type MarketPriceScalarWhereWithAggregatesInput = {
+    AND?: MarketPriceScalarWhereWithAggregatesInput | MarketPriceScalarWhereWithAggregatesInput[]
+    OR?: MarketPriceScalarWhereWithAggregatesInput[]
+    NOT?: MarketPriceScalarWhereWithAggregatesInput | MarketPriceScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"MarketPrice"> | number
+    cropTypeId?: IntWithAggregatesFilter<"MarketPrice"> | number
+    area?: StringWithAggregatesFilter<"MarketPrice"> | string
+    year?: IntWithAggregatesFilter<"MarketPrice"> | number
+    month?: IntWithAggregatesFilter<"MarketPrice"> | number
+    pricePerKg?: FloatWithAggregatesFilter<"MarketPrice"> | number
+    fetchedAt?: DateTimeWithAggregatesFilter<"MarketPrice"> | Date | string
+  }
+
+  export type MarketProductionWhereInput = {
+    AND?: MarketProductionWhereInput | MarketProductionWhereInput[]
+    OR?: MarketProductionWhereInput[]
+    NOT?: MarketProductionWhereInput | MarketProductionWhereInput[]
+    id?: IntFilter<"MarketProduction"> | number
+    cropTypeId?: IntFilter<"MarketProduction"> | number
+    area?: StringFilter<"MarketProduction"> | string
+    year?: IntFilter<"MarketProduction"> | number
+    quarter?: IntFilter<"MarketProduction"> | number
+    tonnes?: FloatFilter<"MarketProduction"> | number
+    fetchedAt?: DateTimeFilter<"MarketProduction"> | Date | string
+    cropType?: XOR<CropTypeScalarRelationFilter, CropTypeWhereInput>
+  }
+
+  export type MarketProductionOrderByWithRelationInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    area?: SortOrder
+    year?: SortOrder
+    quarter?: SortOrder
+    tonnes?: SortOrder
+    fetchedAt?: SortOrder
+    cropType?: CropTypeOrderByWithRelationInput
+  }
+
+  export type MarketProductionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    cropTypeId_area_year_quarter?: MarketProductionCropTypeIdAreaYearQuarterCompoundUniqueInput
+    AND?: MarketProductionWhereInput | MarketProductionWhereInput[]
+    OR?: MarketProductionWhereInput[]
+    NOT?: MarketProductionWhereInput | MarketProductionWhereInput[]
+    cropTypeId?: IntFilter<"MarketProduction"> | number
+    area?: StringFilter<"MarketProduction"> | string
+    year?: IntFilter<"MarketProduction"> | number
+    quarter?: IntFilter<"MarketProduction"> | number
+    tonnes?: FloatFilter<"MarketProduction"> | number
+    fetchedAt?: DateTimeFilter<"MarketProduction"> | Date | string
+    cropType?: XOR<CropTypeScalarRelationFilter, CropTypeWhereInput>
+  }, "id" | "cropTypeId_area_year_quarter">
+
+  export type MarketProductionOrderByWithAggregationInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    area?: SortOrder
+    year?: SortOrder
+    quarter?: SortOrder
+    tonnes?: SortOrder
+    fetchedAt?: SortOrder
+    _count?: MarketProductionCountOrderByAggregateInput
+    _avg?: MarketProductionAvgOrderByAggregateInput
+    _max?: MarketProductionMaxOrderByAggregateInput
+    _min?: MarketProductionMinOrderByAggregateInput
+    _sum?: MarketProductionSumOrderByAggregateInput
+  }
+
+  export type MarketProductionScalarWhereWithAggregatesInput = {
+    AND?: MarketProductionScalarWhereWithAggregatesInput | MarketProductionScalarWhereWithAggregatesInput[]
+    OR?: MarketProductionScalarWhereWithAggregatesInput[]
+    NOT?: MarketProductionScalarWhereWithAggregatesInput | MarketProductionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"MarketProduction"> | number
+    cropTypeId?: IntWithAggregatesFilter<"MarketProduction"> | number
+    area?: StringWithAggregatesFilter<"MarketProduction"> | string
+    year?: IntWithAggregatesFilter<"MarketProduction"> | number
+    quarter?: IntWithAggregatesFilter<"MarketProduction"> | number
+    tonnes?: FloatWithAggregatesFilter<"MarketProduction"> | number
+    fetchedAt?: DateTimeWithAggregatesFilter<"MarketProduction"> | Date | string
+  }
+
   export type UserCreateInput = {
     name: string
     email: string
@@ -34264,6 +36966,8 @@ export namespace Prisma {
     createdAt?: Date | string
     plantings?: PlantingCreateNestedManyWithoutCropTypeInput
     products?: ProductCreateNestedManyWithoutCropTypeInput
+    marketPrices?: MarketPriceCreateNestedManyWithoutCropTypeInput
+    marketProduction?: MarketProductionCreateNestedManyWithoutCropTypeInput
   }
 
   export type CropTypeUncheckedCreateInput = {
@@ -34275,6 +36979,8 @@ export namespace Prisma {
     createdAt?: Date | string
     plantings?: PlantingUncheckedCreateNestedManyWithoutCropTypeInput
     products?: ProductUncheckedCreateNestedManyWithoutCropTypeInput
+    marketPrices?: MarketPriceUncheckedCreateNestedManyWithoutCropTypeInput
+    marketProduction?: MarketProductionUncheckedCreateNestedManyWithoutCropTypeInput
   }
 
   export type CropTypeUpdateInput = {
@@ -34285,6 +36991,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantings?: PlantingUpdateManyWithoutCropTypeNestedInput
     products?: ProductUpdateManyWithoutCropTypeNestedInput
+    marketPrices?: MarketPriceUpdateManyWithoutCropTypeNestedInput
+    marketProduction?: MarketProductionUpdateManyWithoutCropTypeNestedInput
   }
 
   export type CropTypeUncheckedUpdateInput = {
@@ -34296,6 +37004,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantings?: PlantingUncheckedUpdateManyWithoutCropTypeNestedInput
     products?: ProductUncheckedUpdateManyWithoutCropTypeNestedInput
+    marketPrices?: MarketPriceUncheckedUpdateManyWithoutCropTypeNestedInput
+    marketProduction?: MarketProductionUncheckedUpdateManyWithoutCropTypeNestedInput
   }
 
   export type CropTypeCreateManyInput = {
@@ -35459,6 +38169,138 @@ export namespace Prisma {
     resetAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MarketPriceCreateInput = {
+    area: string
+    year: number
+    month: number
+    pricePerKg: number
+    fetchedAt?: Date | string
+    cropType: CropTypeCreateNestedOneWithoutMarketPricesInput
+  }
+
+  export type MarketPriceUncheckedCreateInput = {
+    id?: number
+    cropTypeId: number
+    area: string
+    year: number
+    month: number
+    pricePerKg: number
+    fetchedAt?: Date | string
+  }
+
+  export type MarketPriceUpdateInput = {
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    pricePerKg?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cropType?: CropTypeUpdateOneRequiredWithoutMarketPricesNestedInput
+  }
+
+  export type MarketPriceUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: IntFieldUpdateOperationsInput | number
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    pricePerKg?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketPriceCreateManyInput = {
+    id?: number
+    cropTypeId: number
+    area: string
+    year: number
+    month: number
+    pricePerKg: number
+    fetchedAt?: Date | string
+  }
+
+  export type MarketPriceUpdateManyMutationInput = {
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    pricePerKg?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketPriceUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: IntFieldUpdateOperationsInput | number
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    pricePerKg?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketProductionCreateInput = {
+    area: string
+    year: number
+    quarter: number
+    tonnes: number
+    fetchedAt?: Date | string
+    cropType: CropTypeCreateNestedOneWithoutMarketProductionInput
+  }
+
+  export type MarketProductionUncheckedCreateInput = {
+    id?: number
+    cropTypeId: number
+    area: string
+    year: number
+    quarter: number
+    tonnes: number
+    fetchedAt?: Date | string
+  }
+
+  export type MarketProductionUpdateInput = {
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    quarter?: IntFieldUpdateOperationsInput | number
+    tonnes?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cropType?: CropTypeUpdateOneRequiredWithoutMarketProductionNestedInput
+  }
+
+  export type MarketProductionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: IntFieldUpdateOperationsInput | number
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    quarter?: IntFieldUpdateOperationsInput | number
+    tonnes?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketProductionCreateManyInput = {
+    id?: number
+    cropTypeId: number
+    area: string
+    year: number
+    quarter: number
+    tonnes: number
+    fetchedAt?: Date | string
+  }
+
+  export type MarketProductionUpdateManyMutationInput = {
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    quarter?: IntFieldUpdateOperationsInput | number
+    tonnes?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketProductionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    cropTypeId?: IntFieldUpdateOperationsInput | number
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    quarter?: IntFieldUpdateOperationsInput | number
+    tonnes?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -36251,6 +39093,26 @@ export namespace Prisma {
     _sum?: NestedFloatFilter<$PrismaModel>
     _min?: NestedFloatFilter<$PrismaModel>
     _max?: NestedFloatFilter<$PrismaModel>
+  }
+
+  export type MarketPriceListRelationFilter = {
+    every?: MarketPriceWhereInput
+    some?: MarketPriceWhereInput
+    none?: MarketPriceWhereInput
+  }
+
+  export type MarketProductionListRelationFilter = {
+    every?: MarketProductionWhereInput
+    some?: MarketProductionWhereInput
+    none?: MarketProductionWhereInput
+  }
+
+  export type MarketPriceOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MarketProductionOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type CropTypeCountOrderByAggregateInput = {
@@ -37078,6 +39940,112 @@ export namespace Prisma {
 
   export type RateLimitSumOrderByAggregateInput = {
     count?: SortOrder
+  }
+
+  export type MarketPriceCropTypeIdAreaYearMonthCompoundUniqueInput = {
+    cropTypeId: number
+    area: string
+    year: number
+    month: number
+  }
+
+  export type MarketPriceCountOrderByAggregateInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    area?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    pricePerKg?: SortOrder
+    fetchedAt?: SortOrder
+  }
+
+  export type MarketPriceAvgOrderByAggregateInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    pricePerKg?: SortOrder
+  }
+
+  export type MarketPriceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    area?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    pricePerKg?: SortOrder
+    fetchedAt?: SortOrder
+  }
+
+  export type MarketPriceMinOrderByAggregateInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    area?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    pricePerKg?: SortOrder
+    fetchedAt?: SortOrder
+  }
+
+  export type MarketPriceSumOrderByAggregateInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    year?: SortOrder
+    month?: SortOrder
+    pricePerKg?: SortOrder
+  }
+
+  export type MarketProductionCropTypeIdAreaYearQuarterCompoundUniqueInput = {
+    cropTypeId: number
+    area: string
+    year: number
+    quarter: number
+  }
+
+  export type MarketProductionCountOrderByAggregateInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    area?: SortOrder
+    year?: SortOrder
+    quarter?: SortOrder
+    tonnes?: SortOrder
+    fetchedAt?: SortOrder
+  }
+
+  export type MarketProductionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    year?: SortOrder
+    quarter?: SortOrder
+    tonnes?: SortOrder
+  }
+
+  export type MarketProductionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    area?: SortOrder
+    year?: SortOrder
+    quarter?: SortOrder
+    tonnes?: SortOrder
+    fetchedAt?: SortOrder
+  }
+
+  export type MarketProductionMinOrderByAggregateInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    area?: SortOrder
+    year?: SortOrder
+    quarter?: SortOrder
+    tonnes?: SortOrder
+    fetchedAt?: SortOrder
+  }
+
+  export type MarketProductionSumOrderByAggregateInput = {
+    id?: SortOrder
+    cropTypeId?: SortOrder
+    year?: SortOrder
+    quarter?: SortOrder
+    tonnes?: SortOrder
   }
 
   export type ProductCreateNestedManyWithoutFarmerInput = {
@@ -38103,6 +41071,20 @@ export namespace Prisma {
     connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
   }
 
+  export type MarketPriceCreateNestedManyWithoutCropTypeInput = {
+    create?: XOR<MarketPriceCreateWithoutCropTypeInput, MarketPriceUncheckedCreateWithoutCropTypeInput> | MarketPriceCreateWithoutCropTypeInput[] | MarketPriceUncheckedCreateWithoutCropTypeInput[]
+    connectOrCreate?: MarketPriceCreateOrConnectWithoutCropTypeInput | MarketPriceCreateOrConnectWithoutCropTypeInput[]
+    createMany?: MarketPriceCreateManyCropTypeInputEnvelope
+    connect?: MarketPriceWhereUniqueInput | MarketPriceWhereUniqueInput[]
+  }
+
+  export type MarketProductionCreateNestedManyWithoutCropTypeInput = {
+    create?: XOR<MarketProductionCreateWithoutCropTypeInput, MarketProductionUncheckedCreateWithoutCropTypeInput> | MarketProductionCreateWithoutCropTypeInput[] | MarketProductionUncheckedCreateWithoutCropTypeInput[]
+    connectOrCreate?: MarketProductionCreateOrConnectWithoutCropTypeInput | MarketProductionCreateOrConnectWithoutCropTypeInput[]
+    createMany?: MarketProductionCreateManyCropTypeInputEnvelope
+    connect?: MarketProductionWhereUniqueInput | MarketProductionWhereUniqueInput[]
+  }
+
   export type PlantingUncheckedCreateNestedManyWithoutCropTypeInput = {
     create?: XOR<PlantingCreateWithoutCropTypeInput, PlantingUncheckedCreateWithoutCropTypeInput> | PlantingCreateWithoutCropTypeInput[] | PlantingUncheckedCreateWithoutCropTypeInput[]
     connectOrCreate?: PlantingCreateOrConnectWithoutCropTypeInput | PlantingCreateOrConnectWithoutCropTypeInput[]
@@ -38115,6 +41097,20 @@ export namespace Prisma {
     connectOrCreate?: ProductCreateOrConnectWithoutCropTypeInput | ProductCreateOrConnectWithoutCropTypeInput[]
     createMany?: ProductCreateManyCropTypeInputEnvelope
     connect?: ProductWhereUniqueInput | ProductWhereUniqueInput[]
+  }
+
+  export type MarketPriceUncheckedCreateNestedManyWithoutCropTypeInput = {
+    create?: XOR<MarketPriceCreateWithoutCropTypeInput, MarketPriceUncheckedCreateWithoutCropTypeInput> | MarketPriceCreateWithoutCropTypeInput[] | MarketPriceUncheckedCreateWithoutCropTypeInput[]
+    connectOrCreate?: MarketPriceCreateOrConnectWithoutCropTypeInput | MarketPriceCreateOrConnectWithoutCropTypeInput[]
+    createMany?: MarketPriceCreateManyCropTypeInputEnvelope
+    connect?: MarketPriceWhereUniqueInput | MarketPriceWhereUniqueInput[]
+  }
+
+  export type MarketProductionUncheckedCreateNestedManyWithoutCropTypeInput = {
+    create?: XOR<MarketProductionCreateWithoutCropTypeInput, MarketProductionUncheckedCreateWithoutCropTypeInput> | MarketProductionCreateWithoutCropTypeInput[] | MarketProductionUncheckedCreateWithoutCropTypeInput[]
+    connectOrCreate?: MarketProductionCreateOrConnectWithoutCropTypeInput | MarketProductionCreateOrConnectWithoutCropTypeInput[]
+    createMany?: MarketProductionCreateManyCropTypeInputEnvelope
+    connect?: MarketProductionWhereUniqueInput | MarketProductionWhereUniqueInput[]
   }
 
   export type PlantingUpdateManyWithoutCropTypeNestedInput = {
@@ -38145,6 +41141,34 @@ export namespace Prisma {
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
   }
 
+  export type MarketPriceUpdateManyWithoutCropTypeNestedInput = {
+    create?: XOR<MarketPriceCreateWithoutCropTypeInput, MarketPriceUncheckedCreateWithoutCropTypeInput> | MarketPriceCreateWithoutCropTypeInput[] | MarketPriceUncheckedCreateWithoutCropTypeInput[]
+    connectOrCreate?: MarketPriceCreateOrConnectWithoutCropTypeInput | MarketPriceCreateOrConnectWithoutCropTypeInput[]
+    upsert?: MarketPriceUpsertWithWhereUniqueWithoutCropTypeInput | MarketPriceUpsertWithWhereUniqueWithoutCropTypeInput[]
+    createMany?: MarketPriceCreateManyCropTypeInputEnvelope
+    set?: MarketPriceWhereUniqueInput | MarketPriceWhereUniqueInput[]
+    disconnect?: MarketPriceWhereUniqueInput | MarketPriceWhereUniqueInput[]
+    delete?: MarketPriceWhereUniqueInput | MarketPriceWhereUniqueInput[]
+    connect?: MarketPriceWhereUniqueInput | MarketPriceWhereUniqueInput[]
+    update?: MarketPriceUpdateWithWhereUniqueWithoutCropTypeInput | MarketPriceUpdateWithWhereUniqueWithoutCropTypeInput[]
+    updateMany?: MarketPriceUpdateManyWithWhereWithoutCropTypeInput | MarketPriceUpdateManyWithWhereWithoutCropTypeInput[]
+    deleteMany?: MarketPriceScalarWhereInput | MarketPriceScalarWhereInput[]
+  }
+
+  export type MarketProductionUpdateManyWithoutCropTypeNestedInput = {
+    create?: XOR<MarketProductionCreateWithoutCropTypeInput, MarketProductionUncheckedCreateWithoutCropTypeInput> | MarketProductionCreateWithoutCropTypeInput[] | MarketProductionUncheckedCreateWithoutCropTypeInput[]
+    connectOrCreate?: MarketProductionCreateOrConnectWithoutCropTypeInput | MarketProductionCreateOrConnectWithoutCropTypeInput[]
+    upsert?: MarketProductionUpsertWithWhereUniqueWithoutCropTypeInput | MarketProductionUpsertWithWhereUniqueWithoutCropTypeInput[]
+    createMany?: MarketProductionCreateManyCropTypeInputEnvelope
+    set?: MarketProductionWhereUniqueInput | MarketProductionWhereUniqueInput[]
+    disconnect?: MarketProductionWhereUniqueInput | MarketProductionWhereUniqueInput[]
+    delete?: MarketProductionWhereUniqueInput | MarketProductionWhereUniqueInput[]
+    connect?: MarketProductionWhereUniqueInput | MarketProductionWhereUniqueInput[]
+    update?: MarketProductionUpdateWithWhereUniqueWithoutCropTypeInput | MarketProductionUpdateWithWhereUniqueWithoutCropTypeInput[]
+    updateMany?: MarketProductionUpdateManyWithWhereWithoutCropTypeInput | MarketProductionUpdateManyWithWhereWithoutCropTypeInput[]
+    deleteMany?: MarketProductionScalarWhereInput | MarketProductionScalarWhereInput[]
+  }
+
   export type PlantingUncheckedUpdateManyWithoutCropTypeNestedInput = {
     create?: XOR<PlantingCreateWithoutCropTypeInput, PlantingUncheckedCreateWithoutCropTypeInput> | PlantingCreateWithoutCropTypeInput[] | PlantingUncheckedCreateWithoutCropTypeInput[]
     connectOrCreate?: PlantingCreateOrConnectWithoutCropTypeInput | PlantingCreateOrConnectWithoutCropTypeInput[]
@@ -38171,6 +41195,34 @@ export namespace Prisma {
     update?: ProductUpdateWithWhereUniqueWithoutCropTypeInput | ProductUpdateWithWhereUniqueWithoutCropTypeInput[]
     updateMany?: ProductUpdateManyWithWhereWithoutCropTypeInput | ProductUpdateManyWithWhereWithoutCropTypeInput[]
     deleteMany?: ProductScalarWhereInput | ProductScalarWhereInput[]
+  }
+
+  export type MarketPriceUncheckedUpdateManyWithoutCropTypeNestedInput = {
+    create?: XOR<MarketPriceCreateWithoutCropTypeInput, MarketPriceUncheckedCreateWithoutCropTypeInput> | MarketPriceCreateWithoutCropTypeInput[] | MarketPriceUncheckedCreateWithoutCropTypeInput[]
+    connectOrCreate?: MarketPriceCreateOrConnectWithoutCropTypeInput | MarketPriceCreateOrConnectWithoutCropTypeInput[]
+    upsert?: MarketPriceUpsertWithWhereUniqueWithoutCropTypeInput | MarketPriceUpsertWithWhereUniqueWithoutCropTypeInput[]
+    createMany?: MarketPriceCreateManyCropTypeInputEnvelope
+    set?: MarketPriceWhereUniqueInput | MarketPriceWhereUniqueInput[]
+    disconnect?: MarketPriceWhereUniqueInput | MarketPriceWhereUniqueInput[]
+    delete?: MarketPriceWhereUniqueInput | MarketPriceWhereUniqueInput[]
+    connect?: MarketPriceWhereUniqueInput | MarketPriceWhereUniqueInput[]
+    update?: MarketPriceUpdateWithWhereUniqueWithoutCropTypeInput | MarketPriceUpdateWithWhereUniqueWithoutCropTypeInput[]
+    updateMany?: MarketPriceUpdateManyWithWhereWithoutCropTypeInput | MarketPriceUpdateManyWithWhereWithoutCropTypeInput[]
+    deleteMany?: MarketPriceScalarWhereInput | MarketPriceScalarWhereInput[]
+  }
+
+  export type MarketProductionUncheckedUpdateManyWithoutCropTypeNestedInput = {
+    create?: XOR<MarketProductionCreateWithoutCropTypeInput, MarketProductionUncheckedCreateWithoutCropTypeInput> | MarketProductionCreateWithoutCropTypeInput[] | MarketProductionUncheckedCreateWithoutCropTypeInput[]
+    connectOrCreate?: MarketProductionCreateOrConnectWithoutCropTypeInput | MarketProductionCreateOrConnectWithoutCropTypeInput[]
+    upsert?: MarketProductionUpsertWithWhereUniqueWithoutCropTypeInput | MarketProductionUpsertWithWhereUniqueWithoutCropTypeInput[]
+    createMany?: MarketProductionCreateManyCropTypeInputEnvelope
+    set?: MarketProductionWhereUniqueInput | MarketProductionWhereUniqueInput[]
+    disconnect?: MarketProductionWhereUniqueInput | MarketProductionWhereUniqueInput[]
+    delete?: MarketProductionWhereUniqueInput | MarketProductionWhereUniqueInput[]
+    connect?: MarketProductionWhereUniqueInput | MarketProductionWhereUniqueInput[]
+    update?: MarketProductionUpdateWithWhereUniqueWithoutCropTypeInput | MarketProductionUpdateWithWhereUniqueWithoutCropTypeInput[]
+    updateMany?: MarketProductionUpdateManyWithWhereWithoutCropTypeInput | MarketProductionUpdateManyWithWhereWithoutCropTypeInput[]
+    deleteMany?: MarketProductionScalarWhereInput | MarketProductionScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutPlantingsInput = {
@@ -38508,6 +41560,34 @@ export namespace Prisma {
     delete?: UserWhereInput | boolean
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAiReportsInput, UserUpdateWithoutAiReportsInput>, UserUncheckedUpdateWithoutAiReportsInput>
+  }
+
+  export type CropTypeCreateNestedOneWithoutMarketPricesInput = {
+    create?: XOR<CropTypeCreateWithoutMarketPricesInput, CropTypeUncheckedCreateWithoutMarketPricesInput>
+    connectOrCreate?: CropTypeCreateOrConnectWithoutMarketPricesInput
+    connect?: CropTypeWhereUniqueInput
+  }
+
+  export type CropTypeUpdateOneRequiredWithoutMarketPricesNestedInput = {
+    create?: XOR<CropTypeCreateWithoutMarketPricesInput, CropTypeUncheckedCreateWithoutMarketPricesInput>
+    connectOrCreate?: CropTypeCreateOrConnectWithoutMarketPricesInput
+    upsert?: CropTypeUpsertWithoutMarketPricesInput
+    connect?: CropTypeWhereUniqueInput
+    update?: XOR<XOR<CropTypeUpdateToOneWithWhereWithoutMarketPricesInput, CropTypeUpdateWithoutMarketPricesInput>, CropTypeUncheckedUpdateWithoutMarketPricesInput>
+  }
+
+  export type CropTypeCreateNestedOneWithoutMarketProductionInput = {
+    create?: XOR<CropTypeCreateWithoutMarketProductionInput, CropTypeUncheckedCreateWithoutMarketProductionInput>
+    connectOrCreate?: CropTypeCreateOrConnectWithoutMarketProductionInput
+    connect?: CropTypeWhereUniqueInput
+  }
+
+  export type CropTypeUpdateOneRequiredWithoutMarketProductionNestedInput = {
+    create?: XOR<CropTypeCreateWithoutMarketProductionInput, CropTypeUncheckedCreateWithoutMarketProductionInput>
+    connectOrCreate?: CropTypeCreateOrConnectWithoutMarketProductionInput
+    upsert?: CropTypeUpsertWithoutMarketProductionInput
+    connect?: CropTypeWhereUniqueInput
+    update?: XOR<XOR<CropTypeUpdateToOneWithWhereWithoutMarketProductionInput, CropTypeUpdateWithoutMarketProductionInput>, CropTypeUncheckedUpdateWithoutMarketProductionInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -40620,6 +43700,8 @@ export namespace Prisma {
     source?: string | null
     createdAt?: Date | string
     plantings?: PlantingCreateNestedManyWithoutCropTypeInput
+    marketPrices?: MarketPriceCreateNestedManyWithoutCropTypeInput
+    marketProduction?: MarketProductionCreateNestedManyWithoutCropTypeInput
   }
 
   export type CropTypeUncheckedCreateWithoutProductsInput = {
@@ -40630,6 +43712,8 @@ export namespace Prisma {
     source?: string | null
     createdAt?: Date | string
     plantings?: PlantingUncheckedCreateNestedManyWithoutCropTypeInput
+    marketPrices?: MarketPriceUncheckedCreateNestedManyWithoutCropTypeInput
+    marketProduction?: MarketProductionUncheckedCreateNestedManyWithoutCropTypeInput
   }
 
   export type CropTypeCreateOrConnectWithoutProductsInput = {
@@ -40891,6 +43975,8 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantings?: PlantingUpdateManyWithoutCropTypeNestedInput
+    marketPrices?: MarketPriceUpdateManyWithoutCropTypeNestedInput
+    marketProduction?: MarketProductionUpdateManyWithoutCropTypeNestedInput
   }
 
   export type CropTypeUncheckedUpdateWithoutProductsInput = {
@@ -40901,6 +43987,8 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     plantings?: PlantingUncheckedUpdateManyWithoutCropTypeNestedInput
+    marketPrices?: MarketPriceUncheckedUpdateManyWithoutCropTypeNestedInput
+    marketProduction?: MarketProductionUncheckedUpdateManyWithoutCropTypeNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutProductInput = {
@@ -41078,6 +44166,60 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MarketPriceCreateWithoutCropTypeInput = {
+    area: string
+    year: number
+    month: number
+    pricePerKg: number
+    fetchedAt?: Date | string
+  }
+
+  export type MarketPriceUncheckedCreateWithoutCropTypeInput = {
+    id?: number
+    area: string
+    year: number
+    month: number
+    pricePerKg: number
+    fetchedAt?: Date | string
+  }
+
+  export type MarketPriceCreateOrConnectWithoutCropTypeInput = {
+    where: MarketPriceWhereUniqueInput
+    create: XOR<MarketPriceCreateWithoutCropTypeInput, MarketPriceUncheckedCreateWithoutCropTypeInput>
+  }
+
+  export type MarketPriceCreateManyCropTypeInputEnvelope = {
+    data: MarketPriceCreateManyCropTypeInput | MarketPriceCreateManyCropTypeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MarketProductionCreateWithoutCropTypeInput = {
+    area: string
+    year: number
+    quarter: number
+    tonnes: number
+    fetchedAt?: Date | string
+  }
+
+  export type MarketProductionUncheckedCreateWithoutCropTypeInput = {
+    id?: number
+    area: string
+    year: number
+    quarter: number
+    tonnes: number
+    fetchedAt?: Date | string
+  }
+
+  export type MarketProductionCreateOrConnectWithoutCropTypeInput = {
+    where: MarketProductionWhereUniqueInput
+    create: XOR<MarketProductionCreateWithoutCropTypeInput, MarketProductionUncheckedCreateWithoutCropTypeInput>
+  }
+
+  export type MarketProductionCreateManyCropTypeInputEnvelope = {
+    data: MarketProductionCreateManyCropTypeInput | MarketProductionCreateManyCropTypeInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PlantingUpsertWithWhereUniqueWithoutCropTypeInput = {
     where: PlantingWhereUniqueInput
     update: XOR<PlantingUpdateWithoutCropTypeInput, PlantingUncheckedUpdateWithoutCropTypeInput>
@@ -41108,6 +44250,64 @@ export namespace Prisma {
   export type ProductUpdateManyWithWhereWithoutCropTypeInput = {
     where: ProductScalarWhereInput
     data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutCropTypeInput>
+  }
+
+  export type MarketPriceUpsertWithWhereUniqueWithoutCropTypeInput = {
+    where: MarketPriceWhereUniqueInput
+    update: XOR<MarketPriceUpdateWithoutCropTypeInput, MarketPriceUncheckedUpdateWithoutCropTypeInput>
+    create: XOR<MarketPriceCreateWithoutCropTypeInput, MarketPriceUncheckedCreateWithoutCropTypeInput>
+  }
+
+  export type MarketPriceUpdateWithWhereUniqueWithoutCropTypeInput = {
+    where: MarketPriceWhereUniqueInput
+    data: XOR<MarketPriceUpdateWithoutCropTypeInput, MarketPriceUncheckedUpdateWithoutCropTypeInput>
+  }
+
+  export type MarketPriceUpdateManyWithWhereWithoutCropTypeInput = {
+    where: MarketPriceScalarWhereInput
+    data: XOR<MarketPriceUpdateManyMutationInput, MarketPriceUncheckedUpdateManyWithoutCropTypeInput>
+  }
+
+  export type MarketPriceScalarWhereInput = {
+    AND?: MarketPriceScalarWhereInput | MarketPriceScalarWhereInput[]
+    OR?: MarketPriceScalarWhereInput[]
+    NOT?: MarketPriceScalarWhereInput | MarketPriceScalarWhereInput[]
+    id?: IntFilter<"MarketPrice"> | number
+    cropTypeId?: IntFilter<"MarketPrice"> | number
+    area?: StringFilter<"MarketPrice"> | string
+    year?: IntFilter<"MarketPrice"> | number
+    month?: IntFilter<"MarketPrice"> | number
+    pricePerKg?: FloatFilter<"MarketPrice"> | number
+    fetchedAt?: DateTimeFilter<"MarketPrice"> | Date | string
+  }
+
+  export type MarketProductionUpsertWithWhereUniqueWithoutCropTypeInput = {
+    where: MarketProductionWhereUniqueInput
+    update: XOR<MarketProductionUpdateWithoutCropTypeInput, MarketProductionUncheckedUpdateWithoutCropTypeInput>
+    create: XOR<MarketProductionCreateWithoutCropTypeInput, MarketProductionUncheckedCreateWithoutCropTypeInput>
+  }
+
+  export type MarketProductionUpdateWithWhereUniqueWithoutCropTypeInput = {
+    where: MarketProductionWhereUniqueInput
+    data: XOR<MarketProductionUpdateWithoutCropTypeInput, MarketProductionUncheckedUpdateWithoutCropTypeInput>
+  }
+
+  export type MarketProductionUpdateManyWithWhereWithoutCropTypeInput = {
+    where: MarketProductionScalarWhereInput
+    data: XOR<MarketProductionUpdateManyMutationInput, MarketProductionUncheckedUpdateManyWithoutCropTypeInput>
+  }
+
+  export type MarketProductionScalarWhereInput = {
+    AND?: MarketProductionScalarWhereInput | MarketProductionScalarWhereInput[]
+    OR?: MarketProductionScalarWhereInput[]
+    NOT?: MarketProductionScalarWhereInput | MarketProductionScalarWhereInput[]
+    id?: IntFilter<"MarketProduction"> | number
+    cropTypeId?: IntFilter<"MarketProduction"> | number
+    area?: StringFilter<"MarketProduction"> | string
+    year?: IntFilter<"MarketProduction"> | number
+    quarter?: IntFilter<"MarketProduction"> | number
+    tonnes?: FloatFilter<"MarketProduction"> | number
+    fetchedAt?: DateTimeFilter<"MarketProduction"> | Date | string
   }
 
   export type UserCreateWithoutPlantingsInput = {
@@ -41203,6 +44403,8 @@ export namespace Prisma {
     source?: string | null
     createdAt?: Date | string
     products?: ProductCreateNestedManyWithoutCropTypeInput
+    marketPrices?: MarketPriceCreateNestedManyWithoutCropTypeInput
+    marketProduction?: MarketProductionCreateNestedManyWithoutCropTypeInput
   }
 
   export type CropTypeUncheckedCreateWithoutPlantingsInput = {
@@ -41213,6 +44415,8 @@ export namespace Prisma {
     source?: string | null
     createdAt?: Date | string
     products?: ProductUncheckedCreateNestedManyWithoutCropTypeInput
+    marketPrices?: MarketPriceUncheckedCreateNestedManyWithoutCropTypeInput
+    marketProduction?: MarketProductionUncheckedCreateNestedManyWithoutCropTypeInput
   }
 
   export type CropTypeCreateOrConnectWithoutPlantingsInput = {
@@ -41407,6 +44611,8 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUpdateManyWithoutCropTypeNestedInput
+    marketPrices?: MarketPriceUpdateManyWithoutCropTypeNestedInput
+    marketProduction?: MarketProductionUpdateManyWithoutCropTypeNestedInput
   }
 
   export type CropTypeUncheckedUpdateWithoutPlantingsInput = {
@@ -41417,6 +44623,8 @@ export namespace Prisma {
     source?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     products?: ProductUncheckedUpdateManyWithoutCropTypeNestedInput
+    marketPrices?: MarketPriceUncheckedUpdateManyWithoutCropTypeNestedInput
+    marketProduction?: MarketProductionUncheckedUpdateManyWithoutCropTypeNestedInput
   }
 
   export type ProductUpsertWithoutPlantingsInput = {
@@ -43652,6 +46860,130 @@ export namespace Prisma {
     idSubmissions?: IdSubmissionUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type CropTypeCreateWithoutMarketPricesInput = {
+    name: string
+    daysToHarvestMin: number
+    daysToHarvestMax: number
+    source?: string | null
+    createdAt?: Date | string
+    plantings?: PlantingCreateNestedManyWithoutCropTypeInput
+    products?: ProductCreateNestedManyWithoutCropTypeInput
+    marketProduction?: MarketProductionCreateNestedManyWithoutCropTypeInput
+  }
+
+  export type CropTypeUncheckedCreateWithoutMarketPricesInput = {
+    id?: number
+    name: string
+    daysToHarvestMin: number
+    daysToHarvestMax: number
+    source?: string | null
+    createdAt?: Date | string
+    plantings?: PlantingUncheckedCreateNestedManyWithoutCropTypeInput
+    products?: ProductUncheckedCreateNestedManyWithoutCropTypeInput
+    marketProduction?: MarketProductionUncheckedCreateNestedManyWithoutCropTypeInput
+  }
+
+  export type CropTypeCreateOrConnectWithoutMarketPricesInput = {
+    where: CropTypeWhereUniqueInput
+    create: XOR<CropTypeCreateWithoutMarketPricesInput, CropTypeUncheckedCreateWithoutMarketPricesInput>
+  }
+
+  export type CropTypeUpsertWithoutMarketPricesInput = {
+    update: XOR<CropTypeUpdateWithoutMarketPricesInput, CropTypeUncheckedUpdateWithoutMarketPricesInput>
+    create: XOR<CropTypeCreateWithoutMarketPricesInput, CropTypeUncheckedCreateWithoutMarketPricesInput>
+    where?: CropTypeWhereInput
+  }
+
+  export type CropTypeUpdateToOneWithWhereWithoutMarketPricesInput = {
+    where?: CropTypeWhereInput
+    data: XOR<CropTypeUpdateWithoutMarketPricesInput, CropTypeUncheckedUpdateWithoutMarketPricesInput>
+  }
+
+  export type CropTypeUpdateWithoutMarketPricesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    daysToHarvestMin?: IntFieldUpdateOperationsInput | number
+    daysToHarvestMax?: IntFieldUpdateOperationsInput | number
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    plantings?: PlantingUpdateManyWithoutCropTypeNestedInput
+    products?: ProductUpdateManyWithoutCropTypeNestedInput
+    marketProduction?: MarketProductionUpdateManyWithoutCropTypeNestedInput
+  }
+
+  export type CropTypeUncheckedUpdateWithoutMarketPricesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    daysToHarvestMin?: IntFieldUpdateOperationsInput | number
+    daysToHarvestMax?: IntFieldUpdateOperationsInput | number
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    plantings?: PlantingUncheckedUpdateManyWithoutCropTypeNestedInput
+    products?: ProductUncheckedUpdateManyWithoutCropTypeNestedInput
+    marketProduction?: MarketProductionUncheckedUpdateManyWithoutCropTypeNestedInput
+  }
+
+  export type CropTypeCreateWithoutMarketProductionInput = {
+    name: string
+    daysToHarvestMin: number
+    daysToHarvestMax: number
+    source?: string | null
+    createdAt?: Date | string
+    plantings?: PlantingCreateNestedManyWithoutCropTypeInput
+    products?: ProductCreateNestedManyWithoutCropTypeInput
+    marketPrices?: MarketPriceCreateNestedManyWithoutCropTypeInput
+  }
+
+  export type CropTypeUncheckedCreateWithoutMarketProductionInput = {
+    id?: number
+    name: string
+    daysToHarvestMin: number
+    daysToHarvestMax: number
+    source?: string | null
+    createdAt?: Date | string
+    plantings?: PlantingUncheckedCreateNestedManyWithoutCropTypeInput
+    products?: ProductUncheckedCreateNestedManyWithoutCropTypeInput
+    marketPrices?: MarketPriceUncheckedCreateNestedManyWithoutCropTypeInput
+  }
+
+  export type CropTypeCreateOrConnectWithoutMarketProductionInput = {
+    where: CropTypeWhereUniqueInput
+    create: XOR<CropTypeCreateWithoutMarketProductionInput, CropTypeUncheckedCreateWithoutMarketProductionInput>
+  }
+
+  export type CropTypeUpsertWithoutMarketProductionInput = {
+    update: XOR<CropTypeUpdateWithoutMarketProductionInput, CropTypeUncheckedUpdateWithoutMarketProductionInput>
+    create: XOR<CropTypeCreateWithoutMarketProductionInput, CropTypeUncheckedCreateWithoutMarketProductionInput>
+    where?: CropTypeWhereInput
+  }
+
+  export type CropTypeUpdateToOneWithWhereWithoutMarketProductionInput = {
+    where?: CropTypeWhereInput
+    data: XOR<CropTypeUpdateWithoutMarketProductionInput, CropTypeUncheckedUpdateWithoutMarketProductionInput>
+  }
+
+  export type CropTypeUpdateWithoutMarketProductionInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    daysToHarvestMin?: IntFieldUpdateOperationsInput | number
+    daysToHarvestMax?: IntFieldUpdateOperationsInput | number
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    plantings?: PlantingUpdateManyWithoutCropTypeNestedInput
+    products?: ProductUpdateManyWithoutCropTypeNestedInput
+    marketPrices?: MarketPriceUpdateManyWithoutCropTypeNestedInput
+  }
+
+  export type CropTypeUncheckedUpdateWithoutMarketProductionInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    daysToHarvestMin?: IntFieldUpdateOperationsInput | number
+    daysToHarvestMax?: IntFieldUpdateOperationsInput | number
+    source?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    plantings?: PlantingUncheckedUpdateManyWithoutCropTypeNestedInput
+    products?: ProductUncheckedUpdateManyWithoutCropTypeNestedInput
+    marketPrices?: MarketPriceUncheckedUpdateManyWithoutCropTypeNestedInput
+  }
+
   export type ProductCreateManyFarmerInput = {
     id?: number
     name: string
@@ -44602,6 +47934,24 @@ export namespace Prisma {
     categoryId: number
   }
 
+  export type MarketPriceCreateManyCropTypeInput = {
+    id?: number
+    area: string
+    year: number
+    month: number
+    pricePerKg: number
+    fetchedAt?: Date | string
+  }
+
+  export type MarketProductionCreateManyCropTypeInput = {
+    id?: number
+    area: string
+    year: number
+    quarter: number
+    tonnes: number
+    fetchedAt?: Date | string
+  }
+
   export type PlantingUpdateWithoutCropTypeInput = {
     plantedOn?: DateTimeFieldUpdateOperationsInput | Date | string
     harvestStart?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44716,6 +48066,58 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     farmerId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type MarketPriceUpdateWithoutCropTypeInput = {
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    pricePerKg?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketPriceUncheckedUpdateWithoutCropTypeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    pricePerKg?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketPriceUncheckedUpdateManyWithoutCropTypeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    month?: IntFieldUpdateOperationsInput | number
+    pricePerKg?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketProductionUpdateWithoutCropTypeInput = {
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    quarter?: IntFieldUpdateOperationsInput | number
+    tonnes?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketProductionUncheckedUpdateWithoutCropTypeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    quarter?: IntFieldUpdateOperationsInput | number
+    tonnes?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketProductionUncheckedUpdateManyWithoutCropTypeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    area?: StringFieldUpdateOperationsInput | string
+    year?: IntFieldUpdateOperationsInput | number
+    quarter?: IntFieldUpdateOperationsInput | number
+    tonnes?: FloatFieldUpdateOperationsInput | number
+    fetchedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CropLogCreateManyPlantingInput = {

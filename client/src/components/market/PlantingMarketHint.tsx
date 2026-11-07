@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { TrendingUp } from 'lucide-react'
 import SignalBadge from './SignalBadge'
-import { otherUnits, type MarketData } from './marketTypes'
+import { fmtMonth, otherUnits, type MarketData } from './marketTypes'
 
 /**
  * Shown on the New Planting form once a crop is chosen: what that crop has
@@ -48,7 +48,13 @@ export default function PlantingMarketHint({ token, cropTypeId }: { token: strin
           {Object.keys(row.demand.other).length > 0 && `, ${otherUnits(row.demand.other)}`}
         </li>
         <li>Members plan to harvest in the next {w} weeks: {row.supply.kg > 0 ? `${row.supply.kg} kg` : 'none recorded'}</li>
-        {row.pricePerKg !== null && <li>Average selling price lately: ₱{row.pricePerKg.toFixed(2)} per kg</li>}
+        {row.pricePerKg !== null && <li>Average selling price here lately: ₱{row.pricePerKg.toFixed(2)} per kg</li>}
+        {row.psa.latest.albay && (
+          <li>Albay farmgate price (PSA, {fmtMonth(row.psa.latest.albay.month)}): ₱{row.psa.latest.albay.pricePerKg.toFixed(2)} per kg</li>
+        )}
+        {row.psa.production.albay.at(-1) && (
+          <li>Albay harvested {row.psa.production.albay.at(-1)!.tonnes.toLocaleString('en-PH')} t in Q{row.psa.production.albay.at(-1)!.quarter} {row.psa.production.albay.at(-1)!.year} (PSA)</li>
+        )}
       </ul>
       <Link href="/farmer/market" className="mt-1.5 inline-block text-xs font-medium text-paddy hover:underline">See all crops on the Market page</Link>
     </div>

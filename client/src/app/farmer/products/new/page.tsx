@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Loader2 } from 'lucide-react'
 import ImageUploader from '@/components/ImageUploader'
 import CropTypeSelect from '@/components/CropTypeSelect'
+import PriceReference from '@/components/market/PriceReference'
 import SuggestionBanner from '@/components/SuggestionBanner'
 import { suggestCategory, suggestUnit } from '@/lib/productSuggestions'
 import { UNITS, numericText, unitStep } from '@/lib/units'
@@ -175,6 +176,7 @@ export default function NewProductPage() {
           value={form.cropTypeId}
           onChange={(v) => setForm((prev) => ({ ...prev, cropTypeId: v }))}
         />
+        <PriceReference token={token} cropTypeId={form.cropTypeId} unit={form.unit} />
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Product Photo <span className="text-gray-500">(optional)</span></label>

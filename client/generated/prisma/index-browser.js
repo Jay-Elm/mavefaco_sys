@@ -388,6 +388,26 @@ exports.Prisma.RateLimitScalarFieldEnum = {
   resetAt: 'resetAt'
 };
 
+exports.Prisma.MarketPriceScalarFieldEnum = {
+  id: 'id',
+  cropTypeId: 'cropTypeId',
+  area: 'area',
+  year: 'year',
+  month: 'month',
+  pricePerKg: 'pricePerKg',
+  fetchedAt: 'fetchedAt'
+};
+
+exports.Prisma.MarketProductionScalarFieldEnum = {
+  id: 'id',
+  cropTypeId: 'cropTypeId',
+  area: 'area',
+  year: 'year',
+  quarter: 'quarter',
+  tonnes: 'tonnes',
+  fetchedAt: 'fetchedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -438,7 +458,9 @@ exports.Prisma.ModelName = {
   AuditLog: 'AuditLog',
   IdSubmission: 'IdSubmission',
   AiReport: 'AiReport',
-  RateLimit: 'RateLimit'
+  RateLimit: 'RateLimit',
+  MarketPrice: 'MarketPrice',
+  MarketProduction: 'MarketProduction'
 };
 
 /**

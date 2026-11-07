@@ -137,7 +137,7 @@ The full list of what's in and out of scope is in [`SCOPE_AND_DELIMITATIONS.md`]
 | `GEMINI_MODEL` | No | Overrides the Gemini model (default `gemini-3.5-flash-lite`) |
 | `SUPABASE_ANON_KEY` | No | Supabase's public key ("anon" or "publishable", under Project Settings → API Keys). Given to browsers so open pages hear change signals at once; without it pages check every 15 s. Realtime must allow public channels (Realtime → Settings) |
 | `ID_NUMBER_HASH_KEY` | Yes | Keys the fingerprint of farmers' ID numbers (used to stop one ID verifying two accounts); at least 32 random characters. Never change it once set: existing fingerprints would stop matching |
-| `CRON_SECRET` | Yes | Authenticates Vercel Cron calls to `/api/cron/purge-id-images` and `/api/cron/purge-suspended-products` |
+| `CRON_SECRET` | Yes | Authenticates Vercel Cron calls to `/api/cron/purge-id-images`, `/api/cron/purge-suspended-products` and the weekly `/api/cron/psa-market` |
 
 Generate random values with `node -e "console.log(require('crypto').randomBytes(48).toString('base64'))"`.
 

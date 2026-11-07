@@ -7,6 +7,10 @@
     {
       "path": "/api/cron/purge-suspended-products",
       "schedule": "30 3 * * *"
+    },
+    {
+      "path": "/api/cron/psa-market",
+      "schedule": "0 4 * * 1"
     }
   ]
 }

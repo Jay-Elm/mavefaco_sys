@@ -11,6 +11,12 @@ export interface MarketRow {
   pricePerKg: number | null
   prices: { month: string; pricePerKg: number; kg: number }[]
   plantTodayHarvest: { from: string; to: string }
+  /** PSA OpenSTAT figures for Albay and the Bicol region. */
+  psa: {
+    prices: Record<'albay' | 'bicol', { month: string; pricePerKg: number }[]>
+    latest: Record<'albay' | 'bicol', { month: string; pricePerKg: number } | null>
+    production: Record<'albay' | 'bicol', { year: number; quarter: number; tonnes: number }[]>
+  }
 }
 
 export interface MarketAlertRow {
@@ -27,7 +33,12 @@ export interface MarketData {
   alerts: MarketAlertRow[]
   suggestions: number[]
   unlinkedListings: number
+  psa: { source: string; latestMonth: string | null; updatedAt: string | null }
 }
+
+/** "June 2026" from "2026-06". */
+export const fmtMonth = (m: string) =>
+  new Date(`${m}-01T00:00:00Z`).toLocaleDateString('en-PH', { month: 'long', year: 'numeric', timeZone: 'UTC' })
 
 /** "12 bundles, 3 pieces" for sales not sold by the kilo. */
 export function otherUnits(other: Record<string, number>): string {

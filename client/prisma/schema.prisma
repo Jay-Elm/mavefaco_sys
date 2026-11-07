@@ -218,6 +218,8 @@ model CropType {
 
   plantings        Planting[]
   products         Product[]
+  marketPrices     MarketPrice[]
+  marketProduction MarketProduction[]
 }
 
 // One planting of one crop by one farmer: a season. Replanting is a new row,
@@ -522,4 +524,36 @@ model RateLimit {
   resetAt DateTime
 
   @@index([resetAt])
+}
+
+// Outside market data from the Philippine Statistics Authority (OpenSTAT),
+// copied in weekly by /api/cron/psa-market (src/lib/psa.ts) so pages never
+// call PSA themselves. area: "albay" | "bicol" (the whole Region V).
+
+// Farmgate price: what farmers are paid per kilo, monthly average.
+model MarketPrice {
+  id         Int      @id @default(autoincrement())
+  cropTypeId Int
+  cropType   CropType @relation(fields: [cropTypeId], references: [id], onDelete: Cascade)
+  area       String
+  year       Int
+  month      Int
+  pricePerKg Float
+  fetchedAt  DateTime @default(now()) @updatedAt
+
+  @@unique([cropTypeId, area, year, month])
+}
+
+// Volume of production in metric tons, per quarter.
+model MarketProduction {
+  id         Int      @id @default(autoincrement())
+  cropTypeId Int
+  cropType   CropType @relation(fields: [cropTypeId], references: [id], onDelete: Cascade)
+  area       String
+  year       Int
+  quarter    Int
+  tonnes     Float
+  fetchedAt  DateTime @default(now()) @updatedAt
+
+  @@unique([cropTypeId, area, year, quarter])
 }
