@@ -1,6 +1,6 @@
 # Where We Left Off
 
-_Updated: 2026-11-03_
+_Updated: 2026-11-08 (last commit 0e52ef2; everything pushed and deployed)_
 
 ## Current state
 
@@ -9,7 +9,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 1. **Phase 1–3 security review** (completed 2026-09-08, `SECURITY_REVIEW.md`): cookie-based sessions, admin-route guard, private ID storage, password reset, shared validators, email verification.
 2. **10-item gap list** (completed 2026-09-21): Next.js CVE patches, JWT secret validation, `Decimal` money, connection pooling, Dependabot + CI audit, mandatory TOTP MFA for staff, ID-image auto-purge, no email enumeration.
 3. **Whole-project review and fixes** (2026-10-03 to 2026-10-05, `PROJECT_REVIEW.md`): every finding fixed (L4 on 2026-11-07). Highlights:
-   - **Integration tests** against a real Postgres database (`npm run test:integration`, now 291 tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron, crop monitoring, announcements, FAQ/banner order; now 84 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
+   - **Integration tests** against a real Postgres database (`npm run test:integration`, now 363 tests; plus 132 unit and 6 Playwright end-to-end tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron, crop monitoring, announcements, FAQ/banner order; now 84 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
    - **MFA encryption key** separated from `JWT_SECRET` (`TOTP_ENCRYPTION_KEY`); all staff migrated.
    - **Preview deployments** have their own Supabase database and keys; Preview builds migrate only that database (`PREVIEW_DATABASE_ISOLATED`).
    - **Product archiving** (and staff restore) instead of deleting products with history.
@@ -58,6 +58,12 @@ Feature-complete for the capstone scope and through three structured hardening p
 
 ## Open items
 
+**Start of next session:** the owner will report findings from the items below. Ask for them first, then act on each:
+- **PSA update after the crop list** (Dashboard → Market → "Update PSA figures now"): expected about 1,900 prices and 1,200 production figures; a lower number may mean a crop was deleted or renamed on the live Crop Types page.
+- **Unlinked listings** (Dashboard → Products, amber chip): which were linked or marked "Not a farm crop"; Lakatan Banana may still point to Tomato.
+- **Password autofill** on the profile pages (Round 1 change): does the browser still fill a saved password?
+- **Manual checks 1-27** below: which passed, and the exact text of any failure.
+
 **Manual checks still to do** (all covered by automated tests; these confirm the screens and real email delivery with logged-in test accounts):
 
 1. Change a test customer's email: notice at the old address, link at the new one, logged out after clicking, final notice to the old address (only test of real Brevo delivery).
@@ -90,7 +96,9 @@ Feature-complete for the capstone scope and through three structured hardening p
 26. PSA figures: on Dashboard → Market press "Update PSA figures now" once after deploying; the Albay farmgate column and each crop's chart fill in, and Add Product shows the price reference after choosing a crop.
 27. Crop list: Crop Types shows about 143 crops by category; on Add Product, typing "talong" in Crop finds Eggplant; on staff Products, the "not linked to a crop" chip filters the list and the picker links a listing (or marks it "Not a farm crop"); Record a planting of a crop with "Not set" growing time asks for harvest dates. After deploying, press "Update PSA figures now" again so the new crops get PSA figures.
 
-**Waiting on the project owner:** the cooperative's own photos to replace the temporary hero photo (then remove its credit line).
+**Waiting on the project owner:** the cooperative's own photos to replace the temporary hero photo (then remove its credit line); real announcements to replace the lorem-ipsum "Title #2"/"Title #3" posts; which crops Tabaco farmers actually grow (cooperative or Tabaco City Agriculturist's Office), for the thesis; growing times for the 124 crops without a DA figure (and a farmer's confirmation of upo's 90-100 days); real orders, so the market signals have data.
+
+**Decisions the owner may revisit:** the delivery area (Tabaco City, Malinao, Malilipot, Ligao City, Oas) and the market thresholds (75% / 150%, 8 weeks, rising at 1.5x).
 
 **Remaining debt** (see `DEVELOPMENT_STATUS.md` → Known Technical Debt): Prisma 8 upgrade once it is out of release candidate (8.0.0-rc.30 on 2026-11-07); end-to-end tests cover checkout only. Done 2026-11-07: rate limits counted in Postgres (L4, no Upstash needed); Playwright end-to-end tests (`npm run test:e2e`); DA growing times with sources on all 13 crop types.
 

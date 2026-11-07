@@ -49,7 +49,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 ## Database Schema (Prisma)
 
-23 models. `generated/prisma` is a custom client output path — **always run `npx prisma generate` after `npx prisma migrate dev`**, it does not auto-update. Use the Bash tool (not PowerShell) for Prisma CLI commands.
+26 models. `generated/prisma` is a custom client output path — **always run `npx prisma generate` after `npx prisma migrate dev`**, it does not auto-update. Use the Bash tool (not PowerShell) for Prisma CLI commands.
 
 - `User` — id, name, email, password, role, suspended, `verified`, `verifiedAt`, `verifiedInPersonAt`, `emailVerifiedAt`, `tokenVersion`, `totpSecret` (encrypted), `totpEnabled`, createdAt, updatedAt
 - `EmailVerificationToken` / `PasswordResetToken` — id, `tokenHash` (SHA-256, never the raw token), expiresAt, usedAt, userId
