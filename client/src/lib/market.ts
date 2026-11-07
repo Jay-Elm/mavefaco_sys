@@ -46,9 +46,10 @@ export interface SaleLine {
 export interface CropInfo {
   id: number;
   name: string;
-  daysToHarvestMin: number;
-  daysToHarvestMax: number;
+  daysToHarvestMin: number | null;
+  daysToHarvestMax: number | null;
   source?: string | null;
+  category?: string;
 }
 
 /** A crop's planned harvest over the supply outlook (from expectedSupply()). */
@@ -137,8 +138,8 @@ export interface CropMarket {
   /** Average selling price per kilo over DEMAND_WEEKS, if any kilo sales. */
   pricePerKg: number | null;
   prices: { month: string; pricePerKg: number; kg: number }[];
-  /** Harvest window if planted today, from the crop's DA growing time. */
-  plantTodayHarvest: { from: string; to: string };
+  /** Harvest window if planted today, from the crop's DA growing time (null if unknown). */
+  plantTodayHarvest: { from: string; to: string } | null;
 }
 
 /**
@@ -166,7 +167,10 @@ export function marketByCrop(crops: CropInfo[], sales: SaleLine[], supply: Plann
       gapKg: round1(demand.kg - planned.kg),
       pricePerKg: kgSold > 0 ? round2(kgLines.reduce((s, l) => s + l.quantity * l.price, 0) / kgSold) : null,
       prices: monthlyPrices(lines, today),
-      plantTodayHarvest: { from: addDays(today, crop.daysToHarvestMin), to: addDays(today, crop.daysToHarvestMax) },
+      plantTodayHarvest:
+        crop.daysToHarvestMin !== null && crop.daysToHarvestMax !== null
+          ? { from: addDays(today, crop.daysToHarvestMin), to: addDays(today, crop.daysToHarvestMax) }
+          : null,
     };
   });
 }

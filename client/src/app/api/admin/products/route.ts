@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
       include: {
         category: true,
         farmer: { select: { id: true, name: true, email: true } },
+        cropType: { select: { id: true, name: true } },
         _count: { select: { orderItems: true } },
       },
       orderBy: archived ? { archivedAt: "desc" } : { createdAt: "desc" },

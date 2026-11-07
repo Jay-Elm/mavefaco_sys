@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
+import { cropLinkData } from "@/lib/cropLink";
 import { NextRequest, NextResponse } from "next/server";
 import { productUpdateSchema } from "@/validators/product";
 import { removeListing } from "@/lib/productRemoval";
@@ -65,9 +66,9 @@ export async function PATCH(
     const parsed = productUpdateSchema.safeParse(await req.json());
     if (!parsed.success)
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
-    const { name, description, price, stock, unit, imageUrl, categoryId, cropTypeId } = parsed.data;
-    if (cropTypeId && !(await prisma.cropType.findUnique({ where: { id: cropTypeId }, select: { id: true } })))
-      return NextResponse.json({ error: "Choose a crop from the list" }, { status: 400 });
+    const { name, description, price, stock, unit, imageUrl, categoryId, cropTypeId, notACrop } = parsed.data;
+    const link = await cropLinkData(cropTypeId, notACrop);
+    if ("error" in link) return NextResponse.json({ error: link.error }, { status: 400 });
     if (stock !== undefined || unit !== undefined) {
       const badStock = stockError(stock ?? product.stock, unit ?? product.unit);
       if (badStock) return NextResponse.json({ error: badStock }, { status: 400 });
@@ -99,7 +100,7 @@ export async function PATCH(
         ...(unit !== undefined && { unit }),
         ...(imageUrl !== undefined && { imageUrl: imageUrl || null }),
         ...(categoryId !== undefined && { categoryId }),
-        ...(cropTypeId !== undefined && { cropTypeId }),
+        ...link.data,
         ...(contentChanged && { approved: false }),
         ...(resubmit && { suspendedAt: null, suspensionReasons: [], suspensionNote: null, suspendedById: null }),
       },

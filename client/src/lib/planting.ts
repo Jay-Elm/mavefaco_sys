@@ -35,11 +35,15 @@ export function weekStart(date: string): string {
   return addDays(date, -((day + 6) % 7));
 }
 
-/** The harvest window a crop type gives a planting. */
+/**
+ * The harvest window a crop type gives a planting, or null when the crop has
+ * no known growing time (the farmer then gives the dates).
+ */
 export function harvestWindow(
-  cropType: { daysToHarvestMin: number; daysToHarvestMax: number },
+  cropType: { daysToHarvestMin: number | null; daysToHarvestMax: number | null },
   plantedOn: string,
-): { harvestStart: string; harvestEnd: string } {
+): { harvestStart: string; harvestEnd: string } | null {
+  if (cropType.daysToHarvestMin === null || cropType.daysToHarvestMax === null) return null;
   return {
     harvestStart: addDays(plantedOn, cropType.daysToHarvestMin),
     harvestEnd: addDays(plantedOn, cropType.daysToHarvestMax),
@@ -74,7 +78,7 @@ type PlantingRow = {
   harvestEnd: Date;
   harvestedOn: Date | null;
   status: string;
-  cropType: { id: number; name: string; daysToHarvestMin: number; daysToHarvestMax: number };
+  cropType: { id: number; name: string; daysToHarvestMin: number | null; daysToHarvestMax: number | null };
 };
 
 /**

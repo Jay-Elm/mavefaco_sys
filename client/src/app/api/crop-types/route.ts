@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   try {
     const cropTypes = await prisma.cropType.findMany({
       orderBy: { name: "asc" },
-      include: { _count: { select: { plantings: true } } },
+      include: { _count: { select: { plantings: true, products: { where: { archivedAt: null } } } } },
     });
     return NextResponse.json(cropTypes);
   } catch {

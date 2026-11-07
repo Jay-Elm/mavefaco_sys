@@ -60,7 +60,7 @@ export default function EditProductPage() {
         unit: product.unit ?? 'piece',
         categoryId: String(product.categoryId),
         imageUrl: product.imageUrl ?? '',
-        cropTypeId: product.cropTypeId ? String(product.cropTypeId) : '',
+        cropTypeId: product.notACrop ? 'none' : product.cropTypeId ? String(product.cropTypeId) : '',
       })
       if (Array.isArray(cats)) setCategories(cats)
     }).finally(() => setLoading(false))
@@ -111,7 +111,8 @@ export default function EditProductPage() {
           unit: form.unit.trim() || 'piece',
           categoryId: parseInt(form.categoryId, 10),
           imageUrl: form.imageUrl.trim() || null,
-          cropTypeId: form.cropTypeId ? Number(form.cropTypeId) : null,
+          cropTypeId: form.cropTypeId && form.cropTypeId !== 'none' ? Number(form.cropTypeId) : null,
+          notACrop: form.cropTypeId === 'none',
         }),
       })
       const data = await res.json()
@@ -254,7 +255,7 @@ export default function EditProductPage() {
           value={form.cropTypeId}
           onChange={(v) => setForm((prev) => ({ ...prev, cropTypeId: v }))}
         />
-        <PriceReference token={token} cropTypeId={form.cropTypeId} unit={form.unit} />
+        {form.cropTypeId !== 'none' && <PriceReference token={token} cropTypeId={form.cropTypeId} unit={form.unit} />}
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Product Photo <span className="text-gray-500">(optional)</span></label>

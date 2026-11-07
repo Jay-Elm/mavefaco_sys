@@ -1,0 +1,2083 @@
+[
+ {
+  "name": "Ampalaya",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "ampalaya",
+   "amargoso",
+   "bitter gourd",
+   "bitter melon"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Ampalaya fruit [Bitter gourd]",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Ampalaya fruit [Bitter gourd]",
+  "days": [
+   60,
+   75
+  ],
+  "source": "DA Bicol, Guiya sa Pagtanom nin Gulay (2021): 60–75 days after emergence"
+ },
+ {
+  "name": "Eggplant",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "eggplant",
+   "talong"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Eggplant",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Eggplant, long, purple",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Squash",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "squash",
+   "kalabasa",
+   "karabasa"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Squash fruit",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Squash fruit",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Tomato",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "tomato",
+   "kamatis"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Tomato",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Tomato",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Okra",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "okra"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Okra [Lady's finger]",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Okra [Lady's finger]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Upo",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "upo",
+   "bottle gourd"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Upo [Bottle gourd]",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Upo [Bottle gourd]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Patola",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "patola",
+   "sponge gourd",
+   "luffa"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Patola",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Patola, Native",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Cucumber",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "cucumber",
+   "pipino"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Cucumber",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Cucumber",
+  "days": [
+   50,
+   65
+  ],
+  "source": "DA Bicol, Guiya sa Pagtanom nin Gulay (2021): 50–65 days after planting"
+ },
+ {
+  "name": "Sayote",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "sayote",
+   "chayote"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Chayote fruit",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Chayote fruit",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Young Jackfruit",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "young jackfruit",
+   "langkang hilaw",
+   "unripe jackfruit"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Jackfruit, young",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Jackfruit, young",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Green Papaya",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "green papaya",
+   "hilaw na papaya",
+   "unripe papaya"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Papaya, green",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Papaya, green",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Banana Blossom",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "banana blossom",
+   "puso ng saging",
+   "puso"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Banana blossom",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Banana Blossom",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Kamansi",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "kamansi",
+   "breadnut"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Kamansi",
+  "psaPriceTable": "2M/NFG/0032M4AFN05.px",
+  "psaPrice": "Kamansi",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Kamias",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "kamias",
+   "iba",
+   "bilimbi"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Kamias",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Kundol",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "kundol",
+   "wax gourd",
+   "winter melon"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Kundol",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Bell Pepper",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "bell pepper",
+   "siling baguio",
+   "capsicum"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Pepper, bell",
+  "psaPriceTable": "2M/NFG/0032M4AFN04.px",
+  "psaPrice": "Pepper, bell",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Young Corn",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "young corn",
+   "baby corn"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Young corn",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Malunggay Pods",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "malunggay pods",
+   "malunggay fruit",
+   "moringa pods"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Malunggay fruit",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Labong",
+  "category": "Fruit vegetables",
+  "aliases": [
+   "labong",
+   "rabong",
+   "bamboo shoots",
+   "bamboo shoot"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Bamboo shoots",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Pechay",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "pechay",
+   "petsay",
+   "bok choy",
+   "pak choi"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Pechay, native",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Pechay, native",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Pechay Baguio",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "pechay baguio",
+   "wombok",
+   "wongbok",
+   "chinese cabbage",
+   "napa cabbage"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Chinese cabbage (Wongbok, Pechay Baguio)",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Chinese cabbage (Wongbok, Pechay Baguio)",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Mustasa",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "mustasa",
+   "mustard"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Mustard",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Mustard",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Kangkong",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "kangkong",
+   "water spinach",
+   "swamp cabbage"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Kangkong [Swamp cabbage]",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Kangkong [Swamp cabbage]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Lettuce",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "lettuce",
+   "letsugas"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Lettuce",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Lettuce",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Cabbage",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "cabbage",
+   "repolyo"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Cabbage",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Cabbage",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Gabi Leaves",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "gabi leaves",
+   "dahon ng gabi",
+   "laing",
+   "natong"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Gabi, leaves with stem",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Camote Tops",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "camote tops",
+   "talbos ng kamote",
+   "sweet potato tops"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Camote tops",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Camote tops",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Malunggay",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "malunggay",
+   "kalunggay",
+   "moringa"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Malunggay leaves",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Malunggay leaves",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Cassava Tops",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "cassava tops",
+   "cassava leaves",
+   "talbos ng kamoteng kahoy"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Cassava tops",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Pako",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "pako",
+   "edible fern",
+   "fiddlehead"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Pako [Edible fern]",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Squash Tops",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "squash tops",
+   "talbos ng kalabasa"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Squash tops",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Squash tops",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Alugbati",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "alugbati",
+   "malabar spinach"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Alugbati",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Alugbati",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Ampalaya Leaves",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "ampalaya leaves",
+   "dahon ng ampalaya"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Ampalaya leaves",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Ampalaya leaves",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Chili Leaves",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "chili leaves",
+   "dahon ng sili",
+   "chili pepper leaves"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Chili pepper leaves",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Chili pepper leaves",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Sayote Tops",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "sayote tops",
+   "chayote tops"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Chayote tops",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Chayote tops",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Saluyot",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "saluyot",
+   "jute leaves"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Saluyot",
+  "psaPriceTable": "2M/NFG/0032M4AFN06.px",
+  "psaPrice": "Saluyot",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Spinach",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "spinach"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Spinach",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Chinese Malunggay",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "chinese malunggay"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Chinese malunggay",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Gabi Runners",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "gabi runners",
+   "gabi runner"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Gabi runner",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Labog",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "labog",
+   "roselle"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Labog [Rossel]",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Talinum",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "talinum"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Talinum",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Lupo",
+  "category": "Leafy vegetables",
+  "aliases": [
+   "lupo"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Lupo",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Sitaw",
+  "category": "Legumes",
+  "aliases": [
+   "sitaw",
+   "string beans",
+   "string bean",
+   "yardlong",
+   "balatong"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Sitao [Stringbeans]",
+  "psaPriceTable": "2M/NFG/0032M4AFN03.px",
+  "psaPrice": "Sitao [Stringbeans]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Sigarilyas",
+  "category": "Legumes",
+  "aliases": [
+   "sigarilyas",
+   "winged beans",
+   "winged bean",
+   "pallang"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Sigarilyas [Winged beans]",
+  "psaPriceTable": "2M/NFG/0032M4AFN03.px",
+  "psaPrice": "Sigarilyas [Winged beans]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Munggo",
+  "category": "Legumes",
+  "aliases": [
+   "munggo",
+   "monggo",
+   "mongo",
+   "mung beans",
+   "mung bean"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Mongo [Mungbean]",
+  "psaPriceTable": "2M/NFG/0032M4AFN03.px",
+  "psaPrice": "Mongo [Mungbean], green, shiny",
+  "days": [
+   65,
+   72
+  ],
+  "source": "DA Bicol, Guiya sa Pagtanom nin Gulay (2021): 65–72 days after planting"
+ },
+ {
+  "name": "Habitchuelas",
+  "category": "Legumes",
+  "aliases": [
+   "habitchuelas",
+   "snap beans",
+   "baguio beans",
+   "green beans"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Habitchuelas [Snap beans]",
+  "psaPriceTable": "2M/NFG/0032M4AFN03.px",
+  "psaPrice": "Habitchuelas [Snap beans]",
+  "days": [
+   43,
+   62
+  ],
+  "source": "DA Bicol, Guiya sa Pagtanom nin Gulay (2021): Burik 43, Blue Lake 47, Redford 52–62, Norman 52–59 days after planting"
+ },
+ {
+  "name": "Paayap",
+  "category": "Legumes",
+  "aliases": [
+   "paayap",
+   "cowpea",
+   "bush sitao"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Cowpea",
+  "psaPriceTable": "2M/NFG/0032M4AFN03.px",
+  "psaPrice": "Bush Sitao, Paayap [Cowpea]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Patani",
+  "category": "Legumes",
+  "aliases": [
+   "patani",
+   "lima beans",
+   "lima bean"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Patani [Lima beans]",
+  "psaPriceTable": "2M/NFG/0032M4AFN03.px",
+  "psaPrice": "Patani [Lima beans]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Kadios",
+  "category": "Legumes",
+  "aliases": [
+   "kadios",
+   "pigeon pea"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Kadios [Pigeon pea]",
+  "psaPriceTable": "2M/NFG/0032M4AFN03.px",
+  "psaPrice": "Kadios [Pigeon pea]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Peanut",
+  "category": "Legumes",
+  "aliases": [
+   "peanut",
+   "mani"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Peanut, with shell, dry",
+  "psaPriceTable": "2M/NFG/0032M4AFN03.px",
+  "psaPrice": "Peanut, with shell, dry",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Kidney Beans",
+  "category": "Legumes",
+  "aliases": [
+   "kidney beans",
+   "kidney bean"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Kidney beans",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Wonder Beans",
+  "category": "Legumes",
+  "aliases": [
+   "wonder beans"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Wonder beans",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Camote",
+  "category": "Root crops",
+  "aliases": [
+   "camote",
+   "kamote",
+   "sweet potato"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Camote [Sweet potato]",
+  "psaPriceTable": "2M/NFG/0032M4AFN02.px",
+  "psaPrice": "Camote [Sweet potato]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Cassava",
+  "category": "Root crops",
+  "aliases": [
+   "cassava",
+   "kamoteng kahoy",
+   "balinghoy",
+   "balanghoy"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Cassava for food, fresh tubers",
+  "psaPriceTable": "2M/NFG/0032M4AFN02.px",
+  "psaPrice": "Cassava for food, fresh tubers",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Gabi",
+  "category": "Root crops",
+  "aliases": [
+   "gabi",
+   "taro"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Gabi [Taro]",
+  "psaPriceTable": "2M/NFG/0032M4AFN02.px",
+  "psaPrice": "Gabi for sinigang, Tagalog [Taro]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Ube",
+  "category": "Root crops",
+  "aliases": [
+   "ube",
+   "ubi",
+   "purple yam",
+   "greater yam"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Ubi [Greater yam]",
+  "psaPriceTable": "2M/NFG/0032M4AFN02.px",
+  "psaPrice": "Ubi [Greater yam]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Singkamas",
+  "category": "Root crops",
+  "aliases": [
+   "singkamas",
+   "jicama"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Singkamas [Turnip]",
+  "psaPriceTable": "2M/NFG/0032M4AFN02.px",
+  "psaPrice": "Singkamas [Turnip]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Pao Galiang",
+  "category": "Root crops",
+  "aliases": [
+   "pao galiang"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Pao Galiang",
+  "psaPriceTable": "2M/NFG/0032M4AFN02.px",
+  "psaPrice": "Pao Galiang",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Labanos",
+  "category": "Root crops",
+  "aliases": [
+   "labanos",
+   "radish"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Radish",
+  "psaPriceTable": "2M/NFG/0032M4AFN02.px",
+  "psaPrice": "Radish",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Tugui",
+  "category": "Root crops",
+  "aliases": [
+   "tugui",
+   "tugue",
+   "lesser yam"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Tugue",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Potato",
+  "category": "Root crops",
+  "aliases": [
+   "potato",
+   "patatas"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Potato",
+  "psaPriceTable": "2M/NFG/0032M4AFN02.px",
+  "psaPrice": "Potato",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Carrot",
+  "category": "Root crops",
+  "aliases": [
+   "carrot",
+   "carrots",
+   "karot"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Carrot",
+  "psaPriceTable": "2M/NFG/0032M4AFN02.px",
+  "psaPrice": "Carrot",
+  "days": [
+   80,
+   100
+  ],
+  "source": "DA Bicol, Guiya sa Pagtanom nin Gulay (2021): 80–100 days after planting, by variety"
+ },
+ {
+  "name": "Siling Labuyo",
+  "category": "Herbs and spices",
+  "aliases": [
+   "siling labuyo",
+   "labuyo",
+   "chili",
+   "chilli",
+   "sili"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Chili pepper fruit (Siling labuyo)",
+  "psaPriceTable": "2M/NFG/0032M4AFN04.px",
+  "psaPrice": "Chili pepper fruit (Siling labuyo)",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Siling Haba",
+  "category": "Herbs and spices",
+  "aliases": [
+   "siling haba",
+   "finger chili",
+   "long chili",
+   "siling pangsigang"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Pepper, finger",
+  "psaPriceTable": "2M/NFG/0032M4AFN04.px",
+  "psaPrice": "Pepper, finger",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Ginger",
+  "category": "Herbs and spices",
+  "aliases": [
+   "ginger",
+   "luya",
+   "laya"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Ginger",
+  "psaPriceTable": "2M/NFG/0032M4AFN04.px",
+  "psaPrice": "Ginger, Native",
+  "days": [
+   240,
+   300
+  ],
+  "source": "DA Bicol, Guiya sa Pagtanom nin Gulay (2021): 8–10 months after planting"
+ },
+ {
+  "name": "Luyang Dilaw",
+  "category": "Herbs and spices",
+  "aliases": [
+   "luyang dilaw",
+   "turmeric",
+   "dulaw"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Luyang dilaw [Turmeric]",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Tanglad",
+  "category": "Herbs and spices",
+  "aliases": [
+   "tanglad",
+   "lemongrass",
+   "lemon grass"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Tanglad [Lemon grass]",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Spring Onion",
+  "category": "Herbs and spices",
+  "aliases": [
+   "spring onion",
+   "green onion",
+   "sibuyas dahon",
+   "dahon ng sibuyas"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Spring onion",
+  "psaPriceTable": "2M/NFG/0032M4AFN04.px",
+  "psaPrice": "Spring onion",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Sibuyas Tagalog",
+  "category": "Herbs and spices",
+  "aliases": [
+   "sibuyas tagalog",
+   "shallot",
+   "red onion",
+   "onion"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Onion, red shallot (Sibuyas Tagalog)",
+  "psaPriceTable": "2M/NFG/0032M4AFN04.px",
+  "psaPrice": "Onion, red shallot (Sibuyas Tagalog)",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Leeks",
+  "category": "Herbs and spices",
+  "aliases": [
+   "leeks",
+   "leek",
+   "onion leeks"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Onion leeks",
+  "psaPriceTable": "2M/NFG/0032M4AFN04.px",
+  "psaPrice": "Onion Leeks",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Black Pepper",
+  "category": "Herbs and spices",
+  "aliases": [
+   "black pepper",
+   "paminta"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Paminta [Black pepper]",
+  "psaPriceTable": "2M/NFG/0032M4AFN04.px",
+  "psaPrice": "Paminta [Black pepper]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Pandan",
+  "category": "Herbs and spices",
+  "aliases": [
+   "pandan",
+   "screwpine"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Pandan, fresh leaves",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Basil",
+  "category": "Herbs and spices",
+  "aliases": [
+   "basil",
+   "balanoy"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Basil",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Sangig",
+  "category": "Herbs and spices",
+  "aliases": [
+   "sangig"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Sangig",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Atsuete",
+  "category": "Herbs and spices",
+  "aliases": [
+   "atsuete",
+   "achuete",
+   "annatto"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Achuete",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Mushroom",
+  "category": "Other vegetables",
+  "aliases": [
+   "mushroom",
+   "mushrooms",
+   "kabute"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Mushroom",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Ubod",
+  "category": "Other vegetables",
+  "aliases": [
+   "ubod",
+   "coconut pith",
+   "heart of palm"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Coconut, pith",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Pineapple",
+  "category": "Fruits",
+  "aliases": [
+   "pineapple",
+   "pinya",
+   "formosa"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Pineapple",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Pineapple Formosa",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Saba",
+  "category": "Fruits",
+  "aliases": [
+   "saba",
+   "banana saba",
+   "cardaba"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Banana Saba",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Banana Saba, green",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Lakatan",
+  "category": "Fruits",
+  "aliases": [
+   "lakatan",
+   "banana lakatan"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Banana Lakatan",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Banana Lakatan, green",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Latundan",
+  "category": "Fruits",
+  "aliases": [
+   "latundan",
+   "banana latundan"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Banana Latundan",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Banana Latundan, green",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Bungulan",
+  "category": "Fruits",
+  "aliases": [
+   "bungulan",
+   "banana bungulan"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Banana Bungulan",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Banana Bungulan, green",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Cavendish",
+  "category": "Fruits",
+  "aliases": [
+   "cavendish",
+   "banana cavendish"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Banana Cavendish",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Banana Cavendish",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Banana (other varieties)",
+  "category": "Fruits",
+  "aliases": [
+   "banana",
+   "saging"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Banana Others",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Banana, Other Variety",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Watermelon",
+  "category": "Fruits",
+  "aliases": [
+   "watermelon",
+   "pakwan"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Watermelon",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Watermelon",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Papaya",
+  "category": "Fruits",
+  "aliases": [
+   "papaya",
+   "ripe papaya"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Papaya",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Papaya native",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Jackfruit",
+  "category": "Fruits",
+  "aliases": [
+   "jackfruit",
+   "langka",
+   "ripe jackfruit"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Jackfruit, ripe",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Jackfruit, ripe",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Calamansi",
+  "category": "Fruits",
+  "aliases": [
+   "calamansi",
+   "kalamansi",
+   "calamondin"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Calamansi",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Calamansi",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Mango Carabao",
+  "category": "Fruits",
+  "aliases": [
+   "carabao mango",
+   "mango carabao",
+   "manggang kalabaw"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Mango Carabao",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Mango Carabao, green",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Mango Indian",
+  "category": "Fruits",
+  "aliases": [
+   "indian mango",
+   "mango indian"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Mango Indian",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Mango Indian, green",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Mango Piko",
+  "category": "Fruits",
+  "aliases": [
+   "piko mango",
+   "mango piko",
+   "pico"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Mango Piko",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Mango Piko, green",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Mango (other varieties)",
+  "category": "Fruits",
+  "aliases": [
+   "mango",
+   "mangga"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Mango Others",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Mango, Other Variety",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Avocado",
+  "category": "Fruits",
+  "aliases": [
+   "avocado",
+   "abokado"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Avocado",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Avocado",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Guava",
+  "category": "Fruits",
+  "aliases": [
+   "guava",
+   "bayabas",
+   "guapple"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Guava",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Guava",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Santol",
+  "category": "Fruits",
+  "aliases": [
+   "santol"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Santol",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Santol native",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Rambutan",
+  "category": "Fruits",
+  "aliases": [
+   "rambutan"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Rambutan",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Rambutan",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Pomelo",
+  "category": "Fruits",
+  "aliases": [
+   "pomelo",
+   "suha",
+   "lukban"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Pomelo",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Pomelo",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Caimito",
+  "category": "Fruits",
+  "aliases": [
+   "caimito",
+   "star apple",
+   "starapple"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Starapple",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Starapple",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Guyabano",
+  "category": "Fruits",
+  "aliases": [
+   "guyabano",
+   "guayabano",
+   "soursop"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Guyabano",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Guayabano [Soursop]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Mandarin",
+  "category": "Fruits",
+  "aliases": [
+   "mandarin",
+   "sintones",
+   "ponkan"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Mandarin",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Mandarin Ladu",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Dragon Fruit",
+  "category": "Fruits",
+  "aliases": [
+   "dragon fruit",
+   "pitaya"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Dragon fruit",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Dragon fruit",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Lanzones",
+  "category": "Fruits",
+  "aliases": [
+   "lanzones",
+   "lansones",
+   "buahan"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Lanzones",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Lanzones",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Melon",
+  "category": "Fruits",
+  "aliases": [
+   "melon",
+   "muskmelon",
+   "cantaloupe",
+   "honeydew"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Melon",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Muskmelon",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Golden Melon",
+  "category": "Fruits",
+  "aliases": [
+   "golden melon"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Golden Melon",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Golden Melon",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Chico",
+  "category": "Fruits",
+  "aliases": [
+   "chico",
+   "sapote",
+   "sapodilla"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Chico",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Chico [Sapota]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Sampalok",
+  "category": "Fruits",
+  "aliases": [
+   "sampalok",
+   "sampaloc",
+   "tamarind"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Tamarind Fruit",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Tamarind",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Lemon",
+  "category": "Fruits",
+  "aliases": [
+   "lemon"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Lemon",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Lemon",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Lime",
+  "category": "Fruits",
+  "aliases": [
+   "lime",
+   "dayap"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Lime",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Lime",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Orange",
+  "category": "Fruits",
+  "aliases": [
+   "orange",
+   "dalandan"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Orange",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Orange",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Rimas",
+  "category": "Fruits",
+  "aliases": [
+   "rimas",
+   "breadfruit"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Breadfruit",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Breadfruit",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Lipote",
+  "category": "Fruits",
+  "aliases": [
+   "lipote"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Lipote",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Balimbing",
+  "category": "Fruits",
+  "aliases": [
+   "balimbing",
+   "starfruit",
+   "star fruit",
+   "carambola"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Balimbing",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Balimbing",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Atis",
+  "category": "Fruits",
+  "aliases": [
+   "atis",
+   "sugar apple",
+   "sugarapple"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Atis",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Atis [Sugarapple]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Makopa",
+  "category": "Fruits",
+  "aliases": [
+   "makopa",
+   "macopa",
+   "wax apple"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Makopa",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Makopa",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Miracle Fruit",
+  "category": "Fruits",
+  "aliases": [
+   "miracle fruit"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Miracle Fruit",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Canistel",
+  "category": "Fruits",
+  "aliases": [
+   "canistel",
+   "tiesa",
+   "eggfruit"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Canistel",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Canistel",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Aratelis",
+  "category": "Fruits",
+  "aliases": [
+   "aratelis",
+   "manzanita",
+   "datiles"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Aratelis (Manzanita)",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Aratelis (Manzanita)",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Duhat",
+  "category": "Fruits",
+  "aliases": [
+   "duhat",
+   "java plum"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Duhat",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Duhat",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Passion Fruit",
+  "category": "Fruits",
+  "aliases": [
+   "passion fruit",
+   "passionfruit"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Passion Fruit",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Passion fruit",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Bignay",
+  "category": "Fruits",
+  "aliases": [
+   "bignay"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Bignay",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Bignay",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Mabolo",
+  "category": "Fruits",
+  "aliases": [
+   "mabolo",
+   "velvet apple"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Mabolo",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Mulberry",
+  "category": "Fruits",
+  "aliases": [
+   "mulberry",
+   "mulberries"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Mulberry",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Marang",
+  "category": "Fruits",
+  "aliases": [
+   "marang"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Marang",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Marang",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Sineguelas",
+  "category": "Fruits",
+  "aliases": [
+   "sineguelas",
+   "siniguelas",
+   "sirguelas",
+   "jamaica plum"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Sineguelas",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Siniguelas [Jamaica plum]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Tambis",
+  "category": "Fruits",
+  "aliases": [
+   "tambis",
+   "water apple"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Tambis",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Tambis",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Mangosteen",
+  "category": "Fruits",
+  "aliases": [
+   "mangosteen"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Mangosteen",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Mangosteen",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Batwan",
+  "category": "Fruits",
+  "aliases": [
+   "batwan",
+   "batuan"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Batwan",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Anonas",
+  "category": "Fruits",
+  "aliases": [
+   "anonas",
+   "custard apple"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Anonas",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Anonas",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Grapes",
+  "category": "Fruits",
+  "aliases": [
+   "grapes",
+   "ubas"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Grapes",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Grapes, green",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Durian",
+  "category": "Fruits",
+  "aliases": [
+   "durian"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Durian",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Durian",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Strawberry",
+  "category": "Fruits",
+  "aliases": [
+   "strawberry",
+   "strawberries"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Strawberry",
+  "psaPriceTable": "2M/NFG/0032M4AFN07.px",
+  "psaPrice": "Strawberry",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Granada",
+  "category": "Fruits",
+  "aliases": [
+   "granada",
+   "pomegranate"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP2.px",
+  "psaProduction": "Granada",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Palay",
+  "category": "Grains",
+  "aliases": [
+   "palay",
+   "rice",
+   "bigas",
+   "paddy"
+  ],
+  "psaProductionTable": "2E/CS/0012E4EVCP0.px",
+  "psaProduction": "Palay",
+  "psaPriceTable": "2M/NFG/0032M4AFN01.px",
+  "psaPrice": "Palay [Paddy] Other Variety, dry (conv. to 14% mc)",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Corn",
+  "category": "Grains",
+  "aliases": [
+   "corn",
+   "mais",
+   "maize",
+   "sweet corn"
+  ],
+  "psaProductionTable": "2E/CS/0012E4EVCP0.px",
+  "psaProduction": "Corn",
+  "psaPriceTable": "2M/NFG/0032M4AFN01.px",
+  "psaPrice": "Corngrain [Maize] White, matured",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Coconut",
+  "category": "Plantation crops",
+  "aliases": [
+   "coconut",
+   "niyog",
+   "mature coconut"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP1.px",
+  "psaProduction": "Coconut Mature",
+  "psaPriceTable": "2M/NFG/0032M4AFN08.px",
+  "psaPrice": "Coconut matured",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Buko",
+  "category": "Plantation crops",
+  "aliases": [
+   "buko",
+   "young coconut"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP1.px",
+  "psaProduction": "Coconut Young",
+  "psaPriceTable": "2M/NFG/0032M4AFN08.px",
+  "psaPrice": "Coconut green, young 'buko'",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Pili",
+  "category": "Plantation crops",
+  "aliases": [
+   "pili",
+   "pili nut",
+   "pili nuts"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP1.px",
+  "psaProduction": "Pili Nut",
+  "psaPriceTable": "2M/NFG/0032M4AFN08.px",
+  "psaPrice": "Pili Nut, with shell",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Cacao",
+  "category": "Plantation crops",
+  "aliases": [
+   "cacao",
+   "cocoa",
+   "tablea"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP1.px",
+  "psaProduction": "Cacao",
+  "psaPriceTable": "2M/NFG/0032M4AFN08.px",
+  "psaPrice": "Cacao, dry beans [Cocoa beans]",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Coffee",
+  "category": "Plantation crops",
+  "aliases": [
+   "coffee",
+   "kape",
+   "coffee beans"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP1.px",
+  "psaProduction": "Coffee (green coffee beans)",
+  "psaPriceTable": "2M/NFG/0032M4AFN08.px",
+  "psaPrice": "Coffee Robusta, green coffee beans",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Sugarcane",
+  "category": "Plantation crops",
+  "aliases": [
+   "sugarcane",
+   "tubo"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP1.px",
+  "psaProduction": "Sugarcane",
+  "psaPriceTable": "2M/NFG/0032M4AFN08.px",
+  "psaPrice": "Sugarcane for Chewing",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Kasoy",
+  "category": "Plantation crops",
+  "aliases": [
+   "kasoy",
+   "cashew"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP1.px",
+  "psaProduction": "Cashew",
+  "psaPriceTable": "2M/NFG/0032M4AFN08.px",
+  "psaPrice": "Cashew Nut, without shell",
+  "days": null,
+  "source": null
+ },
+ {
+  "name": "Linga",
+  "category": "Plantation crops",
+  "aliases": [
+   "linga",
+   "sesame"
+  ],
+  "psaProductionTable": "2E/CS/0072E4EVCP1.px",
+  "psaProduction": "Sesame",
+  "psaPriceTable": null,
+  "psaPrice": null,
+  "days": null,
+  "source": null
+ }
+]

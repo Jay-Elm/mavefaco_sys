@@ -2,7 +2,9 @@
 
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { AlertTriangle, ChevronRight, Info, Loader2, Megaphone, RefreshCw, Sprout, TrendingUp } from 'lucide-react'
+import { AlertTriangle, ChevronRight, Info, Loader2, Megaphone, RefreshCw, Search, Sprout, TrendingUp } from 'lucide-react'
+import { CROP_CATEGORIES, byCategory } from '@/lib/cropCategories'
+import { searchCrops } from '@/lib/cropKeywords'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 import { ANNOUNCEMENT_DRAFT_KEY } from '@/components/AiReportPanel'
@@ -25,6 +27,9 @@ export default function MarketBoard({ forStaff }: { forStaff: boolean }) {
   const [syncing, setSyncing] = useState(false)
   const [syncNote, setSyncNote] = useState('')
   const [reload, setReload] = useState(0)
+  const [query, setQuery] = useState('')
+  const [category, setCategory] = useState('all')
+  const [showAll, setShowAll] = useState(false)
 
   useEffect(() => {
     if (!token) return
@@ -70,12 +75,19 @@ export default function MarketBoard({ forStaff }: { forStaff: boolean }) {
   const suggestions = data.suggestions.map((id) => byId.get(id)!).filter(Boolean)
   const months = lastMonths(data.today)
   const w = data.demandWeeks
-  // Crops with any sales or planned harvest first; the rest after, by name.
-  const rows = [...data.rows].sort((a, b) => activity(b) - activity(a) || a.crop.name.localeCompare(b.crop.name))
+  // By default, crops with sales, planned harvests or listings; "Show all"
+  // (or a search) brings in every Bicol crop.
+  const inCategory = data.rows.filter((r) => category === 'all' || r.crop.category === category)
+  const active = inCategory.filter((r) => activity(r) > 0)
+  const withRow = inCategory.map((r) => ({ ...r.crop, row: r }))
+  let rows: MarketRow[]
+  if (query.trim()) rows = searchCrops(query, withRow).map((x) => x.crop.row)
+  else if (showAll) rows = byCategory(withRow).map((c) => c.row)
+  else rows = [...active].sort((a, b) => activity(b) - activity(a) || a.crop.name.localeCompare(b.crop.name))
 
   function draftAdvisory() {
     const lines = data!.alerts.map((a) => `• ${a.message}`)
-    const plant = suggestions.slice(0, 3).map((r) => `${r.crop.name} (harvest about ${fmtDate(r.plantTodayHarvest.from)}–${fmtDate(r.plantTodayHarvest.to)} if planted now)`)
+    const plant = suggestions.slice(0, 3).map((r) => (r.plantTodayHarvest ? `${r.crop.name} (harvest about ${fmtDate(r.plantTodayHarvest.from)}–${fmtDate(r.plantTodayHarvest.to)} if planted now)` : r.crop.name))
     const body = [
       `From the marketplace's sales over the last ${w} weeks and members' planned harvests for the next ${w}:`,
       '',
@@ -161,9 +173,11 @@ export default function MarketBoard({ forStaff }: { forStaff: boolean }) {
                 <p className="mt-1 text-sm text-gray-700">
                   {r.demand.kg} kg sold in {w} weeks; {r.supply.kg} kg planned. Room for about <strong>{Math.round(r.gapKg)} kg</strong> more.
                 </p>
-                <p className="mt-1 text-xs text-gray-500">
-                  Planted today, it would be ready about {fmtDate(r.plantTodayHarvest.from)}–{fmtDate(r.plantTodayHarvest.to)} ({r.crop.daysToHarvestMin}–{r.crop.daysToHarvestMax} days, DA figure).
-                </p>
+                {r.plantTodayHarvest && (
+                  <p className="mt-1 text-xs text-gray-500">
+                    Planted today, it would be ready about {fmtDate(r.plantTodayHarvest.from)}–{fmtDate(r.plantTodayHarvest.to)} ({r.crop.daysToHarvestMin}–{r.crop.daysToHarvestMax} days, DA figure).
+                  </p>
+                )}
               </li>
             ))}
           </ol>
@@ -173,6 +187,22 @@ export default function MarketBoard({ forStaff }: { forStaff: boolean }) {
       {/* Every crop */}
       <section aria-labelledby="crops-h">
         <h2 id="crops-h" className="text-lg font-semibold text-soil mb-2">Demand and planned supply by crop</h2>
+        <div className="flex flex-wrap items-center gap-3 mb-3">
+          <div className="relative flex-1 min-w-[200px] max-w-sm">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden />
+            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search any crop, e.g. talong" aria-label="Search crops"
+              className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-paddy" />
+          </div>
+          <select value={category} onChange={(e) => setCategory(e.target.value)} aria-label="Category" className="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+            <option value="all">All categories</option>
+            {CROP_CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+          </select>
+          <label className="inline-flex items-center gap-2 text-sm text-gray-700">
+            <input type="checkbox" checked={showAll} onChange={(e) => setShowAll(e.target.checked)} className="accent-paddy" />
+            Show all {inCategory.length} Bicol crops
+          </label>
+          <span className="text-xs text-gray-500">{rows.length} shown{!showAll && !query.trim() ? ' (with sales, planned harvests or listings)' : ''}</span>
+        </div>
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[860px] text-sm">
@@ -236,7 +266,7 @@ export default function MarketBoard({ forStaff }: { forStaff: boolean }) {
   )
 }
 
-const activity = (r: MarketRow) => (r.demand.orders > 0 ? 2 : 0) + (r.supply.kg > 0 || r.supply.farms > 0 ? 1 : 0)
+const activity = (r: MarketRow) => (r.demand.orders > 0 ? 4 : 0) + (r.supply.kg > 0 || r.supply.farms > 0 ? 2 : 0) + (r.listings > 0 ? 1 : 0)
 
 function Detail({ row: r, months, w }: { row: MarketRow; months: string[]; w: number }) {
   return (
@@ -260,7 +290,7 @@ function Detail({ row: r, months, w }: { row: MarketRow; months: string[]; w: nu
             </div>
             <div>
               <dt className="text-xs font-semibold text-paddy-deep">If planted today</dt>
-              <dd>Ready about {fmtDate(r.plantTodayHarvest.from)}–{fmtDate(r.plantTodayHarvest.to)}</dd>
+              <dd>{r.plantTodayHarvest ? `Ready about ${fmtDate(r.plantTodayHarvest.from)}–${fmtDate(r.plantTodayHarvest.to)}` : 'No typical growing time on record'}</dd>
             </div>
             {(r.psa.production.albay.length > 0 || r.psa.production.bicol.length > 0) && (
               <div>

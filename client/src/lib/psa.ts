@@ -18,32 +18,11 @@ export const PSA_CREDIT = "Philippine Statistics Authority, OpenSTAT";
 export const AREAS = ["albay", "bicol"] as const;
 export type Area = (typeof AREAS)[number];
 
-// Farmgate prices (new series), pesos per kilo.
-const T = {
-  legumes: "2M/NFG/0032M4AFN03.px",
-  condiments: "2M/NFG/0032M4AFN04.px",
-  fruitVeg: "2M/NFG/0032M4AFN05.px",
-  leafyVeg: "2M/NFG/0032M4AFN06.px",
-} as const;
-// Vegetables and root crops: volume of production, metric tons.
-const PRODUCTION_TABLE = "2E/CS/0082E4EVCP3.px";
-
-/** Each crop type (by name) and its PSA series. */
-export const PSA_SERIES: Record<string, { priceTable: string; price: string; production: string }> = {
-  Ampalaya: { priceTable: T.fruitVeg, price: "Ampalaya fruit [Bitter gourd]", production: "Ampalaya fruit [Bitter gourd]" },
-  Eggplant: { priceTable: T.fruitVeg, price: "Eggplant, long, purple", production: "Eggplant" },
-  Kangkong: { priceTable: T.leafyVeg, price: "Kangkong [Swamp cabbage]", production: "Kangkong [Swamp cabbage]" },
-  Lettuce: { priceTable: T.leafyVeg, price: "Lettuce", production: "Lettuce" },
-  Mustasa: { priceTable: T.leafyVeg, price: "Mustard", production: "Mustard" },
-  Okra: { priceTable: T.fruitVeg, price: "Okra [Lady's finger]", production: "Okra [Lady's finger]" },
-  Patola: { priceTable: T.fruitVeg, price: "Patola, Native", production: "Patola" },
-  Pechay: { priceTable: T.leafyVeg, price: "Pechay, native", production: "Pechay, native" },
-  "Siling Labuyo": { priceTable: T.condiments, price: "Chili pepper fruit (Siling labuyo)", production: "Chili pepper fruit (Siling labuyo)" },
-  Sitaw: { priceTable: T.legumes, price: "Sitao [Stringbeans]", production: "Sitao [Stringbeans]" },
-  Squash: { priceTable: T.fruitVeg, price: "Squash fruit", production: "Squash fruit" },
-  Tomato: { priceTable: T.fruitVeg, price: "Tomato", production: "Tomato" },
-  Upo: { priceTable: T.fruitVeg, price: "Upo [Bottle gourd]", production: "Upo [Bottle gourd]" },
-};
+/**
+ * Each crop type stores its PSA series (CropType.psaProductionTable /
+ * psaProduction, psaPriceTable / psaPrice), filled from
+ * src/lib/cropCatalogue.json; staff-added crops have none until set.
+ */
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -87,30 +66,46 @@ export function csvLine(line: string): string[] {
 
 export interface PsaCell { commodity: string; area: Area; year: number; period: string; value: number }
 
+/** 1–4 from "Quarter2" or "Quarter 2"; null otherwise. */
+export const quarterOf = (period: string) => {
+  const m = /^Quarter\s?([1-4])$/.exec(period.trim());
+  return m ? Number(m[1]) : null;
+};
+
+const PERIOD = /^(January|February|March|April|May|June|July|August|September|October|November|December|Quarter\s?[1-4]|Semester\s?[12]|Annual)\b\s*/;
+
 /**
- * PX-Web CSV with two label columns (commodity, place) and one column per
- * "YEAR Period" ("2026 June", "2026 Quarter2"). Returns every number, in
- * either label order.
+ * PX-Web CSV. Most tables have two label columns (commodity and place) and
+ * one column per "YEAR Period" ("2026 June", "2026 Quarter2"); some put the
+ * commodity in the column heading instead ("2026 January Coconut matured")
+ * with the place as the only label. Returns every number, either way.
  */
 export function parsePsaCsv(text: string): PsaCell[] {
-  const lines = text.replace(/^﻿/, "").split(/\r?\n/).filter((l) => l.trim());
+  const lines = text.replace(/^\uFEFF/, "").split(/\r?\n/).filter((l) => l.trim());
   if (lines.length < 2) return [];
   const header = csvLine(lines[0]);
-  const cols = header.slice(2).map((h) => {
+  const labelCount = header.findIndex((h) => /^\d{4}\s/.test(h.trim()));
+  if (labelCount < 1) return [];
+  const cols = header.slice(labelCount).map((h) => {
     const m = /^(\d{4})\s+(.+)$/.exec(h.trim());
-    return m ? { year: Number(m[1]), period: m[2].trim() } : null;
+    if (!m) return null;
+    const p = PERIOD.exec(m[2]);
+    if (!p) return null;
+    return { year: Number(m[1]), period: p[1], commodity: clean(m[2].slice(p[0].length)) };
   });
   const cells: PsaCell[] = [];
   for (const line of lines.slice(1)) {
     const f = csvLine(line);
-    const [a, b] = [f[0], f[1]];
-    const area = areaOf(b) ?? areaOf(a);
-    if (!area) continue;
-    const commodity = clean(areaOf(b) ? a : b);
-    f.slice(2).forEach((raw, i) => {
+    const labels = f.slice(0, labelCount);
+    const areaLabel = labels.find((l) => areaOf(l) !== null);
+    if (!areaLabel) continue;
+    const area = areaOf(areaLabel)!;
+    const rowCommodity = labels.filter((l) => l !== areaLabel).map(clean)[0] ?? "";
+    f.slice(labelCount).forEach((raw, i) => {
       const col = cols[i];
       const value = psaNumber(raw);
-      if (col && value !== null) cells.push({ commodity, area, year: col.year, period: col.period, value });
+      const commodity = col?.commodity || rowCommodity;
+      if (col && value !== null && commodity) cells.push({ commodity, area, year: col.year, period: col.period, value });
     });
   }
   return cells;
@@ -144,11 +139,11 @@ async function query(fetchImpl: Fetch, table: string, commodities: string[], per
   const selection = vars.map((v) => {
     const code = v.code.toLowerCase();
     let values: string[];
-    if (code === "commodity" || code === "crop") values = pick(v, (t) => commodities.includes(clean(t)));
-    else if (code === "geolocation" || code.startsWith("region")) values = pick(v, (t) => areaOf(t) !== null);
+    if (code === "geolocation" || code.startsWith("region")) values = pick(v, (t) => areaOf(t) !== null);
     else if (code === "year") values = v.values.slice(-years);
     else if (code === "period") values = pick(v, periodFilter);
-    else values = v.values;
+    // The commodity, whatever the table calls it (Commodity, Crop, Ecosystem/Croptype).
+    else values = pick(v, (t) => commodities.includes(clean(t)));
     return { code: v.code, selection: { filter: "item", values } };
   });
 
@@ -194,43 +189,57 @@ async function saveProduction(rows: { cropTypeId: number; area: string; year: nu
 /**
  * Fetches the last two years of farmgate prices and production for every
  * crop type with a PSA series, and saves them. Returns how many figures were
- * saved; a table that fails is reported and the rest still saved.
+ * saved; a table that fails is reported and the rest still saved. Tables are
+ * fetched side by side.
  */
 export async function syncPsaMarket(fetchImpl: Fetch = fetch) {
-  const crops = await prisma.cropType.findMany({ select: { id: true, name: true } });
-  const known = crops.filter((c) => PSA_SERIES[c.name]);
+  const crops = await prisma.cropType.findMany({
+    select: { id: true, psaProductionTable: true, psaProduction: true, psaPriceTable: true, psaPrice: true },
+  });
   const errors: string[] = [];
   let prices = 0;
   let production = 0;
+  const fail = (err: unknown) => errors.push(err instanceof Error ? err.message : String(err));
 
-  const priceTables = [...new Set(known.map((c) => PSA_SERIES[c.name].priceTable))];
-  await Promise.all([...priceTables.map(async (table) => {
-    const inTable = known.filter((c) => PSA_SERIES[c.name].priceTable === table);
+  // table -> PSA name -> crop ids (two crops may share a series).
+  const group = (pick: (c: (typeof crops)[number]) => [string | null, string | null]) => {
+    const tables = new Map<string, Map<string, number[]>>();
+    for (const c of crops) {
+      const [table, name] = pick(c);
+      if (!table || !name) continue;
+      const names = tables.get(table) ?? tables.set(table, new Map()).get(table)!;
+      names.set(name, [...(names.get(name) ?? []), c.id]);
+    }
+    return tables;
+  };
+
+  const priceJobs = [...group((c) => [c.psaPriceTable, c.psaPrice])].map(async ([table, names]) => {
     try {
-      const cells = await query(fetchImpl, table, inTable.map((c) => PSA_SERIES[c.name].price), (p) => MONTHS.includes(p));
+      const cells = await query(fetchImpl, table, [...names.keys()], (p) => MONTHS.includes(p));
       const rows = cells.flatMap((cell) => {
-        const crop = inTable.find((c) => PSA_SERIES[c.name].price === cell.commodity);
         const month = MONTHS.indexOf(cell.period) + 1;
-        return crop && month >= 1 ? [{ cropTypeId: crop.id, area: cell.area, year: cell.year, month, value: cell.value }] : [];
+        return month < 1 ? [] : (names.get(cell.commodity) ?? []).map((cropTypeId) => ({ cropTypeId, area: cell.area, year: cell.year, month, value: cell.value }));
       });
       await savePrices(rows);
       prices += rows.length;
     } catch (err) {
-      errors.push(err instanceof Error ? err.message : String(err));
+      fail(err);
     }
-  }), (async () => {
-  try {
-    const cells = await query(fetchImpl, PRODUCTION_TABLE, known.map((c) => PSA_SERIES[c.name].production), (p) => /^Quarter[1-4]$/.test(p));
-    const rows = cells.flatMap((cell) => {
-      const crop = known.find((c) => PSA_SERIES[c.name].production === cell.commodity);
-      return crop ? [{ cropTypeId: crop.id, area: cell.area, year: cell.year, quarter: Number(cell.period.replace("Quarter", "")), value: cell.value }] : [];
-    });
-    await saveProduction(rows);
-    production += rows.length;
-  } catch (err) {
-    errors.push(err instanceof Error ? err.message : String(err));
-  }
-  })()]);
+  });
 
+  const productionJobs = [...group((c) => [c.psaProductionTable, c.psaProduction])].map(async ([table, names]) => {
+    try {
+      const cells = await query(fetchImpl, table, [...names.keys()], (p) => quarterOf(p) !== null);
+      const rows = cells.flatMap((cell) =>
+        (names.get(cell.commodity) ?? []).map((cropTypeId) => ({ cropTypeId, area: cell.area, year: cell.year, quarter: quarterOf(cell.period)!, value: cell.value })),
+      );
+      await saveProduction(rows);
+      production += rows.length;
+    } catch (err) {
+      fail(err);
+    }
+  });
+
+  await Promise.all([...priceJobs, ...productionJobs]);
   return { prices, production, errors };
 }

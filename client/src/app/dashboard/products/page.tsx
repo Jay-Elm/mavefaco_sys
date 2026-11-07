@@ -1,6 +1,9 @@
 'use client'
 
 import React, { useEffect, useState, useMemo } from 'react'
+import StaffCropLink from '@/components/StaffCropLink'
+import type { PickerCrop } from '@/components/CropPicker'
+import { byCategory } from '@/lib/cropCategories'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { refreshNavBadges } from '@/components/NavBadge'
@@ -25,7 +28,13 @@ interface ProductRow {
   category: { name: string }
   farmer: { name: string; email: string }
   _count: { orderItems: number }
+  cropTypeId: number | null
+  notACrop: boolean
+  cropType: { id: number; name: string } | null
 }
+
+/** Live, and neither linked to a crop nor marked "not a farm crop". */
+const unlinked = (p: ProductRow) => !p.archivedAt && !p.cropTypeId && !p.notACrop
 
 type StatusFilter = 'all' | 'approved' | 'pending' | 'suspended' | 'archived'
 
@@ -58,6 +67,8 @@ export default function DashboardProductsPage() {
   const [search, setSearch]           = useState('')
   const [filterCategory, setFilterCategory] = useState('')
   const [filterStatus, setFilterStatus]     = useState<StatusFilter>('all')
+  const [filterCrop, setFilterCrop]         = useState<'all' | 'unlinked'>('all')
+  const [crops, setCrops]                   = useState<PickerCrop[]>([])
   // Archived products come from a separate request, loaded the first time
   // the "Archived" filter is picked.
   const [archivedProducts, setArchivedProducts] = useState<ProductRow[] | null>(null)
@@ -101,6 +112,7 @@ export default function DashboardProductsPage() {
       )
     }
     if (filterCategory) list = list.filter((p) => p.category.name === filterCategory)
+    if (filterCrop === 'unlinked') list = list.filter(unlinked)
     if (filterStatus === 'approved')  list = list.filter((p) => p.approved)
     if (filterStatus === 'pending')   list = list.filter((p) => !p.approved && !p.suspendedAt)
     if (filterStatus === 'suspended') list = list.filter((p) => p.suspendedAt)
@@ -116,7 +128,20 @@ export default function DashboardProductsPage() {
     })
 
     return list
-  }, [source, search, filterCategory, filterStatus, sortKey, sortDir])
+  }, [source, search, filterCategory, filterStatus, filterCrop, sortKey, sortDir])
+
+  // The crop list, for linking listings to the crops they sell.
+  useEffect(() => {
+    if (!token) return
+    fetch('/api/crop-types', { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => r.json())
+      .then((d) => Array.isArray(d) && setCrops(byCategory(d)))
+      .catch(() => {})
+  }, [token])
+
+  function linked(id: number, link: { cropTypeId: number | null; notACrop: boolean; cropType: { id: number; name: string } | null }) {
+    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, ...link } : p)))
+  }
 
   function toggleSort(key: SortKey) {
     if (sortKey === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'))
@@ -208,6 +233,7 @@ export default function DashboardProductsPage() {
   const pending   = products.filter((p) => !p.approved && !p.suspendedAt).length
   const suspended = products.filter((p) => p.suspendedAt).length
   const approved  = products.filter((p) => p.approved).length
+  const notLinked = products.filter(unlinked).length
 
   return (
     <div className="p-4 sm:p-8">
@@ -223,6 +249,15 @@ export default function DashboardProductsPage() {
             <span className="bg-red-100 text-red-700 font-semibold px-2.5 py-1 rounded-full">
               {suspended} suspended
             </span>
+          )}
+          {notLinked > 0 && (
+            <button
+              onClick={() => setFilterCrop('unlinked')}
+              title="Listings whose sales don't count on the Market page until they're linked to a crop"
+              className="bg-amber-100 text-amber-800 font-semibold px-2.5 py-1 rounded-full hover:bg-amber-200"
+            >
+              {notLinked} not linked to a crop
+            </button>
           )}
           <span>{approved} approved / {products.length} total</span>
         </div>
@@ -264,9 +299,19 @@ export default function DashboardProductsPage() {
           <option value="archived">Archived</option>
         </select>
 
-        {(search || filterCategory || filterStatus !== 'all') && (
+        <select
+          aria-label="Filter by crop link"
+          value={filterCrop}
+          onChange={(e) => setFilterCrop(e.target.value as 'all' | 'unlinked')}
+          className="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-paddy"
+        >
+          <option value="all">Any crop link</option>
+          <option value="unlinked">Not linked to a crop</option>
+        </select>
+
+        {(search || filterCategory || filterStatus !== 'all' || filterCrop !== 'all') && (
           <button
-            onClick={() => { setSearch(''); setFilterCategory(''); setFilterStatus('all') }}
+            onClick={() => { setSearch(''); setFilterCategory(''); setFilterStatus('all'); setFilterCrop('all') }}
             className="text-xs text-gray-500 hover:text-gray-700 underline"
           >
             Clear filters
@@ -279,9 +324,9 @@ export default function DashboardProductsPage() {
         <button
           onClick={() => downloadCSV(
             'products.csv',
-            ['Product', 'Category', 'Farmer', 'Farmer Email', 'Price (PHP)', 'Stock', 'Orders', 'Status', 'Listed Date'],
+            ['Product', 'Category', 'Crop', 'Farmer', 'Farmer Email', 'Price (PHP)', 'Stock', 'Orders', 'Status', 'Listed Date'],
             displayed.map((p) => [
-              p.name, p.category.name, p.farmer.name, p.farmer.email,
+              p.name, p.category.name, p.notACrop ? 'Not a farm crop' : p.cropType?.name ?? '', p.farmer.name, p.farmer.email,
               p.price.toFixed(2), p.stock, p._count.orderItems,
               statusOf(p),
               fmtDate(p.createdAt),
@@ -297,7 +342,7 @@ export default function DashboardProductsPage() {
 
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-        <table className="w-full min-w-[780px] text-sm">
+        <table className="w-full min-w-[960px] text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th
@@ -307,6 +352,7 @@ export default function DashboardProductsPage() {
                 Product <SortIcon col="name" sortKey={sortKey} sortDir={sortDir} />
               </th>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Category</th>
+              <th className="px-5 py-3 text-left font-medium text-gray-500">Crop</th>
               <th className="px-5 py-3 text-left font-medium text-gray-500">Farmer</th>
               <th
                 className="px-5 py-3 text-right font-medium text-gray-500 cursor-pointer select-none hover:text-gray-700"
@@ -333,7 +379,7 @@ export default function DashboardProductsPage() {
           <tbody className="divide-y divide-gray-50">
             {displayed.length === 0 ? (
               <tr>
-                <td colSpan={8} className="text-center py-12 text-gray-500">
+                <td colSpan={9} className="text-center py-12 text-gray-500">
                   <Package size={32} className="mx-auto mb-2" />
                   {showingArchived && archivedProducts === null
                     ? 'Loading archived products…'
@@ -356,6 +402,13 @@ export default function DashboardProductsPage() {
                       <span className="bg-shoot text-paddy-deep text-xs font-medium px-2 py-0.5 rounded-full">
                         {p.category.name}
                       </span>
+                    </td>
+                    <td className="px-5 py-3">
+                      {p.archivedAt ? (
+                        <span className="text-xs text-gray-500">{p.notACrop ? 'Not a farm crop' : p.cropType?.name ?? '—'}</span>
+                      ) : (
+                        <StaffCropLink productId={p.id} cropTypeId={p.cropTypeId} notACrop={p.notACrop} crops={crops} token={token} onSaved={(l) => linked(p.id, l)} />
+                      )}
                     </td>
                     <td className="px-5 py-3 text-gray-600">{p.farmer.name}</td>
                     <td className="px-5 py-3 text-right font-semibold text-paddy">
@@ -454,7 +507,7 @@ export default function DashboardProductsPage() {
 
                   {actionError?.id === p.id && (
                     <tr className="bg-red-50">
-                      <td colSpan={8} className="px-5 py-2">
+                      <td colSpan={9} className="px-5 py-2">
                         <span className="flex items-center gap-2 text-xs text-red-700">
                           <AlertTriangle size={13} />
                           {actionError.msg}

@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
+import { cropLinkData } from "@/lib/cropLink";
 import { NextRequest, NextResponse } from "next/server";
 import { productCreateSchema } from "@/validators/product";
 import { stockError } from "@/lib/units";
@@ -23,11 +24,11 @@ export async function POST(req: NextRequest) {
     const parsed = productCreateSchema.safeParse(await req.json());
     if (!parsed.success)
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
-    const { name, description, price, stock, unit, categoryId, imageUrl, cropTypeId } = parsed.data;
+    const { name, description, price, stock, unit, categoryId, imageUrl, cropTypeId, notACrop } = parsed.data;
     const badStock = stockError(stock, unit);
     if (badStock) return NextResponse.json({ error: badStock }, { status: 400 });
-    if (cropTypeId && !(await prisma.cropType.findUnique({ where: { id: cropTypeId }, select: { id: true } })))
-      return NextResponse.json({ error: "Choose a crop from the list" }, { status: 400 });
+    const link = await cropLinkData(cropTypeId, notACrop);
+    if ("error" in link) return NextResponse.json({ error: link.error }, { status: 400 });
 
     const product = await prisma.product.create({
       data: {
@@ -37,7 +38,7 @@ export async function POST(req: NextRequest) {
         stock,
         unit,
         categoryId,
-        cropTypeId: cropTypeId ?? null,
+        ...link.data,
         imageUrl: imageUrl || null,
         farmerId: actor.id,
         approved: false,
@@ -95,6 +96,7 @@ export async function GET(req: NextRequest) {
       },
       include: {
         category: true,
+        cropType: { select: { id: true, name: true } },
         farmer: {
           select: {
             id: true,

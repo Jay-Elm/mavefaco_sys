@@ -189,6 +189,8 @@ model Product {
   // demand (src/lib/market.ts). Not shown to customers.
   cropTypeId Int?
   cropType   CropType? @relation(fields: [cropTypeId], references: [id], onDelete: SetNull)
+  // Not a farm crop at all (processed goods, fish...): no crop to link.
+  notACrop   Boolean   @default(false)
 
   orderItems OrderItem[]
   reviews    Review[]
@@ -207,14 +209,27 @@ model Product {
 // manage the list; the figures are approximate and drive each planting's
 // growth stage and expected harvest window (src/lib/planting.ts).
 model CropType {
-  id               Int      @id @default(autoincrement())
-  name             String   @unique
-  // Typical range of days from planting to harvest.
-  daysToHarvestMin Int
-  daysToHarvestMax Int
+  id                 Int      @id @default(autoincrement())
+  name               String   @unique
+  // Typical range of days from planting to harvest; null when no DA figure is
+  // known (a planting of the crop then takes its harvest dates from the farmer).
+  daysToHarvestMin   Int?
+  daysToHarvestMax   Int?
   // Where the range comes from (e.g. a Department of Agriculture guide).
-  source           String?
-  createdAt        DateTime @default(now())
+  source             String?
+  // Fruit vegetables, Leafy vegetables, Legumes, Root crops, Herbs and
+  // spices, Fruits, Grains, Plantation crops, Other vegetables.
+  category           String   @default("Other vegetables")
+  // Other names in English, Filipino or Bikol; a listing named with any of
+  // them is matched to this crop (src/lib/cropKeywords.ts).
+  aliases            String[] @default([])
+  // The crop's PSA OpenSTAT series (src/lib/psa.ts): production table and
+  // name, and farmgate price table and name when PSA prices it.
+  psaProductionTable String?
+  psaProduction      String?
+  psaPriceTable      String?
+  psaPrice           String?
+  createdAt          DateTime @default(now())
 
   plantings        Planting[]
   products         Product[]

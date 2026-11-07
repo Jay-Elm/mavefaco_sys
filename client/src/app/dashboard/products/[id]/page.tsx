@@ -1,5 +1,8 @@
 'use client'
 
+import StaffCropLink from '@/components/StaffCropLink'
+import type { PickerCrop } from '@/components/CropPicker'
+import { byCategory } from '@/lib/cropCategories'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -26,6 +29,8 @@ interface Product {
   suspensionNote: string | null
   category: { name: string }
   farmer: { id: number; name: string; email: string }
+  cropTypeId: number | null
+  notACrop: boolean
 }
 
 const fmtDate = (d: string | Date) =>
@@ -41,6 +46,15 @@ export default function DashboardProductViewPage() {
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [crops, setCrops] = useState<PickerCrop[]>([])
+
+  useEffect(() => {
+    if (!token) return
+    fetch('/api/crop-types', { headers: { Authorization: `Bearer ${token}` } })
+      .then((r) => r.json())
+      .then((d) => Array.isArray(d) && setCrops(byCategory(d)))
+      .catch(() => {})
+  }, [token])
 
   useEffect(() => {
     if (!token) return
@@ -110,6 +124,19 @@ export default function DashboardProductViewPage() {
             <div><dt className="text-gray-500">Farmer</dt><dd className="text-soil">{product.farmer.name} <span className="text-gray-500">({product.farmer.email})</span></dd></div>
             <div><dt className="text-gray-500">Listed</dt><dd className="text-soil">{fmtDate(product.createdAt)}</dd></div>
             <div><dt className="text-gray-500">Last updated</dt><dd className="text-soil">{fmtDate(product.updatedAt)}</dd></div>
+            <div className="sm:col-span-2">
+              <dt className="text-gray-500">Crop <span className="text-xs">(counts its sales on the Market page; customers don&apos;t see it)</span></dt>
+              <dd className="mt-1 max-w-xs">
+                <StaffCropLink
+                  productId={product.id}
+                  cropTypeId={product.cropTypeId}
+                  notACrop={product.notACrop}
+                  crops={crops}
+                  token={token}
+                  onSaved={(l) => setProduct((p) => (p ? { ...p, cropTypeId: l.cropTypeId, notACrop: l.notACrop } : p))}
+                />
+              </dd>
+            </div>
           </dl>
         </div>
       )}

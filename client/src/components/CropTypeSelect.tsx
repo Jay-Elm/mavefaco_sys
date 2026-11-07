@@ -1,14 +1,15 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { suggestCropType } from '@/lib/cropKeywords'
-
-interface Crop { id: number; name: string }
+import { byCategory } from '@/lib/cropCategories'
+import CropPicker, { type PickerCrop } from '@/components/CropPicker'
 
 /**
- * Which crop a listing sells, so its sales count toward that crop's market
- * demand. Fills itself in from the listing name until the farmer picks one
- * by hand. Customers never see it, so changing it needs no review.
+ * Which crop a listing sells, so its sales count toward that crop on the
+ * Market page, or "Not a farm crop". Fills itself in from the listing name
+ * (any English, Filipino or Bikol name staff gave the crop) until the farmer
+ * picks one by hand. Customers never see it, so changing it needs no review.
  */
 export default function CropTypeSelect({
   token,
@@ -18,11 +19,11 @@ export default function CropTypeSelect({
 }: {
   token: string | null
   listingName: string
-  /** The crop's id as a string, or '' for none. */
+  /** '' (not linked yet), 'none' (not a farm crop), or the crop's id. */
   value: string
   onChange: (value: string) => void
 }) {
-  const [crops, setCrops] = useState<Crop[]>([])
+  const [crops, setCrops] = useState<PickerCrop[]>([])
   // Once chosen by hand (or loaded from a saved listing), stop guessing.
   const touched = useRef(value !== '')
 
@@ -47,22 +48,22 @@ export default function CropTypeSelect({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listingName, crops])
 
+  const sorted = useMemo(() => byCategory(crops), [crops])
+
   return (
     <div>
-      <label htmlFor="crop-type" className="block text-sm font-medium text-gray-700 mb-1">
-        Crop <span className="text-gray-500">(optional)</span>
-      </label>
-      <select
-        id="crop-type"
+      <CropPicker
+        crops={sorted}
         value={value}
-        onChange={(e) => { touched.current = true; onChange(e.target.value) }}
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
-      >
-        <option value="">Not a listed crop</option>
-        {crops.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-      </select>
+        onChange={(v) => { touched.current = true; onChange(v) }}
+        label="Crop (optional)"
+        emptyLabel="Not linked to a crop yet"
+        allowEmpty
+        allowNotACrop
+      />
       <p className="mt-1 text-xs text-gray-500">
-        Counts this listing&apos;s sales toward the crop on the Market page. Customers don&apos;t see it.
+        Links this listing to a crop on the Market page, so its sales count there, whatever you call it. Customers don&apos;t see it.
+        {value === '' && ' Not linked yet: cooperative staff may link it for you.'}
       </p>
     </div>
   )

@@ -5,9 +5,13 @@ import type { ElementType } from 'react'
 export interface CropType {
   id: number
   name: string
-  daysToHarvestMin: number
-  daysToHarvestMax: number
+  daysToHarvestMin: number | null
+  daysToHarvestMax: number | null
   source?: string | null
+  category?: string
+  aliases?: string[]
+  psaProduction?: string | null
+  psaPrice?: string | null
 }
 
 export interface Planting {

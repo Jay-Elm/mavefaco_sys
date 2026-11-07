@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { areaOf, csvLine, parsePsaCsv, psaNumber } from "./psa";
+import { areaOf, csvLine, parsePsaCsv, psaNumber, quarterOf } from "./psa";
 
 describe("PSA parsing", () => {
   it("knows Albay and the Bicol region by their PSA names", () => {
@@ -41,5 +41,19 @@ describe("PSA parsing", () => {
       { commodity: "Pechay, native", area: "albay", year: 2026, period: "Quarter1", value: 590.32 },
       { commodity: "Pechay, native", area: "albay", year: 2026, period: "Quarter2", value: 1420.16 },
     ]);
+  });
+
+  it("reads tables that put the commodity in the column heading", () => {
+    const csv = ['"Geolocation","2026 January Coconut matured","2026 January Pili Nut, with shell"', '"....Albay",10.77,58.34'].join("\n");
+    expect(parsePsaCsv(csv)).toEqual([
+      { commodity: "Coconut matured", area: "albay", year: 2026, period: "January", value: 10.77 },
+      { commodity: "Pili Nut, with shell", area: "albay", year: 2026, period: "January", value: 58.34 },
+    ]);
+  });
+
+  it("knows quarters written with or without a space", () => {
+    expect(quarterOf("Quarter2")).toBe(2);
+    expect(quarterOf("Quarter 3")).toBe(3);
+    expect(quarterOf("Semester1")).toBeNull();
   });
 });

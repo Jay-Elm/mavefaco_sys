@@ -42,7 +42,7 @@ export async function PUT(req: NextRequest, context: { params: Promise<{ id: str
 
     const cropType = await prisma.cropType.findUniqueOrThrow({
       where: { id: auth.id },
-      include: { _count: { select: { plantings: true } } },
+      include: { _count: { select: { plantings: true, products: { where: { archivedAt: null } } } } },
     });
     return NextResponse.json(cropType);
   } catch (err) {

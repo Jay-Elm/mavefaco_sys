@@ -7,6 +7,16 @@ import { GET as reference } from "@/app/api/market/reference/route";
 import { prisma } from "@/lib/prisma";
 import { createCropType, createUser, request } from "@/test-utils/integration/helpers";
 
+/** A crop with the PSA series the fake PSA below serves. */
+const SERIES: Record<string, { psaPriceTable: string; psaPrice: string; psaProductionTable: string; psaProduction: string }> = {
+  Tomato: { psaPriceTable: "2M/NFG/0032M4AFN05.px", psaPrice: "Tomato", psaProductionTable: "2E/CS/0082E4EVCP3.px", psaProduction: "Tomato" },
+  Eggplant: { psaPriceTable: "2M/NFG/0032M4AFN05.px", psaPrice: "Eggplant, long, purple", psaProductionTable: "2E/CS/0082E4EVCP3.px", psaProduction: "Eggplant" },
+};
+async function psaCrop(name: string) {
+  const crop = await createCropType({ name });
+  return SERIES[name] ? prisma.cropType.update({ where: { id: crop.id }, data: SERIES[name] }) : crop;
+}
+
 /** A stand-in for PSA OpenSTAT: metadata on GET, CSV on POST, per table. */
 function fakePsa({ failTable }: { failTable?: string } = {}) {
   const geo = { code: "Geolocation", text: "Geolocation", values: ["0", "41", "42", "43"], valueTexts: ["PHILIPPINES", "..REGION V (BICOL REGION)", "....Albay", "....Camarines Norte"] };
@@ -37,8 +47,8 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe("syncPsaMarket", () => {
   it("saves Albay and Bicol farmgate prices and production, skipping missing figures", async () => {
-    const tomato = await createCropType({ name: "Tomato" });
-    const eggplant = await createCropType({ name: "Eggplant" });
+    const tomato = await psaCrop("Tomato");
+    const eggplant = await psaCrop("Eggplant");
     await createCropType({ name: "Other vegetable" }); // no PSA series: never asked for
     const psa = fakePsa();
 
@@ -67,8 +77,8 @@ describe("syncPsaMarket", () => {
   });
 
   it("keeps what arrived when one PSA table fails", async () => {
-    await createCropType({ name: "Tomato" });
-    await createCropType({ name: "Eggplant" });
+    await psaCrop("Tomato");
+    await psaCrop("Eggplant");
     const result = await syncPsaMarket(fakePsa({ failTable: "0082E4EVCP3" }).impl);
     expect(result.prices).toBe(4);
     expect(result.production).toBe(0);
@@ -88,7 +98,7 @@ describe("PSA routes", () => {
 
   it("staff can fetch now; farmers and customers can't", async () => {
     vi.stubGlobal("fetch", fakePsa().impl);
-    await createCropType({ name: "Tomato" });
+    await psaCrop("Tomato");
     for (const role of ["customer", "farmer"] as const)
       expect((await staffSync(request("/api/admin/market/psa", { method: "POST", as: await createUser({ role }) }))).status).toBe(403);
     for (const role of ["manager", "admin"] as const)
@@ -96,7 +106,7 @@ describe("PSA routes", () => {
   });
 
   it("the Market data and the price reference carry the PSA figures", async () => {
-    const tomato = await createCropType({ name: "Tomato" });
+    const tomato = await psaCrop("Tomato");
     await prisma.marketPrice.createMany({
       data: [
         { cropTypeId: tomato.id, area: "albay", year: 2026, month: 5, pricePerKg: 44 },

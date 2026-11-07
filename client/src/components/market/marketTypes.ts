@@ -2,7 +2,7 @@ import type { Signal } from '@/lib/market'
 
 /** GET /api/market, as the pages receive it. */
 export interface MarketRow {
-  crop: { id: number; name: string; daysToHarvestMin: number; daysToHarvestMax: number; source?: string | null }
+  crop: { id: number; name: string; daysToHarvestMin: number | null; daysToHarvestMax: number | null; source?: string | null; category?: string }
   demand: { kg: number; other: Record<string, number>; orders: number }
   supply: { kg: number; farms: number }
   signal: Signal
@@ -10,7 +10,9 @@ export interface MarketRow {
   gapKg: number
   pricePerKg: number | null
   prices: { month: string; pricePerKg: number; kg: number }[]
-  plantTodayHarvest: { from: string; to: string }
+  plantTodayHarvest: { from: string; to: string } | null
+  /** Live listings linked to this crop. */
+  listings: number
   /** PSA OpenSTAT figures for Albay and the Bicol region. */
   psa: {
     prices: Record<'albay' | 'bicol', { month: string; pricePerKg: number }[]>

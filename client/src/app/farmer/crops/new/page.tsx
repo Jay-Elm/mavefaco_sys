@@ -8,6 +8,8 @@ import { ArrowLeft, Loader2, Sprout } from 'lucide-react'
 import { harvestWindow, todayPH } from '@/lib/planting'
 import PlantingMarketHint from '@/components/market/PlantingMarketHint'
 import { INPUT, fmtWindow, type CropType } from '@/components/cropDisplay'
+import CropPicker from '@/components/CropPicker'
+import { byCategory } from '@/lib/cropCategories'
 
 interface Listing { id: number; name: string }
 
@@ -23,6 +25,9 @@ export default function NewPlantingPage() {
   const [areaSqm, setAreaSqm] = useState('')
   const [expectedYield, setExpectedYield] = useState('')
   const [productId, setProductId] = useState('')
+  // Only for a crop with no typical growing time on record.
+  const [harvestStart, setHarvestStart] = useState('')
+  const [harvestEnd, setHarvestEnd] = useState('')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
@@ -34,7 +39,7 @@ export default function NewPlantingPage() {
       fetch(`/api/products?farmerId=${user.id}`, { headers }).then((r) => r.json()),
     ])
       .then(([types, products]) => {
-        if (Array.isArray(types)) setCropTypes(types)
+        if (Array.isArray(types)) setCropTypes(byCategory(types))
         if (Array.isArray(products)) setListings(products)
       })
       .catch(() => setError('Failed to load the crop list'))
@@ -43,6 +48,8 @@ export default function NewPlantingPage() {
 
   const crop = cropTypes.find((c) => String(c.id) === cropTypeId)
   const preview = crop && plantedOn ? harvestWindow(crop, plantedOn) : null
+  // A crop without a DA growing time: the farmer says when they expect to harvest.
+  const askDates = Boolean(crop && !preview)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -58,6 +65,7 @@ export default function NewPlantingPage() {
           areaSqm: areaSqm ? Number(areaSqm) : null,
           expectedYield: expectedYield ? Number(expectedYield) : null,
           productId: productId ? Number(productId) : null,
+          ...(askDates && { harvestStart, harvestEnd }),
         }),
       })
       const d = await res.json()
@@ -88,13 +96,13 @@ export default function NewPlantingPage() {
 
       <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 space-y-5">
         <div>
-          <label htmlFor="crop" className="block text-xs font-medium text-gray-600 mb-1">Crop</label>
-          <select id="crop" required value={cropTypeId} onChange={(e) => setCropTypeId(e.target.value)} className={INPUT}>
-            <option value="">— Choose a crop —</option>
-            {cropTypes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
+          <CropPicker crops={cropTypes} value={cropTypeId} onChange={setCropTypeId} label="Crop" required />
           {crop && (
-            <p className="text-xs text-gray-500 mt-1">Usually ready {crop.daysToHarvestMin}–{crop.daysToHarvestMax} days after planting.</p>
+            <p className="text-xs text-gray-500 mt-1">
+              {crop.daysToHarvestMin !== null
+                ? `Usually ready ${crop.daysToHarvestMin}–${crop.daysToHarvestMax} days after planting.`
+                : 'No typical growing time on record for this crop: enter when you expect to harvest below.'}
+            </p>
           )}
         </div>
 
@@ -105,6 +113,19 @@ export default function NewPlantingPage() {
         </div>
 
         {cropTypeId && <PlantingMarketHint token={token} cropTypeId={cropTypeId} />}
+
+        {askDates && (
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="harvestStart" className="block text-xs font-medium text-gray-600 mb-1">Expected harvest from</label>
+              <input id="harvestStart" type="date" required min={plantedOn} value={harvestStart} onChange={(e) => setHarvestStart(e.target.value)} className={INPUT} />
+            </div>
+            <div>
+              <label htmlFor="harvestEnd" className="block text-xs font-medium text-gray-600 mb-1">Expected harvest until</label>
+              <input id="harvestEnd" type="date" required min={harvestStart || plantedOn} value={harvestEnd} onChange={(e) => setHarvestEnd(e.target.value)} className={INPUT} />
+            </div>
+          </div>
+        )}
 
         {preview && (
           <div className="rounded-lg bg-field border border-paddy/10 px-4 py-3 text-sm text-gray-700">

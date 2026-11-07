@@ -207,7 +207,8 @@ exports.Prisma.ProductScalarFieldEnum = {
   updatedAt: 'updatedAt',
   farmerId: 'farmerId',
   categoryId: 'categoryId',
-  cropTypeId: 'cropTypeId'
+  cropTypeId: 'cropTypeId',
+  notACrop: 'notACrop'
 };
 
 exports.Prisma.CropTypeScalarFieldEnum = {
@@ -216,6 +217,12 @@ exports.Prisma.CropTypeScalarFieldEnum = {
   daysToHarvestMin: 'daysToHarvestMin',
   daysToHarvestMax: 'daysToHarvestMax',
   source: 'source',
+  category: 'category',
+  aliases: 'aliases',
+  psaProductionTable: 'psaProductionTable',
+  psaProduction: 'psaProduction',
+  psaPriceTable: 'psaPriceTable',
+  psaPrice: 'psaPrice',
   createdAt: 'createdAt'
 };
 

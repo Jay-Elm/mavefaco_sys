@@ -1,34 +1,55 @@
 /**
- * Words that name each crop in a listing, in English or Filipino. Used to
- * suggest a crop as a farmer types a listing name (the same lists filled in
- * existing listings, migration product_crop_type).
+ * Matching listing names to crops. Each crop carries its other names in
+ * English, Filipino or Bikol (CropType.aliases, editable on Crop Types).
  */
-export const CROP_KEYWORDS: Record<string, string[]> = {
-  Ampalaya: ['ampalaya', 'amargoso', 'bitter gourd', 'bitter melon'],
-  Eggplant: ['eggplant', 'talong'],
-  Kangkong: ['kangkong', 'water spinach', 'swamp cabbage'],
-  Lettuce: ['lettuce', 'letsugas'],
-  Mustasa: ['mustasa', 'mustard'],
-  Okra: ['okra'],
-  Patola: ['patola', 'sponge gourd', 'luffa'],
-  Pechay: ['pechay', 'petsay', 'bok choy', 'pak choi'],
-  'Siling Labuyo': ['siling labuyo', 'labuyo', 'chili', 'chilli', 'sili'],
-  Sitaw: ['sitaw', 'string bean', 'yardlong', 'balatong'],
-  Squash: ['squash', 'kalabasa', 'karabasa'],
-  Tomato: ['tomato', 'kamatis'],
-  Upo: ['upo', 'bottle gourd'],
+export interface NamedCrop {
+  id: number
+  name: string
+  aliases?: string[]
 }
 
 // Short words that must stand alone ("upo" is also in "kapuso").
-const WHOLE_WORD = new Set(['upo', 'sili', 'okra'])
+const WHOLE_WORD_MAX = 4
 
-/** The crop a listing name points to, if exactly one does. */
-export function suggestCropType<C extends { id: number; name: string }>(listingName: string, crops: C[]): C | null {
+function hit(name: string, word: string): boolean {
+  const w = word.toLowerCase().trim()
+  if (!w) return false
+  if (w.length <= WHOLE_WORD_MAX) return new RegExp(`(^|[^a-z])${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^a-z]|$)`).test(name)
+  return name.includes(w)
+}
+
+/** The words that name a crop: its name and its other names. */
+export const cropWords = (c: NamedCrop) => [c.name, ...(c.aliases ?? [])].map((w) => w.toLowerCase())
+
+/**
+ * The crop a listing name points to. The most specific match wins
+ * ("Pechay Baguio" is Pechay Baguio, not Pechay); a tie means unsure, so null.
+ */
+export function suggestCropType<C extends NamedCrop>(listingName: string, crops: C[]): C | null {
   const name = listingName.toLowerCase()
   if (!name.trim()) return null
-  const hits = crops.filter((c) => {
-    const words = CROP_KEYWORDS[c.name] ?? [c.name.toLowerCase()]
-    return words.some((w) => (WHOLE_WORD.has(w) ? new RegExp(`\\b${w}\\b`).test(name) : name.includes(w)))
-  })
-  return hits.length === 1 ? hits[0] : null
+  let best: C[] = []
+  let bestLen = 0
+  for (const c of crops) {
+    const len = Math.max(0, ...cropWords(c).filter((w) => hit(name, w)).map((w) => w.length))
+    if (len === 0) continue
+    if (len > bestLen) { best = [c]; bestLen = len }
+    else if (len === bestLen) best.push(c)
+  }
+  return best.length === 1 ? best[0] : null
+}
+
+/** Crops whose name or other names contain the search text, best matches first. */
+export function searchCrops<C extends NamedCrop>(query: string, crops: C[]): { crop: C; via: string | null }[] {
+  const q = query.toLowerCase().trim()
+  if (!q) return crops.map((crop) => ({ crop, via: null }))
+  const out: { crop: C; via: string | null; rank: number }[] = []
+  for (const crop of crops) {
+    const name = crop.name.toLowerCase()
+    if (name.startsWith(q)) { out.push({ crop, via: null, rank: 0 }); continue }
+    if (name.includes(q)) { out.push({ crop, via: null, rank: 1 }); continue }
+    const alias = (crop.aliases ?? []).find((a) => a.toLowerCase().includes(q))
+    if (alias) out.push({ crop, via: alias, rank: alias.toLowerCase().startsWith(q) ? 2 : 3 })
+  }
+  return out.sort((a, b) => a.rank - b.rank || a.crop.name.localeCompare(b.crop.name)).map(({ crop, via }) => ({ crop, via }))
 }

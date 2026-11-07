@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { marketAlerts, marketByCrop, signalFor, suggestedCrops, type CropInfo, type SaleLine } from "./market";
-import { suggestCropType } from "./cropKeywords";
+import { searchCrops, suggestCropType } from "./cropKeywords";
 
 const TODAY = "2026-11-07";
 const okra: CropInfo = { id: 1, name: "Okra", daysToHarvestMin: 60, daysToHarvestMax: 75 };
@@ -68,8 +68,16 @@ describe("marketByCrop", () => {
 
 describe("suggestCropType", () => {
   const crops = [
-    { id: 1, name: "Upo" }, { id: 2, name: "Sitaw" }, { id: 3, name: "Siling Labuyo" },
-    { id: 4, name: "Eggplant" }, { id: 5, name: "Tomato" }, { id: 6, name: "Rare Crop" },
+    { id: 1, name: "Upo", aliases: ["upo", "bottle gourd"] },
+    { id: 2, name: "Sitaw", aliases: ["sitaw", "string beans", "balatong"] },
+    { id: 3, name: "Siling Labuyo", aliases: ["siling labuyo", "chili", "sili"] },
+    { id: 4, name: "Eggplant", aliases: ["eggplant", "talong"] },
+    { id: 5, name: "Tomato", aliases: ["tomato", "kamatis"] },
+    { id: 6, name: "Rare Crop" },
+    { id: 7, name: "Pechay", aliases: ["pechay", "petsay"] },
+    { id: 8, name: "Pechay Baguio", aliases: ["pechay baguio", "wombok"] },
+    { id: 9, name: "Potato", aliases: ["potato", "patatas"] },
+    { id: 10, name: "Chili Leaves", aliases: ["chili leaves", "dahon ng sili"] },
   ];
   it("matches English and Filipino names", () => {
     expect(suggestCropType("Fresh String Beans", crops)?.name).toBe("Sitaw");
@@ -84,8 +92,26 @@ describe("suggestCropType", () => {
   it("uses the crop's own name for crops staff added", () => {
     expect(suggestCropType("rare crop bundle", crops)?.name).toBe("Rare Crop");
   });
+  it("prefers the most specific name", () => {
+    expect(suggestCropType("Fresh Pechay Baguio", crops)?.name).toBe("Pechay Baguio");
+    expect(suggestCropType("Pechay (native)", crops)?.name).toBe("Pechay");
+    expect(suggestCropType("Chili leaves, 1 bundle", crops)?.name).toBe("Chili Leaves");
+  });
   it("suggests nothing when unsure", () => {
-    expect(suggestCropType("Tomato and eggplant mix", crops)).toBeNull();
+    expect(suggestCropType("Tomato and potato mix", crops)).toBeNull(); // equally specific
     expect(suggestCropType("", crops)).toBeNull();
+  });
+});
+
+describe("searchCrops", () => {
+  const crops = [
+    { id: 1, name: "Eggplant", aliases: ["eggplant", "talong"] },
+    { id: 2, name: "Ampalaya", aliases: ["ampalaya", "bitter gourd"] },
+    { id: 3, name: "Ampalaya Leaves", aliases: ["dahon ng ampalaya"] },
+  ];
+  it("finds crops by any of their names, saying which one matched", () => {
+    expect(searchCrops("talong", crops)).toEqual([{ crop: crops[0], via: "talong" }]);
+    expect(searchCrops("ampa", crops).map((x) => x.crop.name)).toEqual(["Ampalaya", "Ampalaya Leaves"]);
+    expect(searchCrops("", crops)).toHaveLength(3);
   });
 });

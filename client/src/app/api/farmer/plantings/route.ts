@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     const parsed = plantingCreateSchema.safeParse(await req.json());
     if (!parsed.success)
       return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
-    const { cropTypeId, plantedOn, areaSqm, expectedYield, productId } = parsed.data;
+    const { cropTypeId, plantedOn, areaSqm, expectedYield, productId, harvestStart: givenStart, harvestEnd: givenEnd } = parsed.data;
 
     const cropType = await prisma.cropType.findUnique({ where: { id: cropTypeId } });
     if (!cropType) return NextResponse.json({ error: "Choose a crop from the list" }, { status: 400 });
@@ -58,7 +58,11 @@ export async function POST(req: NextRequest) {
       if (!product) return NextResponse.json({ error: "Choose one of your own listings" }, { status: 400 });
     }
 
-    const { harvestStart, harvestEnd } = harvestWindow(cropType, plantedOn);
+    // From the crop's typical growing time, or, when there is none, from the farmer.
+    const window = harvestWindow(cropType, plantedOn) ?? (givenStart && givenEnd ? { harvestStart: givenStart, harvestEnd: givenEnd } : null);
+    if (!window)
+      return NextResponse.json({ error: `${cropType.name} has no typical growing time yet. Enter when you expect to harvest.` }, { status: 400 });
+    const { harvestStart, harvestEnd } = window;
     const planting = await prisma.planting.create({
       data: {
         farmerId: actor.id,

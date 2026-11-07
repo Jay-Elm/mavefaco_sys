@@ -3,7 +3,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, Trash2, Pencil, Plus, AlertTriangle, CheckCircle, Clock, Download, XCircle, Ban } from 'lucide-react'
+import { Loader2, Package, Trash2, Pencil, Plus, AlertTriangle, CheckCircle, Clock, Download, XCircle, Ban, Sprout } from 'lucide-react'
 import { downloadCSV } from '@/lib/csv'
 import { reasonLabels, suspensionDeadline } from '@/validators/productSuspension'
 import { useDialog } from '@/contexts/DialogContext'
@@ -22,6 +22,9 @@ interface ProductRow {
   suspendedAt: string | null
   suspensionReasons: string[]
   category: { name: string }
+  cropTypeId: number | null
+  notACrop: boolean
+  cropType: { id: number; name: string } | null
 }
 
 const fmtDate = (d: string | Date) => new Date(d).toLocaleDateString('en-PH')
@@ -193,6 +196,33 @@ export default function FarmerProductsPage() {
         </div>
       )}
 
+      {/* Listings not linked to a crop: their sales don't count on the Market page */}
+      {(() => {
+        const unlinked = products.filter((p) => !p.cropTypeId && !p.notACrop)
+        if (unlinked.length === 0) return null
+        return (
+          <div className="mb-5 bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
+            <Sprout size={18} className="text-blue-700 shrink-0 mt-0.5" />
+            <div className="text-sm text-blue-900">
+              <p className="font-semibold">
+                {unlinked.length === 1 ? '1 listing isn’t' : `${unlinked.length} listings aren’t`} linked to a crop yet
+              </p>
+              <p className="mt-0.5">
+                Their sales don&apos;t count on the Market page until they are. Edit a listing and choose its crop (or &quot;Not a farm
+                crop&quot;):{' '}
+                {unlinked.slice(0, 4).map((p, i) => (
+                  <span key={p.id}>
+                    {i > 0 && ', '}
+                    <Link href={`/farmer/products/${p.id}/edit`} className="font-medium underline">{p.name}</Link>
+                  </span>
+                ))}
+                {unlinked.length > 4 && ` and ${unlinked.length - 4} more`}. Cooperative staff may also link them for you.
+              </p>
+            </div>
+          </div>
+        )
+      })()}
+
       {/* Stock alert banner */}
       {(() => {
         const outOfStock = products.filter((p) => p.stock === 0)
@@ -281,6 +311,7 @@ export default function FarmerProductsPage() {
                   <tr className="hover:bg-gray-50 transition-colors">
                     <td className="px-5 py-3">
                       <p className="font-medium text-soil">{p.name}</p>
+                      <p className="text-xs text-gray-500">{p.notACrop ? 'Not a farm crop' : p.cropType ? `Crop: ${p.cropType.name}` : 'Not linked to a crop'}</p>
                       <p className="text-xs text-gray-500">
                         {new Date(p.createdAt).toLocaleDateString('en-PH')}
                       </p>

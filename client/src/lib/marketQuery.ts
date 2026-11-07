@@ -13,7 +13,7 @@ export async function loadMarket(now: Date = new Date()) {
   const [crops, items, plantings] = await Promise.all([
     prisma.cropType.findMany({
       orderBy: { name: "asc" },
-      select: { id: true, name: true, daysToHarvestMin: true, daysToHarvestMax: true, source: true },
+      select: { id: true, name: true, daysToHarvestMin: true, daysToHarvestMax: true, source: true, category: true },
     }),
     prisma.orderItem.findMany({
       where: {
@@ -60,15 +60,20 @@ export async function loadMarket(now: Date = new Date()) {
 
   const rows = marketByCrop(crops, sales, supply, today);
   const psa = await loadPsa(today);
+  // Live listings per crop: crops with any are shown by default.
+  const listings = new Map(
+    (await prisma.product.groupBy({ by: ["cropTypeId"], where: { archivedAt: null, cropTypeId: { not: null } }, _count: { _all: true } }))
+      .map((g) => [g.cropTypeId!, g._count._all]),
+  );
   return {
     today,
     demandWeeks: DEMAND_WEEKS,
-    rows: rows.map((r) => ({ ...r, psa: psa.byCrop.get(r.crop.id) ?? emptyPsa() })),
+    rows: rows.map((r) => ({ ...r, listings: listings.get(r.crop.id) ?? 0, psa: psa.byCrop.get(r.crop.id) ?? emptyPsa() })),
     psa: psa.summary,
     alerts: marketAlerts(rows),
     suggestions: suggestedCrops(rows).map((r) => r.crop.id),
     // Listings not yet tied to a crop don't count toward any crop's demand.
-    unlinkedListings: await prisma.product.count({ where: { cropTypeId: null, archivedAt: null } }),
+    unlinkedListings: await prisma.product.count({ where: { cropTypeId: null, notACrop: false, archivedAt: null } }),
   };
 }
 

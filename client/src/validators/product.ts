@@ -25,6 +25,8 @@ export const productCreateSchema = z.object({
     (v) => (v === "" || v === null ? null : v),
     z.coerce.number().int().positive("Choose a crop from the list").nullable(),
   ).optional(),
+  // Not a farm crop at all (processed goods, fish...); clears the crop.
+  notACrop: z.boolean().optional(),
 });
 
 export type ProductCreateInput = z.infer<typeof productCreateSchema>;
@@ -43,6 +45,8 @@ export const productUpdateSchema = z.object({
     (v) => (v === "" || v === null ? null : v),
     z.coerce.number().int().positive("Choose a crop from the list").nullable(),
   ).optional(),
+  // Not a farm crop at all (processed goods, fish...); clears the crop.
+  notACrop: z.boolean().optional(),
 });
 
 export type ProductUpdateInput = z.infer<typeof productUpdateSchema>;

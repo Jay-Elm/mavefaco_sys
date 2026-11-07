@@ -81,7 +81,8 @@ export default function NewProductPage() {
           unit: form.unit.trim() || 'piece',
           categoryId: parseInt(form.categoryId, 10),
           imageUrl: form.imageUrl.trim() || null,
-          cropTypeId: form.cropTypeId ? Number(form.cropTypeId) : null,
+          cropTypeId: form.cropTypeId && form.cropTypeId !== 'none' ? Number(form.cropTypeId) : null,
+          notACrop: form.cropTypeId === 'none',
         }),
       })
       const data = await res.json()
@@ -176,7 +177,7 @@ export default function NewProductPage() {
           value={form.cropTypeId}
           onChange={(v) => setForm((prev) => ({ ...prev, cropTypeId: v }))}
         />
-        <PriceReference token={token} cropTypeId={form.cropTypeId} unit={form.unit} />
+        {form.cropTypeId !== 'none' && <PriceReference token={token} cropTypeId={form.cropTypeId} unit={form.unit} />}
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Product Photo <span className="text-gray-500">(optional)</span></label>
