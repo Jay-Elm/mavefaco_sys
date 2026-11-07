@@ -25,7 +25,7 @@ git push -u origin master
 ## Step 2 — Provision a cloud PostgreSQL database (Supabase)
 
 1. Go to [supabase.com](https://supabase.com) and sign in.
-2. Click **New Project** → fill in name, password, region (choose Asia — Singapore for lower latency).
+2. Click **New Project** → fill in name, password, region (an Asian region, for lower latency). The live project uses **Northeast Asia (Tokyo), `ap-northeast-1`**, and `vercel.json` runs the app's server functions in Vercel's Tokyo region (`"regions": ["hnd1"]`) to sit next to it; if the database is ever moved, change that region to match.
 3. Wait for the project to finish provisioning (~2 minutes).
 4. Click **Connect** on the project and copy two connection strings, replacing `<password>` in each with the database password you set:
    - **Transaction pooler** (port 6543): this becomes `DATABASE_URL`, used by the running app.
