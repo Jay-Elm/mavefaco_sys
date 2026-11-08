@@ -235,8 +235,11 @@
   "psaProduction": "Pepper, bell",
   "psaPriceTable": "2M/NFG/0032M4AFN04.px",
   "psaPrice": "Pepper, bell",
-  "days": null,
-  "source": null
+  "days": [
+   60,
+   75
+  ],
+  "source": "DA Regional Field Office 2, Pepper Production Guide: harvest starts 60–75 days after transplanting"
  },
  {
   "name": "Young Corn",
@@ -370,8 +373,11 @@
   "psaProduction": "Cabbage",
   "psaPriceTable": "2M/NFG/0032M4AFN06.px",
   "psaPrice": "Cabbage",
-  "days": null,
-  "source": null
+  "days": [
+   55,
+   60
+  ],
+  "source": "DA Regional Field Office 2, Cabbage Production Guide: heads ready 55–60 days after transplanting"
  },
  {
   "name": "Gabi Leaves",
@@ -474,8 +480,11 @@
   "psaProduction": "Alugbati",
   "psaPriceTable": "2M/NFG/0032M4AFN06.px",
   "psaPrice": "Alugbati",
-  "days": null,
-  "source": null
+  "days": [
+   42,
+   56
+  ],
+  "source": "DA, Mga Katutubong Gulay (Indigenous Vegetables) guide, High Value Crops Development Program: young leaves and shoots from 6–8 weeks after planting"
  },
  {
   "name": "Ampalaya Leaves",
@@ -531,8 +540,11 @@
   "psaProduction": "Saluyot",
   "psaPriceTable": "2M/NFG/0032M4AFN06.px",
   "psaPrice": "Saluyot",
-  "days": null,
-  "source": null
+  "days": [
+   30,
+   60
+  ],
+  "source": "DA, Mga Katutubong Gulay (Indigenous Vegetables) guide, High Value Crops Development Program: harvested 30–60 days after planting"
  },
  {
   "name": "Spinach",
@@ -598,8 +610,11 @@
   "psaProduction": "Talinum",
   "psaPriceTable": null,
   "psaPrice": null,
-  "days": null,
-  "source": null
+  "days": [
+   42,
+   56
+  ],
+  "source": "DA, Mga Katutubong Gulay (Indigenous Vegetables) guide, High Value Crops Development Program: harvest starts 6–8 weeks after sowing"
  },
  {
   "name": "Lupo",
@@ -783,8 +798,11 @@
   "psaProduction": "Camote [Sweet potato]",
   "psaPriceTable": "2M/NFG/0032M4AFN02.px",
   "psaPrice": "Camote [Sweet potato]",
-  "days": null,
-  "source": null
+  "days": [
+   90,
+   120
+  ],
+  "source": "DA Regional Field Office 2, Sweet Potato Production Guide: recommended varieties harvested 3–4 months after planting"
  },
  {
   "name": "Cassava",
@@ -799,8 +817,11 @@
   "psaProduction": "Cassava for food, fresh tubers",
   "psaPriceTable": "2M/NFG/0032M4AFN02.px",
   "psaPrice": "Cassava for food, fresh tubers",
-  "days": null,
-  "source": null
+  "days": [
+   300,
+   365
+  ],
+  "source": "DA Regional Field Office 3, Cassava production guide: harvested 10–12 months after planting"
  },
  {
   "name": "Gabi",
@@ -829,8 +850,11 @@
   "psaProduction": "Ubi [Greater yam]",
   "psaPriceTable": "2M/NFG/0032M4AFN02.px",
   "psaPrice": "Ubi [Greater yam]",
-  "days": null,
-  "source": null
+  "days": [
+   300,
+   330
+  ],
+  "source": "DA Regional Field Office 2, Ubi Production Guide: 10–11 months after planting (early harvest possible at 6–7 months)"
  },
  {
   "name": "Singkamas",
@@ -899,8 +923,11 @@
   "psaProduction": "Potato",
   "psaPriceTable": "2M/NFG/0032M4AFN02.px",
   "psaPrice": "Potato",
-  "days": null,
-  "source": null
+  "days": [
+   75,
+   90
+  ],
+  "source": "DA Regional Field Office 2, White Potato Production Guide: most potatoes mature 75–90 days after planting"
  },
  {
   "name": "Carrot",
@@ -950,8 +977,11 @@
   "psaProduction": "Pepper, finger",
   "psaPriceTable": "2M/NFG/0032M4AFN04.px",
   "psaPrice": "Pepper, finger",
-  "days": null,
-  "source": null
+  "days": [
+   60,
+   75
+  ],
+  "source": "DA Regional Field Office 2, Pepper Production Guide: harvest starts 60–75 days after transplanting"
  },
  {
   "name": "Ginger",
@@ -1130,8 +1160,11 @@
   "psaProduction": "Garlic, dried bulb",
   "psaPriceTable": "2M/NFG/0032M4AFN04.px",
   "psaPrice": "Garlic, dried bulb",
-  "days": null,
-  "source": null
+  "days": [
+   95,
+   120
+  ],
+  "source": "DA Bicol, Guiya sa Pagtanom nin Gulay (2021): Ilocos White 95–100, Batangas Purple 115–120 days after planting"
  },
  {
   "name": "Mushroom",
@@ -1960,8 +1993,11 @@
   "psaProduction": "Palay",
   "psaPriceTable": "2M/NFG/0032M4AFN01.px",
   "psaPrice": "Palay [Paddy] Other Variety, dry (conv. to 14% mc)",
-  "days": null,
-  "source": null
+  "days": [
+   107,
+   115
+  ],
+  "source": "PhilRice, Top popular rice varieties (2018): Rc 160 107, Rc 216 112, Rc 222 114, Rc 300 115 days after sowing"
  },
  {
   "name": "Corn",
@@ -1976,8 +2012,11 @@
   "psaProduction": "Corn",
   "psaPriceTable": "2M/NFG/0032M4AFN01.px",
   "psaPrice": "Corngrain [Maize] White, matured",
-  "days": null,
-  "source": null
+  "days": [
+   95,
+   120
+  ],
+  "source": "DA Regional Field Office 2, Corn Techno Guide: matures 95–120 days after planting, by variety, season and location"
  },
  {
   "name": "Coconut",
