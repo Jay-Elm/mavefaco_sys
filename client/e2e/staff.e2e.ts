@@ -40,7 +40,8 @@ test.describe.serial("Staff: crops, products and the Market", () => {
   test("Market: the linked crop shows for staff and farmers", async ({ page }) => {
     await signInStaff(page, SEED.manager.email);
     await page.goto("/dashboard/market");
-    await page.getByLabel("Search crops").fill("eggplant");
+    // A local name finds the crop, as the search box suggests.
+    await page.getByLabel("Search crops").fill("talong");
     await expect(page.getByRole("cell", { name: /Eggplant/ }).first()).toBeVisible();
 
     await page.context().clearCookies();

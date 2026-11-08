@@ -13,7 +13,8 @@ export async function loadMarket(now: Date = new Date()) {
   const [crops, items, plantings] = await Promise.all([
     prisma.cropType.findMany({
       orderBy: { name: "asc" },
-      select: { id: true, name: true, daysToHarvestMin: true, daysToHarvestMax: true, source: true, category: true },
+      // aliases: the Market search finds crops by their Filipino and Bikol names too.
+      select: { id: true, name: true, daysToHarvestMin: true, daysToHarvestMax: true, source: true, category: true, aliases: true },
     }),
     prisma.orderItem.findMany({
       where: {

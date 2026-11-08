@@ -2,7 +2,7 @@ import type { Signal } from '@/lib/market'
 
 /** GET /api/market, as the pages receive it. */
 export interface MarketRow {
-  crop: { id: number; name: string; daysToHarvestMin: number | null; daysToHarvestMax: number | null; source?: string | null; category?: string }
+  crop: { id: number; name: string; daysToHarvestMin: number | null; daysToHarvestMax: number | null; source?: string | null; category?: string; aliases?: string[] }
   demand: { kg: number; other: Record<string, number>; orders: number }
   supply: { kg: number; farms: number }
   signal: Signal
