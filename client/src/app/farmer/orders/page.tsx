@@ -79,6 +79,11 @@ export default function FarmerOrdersPage() {
   const [updatingId, setUpdatingId] = useState<number | null>(null)
   const [updateError, setUpdateError] = useState<{ id: number; msg: string } | null>(null)
   const [expanded, setExpanded] = useState<number | null>(null)
+  // A note per order for the customer, sent with the next status or payment
+  // change (the automatic "Order update" message), then cleared.
+  const [notes, setNotes] = useState<Record<number, string>>({})
+  const noteFor = (id: number) => notes[id]?.trim() || undefined
+  const clearNote = (id: number) => setNotes((prev) => { const next = { ...prev }; delete next[id]; return next })
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('all')
   const [sort, setSort] = useState<Sort>('newest')
@@ -138,10 +143,11 @@ export default function FarmerOrdersPage() {
       const res = await fetch(`/api/farmer/orders/${orderId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({ status, note: noteFor(orderId) }),
       })
       const data = await res.json()
       if (!res.ok) { setUpdateError({ id: orderId, msg: data.error ?? 'Failed to update order' }); return }
+      clearNote(orderId)
       setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status } : o)))
       refreshNavBadges()
     } catch {
@@ -166,10 +172,11 @@ export default function FarmerOrdersPage() {
       const res = await fetch(`/api/farmer/orders/${order.id}/payment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ action }),
+        body: JSON.stringify({ action, note: noteFor(order.id) }),
       })
       const data = await res.json()
       if (!res.ok) { setUpdateError({ id: order.id, msg: data.error ?? 'Failed to update the payment' }); return }
+      clearNote(order.id)
       setOrders((prev) => prev.map((o) => (o.id === order.id ? { ...o, paymentStatus: data.paymentStatus, ...(action === 'confirm' && { paidAt: new Date().toISOString() }) } : o)))
     } catch {
       setUpdateError({ id: order.id, msg: 'Request failed' })
@@ -424,6 +431,25 @@ export default function FarmerOrdersPage() {
                             )}
                           </div>
                         </div>
+                        {!['delivered', 'cancelled'].includes(order.status) || order.paymentStatus === 'refund_due' ? (
+                          <div className="md:col-span-2 rounded-lg bg-white/80 border border-paddy/15 px-4 py-3">
+                            <label htmlFor={`note-${order.id}`} className="text-xs font-semibold text-paddy-deep">
+                              Note for the customer <span className="font-normal text-gray-500">(optional)</span>
+                            </label>
+                            <textarea
+                              id={`note-${order.id}`}
+                              value={notes[order.id] ?? ''}
+                              onChange={(e) => setNotes((prev) => ({ ...prev, [order.id]: e.target.value }))}
+                              rows={2}
+                              maxLength={300}
+                              placeholder="e.g. Ready after 3 pm at the barangay hall."
+                              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
+                            />
+                            <p className="text-xs text-gray-500">
+                              The customer gets a message whenever you update this order; this note is added to the next one.
+                            </p>
+                          </div>
+                        ) : null}
                         </div>
                       </td>
                     </tr>

@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useDialog } from '@/contexts/DialogContext'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 import GcashPayPanel from '@/components/GcashPayPanel'
+import { refreshNavBadges } from '@/components/NavBadge'
 import { PAYMENT_METHOD_LABELS, PAYMENT_STATUS_LABELS, type PaymentStatus } from '@/lib/payment'
 
 interface OrderItem {
@@ -28,6 +29,8 @@ interface Order {
   deliveryAddress: string | null
   deliveryTown: string | null
   createdAt: string
+  /** Changed by the farmer or staff since My Orders was last opened. */
+  updated: boolean
   farmer: { id: number; name: string } | null
   payTo: { name: string | null; number: string; qrUrl: string | null } | null
   items: OrderItem[]
@@ -55,6 +58,9 @@ export default function CustomerOrdersPage() {
   const [fetching, setFetching] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [expanded, setExpanded] = useState<Set<number>>(new Set())
+  // Orders that came in marked "updated": they keep the mark while this page
+  // is open, though opening the page clears the badge.
+  const [updatedIds, setUpdatedIds] = useState<Set<number>>(new Set())
   const [actingId, setActingId] = useState<number | null>(null)
   const [actionError, setActionError] = useState<{ id: number; msg: string } | null>(null)
   // The customer's saved GCash details, to prefill the payment form.
@@ -74,7 +80,16 @@ export default function CustomerOrdersPage() {
     fetch('/api/customer/orders', { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(data => {
-        if (Array.isArray(data)) setOrders(data)
+        if (Array.isArray(data)) {
+          setOrders(data)
+          const fresh = (data as Order[]).filter(o => o.updated).map(o => o.id)
+          if (fresh.length > 0) {
+            setUpdatedIds(prev => new Set([...prev, ...fresh]))
+            fetch('/api/customer/orders/seen', { method: 'POST', headers: { Authorization: `Bearer ${token}` } })
+              .then(() => refreshNavBadges())
+              .catch(() => {})
+          }
+        }
         else setError(data.error ?? 'Failed to load orders')
       })
       .catch(() => setError('Network error'))
@@ -173,7 +188,14 @@ export default function CustomerOrdersPage() {
               >
                 <div className="flex items-center gap-4 text-left">
                   <div>
-                    <p className="font-semibold text-soil text-sm">Order #{order.id}</p>
+                    <p className="font-semibold text-soil text-sm flex items-center gap-1.5">
+                      Order #{order.id}
+                      {updatedIds.has(order.id) && (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-600">
+                          <span className="w-2 h-2 rounded-full bg-red-500" aria-hidden="true" />Updated
+                        </span>
+                      )}
+                    </p>
                     <p className="text-xs text-gray-500 mt-0.5">{date}</p>
                   </div>
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full capitalize ${STATUS_COLORS[order.status] ?? 'bg-gray-100 text-gray-700'}`}>

@@ -66,7 +66,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | **Communication** | | |
 | Chat with farmer | Implemented | In-app messages with unread counts; conversations can be searched by name or message text, and removed from the customer's own list |
 | Ask product questions | Implemented | "Message farmer" from the product page |
-| Receive notifications | Partial | Emails for account and security events only; no order-status or in-app notifications |
+| Receive notifications | Partial | Every order status or payment change sends an automatic "Order update" message (with the farmer's optional note) in the chat with the order's farmer, and red badges on My Orders and Messages; emails for account and security events; no email, SMS or push for orders, and no settings |
 | **Feedback** | | |
 | Rate seller | Partial | The seller page shows the average of the farmer's product ratings; sellers aren't rated directly |
 | Leave review | Implemented | One review per product, only after a delivered order |
@@ -261,7 +261,7 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 ### 3.5 Communication and notifications
 
 - **Email** (via Brevo) is used only for account and security events (verification, password reset, email change, two-factor changes), to tell a farmer a listing was suspended, and to tell a farmer their ID was approved or rejected.
-- There are **no order-status notifications**, in-app notifications, SMS or push notifications, and no notification settings.
+- **Order updates are in-app only.** When the farmer or staff change an order's status or payment, the customer gets an automatic "Order update" message in their chat with the order's farmer (with the farmer's optional note), and red badges on My Orders and Messages until they look. There are no order emails, SMS or push notifications, and no notification settings.
 - Messaging is **one-to-one between customers and farmers**; staff have no inbox. The system sends farmers one-way **notices** (listing suspensions), shown in Messages without a reply box.
 - The interface is **in English only**.
 
@@ -287,7 +287,7 @@ The following capabilities from the use-case documents are not implemented. They
 | Payments | Online payment processing (a payment gateway that takes and verifies payments itself), invoices and receipts |
 | Market intelligence | Daily retail market prices, demand forecasting, yearly growth comparison |
 | Planning | Pricing guidance, meeting and training scheduling, promotion approval |
-| Customer convenience | Product comparison, pre-orders, favorites, reorder, problem reports, order notifications |
+| Customer convenience | Product comparison, pre-orders, favorites, reorder, problem reports, order notifications by email, SMS or push |
 | Farmer convenience | Spoilage alerts, buyer search, sales receipts, notification settings, chat with staff |
 | Administration | Dispute and complaint handling, buyer approval, automated anomaly detection, automatic ID checks (reading ID details, PhilSys QR verification), in-app database backup and restore |
 | Localization | Languages other than English; AI translation of advisories |
@@ -339,7 +339,7 @@ The study is limited to the following boundaries.
 
 **Crop monitoring.** Harvest windows are estimated from each crop's typical growing time, taken from Department of Agriculture production guides (mainly DA Regional Field Office 5's guide for the Bicol region), not observed in the field, and staff can correct those times. The system does not track growth stages such as flowering or fruiting, and crop problems are recorded as short notes without a severity rating. Expected yields are the farmers' own estimates in kilograms, and the expected harvest dates and weekly harvest totals shown to customers are estimates. The supply outlook covers only the next eight weeks and only the plantings farmers have recorded. It flags possible oversupply but does not schedule harvests or recommend what to plant. The AI crop report summarizes only what farmers wrote in their crop logs; it is not expert agronomic advice and does not recommend pesticides or doses.
 
-**Communication and notifications.** Email is used only for account and security events (account verification, password reset, email change, and two-factor authentication changes) and for notifying farmers of suspended listings and of the outcome of their ID review. The system has no order-status notifications, in-app or push notifications, SMS, or notification settings. In-system messaging is limited to one-to-one conversations between customers and farmers, and staff have no messaging inbox. Open pages update by themselves within about a second of a change (every 15 seconds if the live connection is unavailable), but this is not a notification: nothing is shown on a page that is not open. The interface is in English only.
+**Communication and notifications.** Email is used only for account and security events (account verification, password reset, email change, and two-factor authentication changes) and for notifying farmers of suspended listings and of the outcome of their ID review. When the farmer or staff change an order's status or payment, the customer receives an automatic order-update message in the chat with the order's farmer, with any note the farmer adds, and a badge on My Orders and Messages; order updates are not sent by email, SMS or push, and there are no notification settings. In-system messaging is limited to one-to-one conversations between customers and farmers, and staff have no messaging inbox. Open pages update by themselves within about a second of a change (every 15 seconds if the live connection is unavailable), but this is not a notification: nothing is shown on a page that is not open. The interface is in English only.
 
 **Platform.** The system is a responsive web application used through a modern web browser on desktop or mobile devices. It has no native mobile application and no offline mode. It is hosted on Vercel (application) and Supabase (database and file storage), so its availability, capacity, and data backups depend on those providers. Rate limits on sign-in, registration, password reset, and uploads are counted in fixed time windows.
 

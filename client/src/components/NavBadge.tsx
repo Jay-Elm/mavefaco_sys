@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 const REFRESH_EVENT = 'nav-badges:refresh'
 const POLL_MS = 30_000
@@ -15,14 +16,20 @@ export function refreshNavBadges() {
   window.dispatchEvent(new Event(REFRESH_EVENT))
 }
 
-/** Counts from /api/nav-badges, keyed by sidebar path; refreshed on navigation, on demand and every 30s. */
-export function useNavBadges(): Record<string, number> {
+/**
+ * Counts from /api/nav-badges, keyed by sidebar path; refreshed on
+ * navigation, on demand, when something changes (live updates) and every
+ * 30s. `enabled: false` skips the requests (e.g. the navbar for roles whose
+ * sidebar already shows the badges).
+ */
+export function useNavBadges(enabled = true): Record<string, number> {
   const { token, isAuthenticated } = useAuth()
   const pathname = usePathname()
+  const live = useLiveVersion()
   const [badges, setBadges] = useState<Record<string, number>>({})
 
   useEffect(() => {
-    if (!isAuthenticated) return
+    if (!isAuthenticated || !enabled) return
     let cancelled = false
     const load = () =>
       fetch('/api/nav-badges', { headers: token ? { Authorization: `Bearer ${token}` } : {} })
@@ -38,9 +45,9 @@ export function useNavBadges(): Record<string, number> {
       clearInterval(interval)
       window.removeEventListener(REFRESH_EVENT, load)
     }
-  }, [isAuthenticated, token, pathname])
+  }, [isAuthenticated, enabled, token, pathname, live])
 
-  return badges
+  return enabled ? badges : {}
 }
 
 /** Red count badge beside a sidebar link; renders nothing at zero. */

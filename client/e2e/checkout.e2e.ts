@@ -2,6 +2,13 @@ import { expect, test } from "@playwright/test";
 import { SEED } from "./db";
 import { addToCart, saveLocation, signIn } from "./helpers";
 
+/** The farmer of the customer's latest order, from the orders API. */
+async function farmerId(page: import("@playwright/test").Page) {
+  const res = await page.request.get("/api/customer/orders");
+  const orders = await res.json();
+  return orders[0].farmer.id as number;
+}
+
 // One story, in order: the same order moves from customer to farmer.
 test.describe.serial("GCash order, paid and shipped", () => {
   test("a guest can browse the shop", async ({ page }) => {
@@ -56,10 +63,22 @@ test.describe.serial("GCash order, paid and shipped", () => {
 
   test("the customer sees it paid and shipped", async ({ page }) => {
     await signIn(page, SEED.customer.email);
+    // The account menu counts the updated order and the farmer's update messages.
+    await page.getByRole("button", { name: SEED.customer.name }).click();
+    const menu = page.getByRole("menu");
+    await expect(menu.getByRole("menuitem", { name: /My Orders/ }).getByLabel("1 new")).toBeVisible();
+    await expect(menu.getByRole("menuitem", { name: /Messages/ }).getByLabel("3 new")).toBeVisible();
+
     await page.goto("/customer/orders");
     await expect(page.getByText("shipped", { exact: true })).toBeVisible();
+    await expect(page.getByText("Updated", { exact: true })).toBeVisible();
     await page.getByRole("button", { name: /Order #1/ }).click();
     await expect(page.getByText(/confirmed your GCash payment/)).toBeVisible();
+
+    // Accepted, paid and shipped each arrived as an "Order update" in the chat.
+    await page.goto(`/customer/messages/${await farmerId(page)}`);
+    await expect(page.getByText("Order update")).toHaveCount(3);
+    await expect(page.getByText("Order #1 is ready for pickup.")).toBeVisible();
   });
 });
 

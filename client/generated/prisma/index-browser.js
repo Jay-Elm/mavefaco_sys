@@ -269,6 +269,8 @@ exports.Prisma.OrderScalarFieldEnum = {
   deliveryTown: 'deliveryTown',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  customerNotifiedAt: 'customerNotifiedAt',
+  customerSeenAt: 'customerSeenAt',
   customerId: 'customerId'
 };
 
@@ -329,6 +331,8 @@ exports.Prisma.MessageScalarFieldEnum = {
   content: 'content',
   read: 'read',
   createdAt: 'createdAt',
+  kind: 'kind',
+  orderId: 'orderId',
   senderId: 'senderId',
   receiverId: 'receiverId'
 };

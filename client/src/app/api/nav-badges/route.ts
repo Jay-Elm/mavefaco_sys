@@ -59,6 +59,20 @@ export async function GET(req: NextRequest) {
       });
     }
 
+    if (actor.role === ROLES.CUSTOMER) {
+      const [unreadMessages, updatedOrders] = await Promise.all([
+        unreadVisibleMessages(actor.id),
+        // Orders the farmer or staff changed since the customer last opened My Orders
+        prisma.order.count({
+          where: { customerId: actor.id, customerNotifiedAt: { gt: prisma.order.fields.customerSeenAt } },
+        }),
+      ]);
+      return NextResponse.json({
+        "/customer/orders": updatedOrders,
+        "/customer/messages": unreadMessages,
+      });
+    }
+
     return NextResponse.json({});
   } catch {
     return NextResponse.json({ error: "Failed to fetch badges" }, { status: 500 });

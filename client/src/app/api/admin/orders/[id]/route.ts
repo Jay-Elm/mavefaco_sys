@@ -4,6 +4,7 @@ import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 import { paymentAfterCancel, paymentAfterReopen, shipBlockedReason } from "@/lib/payment";
+import { notifyCustomer, orderNoteSchema, type OrderEvent } from "@/lib/orderUpdates";
 
 const VALID_STATUSES = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
 
@@ -42,6 +43,8 @@ export async function PATCH(
 
     if (!VALID_STATUSES.includes(status))
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
+    const note = orderNoteSchema.safeParse(body.note ?? undefined);
+    if (!note.success) return NextResponse.json({ error: note.error.issues[0].message }, { status: 400 });
 
     const existing = await prisma.order.findUnique({ where: { id: orderId }, select: { status: true, paymentMethod: true, paymentStatus: true } });
     if (!existing) return NextResponse.json({ error: "Order not found" }, { status: 404 });
@@ -104,6 +107,17 @@ export async function PATCH(
           userId: user.id,
         },
       });
+
+      // Tell the customer, unless nothing they'd notice changed (an admin
+      // moving an order back to pending, or saving the same status).
+      const event: OrderEvent | null = cancelling
+        ? "cancelled"
+        : reopening
+          ? "reopened"
+          : status !== existing.status && ["confirmed", "shipped", "delivered"].includes(status)
+            ? (status as OrderEvent)
+            : null;
+      if (event) await notifyCustomer(tx, orderId, event, { byStaff: true, note: note.data });
 
       return tx.order.findUniqueOrThrow({
         where: { id: orderId },

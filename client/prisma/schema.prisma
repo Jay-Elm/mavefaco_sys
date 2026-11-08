@@ -316,11 +316,16 @@ model Order {
   createdAt       DateTime     @default(now())
   // Lets open pages notice a status change (see /api/live).
   updatedAt       DateTime     @default(now()) @updatedAt
+  // The customer's "updated" dot on My Orders: the last change the farmer
+  // or staff made, and when the customer last opened My Orders.
+  customerNotifiedAt DateTime?
+  customerSeenAt     DateTime  @default(now())
 
   customerId    Int
   customer      User         @relation(fields: [customerId], references: [id])
 
   items         OrderItem[]
+  messages      Message[]
 
   @@index([customerId])
   @@index([status])
@@ -405,6 +410,11 @@ model Message {
   content    String
   read       Boolean  @default(false)
   createdAt  DateTime @default(now())
+  // "text" = typed by a person; "order_update" = sent automatically from the
+  // farmer to the customer when the order changes (src/lib/orderUpdates.ts).
+  kind       String   @default("text")
+  orderId    Int?
+  order      Order?   @relation(fields: [orderId], references: [id])
 
   senderId   Int
   sender     User     @relation("SentMessages", fields: [senderId], references: [id])

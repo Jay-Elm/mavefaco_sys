@@ -3508,10 +3508,12 @@ export namespace Prisma {
 
   export type OrderCountOutputType = {
     items: number
+    messages: number
   }
 
   export type OrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | OrderCountOutputTypeCountItemsArgs
+    messages?: boolean | OrderCountOutputTypeCountMessagesArgs
   }
 
   // Custom InputTypes
@@ -3530,6 +3532,13 @@ export namespace Prisma {
    */
   export type OrderCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderItemWhereInput
+  }
+
+  /**
+   * OrderCountOutputType without action
+   */
+  export type OrderCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MessageWhereInput
   }
 
 
@@ -16038,6 +16047,8 @@ export namespace Prisma {
     deliveryTown: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    customerNotifiedAt: Date | null
+    customerSeenAt: Date | null
     customerId: number | null
   }
 
@@ -16058,6 +16069,8 @@ export namespace Prisma {
     deliveryTown: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    customerNotifiedAt: Date | null
+    customerSeenAt: Date | null
     customerId: number | null
   }
 
@@ -16078,6 +16091,8 @@ export namespace Prisma {
     deliveryTown: number
     createdAt: number
     updatedAt: number
+    customerNotifiedAt: number
+    customerSeenAt: number
     customerId: number
     _all: number
   }
@@ -16116,6 +16131,8 @@ export namespace Prisma {
     deliveryTown?: true
     createdAt?: true
     updatedAt?: true
+    customerNotifiedAt?: true
+    customerSeenAt?: true
     customerId?: true
   }
 
@@ -16136,6 +16153,8 @@ export namespace Prisma {
     deliveryTown?: true
     createdAt?: true
     updatedAt?: true
+    customerNotifiedAt?: true
+    customerSeenAt?: true
     customerId?: true
   }
 
@@ -16156,6 +16175,8 @@ export namespace Prisma {
     deliveryTown?: true
     createdAt?: true
     updatedAt?: true
+    customerNotifiedAt?: true
+    customerSeenAt?: true
     customerId?: true
     _all?: true
   }
@@ -16263,6 +16284,8 @@ export namespace Prisma {
     deliveryTown: string | null
     createdAt: Date
     updatedAt: Date
+    customerNotifiedAt: Date | null
+    customerSeenAt: Date
     customerId: number
     _count: OrderCountAggregateOutputType | null
     _avg: OrderAvgAggregateOutputType | null
@@ -16302,9 +16325,12 @@ export namespace Prisma {
     deliveryTown?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    customerNotifiedAt?: boolean
+    customerSeenAt?: boolean
     customerId?: boolean
     customer?: boolean | UserDefaultArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
+    messages?: boolean | Order$messagesArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
@@ -16325,6 +16351,8 @@ export namespace Prisma {
     deliveryTown?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    customerNotifiedAt?: boolean
+    customerSeenAt?: boolean
     customerId?: boolean
     customer?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -16346,6 +16374,8 @@ export namespace Prisma {
     deliveryTown?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    customerNotifiedAt?: boolean
+    customerSeenAt?: boolean
     customerId?: boolean
     customer?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
@@ -16367,13 +16397,16 @@ export namespace Prisma {
     deliveryTown?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    customerNotifiedAt?: boolean
+    customerSeenAt?: boolean
     customerId?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "totalAmount" | "status" | "paymentMethod" | "deliveryMethod" | "paymentStatus" | "gcashReference" | "payerName" | "payerNumber" | "paidAt" | "deliveryLat" | "deliveryLng" | "deliveryAddress" | "deliveryTown" | "createdAt" | "updatedAt" | "customerId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "totalAmount" | "status" | "paymentMethod" | "deliveryMethod" | "paymentStatus" | "gcashReference" | "payerName" | "payerNumber" | "paidAt" | "deliveryLat" | "deliveryLng" | "deliveryAddress" | "deliveryTown" | "createdAt" | "updatedAt" | "customerNotifiedAt" | "customerSeenAt" | "customerId", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | UserDefaultArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
+    messages?: boolean | Order$messagesArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16388,6 +16421,7 @@ export namespace Prisma {
     objects: {
       customer: Prisma.$UserPayload<ExtArgs>
       items: Prisma.$OrderItemPayload<ExtArgs>[]
+      messages: Prisma.$MessagePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -16406,6 +16440,8 @@ export namespace Prisma {
       deliveryTown: string | null
       createdAt: Date
       updatedAt: Date
+      customerNotifiedAt: Date | null
+      customerSeenAt: Date
       customerId: number
     }, ExtArgs["result"]["order"]>
     composites: {}
@@ -16803,6 +16839,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     customer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     items<T extends Order$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    messages<T extends Order$messagesArgs<ExtArgs> = {}>(args?: Subset<T, Order$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16848,6 +16885,8 @@ export namespace Prisma {
     readonly deliveryTown: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
+    readonly customerNotifiedAt: FieldRef<"Order", 'DateTime'>
+    readonly customerSeenAt: FieldRef<"Order", 'DateTime'>
     readonly customerId: FieldRef<"Order", 'Int'>
   }
     
@@ -17271,6 +17310,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderItemScalarFieldEnum | OrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * Order.messages
+   */
+  export type Order$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Message
+     */
+    select?: MessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Message
+     */
+    omit?: MessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MessageInclude<ExtArgs> | null
+    where?: MessageWhereInput
+    orderBy?: MessageOrderByWithRelationInput | MessageOrderByWithRelationInput[]
+    cursor?: MessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
   }
 
   /**
@@ -23776,12 +23839,14 @@ export namespace Prisma {
 
   export type MessageAvgAggregateOutputType = {
     id: number | null
+    orderId: number | null
     senderId: number | null
     receiverId: number | null
   }
 
   export type MessageSumAggregateOutputType = {
     id: number | null
+    orderId: number | null
     senderId: number | null
     receiverId: number | null
   }
@@ -23791,6 +23856,8 @@ export namespace Prisma {
     content: string | null
     read: boolean | null
     createdAt: Date | null
+    kind: string | null
+    orderId: number | null
     senderId: number | null
     receiverId: number | null
   }
@@ -23800,6 +23867,8 @@ export namespace Prisma {
     content: string | null
     read: boolean | null
     createdAt: Date | null
+    kind: string | null
+    orderId: number | null
     senderId: number | null
     receiverId: number | null
   }
@@ -23809,6 +23878,8 @@ export namespace Prisma {
     content: number
     read: number
     createdAt: number
+    kind: number
+    orderId: number
     senderId: number
     receiverId: number
     _all: number
@@ -23817,12 +23888,14 @@ export namespace Prisma {
 
   export type MessageAvgAggregateInputType = {
     id?: true
+    orderId?: true
     senderId?: true
     receiverId?: true
   }
 
   export type MessageSumAggregateInputType = {
     id?: true
+    orderId?: true
     senderId?: true
     receiverId?: true
   }
@@ -23832,6 +23905,8 @@ export namespace Prisma {
     content?: true
     read?: true
     createdAt?: true
+    kind?: true
+    orderId?: true
     senderId?: true
     receiverId?: true
   }
@@ -23841,6 +23916,8 @@ export namespace Prisma {
     content?: true
     read?: true
     createdAt?: true
+    kind?: true
+    orderId?: true
     senderId?: true
     receiverId?: true
   }
@@ -23850,6 +23927,8 @@ export namespace Prisma {
     content?: true
     read?: true
     createdAt?: true
+    kind?: true
+    orderId?: true
     senderId?: true
     receiverId?: true
     _all?: true
@@ -23946,6 +24025,8 @@ export namespace Prisma {
     content: string
     read: boolean
     createdAt: Date
+    kind: string
+    orderId: number | null
     senderId: number
     receiverId: number
     _count: MessageCountAggregateOutputType | null
@@ -23974,8 +24055,11 @@ export namespace Prisma {
     content?: boolean
     read?: boolean
     createdAt?: boolean
+    kind?: boolean
+    orderId?: boolean
     senderId?: boolean
     receiverId?: boolean
+    order?: boolean | Message$orderArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
     receiver?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
@@ -23985,8 +24069,11 @@ export namespace Prisma {
     content?: boolean
     read?: boolean
     createdAt?: boolean
+    kind?: boolean
+    orderId?: boolean
     senderId?: boolean
     receiverId?: boolean
+    order?: boolean | Message$orderArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
     receiver?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
@@ -23996,8 +24083,11 @@ export namespace Prisma {
     content?: boolean
     read?: boolean
     createdAt?: boolean
+    kind?: boolean
+    orderId?: boolean
     senderId?: boolean
     receiverId?: boolean
+    order?: boolean | Message$orderArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
     receiver?: boolean | UserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["message"]>
@@ -24007,20 +24097,25 @@ export namespace Prisma {
     content?: boolean
     read?: boolean
     createdAt?: boolean
+    kind?: boolean
+    orderId?: boolean
     senderId?: boolean
     receiverId?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "read" | "createdAt" | "senderId" | "receiverId", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "read" | "createdAt" | "kind" | "orderId" | "senderId" | "receiverId", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | Message$orderArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
     receiver?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type MessageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | Message$orderArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
     receiver?: boolean | UserDefaultArgs<ExtArgs>
   }
   export type MessageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | Message$orderArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
     receiver?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -24028,6 +24123,7 @@ export namespace Prisma {
   export type $MessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Message"
     objects: {
+      order: Prisma.$OrderPayload<ExtArgs> | null
       sender: Prisma.$UserPayload<ExtArgs>
       receiver: Prisma.$UserPayload<ExtArgs>
     }
@@ -24036,6 +24132,8 @@ export namespace Prisma {
       content: string
       read: boolean
       createdAt: Date
+      kind: string
+      orderId: number | null
       senderId: number
       receiverId: number
     }, ExtArgs["result"]["message"]>
@@ -24432,6 +24530,7 @@ export namespace Prisma {
    */
   export interface Prisma__MessageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    order<T extends Message$orderArgs<ExtArgs> = {}>(args?: Subset<T, Message$orderArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     sender<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     receiver<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
@@ -24467,6 +24566,8 @@ export namespace Prisma {
     readonly content: FieldRef<"Message", 'String'>
     readonly read: FieldRef<"Message", 'Boolean'>
     readonly createdAt: FieldRef<"Message", 'DateTime'>
+    readonly kind: FieldRef<"Message", 'String'>
+    readonly orderId: FieldRef<"Message", 'Int'>
     readonly senderId: FieldRef<"Message", 'Int'>
     readonly receiverId: FieldRef<"Message", 'Int'>
   }
@@ -24867,6 +24968,25 @@ export namespace Prisma {
      * Limit how many Messages to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Message.order
+   */
+  export type Message$orderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
   }
 
   /**
@@ -34075,6 +34195,8 @@ export namespace Prisma {
     deliveryTown: 'deliveryTown',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    customerNotifiedAt: 'customerNotifiedAt',
+    customerSeenAt: 'customerSeenAt',
     customerId: 'customerId'
   };
 
@@ -34156,6 +34278,8 @@ export namespace Prisma {
     content: 'content',
     read: 'read',
     createdAt: 'createdAt',
+    kind: 'kind',
+    orderId: 'orderId',
     senderId: 'senderId',
     receiverId: 'receiverId'
   };
@@ -35336,9 +35460,12 @@ export namespace Prisma {
     deliveryTown?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    customerNotifiedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    customerSeenAt?: DateTimeFilter<"Order"> | Date | string
     customerId?: IntFilter<"Order"> | number
     customer?: XOR<UserScalarRelationFilter, UserWhereInput>
     items?: OrderItemListRelationFilter
+    messages?: MessageListRelationFilter
   }
 
   export type OrderOrderByWithRelationInput = {
@@ -35358,9 +35485,12 @@ export namespace Prisma {
     deliveryTown?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    customerNotifiedAt?: SortOrderInput | SortOrder
+    customerSeenAt?: SortOrder
     customerId?: SortOrder
     customer?: UserOrderByWithRelationInput
     items?: OrderItemOrderByRelationAggregateInput
+    messages?: MessageOrderByRelationAggregateInput
   }
 
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -35383,9 +35513,12 @@ export namespace Prisma {
     deliveryTown?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    customerNotifiedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    customerSeenAt?: DateTimeFilter<"Order"> | Date | string
     customerId?: IntFilter<"Order"> | number
     customer?: XOR<UserScalarRelationFilter, UserWhereInput>
     items?: OrderItemListRelationFilter
+    messages?: MessageListRelationFilter
   }, "id" | "gcashReference">
 
   export type OrderOrderByWithAggregationInput = {
@@ -35405,6 +35538,8 @@ export namespace Prisma {
     deliveryTown?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    customerNotifiedAt?: SortOrderInput | SortOrder
+    customerSeenAt?: SortOrder
     customerId?: SortOrder
     _count?: OrderCountOrderByAggregateInput
     _avg?: OrderAvgOrderByAggregateInput
@@ -35433,6 +35568,8 @@ export namespace Prisma {
     deliveryTown?: StringNullableWithAggregatesFilter<"Order"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
+    customerNotifiedAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    customerSeenAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     customerId?: IntWithAggregatesFilter<"Order"> | number
   }
 
@@ -35802,8 +35939,11 @@ export namespace Prisma {
     content?: StringFilter<"Message"> | string
     read?: BoolFilter<"Message"> | boolean
     createdAt?: DateTimeFilter<"Message"> | Date | string
+    kind?: StringFilter<"Message"> | string
+    orderId?: IntNullableFilter<"Message"> | number | null
     senderId?: IntFilter<"Message"> | number
     receiverId?: IntFilter<"Message"> | number
+    order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
     sender?: XOR<UserScalarRelationFilter, UserWhereInput>
     receiver?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
@@ -35813,8 +35953,11 @@ export namespace Prisma {
     content?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
+    kind?: SortOrder
+    orderId?: SortOrderInput | SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
+    order?: OrderOrderByWithRelationInput
     sender?: UserOrderByWithRelationInput
     receiver?: UserOrderByWithRelationInput
   }
@@ -35827,8 +35970,11 @@ export namespace Prisma {
     content?: StringFilter<"Message"> | string
     read?: BoolFilter<"Message"> | boolean
     createdAt?: DateTimeFilter<"Message"> | Date | string
+    kind?: StringFilter<"Message"> | string
+    orderId?: IntNullableFilter<"Message"> | number | null
     senderId?: IntFilter<"Message"> | number
     receiverId?: IntFilter<"Message"> | number
+    order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
     sender?: XOR<UserScalarRelationFilter, UserWhereInput>
     receiver?: XOR<UserScalarRelationFilter, UserWhereInput>
   }, "id">
@@ -35838,6 +35984,8 @@ export namespace Prisma {
     content?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
+    kind?: SortOrder
+    orderId?: SortOrderInput | SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
     _count?: MessageCountOrderByAggregateInput
@@ -35855,6 +36003,8 @@ export namespace Prisma {
     content?: StringWithAggregatesFilter<"Message"> | string
     read?: BoolWithAggregatesFilter<"Message"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
+    kind?: StringWithAggregatesFilter<"Message"> | string
+    orderId?: IntNullableWithAggregatesFilter<"Message"> | number | null
     senderId?: IntWithAggregatesFilter<"Message"> | number
     receiverId?: IntWithAggregatesFilter<"Message"> | number
   }
@@ -37404,8 +37554,11 @@ export namespace Prisma {
     deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerNotifiedAt?: Date | string | null
+    customerSeenAt?: Date | string
     customer: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
+    messages?: MessageCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateInput = {
@@ -37425,8 +37578,11 @@ export namespace Prisma {
     deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerNotifiedAt?: Date | string | null
+    customerSeenAt?: Date | string
     customerId: number
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    messages?: MessageUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUpdateInput = {
@@ -37445,8 +37601,11 @@ export namespace Prisma {
     deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: UserUpdateOneRequiredWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
+    messages?: MessageUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateInput = {
@@ -37466,8 +37625,11 @@ export namespace Prisma {
     deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerId?: IntFieldUpdateOperationsInput | number
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderCreateManyInput = {
@@ -37487,6 +37649,8 @@ export namespace Prisma {
     deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerNotifiedAt?: Date | string | null
+    customerSeenAt?: Date | string
     customerId: number
   }
 
@@ -37506,6 +37670,8 @@ export namespace Prisma {
     deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type OrderUncheckedUpdateManyInput = {
@@ -37525,6 +37691,8 @@ export namespace Prisma {
     deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -37876,6 +38044,8 @@ export namespace Prisma {
     content: string
     read?: boolean
     createdAt?: Date | string
+    kind?: string
+    order?: OrderCreateNestedOneWithoutMessagesInput
     sender: UserCreateNestedOneWithoutSentMessagesInput
     receiver: UserCreateNestedOneWithoutReceivedMessagesInput
   }
@@ -37885,6 +38055,8 @@ export namespace Prisma {
     content: string
     read?: boolean
     createdAt?: Date | string
+    kind?: string
+    orderId?: number | null
     senderId: number
     receiverId: number
   }
@@ -37893,6 +38065,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
+    order?: OrderUpdateOneWithoutMessagesNestedInput
     sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
     receiver?: UserUpdateOneRequiredWithoutReceivedMessagesNestedInput
   }
@@ -37902,6 +38076,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     senderId?: IntFieldUpdateOperationsInput | number
     receiverId?: IntFieldUpdateOperationsInput | number
   }
@@ -37911,6 +38087,8 @@ export namespace Prisma {
     content: string
     read?: boolean
     createdAt?: Date | string
+    kind?: string
+    orderId?: number | null
     senderId: number
     receiverId: number
   }
@@ -37919,6 +38097,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
   }
 
   export type MessageUncheckedUpdateManyInput = {
@@ -37926,6 +38105,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     senderId?: IntFieldUpdateOperationsInput | number
     receiverId?: IntFieldUpdateOperationsInput | number
   }
@@ -39501,6 +39682,8 @@ export namespace Prisma {
     deliveryTown?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    customerNotifiedAt?: SortOrder
+    customerSeenAt?: SortOrder
     customerId?: SortOrder
   }
 
@@ -39529,6 +39712,8 @@ export namespace Prisma {
     deliveryTown?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    customerNotifiedAt?: SortOrder
+    customerSeenAt?: SortOrder
     customerId?: SortOrder
   }
 
@@ -39549,6 +39734,8 @@ export namespace Prisma {
     deliveryTown?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    customerNotifiedAt?: SortOrder
+    customerSeenAt?: SortOrder
     customerId?: SortOrder
   }
 
@@ -39791,17 +39978,25 @@ export namespace Prisma {
     productId?: SortOrder
   }
 
+  export type OrderNullableScalarRelationFilter = {
+    is?: OrderWhereInput | null
+    isNot?: OrderWhereInput | null
+  }
+
   export type MessageCountOrderByAggregateInput = {
     id?: SortOrder
     content?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
+    kind?: SortOrder
+    orderId?: SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
   }
 
   export type MessageAvgOrderByAggregateInput = {
     id?: SortOrder
+    orderId?: SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
   }
@@ -39811,6 +40006,8 @@ export namespace Prisma {
     content?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
+    kind?: SortOrder
+    orderId?: SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
   }
@@ -39820,12 +40017,15 @@ export namespace Prisma {
     content?: SortOrder
     read?: SortOrder
     createdAt?: SortOrder
+    kind?: SortOrder
+    orderId?: SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
   }
 
   export type MessageSumOrderByAggregateInput = {
     id?: SortOrder
+    orderId?: SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
   }
@@ -41544,11 +41744,25 @@ export namespace Prisma {
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
   }
 
+  export type MessageCreateNestedManyWithoutOrderInput = {
+    create?: XOR<MessageCreateWithoutOrderInput, MessageUncheckedCreateWithoutOrderInput> | MessageCreateWithoutOrderInput[] | MessageUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutOrderInput | MessageCreateOrConnectWithoutOrderInput[]
+    createMany?: MessageCreateManyOrderInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutOrderInput = {
     create?: XOR<OrderItemCreateWithoutOrderInput, OrderItemUncheckedCreateWithoutOrderInput> | OrderItemCreateWithoutOrderInput[] | OrderItemUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
     createMany?: OrderItemCreateManyOrderInputEnvelope
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+  }
+
+  export type MessageUncheckedCreateNestedManyWithoutOrderInput = {
+    create?: XOR<MessageCreateWithoutOrderInput, MessageUncheckedCreateWithoutOrderInput> | MessageCreateWithoutOrderInput[] | MessageUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutOrderInput | MessageCreateOrConnectWithoutOrderInput[]
+    createMany?: MessageCreateManyOrderInputEnvelope
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
   }
 
   export type UserUpdateOneRequiredWithoutOrdersNestedInput = {
@@ -41573,6 +41787,20 @@ export namespace Prisma {
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
   }
 
+  export type MessageUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<MessageCreateWithoutOrderInput, MessageUncheckedCreateWithoutOrderInput> | MessageCreateWithoutOrderInput[] | MessageUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutOrderInput | MessageCreateOrConnectWithoutOrderInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutOrderInput | MessageUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: MessageCreateManyOrderInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutOrderInput | MessageUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutOrderInput | MessageUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
+  }
+
   export type OrderItemUncheckedUpdateManyWithoutOrderNestedInput = {
     create?: XOR<OrderItemCreateWithoutOrderInput, OrderItemUncheckedCreateWithoutOrderInput> | OrderItemCreateWithoutOrderInput[] | OrderItemUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
@@ -41585,6 +41813,20 @@ export namespace Prisma {
     update?: OrderItemUpdateWithWhereUniqueWithoutOrderInput | OrderItemUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: OrderItemUpdateManyWithWhereWithoutOrderInput | OrderItemUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
+  }
+
+  export type MessageUncheckedUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<MessageCreateWithoutOrderInput, MessageUncheckedCreateWithoutOrderInput> | MessageCreateWithoutOrderInput[] | MessageUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: MessageCreateOrConnectWithoutOrderInput | MessageCreateOrConnectWithoutOrderInput[]
+    upsert?: MessageUpsertWithWhereUniqueWithoutOrderInput | MessageUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: MessageCreateManyOrderInputEnvelope
+    set?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    disconnect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    delete?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    connect?: MessageWhereUniqueInput | MessageWhereUniqueInput[]
+    update?: MessageUpdateWithWhereUniqueWithoutOrderInput | MessageUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: MessageUpdateManyWithWhereWithoutOrderInput | MessageUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: MessageScalarWhereInput | MessageScalarWhereInput[]
   }
 
   export type OrderCreateNestedOneWithoutItemsInput = {
@@ -41657,6 +41899,12 @@ export namespace Prisma {
     update?: XOR<XOR<ProductUpdateToOneWithWhereWithoutReviewsInput, ProductUpdateWithoutReviewsInput>, ProductUncheckedUpdateWithoutReviewsInput>
   }
 
+  export type OrderCreateNestedOneWithoutMessagesInput = {
+    create?: XOR<OrderCreateWithoutMessagesInput, OrderUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutMessagesInput
+    connect?: OrderWhereUniqueInput
+  }
+
   export type UserCreateNestedOneWithoutSentMessagesInput = {
     create?: XOR<UserCreateWithoutSentMessagesInput, UserUncheckedCreateWithoutSentMessagesInput>
     connectOrCreate?: UserCreateOrConnectWithoutSentMessagesInput
@@ -41667,6 +41915,16 @@ export namespace Prisma {
     create?: XOR<UserCreateWithoutReceivedMessagesInput, UserUncheckedCreateWithoutReceivedMessagesInput>
     connectOrCreate?: UserCreateOrConnectWithoutReceivedMessagesInput
     connect?: UserWhereUniqueInput
+  }
+
+  export type OrderUpdateOneWithoutMessagesNestedInput = {
+    create?: XOR<OrderCreateWithoutMessagesInput, OrderUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutMessagesInput
+    upsert?: OrderUpsertWithoutMessagesInput
+    disconnect?: OrderWhereInput | boolean
+    delete?: OrderWhereInput | boolean
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutMessagesInput, OrderUpdateWithoutMessagesInput>, OrderUncheckedUpdateWithoutMessagesInput>
   }
 
   export type UserUpdateOneRequiredWithoutSentMessagesNestedInput = {
@@ -42154,7 +42412,10 @@ export namespace Prisma {
     deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerNotifiedAt?: Date | string | null
+    customerSeenAt?: Date | string
     items?: OrderItemCreateNestedManyWithoutOrderInput
+    messages?: MessageCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutCustomerInput = {
@@ -42174,7 +42435,10 @@ export namespace Prisma {
     deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerNotifiedAt?: Date | string | null
+    customerSeenAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    messages?: MessageUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutCustomerInput = {
@@ -42268,6 +42532,8 @@ export namespace Prisma {
     content: string
     read?: boolean
     createdAt?: Date | string
+    kind?: string
+    order?: OrderCreateNestedOneWithoutMessagesInput
     receiver: UserCreateNestedOneWithoutReceivedMessagesInput
   }
 
@@ -42276,6 +42542,8 @@ export namespace Prisma {
     content: string
     read?: boolean
     createdAt?: Date | string
+    kind?: string
+    orderId?: number | null
     receiverId: number
   }
 
@@ -42293,6 +42561,8 @@ export namespace Prisma {
     content: string
     read?: boolean
     createdAt?: Date | string
+    kind?: string
+    order?: OrderCreateNestedOneWithoutMessagesInput
     sender: UserCreateNestedOneWithoutSentMessagesInput
   }
 
@@ -42301,6 +42571,8 @@ export namespace Prisma {
     content: string
     read?: boolean
     createdAt?: Date | string
+    kind?: string
+    orderId?: number | null
     senderId: number
   }
 
@@ -42637,6 +42909,8 @@ export namespace Prisma {
     deliveryTown?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+    customerNotifiedAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    customerSeenAt?: DateTimeFilter<"Order"> | Date | string
     customerId?: IntFilter<"Order"> | number
   }
 
@@ -42749,6 +43023,8 @@ export namespace Prisma {
     content?: StringFilter<"Message"> | string
     read?: BoolFilter<"Message"> | boolean
     createdAt?: DateTimeFilter<"Message"> | Date | string
+    kind?: StringFilter<"Message"> | string
+    orderId?: IntNullableFilter<"Message"> | number | null
     senderId?: IntFilter<"Message"> | number
     receiverId?: IntFilter<"Message"> | number
   }
@@ -45169,6 +45445,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MessageCreateWithoutOrderInput = {
+    content: string
+    read?: boolean
+    createdAt?: Date | string
+    kind?: string
+    sender: UserCreateNestedOneWithoutSentMessagesInput
+    receiver: UserCreateNestedOneWithoutReceivedMessagesInput
+  }
+
+  export type MessageUncheckedCreateWithoutOrderInput = {
+    id?: number
+    content: string
+    read?: boolean
+    createdAt?: Date | string
+    kind?: string
+    senderId: number
+    receiverId: number
+  }
+
+  export type MessageCreateOrConnectWithoutOrderInput = {
+    where: MessageWhereUniqueInput
+    create: XOR<MessageCreateWithoutOrderInput, MessageUncheckedCreateWithoutOrderInput>
+  }
+
+  export type MessageCreateManyOrderInputEnvelope = {
+    data: MessageCreateManyOrderInput | MessageCreateManyOrderInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutOrdersInput = {
     update: XOR<UserUpdateWithoutOrdersInput, UserUncheckedUpdateWithoutOrdersInput>
     create: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
@@ -45277,6 +45582,22 @@ export namespace Prisma {
     data: XOR<OrderItemUpdateManyMutationInput, OrderItemUncheckedUpdateManyWithoutOrderInput>
   }
 
+  export type MessageUpsertWithWhereUniqueWithoutOrderInput = {
+    where: MessageWhereUniqueInput
+    update: XOR<MessageUpdateWithoutOrderInput, MessageUncheckedUpdateWithoutOrderInput>
+    create: XOR<MessageCreateWithoutOrderInput, MessageUncheckedCreateWithoutOrderInput>
+  }
+
+  export type MessageUpdateWithWhereUniqueWithoutOrderInput = {
+    where: MessageWhereUniqueInput
+    data: XOR<MessageUpdateWithoutOrderInput, MessageUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type MessageUpdateManyWithWhereWithoutOrderInput = {
+    where: MessageScalarWhereInput
+    data: XOR<MessageUpdateManyMutationInput, MessageUncheckedUpdateManyWithoutOrderInput>
+  }
+
   export type OrderCreateWithoutItemsInput = {
     totalAmount: Decimal | DecimalJsLike | number | string
     status?: string
@@ -45293,7 +45614,10 @@ export namespace Prisma {
     deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerNotifiedAt?: Date | string | null
+    customerSeenAt?: Date | string
     customer: UserCreateNestedOneWithoutOrdersInput
+    messages?: MessageCreateNestedManyWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutItemsInput = {
@@ -45313,7 +45637,10 @@ export namespace Prisma {
     deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerNotifiedAt?: Date | string | null
+    customerSeenAt?: Date | string
     customerId: number
+    messages?: MessageUncheckedCreateNestedManyWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutItemsInput = {
@@ -45402,7 +45729,10 @@ export namespace Prisma {
     deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customer?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    messages?: MessageUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutItemsInput = {
@@ -45422,7 +45752,10 @@ export namespace Prisma {
     deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customerId?: IntFieldUpdateOperationsInput | number
+    messages?: MessageUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type ProductUpsertWithoutOrderItemsInput = {
@@ -45955,6 +46288,56 @@ export namespace Prisma {
     notices?: NoticeUncheckedUpdateManyWithoutProductNestedInput
   }
 
+  export type OrderCreateWithoutMessagesInput = {
+    totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    paymentMethod?: string
+    deliveryMethod?: string
+    paymentStatus?: string
+    gcashReference?: string | null
+    payerName?: string | null
+    payerNumber?: string | null
+    paidAt?: Date | string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerNotifiedAt?: Date | string | null
+    customerSeenAt?: Date | string
+    customer: UserCreateNestedOneWithoutOrdersInput
+    items?: OrderItemCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutMessagesInput = {
+    id?: number
+    totalAmount: Decimal | DecimalJsLike | number | string
+    status?: string
+    paymentMethod?: string
+    deliveryMethod?: string
+    paymentStatus?: string
+    gcashReference?: string | null
+    payerName?: string | null
+    payerNumber?: string | null
+    paidAt?: Date | string | null
+    deliveryLat?: number | null
+    deliveryLng?: number | null
+    deliveryAddress?: string | null
+    deliveryTown?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customerNotifiedAt?: Date | string | null
+    customerSeenAt?: Date | string
+    customerId: number
+    items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutMessagesInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutMessagesInput, OrderUncheckedCreateWithoutMessagesInput>
+  }
+
   export type UserCreateWithoutSentMessagesInput = {
     name: string
     email: string
@@ -46125,6 +46508,62 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutReceivedMessagesInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutReceivedMessagesInput, UserUncheckedCreateWithoutReceivedMessagesInput>
+  }
+
+  export type OrderUpsertWithoutMessagesInput = {
+    update: XOR<OrderUpdateWithoutMessagesInput, OrderUncheckedUpdateWithoutMessagesInput>
+    create: XOR<OrderCreateWithoutMessagesInput, OrderUncheckedCreateWithoutMessagesInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutMessagesInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutMessagesInput, OrderUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type OrderUpdateWithoutMessagesInput = {
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    deliveryMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    gcashReference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customer?: UserUpdateOneRequiredWithoutOrdersNestedInput
+    items?: OrderItemUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutMessagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: StringFieldUpdateOperationsInput | string
+    paymentMethod?: StringFieldUpdateOperationsInput | string
+    deliveryMethod?: StringFieldUpdateOperationsInput | string
+    paymentStatus?: StringFieldUpdateOperationsInput | string
+    gcashReference?: NullableStringFieldUpdateOperationsInput | string | null
+    payerName?: NullableStringFieldUpdateOperationsInput | string | null
+    payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
+    deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerId?: IntFieldUpdateOperationsInput | number
+    items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type UserUpsertWithoutSentMessagesInput = {
@@ -47347,6 +47786,8 @@ export namespace Prisma {
     deliveryTown?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    customerNotifiedAt?: Date | string | null
+    customerSeenAt?: Date | string
   }
 
   export type AuditLogCreateManyUserInput = {
@@ -47379,6 +47820,8 @@ export namespace Prisma {
     content: string
     read?: boolean
     createdAt?: Date | string
+    kind?: string
+    orderId?: number | null
     receiverId: number
   }
 
@@ -47387,6 +47830,8 @@ export namespace Prisma {
     content: string
     read?: boolean
     createdAt?: Date | string
+    kind?: string
+    orderId?: number | null
     senderId: number
   }
 
@@ -47562,7 +48007,10 @@ export namespace Prisma {
     deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUpdateManyWithoutOrderNestedInput
+    messages?: MessageUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutCustomerInput = {
@@ -47582,7 +48030,10 @@ export namespace Prisma {
     deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutCustomerInput = {
@@ -47602,6 +48053,8 @@ export namespace Prisma {
     deliveryTown?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customerNotifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    customerSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AuditLogUpdateWithoutUserInput = {
@@ -47680,6 +48133,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
+    order?: OrderUpdateOneWithoutMessagesNestedInput
     receiver?: UserUpdateOneRequiredWithoutReceivedMessagesNestedInput
   }
 
@@ -47688,6 +48143,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     receiverId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -47696,6 +48153,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     receiverId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -47703,6 +48162,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
+    order?: OrderUpdateOneWithoutMessagesNestedInput
     sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
   }
 
@@ -47711,6 +48172,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     senderId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -47719,6 +48182,8 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
+    orderId?: NullableIntFieldUpdateOperationsInput | number | null
     senderId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -48495,6 +48960,16 @@ export namespace Prisma {
     productId: number
   }
 
+  export type MessageCreateManyOrderInput = {
+    id?: number
+    content: string
+    read?: boolean
+    createdAt?: Date | string
+    kind?: string
+    senderId: number
+    receiverId: number
+  }
+
   export type OrderItemUpdateWithoutOrderInput = {
     quantity?: FloatFieldUpdateOperationsInput | number
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -48513,6 +48988,35 @@ export namespace Prisma {
     quantity?: FloatFieldUpdateOperationsInput | number
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     productId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type MessageUpdateWithoutOrderInput = {
+    content?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
+    sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
+    receiver?: UserUpdateOneRequiredWithoutReceivedMessagesNestedInput
+  }
+
+  export type MessageUncheckedUpdateWithoutOrderInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    content?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
+    senderId?: IntFieldUpdateOperationsInput | number
+    receiverId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type MessageUncheckedUpdateManyWithoutOrderInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    content?: StringFieldUpdateOperationsInput | string
+    read?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    kind?: StringFieldUpdateOperationsInput | string
+    senderId?: IntFieldUpdateOperationsInput | number
+    receiverId?: IntFieldUpdateOperationsInput | number
   }
 
 

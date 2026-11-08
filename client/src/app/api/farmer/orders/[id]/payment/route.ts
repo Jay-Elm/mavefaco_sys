@@ -4,6 +4,7 @@ import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 import { farmerPaymentActionSchema } from "@/validators/payment";
+import { notifyCustomer, orderNoteSchema } from "@/lib/orderUpdates";
 
 /**
  * POST /api/farmer/orders/[id]/payment — the farmer's answer about a GCash
@@ -15,10 +16,12 @@ import { farmerPaymentActionSchema } from "@/validators/payment";
  *   refunded  the money was sent back (refund_due → refunded)
  */
 const MOVES = {
-  confirm: { from: ["submitted"], to: "confirmed", audit: "CONFIRM_PAYMENT" },
-  reject: { from: ["submitted", "refund_due"], to: "rejected", audit: "REJECT_PAYMENT" },
-  refunded: { from: ["refund_due"], to: "refunded", audit: "REFUND_PAYMENT" },
+  confirm: { from: ["submitted"], to: "confirmed", audit: "CONFIRM_PAYMENT", event: "payment_confirmed" },
+  reject: { from: ["submitted", "refund_due"], to: "rejected", audit: "REJECT_PAYMENT", event: "payment_rejected" },
+  refunded: { from: ["refund_due"], to: "refunded", audit: "REFUND_PAYMENT", event: "refunded" },
 } as const;
+
+class StaleOrderError extends Error {}
 
 export async function POST(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   const user = await getActiveAuthUser(req);
@@ -38,6 +41,8 @@ export async function POST(req: NextRequest, context: { params: Promise<{ id: st
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
   const action = parsed.data.action;
   const move = MOVES[action];
+  const note = orderNoteSchema.safeParse((body as { note?: unknown }).note ?? undefined);
+  if (!note.success) return NextResponse.json({ error: note.error.issues[0].message }, { status: 400 });
 
   const order = await prisma.order.findUnique({
     where: { id: orderId },
@@ -57,17 +62,24 @@ export async function POST(req: NextRequest, context: { params: Promise<{ id: st
   if (action === "reject" && order.paymentStatus === "refund_due" && order.paidAt)
     return NextResponse.json({ error: "You confirmed this payment earlier, so it has to be refunded" }, { status: 400 });
 
-  const { count } = await prisma.order.updateMany({
-    where: { id: orderId, paymentStatus: order.paymentStatus, status: order.status },
-    data: {
-      paymentStatus: move.to,
-      ...(move.to === "confirmed" && { paidAt: new Date() }),
-      // A rejected reference is freed so the customer can enter the right one.
-      ...(move.to === "rejected" && { gcashReference: null }),
-    },
-  });
-  if (count === 0) return NextResponse.json({ error: "The order changed, please refresh" }, { status: 409 });
-
-  await prisma.auditLog.create({ data: { action: move.audit, entityType: "ORDER", entityId: orderId, userId: user.id } });
+  try {
+    await prisma.$transaction(async (tx) => {
+      const { count } = await tx.order.updateMany({
+        where: { id: orderId, paymentStatus: order.paymentStatus, status: order.status },
+        data: {
+          paymentStatus: move.to,
+          ...(move.to === "confirmed" && { paidAt: new Date() }),
+          // A rejected reference is freed so the customer can enter the right one.
+          ...(move.to === "rejected" && { gcashReference: null }),
+        },
+      });
+      if (count === 0) throw new StaleOrderError();
+      await tx.auditLog.create({ data: { action: move.audit, entityType: "ORDER", entityId: orderId, userId: user.id } });
+      await notifyCustomer(tx, orderId, move.event, { byStaff: false, note: note.data });
+    });
+  } catch (err) {
+    if (err instanceof StaleOrderError) return NextResponse.json({ error: "The order changed, please refresh" }, { status: 409 });
+    return NextResponse.json({ error: "Failed to update the payment" }, { status: 500 });
+  }
   return NextResponse.json({ id: orderId, paymentStatus: move.to });
 }

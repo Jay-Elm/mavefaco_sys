@@ -12,6 +12,7 @@ import {
   Info, MessageCircle, Menu, X,
 } from 'lucide-react'
 import Logo from '@/components/Logo'
+import { MenuDot, NavBadge, useNavBadges } from '@/components/NavBadge'
 
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth()
@@ -94,6 +95,9 @@ export default function Navbar() {
   const mobileLinkCls = 'flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-white/10 transition-colors text-base font-medium w-full'
 
   const isFarmer = user?.role === 'farmer'
+  // Customers have no sidebar, so their badges (updated orders, unread
+  // messages) show here: a dot on the account menu, counts inside it.
+  const badges = useNavBadges(user?.role === 'customer')
 
   // Everything about the signed-in person's own account, in one menu.
   const accountLinks =
@@ -170,8 +174,9 @@ export default function Navbar() {
                     onClick={() => setMenuOpen((v) => !v)}
                     aria-expanded={menuOpen}
                     aria-haspopup="menu"
-                    className={`${linkCls} ml-1`}
+                    className={`${linkCls} ml-1 relative`}
                   >
+                    <MenuDot badges={badges} />
                     <UserCircle size={18} aria-hidden="true" />
                     <span className="max-w-[140px] truncate">{user?.name}</span>
                     <ChevronDown size={15} aria-hidden="true" className={`transition-transform ${menuOpen ? 'rotate-180' : ''}`} />
@@ -181,6 +186,7 @@ export default function Navbar() {
                       {accountLinks.map(({ href, label, icon: Icon }) => (
                         <Link key={href} href={href} role="menuitem" className="flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-field">
                           <Icon size={16} className="text-gray-500" aria-hidden="true" />{label}
+                          <NavBadge count={badges[href]} />
                         </Link>
                       ))}
                       {accountLinks.length > 0 && <div className="my-1.5 border-t border-gray-100" />}
@@ -214,11 +220,12 @@ export default function Navbar() {
             )}
             <button
               onClick={() => setMobileOpen(v => !v)}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              className="relative p-2 rounded-lg hover:bg-white/10 transition-colors"
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
             >
               {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+              {!mobileOpen && <MenuDot badges={badges} />}
             </button>
           </div>
         </div>
@@ -247,7 +254,7 @@ export default function Navbar() {
                 <div className="border-t border-white/10 my-3" />
                 <p className="px-4 pb-1 text-sm text-white/60 truncate">Signed in as {user?.name}</p>
                 {accountLinks.map(({ href, label, icon: Icon }) => (
-                  <Link key={href} href={href} className={mobileLinkCls}><Icon size={18} />{label}</Link>
+                  <Link key={href} href={href} className={mobileLinkCls}><Icon size={18} />{label}<NavBadge count={badges[href]} /></Link>
                 ))}
                 <button onClick={() => setShowLogoutConfirm(true)} className={mobileLinkCls}>
                   <LogOut size={18} />Log out

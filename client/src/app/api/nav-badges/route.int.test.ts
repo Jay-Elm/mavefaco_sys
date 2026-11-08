@@ -67,8 +67,8 @@ describe("GET /api/nav-badges", () => {
     }
   });
 
-  it("has nothing for customers, and needs a session", async () => {
-    expect(await badges(await createUser())).toEqual({});
+  it("gives customers their orders and messages (see orderUpdates.int.test.ts), and needs a session", async () => {
+    expect(await badges(await createUser())).toEqual({ "/customer/orders": 0, "/customer/messages": 0 });
     expect((await GET(request("/api/nav-badges"))).status).toBe(401);
   });
 });

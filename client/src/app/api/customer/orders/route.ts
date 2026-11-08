@@ -24,6 +24,8 @@ export async function GET(req: NextRequest) {
         deliveryAddress: true,
         deliveryTown: true,
         createdAt: true,
+        customerNotifiedAt: true,
+        customerSeenAt: true,
         items: {
           select: {
             id: true,
@@ -41,12 +43,14 @@ export async function GET(req: NextRequest) {
     })
 
     return NextResponse.json(
-      orders.map(({ items, ...o }) => {
+      orders.map(({ items, customerNotifiedAt, customerSeenAt, ...o }) => {
         // One farmer per order. Their GCash details go only with GCash orders.
         const farmer = items[0]?.product.farmer
         return {
           ...o,
           totalAmount: Number(o.totalAmount),
+          // Changed by the farmer or staff since the customer last opened My Orders.
+          updated: customerNotifiedAt !== null && customerNotifiedAt > customerSeenAt,
           farmer: farmer ? { id: farmer.id, name: farmer.name } : null,
           payTo:
             o.paymentMethod === 'gcash' && farmer?.gcashNumber

@@ -292,35 +292,40 @@ model CropLog {
 }
 
 model Order {
-  id              Int       @id @default(autoincrement())
-  totalAmount     Decimal   @db.Decimal(10, 2)
-  status          String    @default("pending")
-  paymentMethod   String    @default("cod")
-  deliveryMethod  String    @default("pickup")
+  id                 Int       @id @default(autoincrement())
+  totalAmount        Decimal   @db.Decimal(10, 2)
+  status             String    @default("pending")
+  paymentMethod      String    @default("cod")
+  deliveryMethod     String    @default("pickup")
   // GCash orders only: unpaid | submitted | rejected | confirmed |
   // refund_due | refunded (src/lib/payment.ts). Cash orders stay "unpaid".
-  paymentStatus   String    @default("unpaid")
+  paymentStatus      String    @default("unpaid")
   // The 13-digit GCash reference the customer entered, and the GCash
   // account they say they paid from.
-  gcashReference  String?   @unique
-  payerName       String?
-  payerNumber     String?
+  gcashReference     String?   @unique
+  payerName          String?
+  payerNumber        String?
   // When the farmer confirmed the money arrived.
-  paidAt          DateTime?
+  paidAt             DateTime?
   // Delivery orders: a copy of the customer's saved spot at checkout. Only
   // the order's farmer is shown the pin and address.
-  deliveryLat     Float?
-  deliveryLng     Float?
-  deliveryAddress String?
-  deliveryTown    String?
-  createdAt       DateTime  @default(now())
+  deliveryLat        Float?
+  deliveryLng        Float?
+  deliveryAddress    String?
+  deliveryTown       String?
+  createdAt          DateTime  @default(now())
   // Lets open pages notice a status change (see /api/live).
-  updatedAt       DateTime  @default(now()) @updatedAt
+  updatedAt          DateTime  @default(now()) @updatedAt
+  // The customer's "updated" dot on My Orders: the last change the farmer
+  // or staff made, and when the customer last opened My Orders.
+  customerNotifiedAt DateTime?
+  customerSeenAt     DateTime  @default(now())
 
   customerId Int
   customer   User @relation(fields: [customerId], references: [id])
 
-  items OrderItem[]
+  items    OrderItem[]
+  messages Message[]
 
   @@index([customerId])
   @@index([status])
@@ -404,6 +409,11 @@ model Message {
   content   String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
+  // "text" = typed by a person; "order_update" = sent automatically from the
+  // farmer to the customer when the order changes (src/lib/orderUpdates.ts).
+  kind      String   @default("text")
+  orderId   Int?
+  order     Order?   @relation(fields: [orderId], references: [id])
 
   senderId Int
   sender   User @relation("SentMessages", fields: [senderId], references: [id])

@@ -2,7 +2,8 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Send } from 'lucide-react'
+import Link from 'next/link'
+import { Loader2, Package, Send } from 'lucide-react'
 import { refreshNavBadges } from '@/components/NavBadge'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
@@ -12,6 +13,9 @@ interface Message {
   read: boolean
   createdAt: string
   sender: { id: number; name: string }
+  /** "order_update" = sent automatically when the order changed. */
+  kind?: string
+  orderId?: number | null
 }
 
 interface Props {
@@ -167,6 +171,25 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
                     <span className="flex-1 h-px bg-red-200" />
                   </div>
                 )}
+                {m.kind === 'order_update' ? (
+                  <div className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
+                    <div className="max-w-[85%] sm:max-w-[75%] rounded-card border border-paddy/30 bg-field px-4 py-2.5 text-sm text-soil">
+                      <p className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-paddy-deep">
+                        <Package size={13} aria-hidden="true" /> Order update
+                      </p>
+                      <p className="mt-1 whitespace-pre-line">{m.content}</p>
+                      <p className="mt-1.5 flex items-center justify-between gap-3 text-xs text-gray-500">
+                        <Link
+                          href={user?.role === 'farmer' ? '/farmer/orders' : '/customer/orders'}
+                          className="font-medium text-paddy hover:underline"
+                        >
+                          View order
+                        </Link>
+                        <time dateTime={m.createdAt}>{new Date(m.createdAt).toLocaleTimeString('en-PH', { timeStyle: 'short' })}</time>
+                      </p>
+                    </div>
+                  </div>
+                ) : (
                 <div className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[75%] rounded-card px-4 py-2 text-sm ${
                     isMe
@@ -181,6 +204,7 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
                     </p>
                   </div>
                 </div>
+                )}
               </div>
             )
           })

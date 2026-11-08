@@ -4,6 +4,7 @@ import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
 import { paymentAfterCancel, shipBlockedReason } from "@/lib/payment";
+import { notifyCustomer, orderNoteSchema, type OrderEvent } from "@/lib/orderUpdates";
 
 const VALID_STATUSES = ["pending", "confirmed", "shipped", "delivered", "cancelled"];
 
@@ -45,7 +46,11 @@ export async function PATCH(
     if (!belongsToFarmer)
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-    const { status } = await req.json();
+    const body = await req.json();
+    const { status } = body;
+    // An optional note for the customer, sent with the automatic update message.
+    const note = orderNoteSchema.safeParse(body.note ?? undefined);
+    if (!note.success) return NextResponse.json({ error: note.error.issues[0].message }, { status: 400 });
     if (!VALID_STATUSES.includes(status))
       return NextResponse.json(
         { error: `Status must be one of: ${VALID_STATUSES.join(", ")}` },
@@ -91,6 +96,8 @@ export async function PATCH(
           userId: user.id,
         },
       });
+
+      await notifyCustomer(tx, orderId, status as OrderEvent, { byStaff: false, note: note.data });
 
       return { id: orderId, status };
     });
