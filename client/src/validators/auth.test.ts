@@ -7,6 +7,7 @@ describe("registerSchema", () => {
       name: "Jane Farmer",
       email: "  Jane@Example.com  ",
       password: "correcthorsebattery",
+      acceptTerms: true,
     });
     expect(result.email).toBe("jane@example.com");
     expect(result.role).toBe("customer");
@@ -39,6 +40,16 @@ describe("registerSchema", () => {
     expect(result.error?.issues.some((i) => i.message.includes("at least 2 characters"))).toBe(
       true,
     );
+  });
+
+  it("needs the 18-or-older and Terms/Privacy box ticked", () => {
+    const base = { name: "Jane Farmer", email: "jane@example.com", password: "correcthorsebattery" };
+    for (const acceptTerms of [undefined, false, "true"]) {
+      const result = registerSchema.safeParse({ ...base, acceptTerms });
+      expect(result.success).toBe(false);
+      expect(result.error?.issues[0].message).toMatch(/18 or older/);
+    }
+    expect(registerSchema.safeParse({ ...base, acceptTerms: true }).success).toBe(true);
   });
 
   it("only allows customer or farmer at self-registration, never admin/manager", () => {

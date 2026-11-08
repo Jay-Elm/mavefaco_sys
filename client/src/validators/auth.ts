@@ -12,6 +12,9 @@ export const registerSchema = z.object({
   email: requiredString(z.string().trim().toLowerCase().max(MAX.email, tooLong("Email", MAX.email)).email("Enter a valid email address")),
   password: requiredString(z.string().min(12, "Password must be at least 12 characters").max(MAX.newPassword, tooLong("Password", MAX.newPassword))),
   role: z.enum(["customer", "farmer"]).default("customer"),
+  // The registration checkbox: at least 18, and agrees to the Terms of
+  // Service and Privacy Policy. The server records when (User.termsAcceptedAt).
+  acceptTerms: z.literal(true, { error: "Please confirm you are 18 or older and agree to the Terms of Service and Privacy Policy" }),
 });
 
 // z.input (not z.infer) so `role`, which has a .default(), stays optional

@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 
-const PUBLIC_PATHS = ['/', '/about']
+const PUBLIC_PATHS = ['/', '/about', '/terms', '/privacy']
 const PUBLIC_PREFIXES = ['/products', '/sellers']
 
 // The footer is rendered on the server (it reads the cooperative's contact

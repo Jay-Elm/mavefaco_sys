@@ -144,7 +144,7 @@ describe("user-chosen names in email HTML (M6)", () => {
       request("/api/auth/register", {
         method: "POST",
         headers: freshIp(),
-        body: { name, email: "victim@test.local", password: PASSWORD, role: "customer" },
+        body: { name, email: "victim@test.local", password: PASSWORD, role: "customer", acceptTerms: true },
       }),
     );
 

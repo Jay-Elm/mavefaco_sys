@@ -55,6 +55,9 @@ model User {
   // A customer's own GCash QR (optional), kept private (src/lib/privateImages.ts):
   // shown only to the farmer of an order that owes them a refund.
   gcashQrPath        String?
+  // When the person ticked "I am 18 or older and agree to the Terms of
+  // Service and Privacy Policy" at registration (null: registered before it).
+  termsAcceptedAt    DateTime?
   // A customer's saved delivery spot: the pin, the house/street/landmark
   // details they typed, and the delivery-area town the pin is in (null when
   // outside the area; see src/lib/deliveryArea.ts).

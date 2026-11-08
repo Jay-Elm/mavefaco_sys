@@ -38,7 +38,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Use-case item | Status | How it is covered |
 |---|---|---|
 | **Account management** | | |
-| Register | Implemented | Self-service sign-up with email verification |
+| Register | Implemented | Self-service sign-up with email verification; the person confirms they are 18 or older and agrees to the Terms of Service and Privacy Policy (`/terms`, `/privacy`) |
 | Login | Implemented | |
 | Logout | Implemented | Ends every session for the account |
 | Reset password | Implemented | Emailed single-use link, valid 30 minutes |
@@ -82,7 +82,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Use-case item | Status | How it is covered |
 |---|---|---|
 | **Account management** | | |
-| Register account | Implemented | Self-service sign-up as a farmer |
+| Register account | Implemented | Self-service sign-up as a farmer (18 or older, agreeing to the Terms of Service and Privacy Policy) |
 | Login | Implemented | |
 | Logout | Implemented | |
 | Reset password | Implemented | |

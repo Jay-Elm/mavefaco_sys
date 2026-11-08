@@ -174,6 +174,26 @@ export default function RegisterPage() {
             )}
           </div>
 
+          <div>
+            <label htmlFor="acceptTerms" className="flex items-start gap-2.5 text-sm text-gray-600 leading-snug cursor-pointer">
+              <input
+                id="acceptTerms"
+                type="checkbox"
+                {...register('acceptTerms')}
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-gray-300 accent-paddy"
+              />
+              <span>
+                I am 18 or older and agree to the{' '}
+                <Link href="/terms" target="_blank" rel="noopener" className="text-paddy font-medium hover:underline">Terms of Service</Link>
+                {' '}and{' '}
+                <Link href="/privacy" target="_blank" rel="noopener" className="text-paddy font-medium hover:underline">Privacy Policy</Link>.
+              </span>
+            </label>
+            {errors.acceptTerms && (
+              <p className="text-red-500 text-xs mt-1">{errors.acceptTerms.message}</p>
+            )}
+          </div>
+
           <button
             type="submit"
             disabled={isSubmitting}

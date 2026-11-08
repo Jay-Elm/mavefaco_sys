@@ -83,8 +83,12 @@ export default async function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="max-w-[1200px] mx-auto px-6 py-5 text-sm text-white/50">
-          © {new Date().getFullYear()} {name}
+        <div className="max-w-[1200px] mx-auto px-6 py-5 text-sm text-white/50 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+          <span>© {new Date().getFullYear()} {name}</span>
+          <span className="flex gap-5">
+            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+          </span>
         </div>
       </div>
     </footer>

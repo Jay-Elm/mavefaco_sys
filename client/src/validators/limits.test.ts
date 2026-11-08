@@ -6,7 +6,7 @@ import { productCreateSchema } from "./product";
 import { reviewCreateSchema } from "./review";
 
 const text = (n: number) => "x".repeat(n);
-const register = { name: "Juan dela Cruz", email: "juan@example.com", password: "correct-horse-battery" };
+const register = { name: "Juan dela Cruz", email: "juan@example.com", password: "correct-horse-battery", acceptTerms: true };
 const product = { name: "Tomatoes", price: 50, stock: 5, categoryId: 1 };
 
 describe("input length limits", () => {

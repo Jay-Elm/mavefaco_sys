@@ -65,6 +65,8 @@ export async function POST(req: NextRequest) {
         email,
         password: hashedPassword,
         role,
+        // The schema only lets registration through with the box ticked.
+        termsAcceptedAt: new Date(),
       },
     });
 

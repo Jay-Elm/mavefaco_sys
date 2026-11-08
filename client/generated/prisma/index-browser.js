@@ -140,6 +140,7 @@ exports.Prisma.UserScalarFieldEnum = {
   gcashNumber: 'gcashNumber',
   gcashQrUrl: 'gcashQrUrl',
   gcashQrPath: 'gcashQrPath',
+  termsAcceptedAt: 'termsAcceptedAt',
   deliveryLat: 'deliveryLat',
   deliveryLng: 'deliveryLng',
   deliveryAddress: 'deliveryAddress',
