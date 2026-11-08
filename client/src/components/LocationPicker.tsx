@@ -33,6 +33,9 @@ const MAP_BTN = 'inline-flex items-center gap-1.5 h-9 bg-white/95 border border-
  * drawn on the map; a spot outside it can still be saved (orders to it are
  * pickup only). Saves to the customer's profile.
  */
+// Positions less precise than this (metres) get the "rough location" message.
+const ROUGH_ACCURACY_M = 1000
+
 export default function LocationPicker({
   initial,
   token,
@@ -58,6 +61,8 @@ export default function LocationPicker({
   const [locating, setLocating] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  // Set when the device gave only a rough position (no GPS); cleared once the pin is moved by hand.
+  const [rough, setRough] = useState(false)
   const [saved, setSaved] = useState(false)
   const town = point ? deliveryTownAt(point.lat, point.lng) : null
 
@@ -96,7 +101,7 @@ export default function LocationPicker({
       if (start) m.setView([start.lat, start.lng], 16)
       else m.fitBounds(shaded.getBounds(), { padding: [8, 8] })
 
-      m.on('click', (e) => setPoint({ lat: e.latlng.lat, lng: e.latlng.lng }))
+      m.on('click', (e) => { setRough(false); setPoint({ lat: e.latlng.lat, lng: e.latlng.lng }) })
       map.current = m
       // The pin effect below may have run before the map existed.
       setPoint((p) => (p ? { ...p } : p))
@@ -128,6 +133,7 @@ export default function LocationPicker({
         }).addTo(m)
         marker.current.on('dragend', () => {
           const ll = marker.current!.getLatLng()
+          setRough(false)
           setPoint({ lat: ll.lat, lng: ll.lng })
         })
       } else {
@@ -168,6 +174,7 @@ export default function LocationPicker({
 
   function useMyLocation() {
     setError('')
+    setRough(false)
     if (!('geolocation' in navigator)) { setError("This browser can't share its location. Tap the map instead."); return }
     setLocating(true)
     navigator.geolocation.getCurrentPosition(
@@ -175,14 +182,17 @@ export default function LocationPicker({
         setLocating(false)
         const p = { lat: pos.coords.latitude, lng: pos.coords.longitude }
         setPoint(p)
-        map.current?.setView([p.lat, p.lng], 17)
+        // Without GPS, browsers guess from Wi-Fi or the internet address, which can be kilometres off.
+        const rough = pos.coords.accuracy > ROUGH_ACCURACY_M
+        setRough(rough)
+        map.current?.setView([p.lat, p.lng], rough ? 14 : 17)
       },
       (err) => {
         setLocating(false)
         setError(
           err.code === err.PERMISSION_DENIED
             ? 'Location access was blocked. Allow it in your browser settings, or tap the map instead.'
-            : "Couldn't find your location. Tap the map instead.",
+            : "Couldn't find your location. Turn on your device's location (GPS) and try again, or tap the map.",
         )
       },
       { enableHighAccuracy: true, timeout: 15000 },
@@ -290,6 +300,11 @@ export default function LocationPicker({
       </div>
 
       {error && <p role="alert" className="text-sm text-red-600">{error}</p>}
+      {rough && (
+        <p role="status" className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+          Your device only gave a rough location. Turn on your device&apos;s location (GPS) for a better one, or move the pin to your exact spot.
+        </p>
+      )}
 
       <div className="flex items-center gap-3">
         <button
