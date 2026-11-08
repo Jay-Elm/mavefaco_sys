@@ -49,8 +49,10 @@ export default function PlantingMarketHint({ token, cropTypeId }: { token: strin
         </li>
         <li>Members plan to harvest in the next {w} weeks: {row.supply.kg > 0 ? `${row.supply.kg} kg` : 'none recorded'}</li>
         {row.pricePerKg !== null && <li>Average selling price here lately: ₱{row.pricePerKg.toFixed(2)} per kg</li>}
-        {row.psa.latest.albay && (
+        {row.psa.latest.albay ? (
           <li>Albay farmgate price (PSA, {fmtMonth(row.psa.latest.albay.month)}): ₱{row.psa.latest.albay.pricePerKg.toFixed(2)} per kg</li>
+        ) : row.psa.latest.bicol && (
+          <li>Bicol farmgate price (PSA, {fmtMonth(row.psa.latest.bicol.month)}): ₱{row.psa.latest.bicol.pricePerKg.toFixed(2)} per kg</li>
         )}
         {row.psa.production.albay.at(-1) && (
           <li>Albay harvested {row.psa.production.albay.at(-1)!.tonnes.toLocaleString('en-PH')} t in Q{row.psa.production.albay.at(-1)!.quarter} {row.psa.production.albay.at(-1)!.year} (PSA)</li>

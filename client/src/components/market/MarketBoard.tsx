@@ -123,7 +123,7 @@ export default function MarketBoard({ forStaff }: { forStaff: boolean }) {
       <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
         <span>
           Albay and Bicol prices are PSA farmgate prices (what farmers are paid), from the {data.psa.source}
-          {data.psa.latestMonth ? `, latest ${fmtMonth(data.psa.latestMonth)}` : ''}. PSA publishes about two months behind.
+          {data.psa.latestMonth ? `, latest ${fmtMonth(data.psa.latestMonth)}` : ''}. The table shows Albay; where PSA has no Albay price, the Bicol price. Blank: PSA does not survey that crop&apos;s price. PSA publishes about two months behind.
           {!data.psa.updatedAt && ' No PSA figures have been fetched yet.'}
         </span>
         {forStaff && (
@@ -214,7 +214,7 @@ export default function MarketBoard({ forStaff }: { forStaff: boolean }) {
                   <th className="px-4 py-3 text-right font-medium text-gray-500">Planned harvest, next {w} wks</th>
                   <th className="px-4 py-3 text-left font-medium text-gray-500">Signal</th>
                   <th className="px-4 py-3 text-right font-medium text-gray-500">Avg price here</th>
-                  <th className="px-4 py-3 text-right font-medium text-gray-500">Albay farmgate (PSA)</th>
+                  <th className="px-4 py-3 text-right font-medium text-gray-500">Farmgate price (PSA)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -245,9 +245,14 @@ export default function MarketBoard({ forStaff }: { forStaff: boolean }) {
                         <td className="px-4 py-3"><SignalBadge signal={r.signal} /></td>
                         <td className="px-4 py-3 text-right tabular-nums text-gray-700">{r.pricePerKg !== null ? `₱${r.pricePerKg.toFixed(2)}/kg` : '—'}</td>
                         <td className="px-4 py-3 text-right tabular-nums text-gray-700">
-                          {r.psa.latest.albay ? (
-                            <>₱{r.psa.latest.albay.pricePerKg.toFixed(2)}/kg<span className="block text-xs text-gray-500">{fmtMonth(r.psa.latest.albay.month)}</span></>
-                          ) : '—'}
+                          {(() => {
+                            // Albay first; PSA prices some crops only for the whole Bicol region.
+                            const area = r.psa.latest.albay ? 'Albay' : r.psa.latest.bicol ? 'Bicol' : null
+                            const p = r.psa.latest.albay ?? r.psa.latest.bicol
+                            return p ? (
+                              <>₱{p.pricePerKg.toFixed(2)}/kg<span className="block text-xs text-gray-500">{area}, {fmtMonth(p.month)}</span></>
+                            ) : '—'
+                          })()}
                         </td>
                       </tr>
                       {isOpen && <Detail row={r} months={months} w={w} />}

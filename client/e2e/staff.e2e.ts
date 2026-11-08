@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
-import { SEED } from "./db";
+import { Client } from "pg";
+import { SEED, e2eDbUrl } from "./db";
 import { signIn, signInStaff } from "./helpers";
 
 // In order: staff link a listing to its crop, and the Market pages then count it.
@@ -49,5 +50,23 @@ test.describe.serial("Staff: crops, products and the Market", () => {
     await page.goto("/farmer/market");
     await page.getByLabel("Search crops").fill("eggplant");
     await expect(page.getByRole("cell", { name: /Eggplant/ }).first()).toBeVisible();
+  });
+
+  test("Market: a crop PSA prices only for the Bicol region shows the Bicol price", async ({ page }) => {
+    const db = new Client({ connectionString: e2eDbUrl() });
+    await db.connect();
+    await db.query(
+      `INSERT INTO "MarketPrice" ("cropTypeId", area, year, month, "pricePerKg", "fetchedAt")
+       SELECT id, 'bicol', 2026, 8, 61.5, now() FROM "CropType" WHERE name = 'Eggplant'
+       ON CONFLICT DO NOTHING`,
+    );
+    await db.query(`DELETE FROM "MarketPrice" WHERE area = 'albay' AND "cropTypeId" = (SELECT id FROM "CropType" WHERE name = 'Eggplant')`);
+    await db.end();
+
+    await signInStaff(page, SEED.manager.email);
+    await page.goto("/dashboard/market");
+    await page.getByLabel("Search crops").fill("eggplant");
+    const row = page.getByRole("row", { name: /Eggplant/ }).first();
+    await expect(row.getByRole("cell", { name: /₱61\.50\/kg\s*Bicol, August 2026/ })).toBeVisible();
   });
 });
