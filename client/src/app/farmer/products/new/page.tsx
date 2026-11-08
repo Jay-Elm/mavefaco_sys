@@ -144,6 +144,9 @@ export default function NewProductPage() {
           </div>
         </div>
 
+        {/* PSA farmgate prices for the crop, next to the price box. */}
+        {form.cropTypeId !== 'none' && <PriceReference token={token} cropTypeId={form.cropTypeId} unit={form.unit} />}
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Stock (in {form.unit || 'units'})</label>
           <input aria-label="Stock"
@@ -177,7 +180,6 @@ export default function NewProductPage() {
           value={form.cropTypeId}
           onChange={(v) => setForm((prev) => ({ ...prev, cropTypeId: v }))}
         />
-        {form.cropTypeId !== 'none' && <PriceReference token={token} cropTypeId={form.cropTypeId} unit={form.unit} />}
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Product Photo <span className="text-gray-500">(optional)</span></label>

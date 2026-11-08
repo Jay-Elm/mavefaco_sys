@@ -26,6 +26,8 @@ export default function CropTypeSelect({
   const [crops, setCrops] = useState<PickerCrop[]>([])
   // Once chosen by hand (or loaded from a saved listing), stop guessing.
   const touched = useRef(value !== '')
+  // The last crop filled in from the name, so it isn't mistaken for a hand pick.
+  const guessed = useRef('')
 
   useEffect(() => {
     if (!token) return
@@ -36,13 +38,14 @@ export default function CropTypeSelect({
   }, [token])
 
   useEffect(() => {
-    if (value !== '') touched.current = true
+    if (value !== '' && value !== guessed.current) touched.current = true
   }, [value])
 
   useEffect(() => {
     if (touched.current || crops.length === 0) return
     const guess = suggestCropType(listingName, crops)
     const next = guess ? String(guess.id) : ''
+    guessed.current = next
     if (next !== value) onChange(next)
     // Only re-guess when the name or the crop list changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps

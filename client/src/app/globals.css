@@ -154,3 +154,11 @@ select:disabled {
     opacity: 1;
   }
 }
+
+/* Delivery map (LocationPicker): bigger zoom buttons, easy to hit on a phone. */
+.map-roomy.leaflet-container .leaflet-control-zoom a {
+  width: 38px;
+  height: 38px;
+  line-height: 38px;
+  font-size: 22px;
+}

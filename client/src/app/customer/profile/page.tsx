@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Loader2, CheckCircle, User, KeyRound, Mail, AlertTriangle } from 'lucide-react'
 import { useDialog } from '@/contexts/DialogContext'
-import PasswordInput from '@/components/PasswordInput'
+import PasswordInput, { useNoAutofill } from '@/components/PasswordInput'
+import RevealForm from '@/components/RevealForm'
 import { maskEmail } from '@/lib/maskEmail'
 import ProfilePaymentSections from '@/components/ProfilePaymentSections'
 
@@ -20,6 +21,8 @@ export default function CustomerProfilePage() {
   const [success, setSuccess] = useState(false)
 
   const [newEmail, setNewEmail] = useState('')
+
+  const emailGuard = useNoAutofill()
   const [emailPassword, setEmailPassword] = useState('')
   const [emailSubmitting, setEmailSubmitting] = useState(false)
   const [emailError, setEmailError] = useState('')
@@ -245,37 +248,39 @@ export default function CustomerProfilePage() {
         )}
 
         <div className="bg-white rounded-card border border-gray-200 shadow-sm p-6">
-          <form onSubmit={handleEmailChange} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">New Email</label>
-              <input aria-label="New Email" autoComplete="off" name="new-email"
-                type="email"
-                value={newEmail}
-                onChange={e => setNewEmail(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-              <PasswordInput aria-label="Current Password" autoComplete="off"
-                value={emailPassword}
-                onChange={e => setEmailPassword(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
-              />
-            </div>
-            <div className="pt-2">
-              <button
-                type="submit"
-                disabled={emailSubmitting}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-paddy text-white text-sm font-medium rounded-lg hover:bg-paddy-deep transition-colors disabled:opacity-60"
-              >
-                {emailSubmitting && <Loader2 size={14} className="animate-spin" />}
-                {emailSubmitting ? 'Saving…' : 'Change Email'}
-              </button>
-            </div>
-          </form>
+          <RevealForm label="Change email">
+            <form onSubmit={handleEmailChange} autoComplete="off" className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">New Email</label>
+                <input aria-label="New Email" {...emailGuard} name="new-email"
+                  type="email"
+                  value={newEmail}
+                  onChange={e => setNewEmail(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                <PasswordInput aria-label="Current Password" noAutofill
+                  value={emailPassword}
+                  onChange={e => setEmailPassword(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
+                />
+              </div>
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={emailSubmitting}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-paddy text-white text-sm font-medium rounded-lg hover:bg-paddy-deep transition-colors disabled:opacity-60"
+                >
+                  {emailSubmitting && <Loader2 size={14} className="animate-spin" />}
+                  {emailSubmitting ? 'Saving…' : 'Change Email'}
+                </button>
+              </div>
+            </form>
+          </RevealForm>
         </div>
       </div>
 
@@ -299,46 +304,48 @@ export default function CustomerProfilePage() {
         )}
 
         <div className="bg-white rounded-card border border-gray-200 shadow-sm p-6">
-          <form onSubmit={handlePasswordChange} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-              <PasswordInput aria-label="Current Password" autoComplete="off"
-                value={currentPassword}
-                onChange={e => setCurrentPassword(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-              <PasswordInput aria-label="New Password" autoComplete="new-password"
-                value={newPassword}
-                onChange={e => setNewPassword(e.target.value)}
-                required
-                minLength={12}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
-              <PasswordInput aria-label="Confirm New Password" autoComplete="new-password"
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
-              />
-            </div>
-            <div className="pt-2">
-              <button
-                type="submit"
-                disabled={pwSubmitting}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-paddy text-white text-sm font-medium rounded-lg hover:bg-paddy-deep transition-colors disabled:opacity-60"
-              >
-                {pwSubmitting && <Loader2 size={14} className="animate-spin" />}
-                {pwSubmitting ? 'Updating…' : 'Change Password'}
-              </button>
-            </div>
-          </form>
+          <RevealForm label="Change password">
+            <form onSubmit={handlePasswordChange} autoComplete="off" className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                <PasswordInput aria-label="Current Password" noAutofill
+                  value={currentPassword}
+                  onChange={e => setCurrentPassword(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                <PasswordInput aria-label="New Password" autoComplete="new-password"
+                  value={newPassword}
+                  onChange={e => setNewPassword(e.target.value)}
+                  required
+                  minLength={12}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                <PasswordInput aria-label="Confirm New Password" autoComplete="new-password"
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
+                />
+              </div>
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={pwSubmitting}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-paddy text-white text-sm font-medium rounded-lg hover:bg-paddy-deep transition-colors disabled:opacity-60"
+                >
+                  {pwSubmitting && <Loader2 size={14} className="animate-spin" />}
+                  {pwSubmitting ? 'Updating…' : 'Change Password'}
+                </button>
+              </div>
+            </form>
+          </RevealForm>
         </div>
       </div>
 
@@ -359,27 +366,29 @@ export default function CustomerProfilePage() {
         )}
 
         <div className="bg-white rounded-card border border-red-200 shadow-sm p-6">
-          <form onSubmit={handleDeleteAccount} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
-              <PasswordInput aria-label="Current Password" autoComplete="off"
-                value={deletePassword}
-                onChange={e => setDeletePassword(e.target.value)}
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-              />
-            </div>
-            <div className="pt-1">
-              <button
-                type="submit"
-                disabled={deleting}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors disabled:opacity-60"
-              >
-                {deleting && <Loader2 size={14} className="animate-spin" />}
-                {deleting ? 'Deleting…' : 'Delete My Account'}
-              </button>
-            </div>
-          </form>
+          <RevealForm label="Delete my account…" danger>
+            <form onSubmit={handleDeleteAccount} autoComplete="off" className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                <PasswordInput aria-label="Current Password" noAutofill
+                  value={deletePassword}
+                  onChange={e => setDeletePassword(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                />
+              </div>
+              <div className="pt-1">
+                <button
+                  type="submit"
+                  disabled={deleting}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors disabled:opacity-60"
+                >
+                  {deleting && <Loader2 size={14} className="animate-spin" />}
+                  {deleting ? 'Deleting…' : 'Delete My Account'}
+                </button>
+              </div>
+            </form>
+          </RevealForm>
         </div>
       </div>
     </div>

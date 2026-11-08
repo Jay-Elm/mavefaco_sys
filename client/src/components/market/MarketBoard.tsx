@@ -54,7 +54,8 @@ export default function MarketBoard({ forStaff }: { forStaff: boolean }) {
         )
         return
       }
-      setSyncNote(d.errors?.length ? `Updated ${d.prices + d.production} figures; some PSA tables didn't answer (${d.errors[0]}).` : `Updated ${d.prices} prices and ${d.production} production figures.`)
+      const back = d.restored?.length ? ` Put back ${d.restored.length === 1 ? 'a missing crop' : `${d.restored.length} missing crops`}: ${d.restored.join(', ')}.` : ''
+      setSyncNote((d.errors?.length ? `Updated ${d.prices + d.production} figures; some PSA tables didn't answer (${d.errors[0]}).` : `Updated ${d.prices} prices and ${d.production} production figures.`) + back)
       setReload((n) => n + 1)
     } catch {
       setSyncNote('Could not update PSA figures')

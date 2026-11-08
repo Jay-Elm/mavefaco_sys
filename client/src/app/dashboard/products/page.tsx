@@ -7,7 +7,8 @@ import { byCategory } from '@/lib/cropCategories'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { refreshNavBadges } from '@/components/NavBadge'
-import { Loader2, Package, Trash2, AlertTriangle, CheckCircle, Ban, Eye, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download, ArchiveRestore } from 'lucide-react'
+import { Loader2, Package, Trash2, AlertTriangle, CheckCircle, Ban, Eye, Search, ChevronUp, ChevronDown, ChevronsUpDown, Download, ArchiveRestore, Archive, Clock } from 'lucide-react'
+import Tip from '@/components/Tip'
 import { downloadCSV } from '@/lib/csv'
 import SuspendListingModal, { type SuspendResult } from '@/components/SuspendListingModal'
 import { suspensionDeadline } from '@/validators/productSuspension'
@@ -42,6 +43,8 @@ const statusOf = (p: ProductRow) =>
   p.archivedAt ? 'Archived' : p.suspendedAt ? 'Suspended' : p.approved ? 'Approved' : 'Pending'
 
 const fmtDate = (d: string | Date) => new Date(d).toLocaleDateString('en-PH')
+// The round icon buttons in the Actions column.
+const ICON_BTN = 'inline-flex items-center justify-center w-8 h-8 rounded-lg transition-colors disabled:opacity-40'
 
 type SortKey = 'name' | 'price' | 'stock' | 'createdAt' | 'orders'
 type SortDir = 'asc' | 'desc'
@@ -342,7 +345,7 @@ export default function DashboardProductsPage() {
 
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-        <table className="w-full min-w-[960px] text-sm">
+        <table className="w-full min-w-[820px] text-sm">
           <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               <th
@@ -372,8 +375,8 @@ export default function DashboardProductsPage() {
               >
                 Orders <SortIcon col="orders" sortKey={sortKey} sortDir={sortDir} />
               </th>
-              <th className="px-5 py-3 text-center font-medium text-gray-500">Status</th>
-              <th className="px-5 py-3 text-right font-medium text-gray-500">Actions</th>
+              <th className="px-3 py-3 text-center font-medium text-gray-500">Status</th>
+              <th className="px-3 py-3 text-right font-medium text-gray-500">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-50">
@@ -422,83 +425,84 @@ export default function DashboardProductsPage() {
                     <td className="px-5 py-3 text-center text-xs text-gray-600">
                       {p._count.orderItems}
                     </td>
-                    <td className="px-5 py-3 text-center">
-                      {p.archivedAt ? (
-                        <span
-                          title={`Archived ${new Date(p.archivedAt).toLocaleDateString('en-PH')}${p.approved ? ' (was approved)' : ' (was pending)'}`}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-0.5 rounded-full"
-                        >
-                          Archived
-                        </span>
-                      ) : p.suspendedAt ? (
-                        <span
-                          title={`Suspended ${fmtDate(p.suspendedAt)}; deleted after ${fmtDate(suspensionDeadline(p.suspendedAt))} unless resubmitted`}
-                          className="inline-flex flex-col items-center text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-lg"
-                        >
-                          <span className="inline-flex items-center gap-1"><Ban size={11} /> Suspended</span>
-                          <span className="font-normal">until {fmtDate(suspensionDeadline(p.suspendedAt))}</span>
-                        </span>
-                      ) : p.approved ? (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-paddy bg-shoot px-2 py-0.5 rounded-full">
-                          <CheckCircle size={11} /> Approved
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold text-yellow-700 bg-yellow-100 px-2 py-0.5 rounded-full">
-                          Pending
-                        </span>
-                      )}
+                    <td className="px-3 py-3 text-center">
+                      {(() => {
+                        const status = p.archivedAt
+                          ? { label: `Archived ${fmtDate(p.archivedAt)}${p.approved ? ' (was approved)' : ' (was pending)'}`, icon: <Archive size={14} />, cls: 'text-gray-600 bg-gray-100' }
+                          : p.suspendedAt
+                            ? { label: `Suspended; deleted after ${fmtDate(suspensionDeadline(p.suspendedAt))} unless resubmitted`, icon: <Ban size={14} />, cls: 'text-red-700 bg-red-100' }
+                            : p.approved
+                              ? { label: 'Approved', icon: <CheckCircle size={14} />, cls: 'text-paddy bg-shoot' }
+                              : { label: 'Pending review', icon: <Clock size={14} />, cls: 'text-yellow-700 bg-yellow-100' }
+                        return (
+                          <Tip label={status.label}>
+                            <span tabIndex={0} role="img" aria-label={status.label} className={`inline-flex items-center justify-center w-7 h-7 rounded-full ${status.cls}`}>
+                              {status.icon}
+                            </span>
+                          </Tip>
+                        )
+                      })()}
                     </td>
-                    <td className="px-5 py-3 text-right">
-                      <div className="flex items-center justify-end gap-2">
+                    <td className="px-3 py-3 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
                         {actingId === p.id && (
                           <Loader2 size={14} className="animate-spin text-gray-500" />
                         )}
                         {p.archivedAt ? (
-                          <button
-                            onClick={() => handleRestore(p.id)}
-                            disabled={actingId === p.id}
-                            title={p.approved ? 'Restore — goes straight back into the shop' : 'Restore — returns to pending review'} aria-label={p.approved ? 'Restore — goes straight back into the shop' : 'Restore — returns to pending review'}
-                            className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-field text-paddy hover:bg-paddy/10 transition-colors disabled:opacity-40"
-                          >
-                            <ArchiveRestore size={12} />
-                            Restore
-                          </button>
+                          <Tip label={p.approved ? 'Restore (goes straight back into the shop)' : 'Restore (returns to pending review)'} align="end">
+                            <button
+                              onClick={() => handleRestore(p.id)}
+                              disabled={actingId === p.id}
+                              aria-label={p.approved ? 'Restore — goes straight back into the shop' : 'Restore — returns to pending review'}
+                              className={`${ICON_BTN} bg-field text-paddy hover:bg-paddy/10`}
+                            >
+                              <ArchiveRestore size={15} />
+                            </button>
+                          </Tip>
                         ) : (<>
                         {!p.approved && !p.suspendedAt && (
-                          <button
-                            onClick={() => handleApprove(p.id)}
-                            disabled={actingId === p.id}
-                            className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-shoot text-paddy hover:bg-shoot transition-colors disabled:opacity-40"
-                          >
-                            <CheckCircle size={12} />
-                            Approve
-                          </button>
+                          <Tip label="Approve" align="end">
+                            <button
+                              onClick={() => handleApprove(p.id)}
+                              disabled={actingId === p.id}
+                              aria-label="Approve"
+                              className={`${ICON_BTN} bg-shoot text-paddy hover:bg-paddy/15`}
+                            >
+                              <CheckCircle size={15} />
+                            </button>
+                          </Tip>
                         )}
-                        <Link
-                          href={`/dashboard/products/${p.id}`}
-                          className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors"
-                        >
-                          <Eye size={12} />
-                          View
-                        </Link>
+                        <Tip label="View" align="end">
+                          <Link
+                            href={`/dashboard/products/${p.id}`}
+                            aria-label="View"
+                            className={`${ICON_BTN} bg-blue-100 text-blue-700 hover:bg-blue-200`}
+                          >
+                            <Eye size={15} />
+                          </Link>
+                        </Tip>
                         {p.suspendedAt ? (
-                          <button
-                            onClick={() => handleDelete(p.id, p.name)}
-                            disabled={actingId === p.id}
-                            className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 transition-colors disabled:opacity-40"
-                          >
-                            <Trash2 size={12} />
-                            Delete
-                          </button>
+                          <Tip label="Delete" align="end">
+                            <button
+                              onClick={() => handleDelete(p.id, p.name)}
+                              disabled={actingId === p.id}
+                              aria-label="Delete"
+                              className={`${ICON_BTN} bg-red-100 text-red-700 hover:bg-red-200`}
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                          </Tip>
                         ) : (
-                          <button
-                            onClick={() => { setActionError(null); setSuspending(p) }}
-                            disabled={actingId === p.id}
-                            className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-lg bg-yellow-100 text-yellow-700 hover:bg-yellow-200 transition-colors disabled:opacity-40"
-                          >
-                            <Ban size={12} />
-                            Suspend
-                          </button>
+                          <Tip label="Suspend" align="end">
+                            <button
+                              onClick={() => { setActionError(null); setSuspending(p) }}
+                              disabled={actingId === p.id}
+                              aria-label="Suspend"
+                              className={`${ICON_BTN} bg-yellow-100 text-yellow-700 hover:bg-yellow-200`}
+                            >
+                              <Ban size={15} />
+                            </button>
+                          </Tip>
                         )}
                         </>)}
                       </div>

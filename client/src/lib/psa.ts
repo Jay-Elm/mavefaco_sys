@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import catalogue from "@/lib/cropCatalogue.json";
 
 /**
  * Outside market data from the Philippine Statistics Authority's OpenSTAT
@@ -186,13 +187,55 @@ async function saveProduction(rows: { cropTypeId: number; area: string; year: nu
     DO UPDATE SET "tonnes" = EXCLUDED."tonnes", "fetchedAt" = now()`;
 }
 
+type CatalogueCrop = (typeof catalogue)[number];
+const seriesKeys = (c: { psaPriceTable: string | null; psaPrice: string | null; psaProductionTable: string | null; psaProduction: string | null }) =>
+  [c.psaPrice && `${c.psaPriceTable}|${c.psaPrice}`, c.psaProduction && `${c.psaProductionTable}|${c.psaProduction}`].filter(Boolean) as string[];
+
 /**
- * Fetches the last two years of farmgate prices and production for every
- * crop type with a PSA series, and saves them. Returns how many figures were
- * saved; a table that fails is reported and the rest still saved. Tables are
+ * Puts back every crop from the catalogue (src/lib/cropCatalogue.json) that
+ * is no longer in Crop Types, e.g. one staff deleted. Crops already there are
+ * left exactly as staff edited them, and a catalogue crop that staff renamed
+ * (another name, same PSA series) is not added a second time. Returns the
+ * names added.
+ */
+export async function restoreCatalogueCrops(): Promise<string[]> {
+  const existing = await prisma.cropType.findMany({
+    select: { name: true, psaPriceTable: true, psaPrice: true, psaProductionTable: true, psaProduction: true },
+  });
+  const catalogueNames = new Set(catalogue.map((c) => c.name.toLowerCase()));
+  const names = new Set(existing.map((c) => c.name.toLowerCase()));
+  const renamed = new Set(existing.filter((c) => !catalogueNames.has(c.name.toLowerCase())).flatMap(seriesKeys));
+  const missing = (catalogue as CatalogueCrop[]).filter(
+    (c) => !names.has(c.name.toLowerCase()) && !seriesKeys(c).some((k) => renamed.has(k)),
+  );
+  if (missing.length === 0) return [];
+  await prisma.cropType.createMany({
+    data: missing.map((c) => ({
+      name: c.name,
+      category: c.category,
+      aliases: c.aliases,
+      daysToHarvestMin: c.days?.[0] ?? null,
+      daysToHarvestMax: c.days?.[1] ?? null,
+      source: c.source,
+      psaProductionTable: c.psaProductionTable,
+      psaProduction: c.psaProduction,
+      psaPriceTable: c.psaPriceTable,
+      psaPrice: c.psaPrice,
+    })),
+    skipDuplicates: true,
+  });
+  return missing.map((c) => c.name);
+}
+
+/**
+ * Puts back missing catalogue crops, then fetches the last two years of
+ * farmgate prices and production for every crop type with a PSA series, and
+ * saves them. Returns how many figures were saved and which crops came back;
+ * a table that fails is reported and the rest still saved. Tables are
  * fetched side by side.
  */
 export async function syncPsaMarket(fetchImpl: Fetch = fetch) {
+  const restored = await restoreCatalogueCrops();
   const crops = await prisma.cropType.findMany({
     select: { id: true, psaProductionTable: true, psaProduction: true, psaPriceTable: true, psaPrice: true },
   });
@@ -241,5 +284,5 @@ export async function syncPsaMarket(fetchImpl: Fetch = fetch) {
   });
 
   await Promise.all([...priceJobs, ...productionJobs]);
-  return { prices, production, errors };
+  return { prices, production, errors, restored };
 }

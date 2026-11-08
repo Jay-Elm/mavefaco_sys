@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { syncPsaMarket } from "./psa";
+import { restoreCatalogueCrops, syncPsaMarket } from "./psa";
+import catalogue from "./cropCatalogue.json";
 import { GET as cronRoute } from "@/app/api/cron/psa-market/route";
 import { POST as staffSync } from "@/app/api/admin/market/psa/route";
 import { GET as market } from "@/app/api/market/route";
@@ -53,7 +54,7 @@ describe("syncPsaMarket", () => {
     const psa = fakePsa();
 
     const result = await syncPsaMarket(psa.impl);
-    expect(result).toEqual({ prices: 4, production: 3, errors: [] });
+    expect(result).toMatchObject({ prices: 4, production: 3, errors: [] });
 
     const prices = await prisma.marketPrice.findMany({ orderBy: [{ cropTypeId: "asc" }, { area: "asc" }, { month: "asc" }] });
     expect(prices.map((p) => [p.cropTypeId, p.area, p.month, p.pricePerKg])).toEqual([
@@ -83,6 +84,40 @@ describe("syncPsaMarket", () => {
     expect(result.prices).toBe(4);
     expect(result.production).toBe(0);
     expect(result.errors[0]).toMatch(/0082E4EVCP3/);
+  });
+});
+
+describe("restoreCatalogueCrops", () => {
+  it("puts back deleted catalogue crops and leaves staff edits alone", async () => {
+    // First run fills an empty table with the whole catalogue.
+    expect(await restoreCatalogueCrops()).toHaveLength(catalogue.length);
+    expect(await prisma.cropType.count()).toBe(catalogue.length);
+    expect(await prisma.cropType.findUnique({ where: { name: "Garlic" } })).toMatchObject({ category: "Herbs and spices", psaPrice: "Garlic, dried bulb" });
+
+    // Staff delete Ampalaya and change Eggplant's growing time.
+    await prisma.cropType.delete({ where: { name: "Ampalaya" } });
+    await prisma.cropType.update({ where: { name: "Eggplant" }, data: { daysToHarvestMin: 70, daysToHarvestMax: 80, source: "Our farmers" } });
+
+    expect(await restoreCatalogueCrops()).toEqual(["Ampalaya"]);
+    expect(await prisma.cropType.findUnique({ where: { name: "Ampalaya" } })).toMatchObject({ daysToHarvestMin: 60, daysToHarvestMax: 75, psaProduction: "Ampalaya fruit [Bitter gourd]" });
+    expect(await prisma.cropType.findUnique({ where: { name: "Eggplant" } })).toMatchObject({ daysToHarvestMin: 70, source: "Our farmers" });
+    expect(await restoreCatalogueCrops()).toEqual([]);
+  });
+
+  it("does not add a crop again after staff renamed it", async () => {
+    await restoreCatalogueCrops();
+    await prisma.cropType.update({ where: { name: "Tomato" }, data: { name: "Kamatis" } });
+    await prisma.cropType.update({ where: { name: "Garlic" }, data: { name: "Bawang (Garlic)" } });
+    expect(await restoreCatalogueCrops()).toEqual([]);
+    expect(await prisma.cropType.count({ where: { name: { in: ["Tomato", "Garlic"] } } })).toBe(0);
+  });
+
+  it("the PSA update reports the crops it put back", async () => {
+    await restoreCatalogueCrops();
+    await prisma.cropType.delete({ where: { name: "Ampalaya" } });
+    vi.stubGlobal("fetch", fakePsa().impl);
+    const res = await staffSync(request("/api/admin/market/psa", { method: "POST", as: await createUser({ role: "manager" }) }));
+    expect((await res.json()).restored).toEqual(["Ampalaya"]);
   });
 });
 

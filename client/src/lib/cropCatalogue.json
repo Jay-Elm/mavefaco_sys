@@ -1119,6 +1119,21 @@
   "source": null
  },
  {
+  "name": "Garlic",
+  "category": "Herbs and spices",
+  "aliases": [
+   "garlic",
+   "bawang",
+   "ahos"
+  ],
+  "psaProductionTable": "2E/CS/0082E4EVCP3.px",
+  "psaProduction": "Garlic, dried bulb",
+  "psaPriceTable": "2M/NFG/0032M4AFN04.px",
+  "psaPrice": "Garlic, dried bulb",
+  "days": null,
+  "source": null
+ },
+ {
   "name": "Mushroom",
   "category": "Other vegetables",
   "aliases": [
