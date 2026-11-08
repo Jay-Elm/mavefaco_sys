@@ -50,6 +50,7 @@ export default async function globalSetup() {
       gcashNumber: SEED.farmer.gcashNumber,
     });
     const farmer2 = await user(SEED.farmerNoGcash.email, SEED.farmerNoGcash.name, "farmer");
+    await user(SEED.manager.email, SEED.manager.name, "manager", { totpEnabled: true });
 
     const { rows: cat } = await db.query(`INSERT INTO "Category" (name) VALUES ('Vegetables') RETURNING id`);
     const product = (farmerId: number, productName: string) =>

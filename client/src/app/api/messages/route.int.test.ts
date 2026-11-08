@@ -186,6 +186,18 @@ describe("GET /api/messages?q= (search)", () => {
     expect(await inbox(farmer, "durian")).toEqual([]);
   });
 
+  it("takes % and _ literally", async () => {
+    const farmer = await createUser({ role: "farmer" });
+    const ana = await createUser({ name: "Ana" });
+    const ben = await createUser({ name: "Ben" });
+    await post(ana, farmer.id, "Is there a 10% discount?");
+    await post(ben, farmer.id, "Two kilos please");
+
+    expect((await inbox(farmer, "10%")).map((c: { user: { id: number } }) => c.user.id)).toEqual([ana.id]);
+    expect(await inbox(farmer, "%")).toHaveLength(1);
+    expect(await inbox(farmer, "_")).toEqual([]);
+  });
+
   it("doesn't search messages the caller removed", async () => {
     const farmer = await createUser({ role: "farmer" });
     const customer = await createUser();

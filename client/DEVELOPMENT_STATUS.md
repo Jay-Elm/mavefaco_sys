@@ -333,7 +333,7 @@ The admin moves an item up or down; the page swaps it optimistically and sends e
 
 ### Automated tests
 
-**End-to-end:** `npm run test:e2e` builds the site and runs Playwright (`e2e/*.e2e.ts`, `playwright.config.ts`) against `next start` on port 3200 with its own database `<name>_e2e_test`, created, migrated, emptied and seeded by `e2e/globalSetup.ts` (two farmers, one with GCash; a customer; two products). It uses the installed Chrome (`channel: "chrome"`) and blanks the email, Supabase and Gemini keys so nothing leaves the machine.
+**End-to-end:** `npm run test:e2e` builds the site and runs Playwright (`e2e/*.e2e.ts`, `playwright.config.ts`) against `next start` on port 3200 with its own database `<name>_e2e_test`, created, migrated, emptied and seeded by `e2e/globalSetup.ts` (two farmers, one with GCash; a customer; a manager; two products). Staff pages are reached with `signInStaff()` (`e2e/helpers.ts`), which sets a session cookie signed with `JWT_SECRET` instead of going through the authenticator code. It uses the installed Chrome (`channel: "chrome"`) and blanks the email, Supabase and Gemini keys so nothing leaves the machine.
 
 **Admin parity:** `src/app/api/adminParity.int.test.ts` calls every staff route (stats, orders, products, suspension, crop links, supply, advisory, AI report, reports, users, Market, PSA update, crop types, categories, announcements, badges) as a manager and as an admin and fails if an admin is ever refused something a manager may do; it also checks audit logs stay admin-only. Keep new staff routes in it.
 
@@ -373,7 +373,7 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 | Product images orphaned by edits aren't cleaned up | Low | Replaced product photos stay in the public bucket |
 | Messaging is polling, not WebSocket | Low | 8s interval; acceptable for the cooperative's use |
 | A resubmitted listing keeps no record of its previous details | Low | The audit log records the suspension and resubmission (who, when) and the notice keeps the reasons, but not the before/after values |
-| End-to-end tests cover checkout only | Low | `npm run test:e2e` (Playwright) covers browsing, the GCash order from payment to shipping, the delivery area, and the Add Product crop guess; other screens are checked manually |
+| End-to-end tests cover a few flows | Low | `npm run test:e2e` (Playwright, 10 tests) covers browsing, the GCash order from payment to shipping with the customer's update messages and badges, the delivery area, the Add Product crop guess, and staff Crop Types, Products (icons, crop linking) and the Market pages; photos in Messages need Supabase storage and are covered by integration tests only |
 
 Every finding from `SECURITY_REVIEW.md` (through 2026-09-08), the 10-item gap list, and the 2026-10-03 whole-project review (`PROJECT_REVIEW.md`) is fixed. L4 (per-instance rate limiting) was fixed on 2026-11-07 by counting in Postgres (`RateLimit` table, `src/lib/rateLimit.ts`) instead of adding Upstash.
 

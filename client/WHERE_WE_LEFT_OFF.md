@@ -9,7 +9,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 1. **Phase 1–3 security review** (completed 2026-09-08, `SECURITY_REVIEW.md`): cookie-based sessions, admin-route guard, private ID storage, password reset, shared validators, email verification.
 2. **10-item gap list** (completed 2026-09-21): Next.js CVE patches, JWT secret validation, `Decimal` money, connection pooling, Dependabot + CI audit, mandatory TOTP MFA for staff, ID-image auto-purge, no email enumeration.
 3. **Whole-project review and fixes** (2026-10-03 to 2026-10-05, `PROJECT_REVIEW.md`): every finding fixed (L4 on 2026-11-07). Highlights:
-   - **Integration tests** against a real Postgres database (`npm run test:integration`, now 382 tests; plus 139 unit and 7 Playwright end-to-end tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron, crop monitoring, announcements, FAQ/banner order; now 84 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
+   - **Integration tests** against a real Postgres database (`npm run test:integration`, now 383 tests; plus 139 unit and 10 Playwright end-to-end tests) covering orders, auth, MFA, products, reviews, messages, admin users, content, reports, cron, crop monitoring, announcements, FAQ/banner order; now 84 unit tests. Both suites run in CI. The tests found and drove fixes for 10+ real bugs (stock double-restock, MFA code reuse under concurrency, products with history undeletable, …).
    - **MFA encryption key** separated from `JWT_SECRET` (`TOTP_ENCRYPTION_KEY`); all staff migrated.
    - **Preview deployments** have their own Supabase database and keys; Preview builds migrate only that database (`PREVIEW_DATABASE_ISOLATED`).
    - **Product archiving** (and staff restore) instead of deleting products with history.
@@ -88,7 +88,7 @@ Feature-complete for the capstone scope and through three structured hardening p
 
 **Decisions the owner may revisit:** the delivery area (Tabaco City, Malinao, Malilipot, Ligao City, Oas) and the market thresholds (75% / 150%, 8 weeks, rising at 1.5x).
 
-**Remaining debt** (see `DEVELOPMENT_STATUS.md` → Known Technical Debt): Prisma 8 upgrade once it is out of release candidate (8.0.0-rc.30 on 2026-11-07); end-to-end tests cover checkout only. Done 2026-11-07: rate limits counted in Postgres (L4, no Upstash needed); Playwright end-to-end tests (`npm run test:e2e`); DA growing times with sources on all 13 crop types.
+**Remaining debt** (see `DEVELOPMENT_STATUS.md` → Known Technical Debt): Prisma 8 upgrade once it is out of release candidate (still 8.0.0-rc.33 on 2026-11-09); end-to-end tests cover a few flows (see DEVELOPMENT_STATUS). Done 2026-11-09: the conversation list is grouped by the database (`GET /api/messages`: one row per conversation with its latest message and unread count, instead of loading every message); end-to-end tests for staff Crop Types, Products and the Market pages. Done 2026-11-07: rate limits counted in Postgres (L4, no Upstash needed); Playwright end-to-end tests (`npm run test:e2e`); DA growing times with sources on all 13 crop types.
 
 **Optional:** staff can rename their authenticator entry from "CoopMarket" to "MaVeFaCo"; Vercel's Preview toolbar can be turned off if its CSP violations clutter the logs.
 
