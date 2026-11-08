@@ -184,9 +184,9 @@ export default function RegisterPage() {
               />
               <span>
                 I am 18 or older and agree to the{' '}
-                <Link href="/terms" target="_blank" rel="noopener" className="text-paddy font-medium hover:underline">Terms of Service</Link>
+                <Link href="/terms" className="text-paddy font-medium hover:underline">Terms of Service</Link>
                 {' '}and{' '}
-                <Link href="/privacy" target="_blank" rel="noopener" className="text-paddy font-medium hover:underline">Privacy Policy</Link>.
+                <Link href="/privacy" className="text-paddy font-medium hover:underline">Privacy Policy</Link>.
               </span>
             </label>
             {errors.acceptTerms && (

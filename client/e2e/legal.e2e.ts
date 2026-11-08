@@ -7,6 +7,12 @@ test("registration links the Terms and Privacy Policy and needs the box ticked; 
   await expect(terms).toHaveAttribute("href", "/terms");
   await expect(privacy).toHaveAttribute("href", "/privacy");
 
+  // Same tab: the browser's back button returns to registration.
+  await terms.click();
+  await expect(page).toHaveURL(/\/terms$/);
+  await page.goBack();
+  await expect(page).toHaveURL(/\/register$/);
+
   await page.locator("#name").fill("Juan dela Cruz");
   await page.locator("#email").fill("juan@e2e.local");
   await page.locator("#password").fill("correct-horse-battery");
