@@ -3,6 +3,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { NextRequest, NextResponse } from "next/server";
 import { messageCreateSchema } from "@/validators/message";
 import { messageRefusal, withImageUrls } from "@/lib/messaging";
+import { rateLimit } from "@/lib/rateLimit";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
   const actor = await getActiveAuthUser(req);
@@ -53,6 +54,15 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ use
   // Messaging is between a customer and a farmer only; staff have no inbox.
   const refused = await messageRefusal(actor, receiverId);
   if (refused) return NextResponse.json({ error: refused.error }, { status: refused.status });
+
+  // Generous for a real conversation (two a minute for an hour), but stops
+  // an account flooding someone's inbox.
+  const { allowed, retryAfterSeconds } = await rateLimit(`message:${actor.id}`, 120, 60 * 60 * 1000);
+  if (!allowed)
+    return NextResponse.json(
+      { error: "You're sending messages too fast. Please wait a little and try again." },
+      { status: 429, headers: { "Retry-After": String(retryAfterSeconds) } },
+    );
 
   try {
     const parsed = messageCreateSchema.safeParse(await req.json());

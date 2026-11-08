@@ -66,6 +66,24 @@ describe("POST /api/messages/[userId]", () => {
   });
 });
 
+describe("POST /api/messages/[userId] rate limit", () => {
+  it("stops a sender after 120 messages an hour, without saving the extra one", async () => {
+    const customer = await createUser();
+    const farmer = await createUser({ role: "farmer" });
+    // As if 120 were already sent this hour.
+    // (Written with the database's clock, as rateLimit() compares against now().)
+    await prisma.$executeRaw`INSERT INTO "RateLimit" ("key", "count", "resetAt") VALUES (${`message:${customer.id}`}, 120, now() + interval '1 hour')`;
+
+    const res = await post(customer, farmer.id, "One more");
+    expect(res.status).toBe(429);
+    expect(res.headers.get("Retry-After")).toBeTruthy();
+    expect(await prisma.message.count()).toBe(0);
+
+    // The farmer's own limit is separate.
+    expect((await post(farmer, customer.id, "Hello")).status).toBe(201);
+  });
+});
+
 describe("GET /api/messages/[userId]", () => {
   it("returns both directions oldest first and marks only the reader's incoming messages read", async () => {
     const alice = await createUser();

@@ -248,7 +248,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | POST | `/api/admin/advisory/report` | admin/manager | ask Gemini for a new report from the last 30 days of crop logs; 1 per minute; saved and audited (`GENERATE_AI_REPORT`) |
 | GET | `/api/messages` | authenticated | conversation list with unread counts, newest first; leaves out messages from before the caller removed a conversation; `?q=` matches names and any message text (each result says which message matched) |
 | GET | `/api/messages/[userId]` | authenticated | message thread (photos as 1-hour signed `imageUrl`); marks received as read |
-| POST | `/api/messages/[userId]` | customer/farmer | send message; only between a customer and a farmer (403 otherwise; `src/lib/messaging.ts`) |
+| POST | `/api/messages/[userId]` | customer/farmer | send message; only between a customer and a farmer (403 otherwise; `src/lib/messaging.ts`); 120/hour per sender |
 | POST | `/api/messages/[userId]/image` | customer/farmer | send a photo (form `file` PNG/JPEG/WEBP ≤4 MB, optional `caption`), stored in the private `private-images` bucket (`src/lib/privateImages.ts`, bucket created on first use); 30/hour |
 | POST/DELETE | `/api/users/me/gcash-qr` | customer | a customer's own GCash QR (private), shown only to a farmer owing them a refund; 10 uploads/hour |
 | DELETE | `/api/messages/[userId]` | authenticated | remove the conversation from the caller's list only (the other side keeps it; a newer message brings it back); marks its unread messages read |
