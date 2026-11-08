@@ -139,6 +139,7 @@ exports.Prisma.UserScalarFieldEnum = {
   gcashName: 'gcashName',
   gcashNumber: 'gcashNumber',
   gcashQrUrl: 'gcashQrUrl',
+  gcashQrPath: 'gcashQrPath',
   deliveryLat: 'deliveryLat',
   deliveryLng: 'deliveryLng',
   deliveryAddress: 'deliveryAddress',
@@ -263,6 +264,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   payerName: 'payerName',
   payerNumber: 'payerNumber',
   paidAt: 'paidAt',
+  refundReference: 'refundReference',
   deliveryLat: 'deliveryLat',
   deliveryLng: 'deliveryLng',
   deliveryAddress: 'deliveryAddress',
@@ -333,6 +335,7 @@ exports.Prisma.MessageScalarFieldEnum = {
   createdAt: 'createdAt',
   kind: 'kind',
   orderId: 'orderId',
+  imagePath: 'imagePath',
   senderId: 'senderId',
   receiverId: 'receiverId'
 };

@@ -39,6 +39,8 @@ export interface UpdateContext {
   byStaff: boolean;
   /** For payment_rejected on a cancelled order: nothing was paid, so nothing to refund. */
   orderCancelled?: boolean;
+  /** For refunded: the refund's GCash reference, when the farmer gave it. */
+  refundReference?: string | null;
 }
 
 /** The message text for one change. */
@@ -58,7 +60,9 @@ export function orderUpdateText(event: OrderEvent, ctx: UpdateContext, note?: st
     payment_rejected: ctx.orderCancelled
       ? `No GCash payment for order ${n} arrived, so there is nothing to refund.`
       : `The farmer couldn't find your GCash payment for order ${n}. Check the reference number and enter it again in My Orders.`,
-    refunded: `Your GCash refund for order ${n} was sent. Check your GCash app.`,
+    refunded: ctx.refundReference
+      ? `Your GCash refund for order ${n} was sent (reference ${ctx.refundReference}). Check your GCash app.`
+      : `Your GCash refund for order ${n} was sent. Check your GCash app.`,
   };
   const text = lines[event];
   return note ? `${text}\nNote from ${ctx.byStaff ? "the cooperative" : "the farmer"}: ${note}` : text;
@@ -82,13 +86,21 @@ export async function notifyCustomer(
       status: true,
       deliveryMethod: true,
       paymentStatus: true,
+      refundReference: true,
       items: { take: 1, select: { product: { select: { farmerId: true } } } },
     },
   });
   const farmerId = order.items[0]?.product.farmerId;
   const content = orderUpdateText(
     event,
-    { orderId, deliveryMethod: order.deliveryMethod, paymentStatus: order.paymentStatus, byStaff, orderCancelled: order.status === "cancelled" },
+    {
+      orderId,
+      deliveryMethod: order.deliveryMethod,
+      paymentStatus: order.paymentStatus,
+      byStaff,
+      orderCancelled: order.status === "cancelled",
+      refundReference: order.refundReference,
+    },
     note,
   );
   if (farmerId !== undefined) {

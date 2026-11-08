@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
         payerName: true,
         payerNumber: true,
         paidAt: true,
+        refundReference: true,
         deliveryMethod: true,
         deliveryAddress: true,
         deliveryTown: true,

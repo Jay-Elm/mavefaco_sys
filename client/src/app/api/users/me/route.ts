@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { signPrivateImages } from "@/lib/privateImages";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
@@ -19,7 +20,7 @@ export async function GET(req: NextRequest) {
       where: { id: actor.id },
       select: {
         id: true, name: true, email: true, role: true, verified: true, verifiedInPersonAt: true, createdAt: true,
-        gcashName: true, gcashNumber: true, gcashQrUrl: true,
+        gcashName: true, gcashNumber: true, gcashQrUrl: true, gcashQrPath: true,
         deliveryLat: true, deliveryLng: true, deliveryAddress: true, deliveryTown: true,
         idSubmissions: { where: { status: { not: "replaced" } }, orderBy: { createdAt: "desc" }, take: 1 },
       },
@@ -28,8 +29,10 @@ export async function GET(req: NextRequest) {
     if (!user) return NextResponse.json({ error: "User not found" }, { status: 404 });
 
     // The latest ID submission, without its storage paths or number fingerprint.
-    const { idSubmissions, ...rest } = user;
-    return NextResponse.json({ ...rest, idSubmission: idSubmissions[0] ? submissionSummary(idSubmissions[0]) : null });
+    // A customer's private GCash QR comes as a short-lived view link, never its path.
+    const { idSubmissions, gcashQrPath, ...rest } = user;
+    const gcashQrViewUrl = gcashQrPath ? ((await signPrivateImages([gcashQrPath])).get(gcashQrPath) ?? null) : null;
+    return NextResponse.json({ ...rest, gcashQrViewUrl, idSubmission: idSubmissions[0] ? submissionSummary(idSubmissions[0]) : null });
   } catch {
     return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
   }

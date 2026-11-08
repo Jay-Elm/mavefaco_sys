@@ -33,8 +33,10 @@ test.describe.serial("GCash order, paid and shipped", () => {
     await expect(page).toHaveURL(/\/customer\/orders/);
     await page.getByRole("button", { name: /Order #1/ }).click();
     // The quantity dialog starts at 0.25 kg: 0.25 × ₱80.
-    await expect(page.getByText("Send ₱20.00 by GCash to:")).toBeVisible();
+    await expect(page.getByText(`Pay ₱20.00 to ${SEED.farmer.gcashName} by GCash`)).toBeVisible();
     await expect(page.getByText("0918 123 4567")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Copy number" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Copy amount" })).toBeVisible();
 
     await page.getByLabel("Reference number").fill("1234 567 891234");
     await page.getByLabel("Your GCash name").fill(SEED.customer.name);

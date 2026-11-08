@@ -49,4 +49,9 @@ export const paymentSubmitSchema = z.object({
 // POST /api/farmer/orders/[id]/payment
 export const farmerPaymentActionSchema = z.object({
   action: z.enum(["confirm", "reject", "refunded"], { error: "Unknown payment action" }),
+  // "refunded" only, optional: the refund's GCash reference, for the customer.
+  refundReference: z.preprocess(
+    (v) => (typeof v === "string" ? (v.trim() === "" ? undefined : (normalizeReference(v) ?? v)) : v),
+    z.string().regex(/^\d{13}$/, "The GCash reference number has 13 digits").optional(),
+  ),
 });

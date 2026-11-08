@@ -3593,6 +3593,7 @@ export namespace Prisma {
     gcashName: string | null
     gcashNumber: string | null
     gcashQrUrl: string | null
+    gcashQrPath: string | null
     deliveryLat: number | null
     deliveryLng: number | null
     deliveryAddress: string | null
@@ -3620,6 +3621,7 @@ export namespace Prisma {
     gcashName: string | null
     gcashNumber: string | null
     gcashQrUrl: string | null
+    gcashQrPath: string | null
     deliveryLat: number | null
     deliveryLng: number | null
     deliveryAddress: string | null
@@ -3647,6 +3649,7 @@ export namespace Prisma {
     gcashName: number
     gcashNumber: number
     gcashQrUrl: number
+    gcashQrPath: number
     deliveryLat: number
     deliveryLng: number
     deliveryAddress: number
@@ -3692,6 +3695,7 @@ export namespace Prisma {
     gcashName?: true
     gcashNumber?: true
     gcashQrUrl?: true
+    gcashQrPath?: true
     deliveryLat?: true
     deliveryLng?: true
     deliveryAddress?: true
@@ -3719,6 +3723,7 @@ export namespace Prisma {
     gcashName?: true
     gcashNumber?: true
     gcashQrUrl?: true
+    gcashQrPath?: true
     deliveryLat?: true
     deliveryLng?: true
     deliveryAddress?: true
@@ -3746,6 +3751,7 @@ export namespace Prisma {
     gcashName?: true
     gcashNumber?: true
     gcashQrUrl?: true
+    gcashQrPath?: true
     deliveryLat?: true
     deliveryLng?: true
     deliveryAddress?: true
@@ -3860,6 +3866,7 @@ export namespace Prisma {
     gcashName: string | null
     gcashNumber: string | null
     gcashQrUrl: string | null
+    gcashQrPath: string | null
     deliveryLat: number | null
     deliveryLng: number | null
     deliveryAddress: string | null
@@ -3906,6 +3913,7 @@ export namespace Prisma {
     gcashName?: boolean
     gcashNumber?: boolean
     gcashQrUrl?: boolean
+    gcashQrPath?: boolean
     deliveryLat?: boolean
     deliveryLng?: boolean
     deliveryAddress?: boolean
@@ -3949,6 +3957,7 @@ export namespace Prisma {
     gcashName?: boolean
     gcashNumber?: boolean
     gcashQrUrl?: boolean
+    gcashQrPath?: boolean
     deliveryLat?: boolean
     deliveryLng?: boolean
     deliveryAddress?: boolean
@@ -3976,6 +3985,7 @@ export namespace Prisma {
     gcashName?: boolean
     gcashNumber?: boolean
     gcashQrUrl?: boolean
+    gcashQrPath?: boolean
     deliveryLat?: boolean
     deliveryLng?: boolean
     deliveryAddress?: boolean
@@ -4003,6 +4013,7 @@ export namespace Prisma {
     gcashName?: boolean
     gcashNumber?: boolean
     gcashQrUrl?: boolean
+    gcashQrPath?: boolean
     deliveryLat?: boolean
     deliveryLng?: boolean
     deliveryAddress?: boolean
@@ -4011,7 +4022,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "verified" | "verifiedAt" | "verifiedInPersonAt" | "emailVerifiedAt" | "tokenVersion" | "deletedAt" | "totpSecret" | "totpEnabled" | "totpLastStep" | "gcashName" | "gcashNumber" | "gcashQrUrl" | "deliveryLat" | "deliveryLng" | "deliveryAddress" | "deliveryTown" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "role" | "suspended" | "verified" | "verifiedAt" | "verifiedInPersonAt" | "emailVerifiedAt" | "tokenVersion" | "deletedAt" | "totpSecret" | "totpEnabled" | "totpLastStep" | "gcashName" | "gcashNumber" | "gcashQrUrl" | "gcashQrPath" | "deliveryLat" | "deliveryLng" | "deliveryAddress" | "deliveryTown" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | User$productsArgs<ExtArgs>
     orders?: boolean | User$ordersArgs<ExtArgs>
@@ -4071,6 +4082,7 @@ export namespace Prisma {
       gcashName: string | null
       gcashNumber: string | null
       gcashQrUrl: string | null
+      gcashQrPath: string | null
       deliveryLat: number | null
       deliveryLng: number | null
       deliveryAddress: string | null
@@ -4533,6 +4545,7 @@ export namespace Prisma {
     readonly gcashName: FieldRef<"User", 'String'>
     readonly gcashNumber: FieldRef<"User", 'String'>
     readonly gcashQrUrl: FieldRef<"User", 'String'>
+    readonly gcashQrPath: FieldRef<"User", 'String'>
     readonly deliveryLat: FieldRef<"User", 'Float'>
     readonly deliveryLng: FieldRef<"User", 'Float'>
     readonly deliveryAddress: FieldRef<"User", 'String'>
@@ -16041,6 +16054,7 @@ export namespace Prisma {
     payerName: string | null
     payerNumber: string | null
     paidAt: Date | null
+    refundReference: string | null
     deliveryLat: number | null
     deliveryLng: number | null
     deliveryAddress: string | null
@@ -16063,6 +16077,7 @@ export namespace Prisma {
     payerName: string | null
     payerNumber: string | null
     paidAt: Date | null
+    refundReference: string | null
     deliveryLat: number | null
     deliveryLng: number | null
     deliveryAddress: string | null
@@ -16085,6 +16100,7 @@ export namespace Prisma {
     payerName: number
     payerNumber: number
     paidAt: number
+    refundReference: number
     deliveryLat: number
     deliveryLng: number
     deliveryAddress: number
@@ -16125,6 +16141,7 @@ export namespace Prisma {
     payerName?: true
     payerNumber?: true
     paidAt?: true
+    refundReference?: true
     deliveryLat?: true
     deliveryLng?: true
     deliveryAddress?: true
@@ -16147,6 +16164,7 @@ export namespace Prisma {
     payerName?: true
     payerNumber?: true
     paidAt?: true
+    refundReference?: true
     deliveryLat?: true
     deliveryLng?: true
     deliveryAddress?: true
@@ -16169,6 +16187,7 @@ export namespace Prisma {
     payerName?: true
     payerNumber?: true
     paidAt?: true
+    refundReference?: true
     deliveryLat?: true
     deliveryLng?: true
     deliveryAddress?: true
@@ -16278,6 +16297,7 @@ export namespace Prisma {
     payerName: string | null
     payerNumber: string | null
     paidAt: Date | null
+    refundReference: string | null
     deliveryLat: number | null
     deliveryLng: number | null
     deliveryAddress: string | null
@@ -16319,6 +16339,7 @@ export namespace Prisma {
     payerName?: boolean
     payerNumber?: boolean
     paidAt?: boolean
+    refundReference?: boolean
     deliveryLat?: boolean
     deliveryLng?: boolean
     deliveryAddress?: boolean
@@ -16345,6 +16366,7 @@ export namespace Prisma {
     payerName?: boolean
     payerNumber?: boolean
     paidAt?: boolean
+    refundReference?: boolean
     deliveryLat?: boolean
     deliveryLng?: boolean
     deliveryAddress?: boolean
@@ -16368,6 +16390,7 @@ export namespace Prisma {
     payerName?: boolean
     payerNumber?: boolean
     paidAt?: boolean
+    refundReference?: boolean
     deliveryLat?: boolean
     deliveryLng?: boolean
     deliveryAddress?: boolean
@@ -16391,6 +16414,7 @@ export namespace Prisma {
     payerName?: boolean
     payerNumber?: boolean
     paidAt?: boolean
+    refundReference?: boolean
     deliveryLat?: boolean
     deliveryLng?: boolean
     deliveryAddress?: boolean
@@ -16402,7 +16426,7 @@ export namespace Prisma {
     customerId?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "totalAmount" | "status" | "paymentMethod" | "deliveryMethod" | "paymentStatus" | "gcashReference" | "payerName" | "payerNumber" | "paidAt" | "deliveryLat" | "deliveryLng" | "deliveryAddress" | "deliveryTown" | "createdAt" | "updatedAt" | "customerNotifiedAt" | "customerSeenAt" | "customerId", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "totalAmount" | "status" | "paymentMethod" | "deliveryMethod" | "paymentStatus" | "gcashReference" | "payerName" | "payerNumber" | "paidAt" | "refundReference" | "deliveryLat" | "deliveryLng" | "deliveryAddress" | "deliveryTown" | "createdAt" | "updatedAt" | "customerNotifiedAt" | "customerSeenAt" | "customerId", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     customer?: boolean | UserDefaultArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
@@ -16434,6 +16458,7 @@ export namespace Prisma {
       payerName: string | null
       payerNumber: string | null
       paidAt: Date | null
+      refundReference: string | null
       deliveryLat: number | null
       deliveryLng: number | null
       deliveryAddress: string | null
@@ -16879,6 +16904,7 @@ export namespace Prisma {
     readonly payerName: FieldRef<"Order", 'String'>
     readonly payerNumber: FieldRef<"Order", 'String'>
     readonly paidAt: FieldRef<"Order", 'DateTime'>
+    readonly refundReference: FieldRef<"Order", 'String'>
     readonly deliveryLat: FieldRef<"Order", 'Float'>
     readonly deliveryLng: FieldRef<"Order", 'Float'>
     readonly deliveryAddress: FieldRef<"Order", 'String'>
@@ -23858,6 +23884,7 @@ export namespace Prisma {
     createdAt: Date | null
     kind: string | null
     orderId: number | null
+    imagePath: string | null
     senderId: number | null
     receiverId: number | null
   }
@@ -23869,6 +23896,7 @@ export namespace Prisma {
     createdAt: Date | null
     kind: string | null
     orderId: number | null
+    imagePath: string | null
     senderId: number | null
     receiverId: number | null
   }
@@ -23880,6 +23908,7 @@ export namespace Prisma {
     createdAt: number
     kind: number
     orderId: number
+    imagePath: number
     senderId: number
     receiverId: number
     _all: number
@@ -23907,6 +23936,7 @@ export namespace Prisma {
     createdAt?: true
     kind?: true
     orderId?: true
+    imagePath?: true
     senderId?: true
     receiverId?: true
   }
@@ -23918,6 +23948,7 @@ export namespace Prisma {
     createdAt?: true
     kind?: true
     orderId?: true
+    imagePath?: true
     senderId?: true
     receiverId?: true
   }
@@ -23929,6 +23960,7 @@ export namespace Prisma {
     createdAt?: true
     kind?: true
     orderId?: true
+    imagePath?: true
     senderId?: true
     receiverId?: true
     _all?: true
@@ -24027,6 +24059,7 @@ export namespace Prisma {
     createdAt: Date
     kind: string
     orderId: number | null
+    imagePath: string | null
     senderId: number
     receiverId: number
     _count: MessageCountAggregateOutputType | null
@@ -24057,6 +24090,7 @@ export namespace Prisma {
     createdAt?: boolean
     kind?: boolean
     orderId?: boolean
+    imagePath?: boolean
     senderId?: boolean
     receiverId?: boolean
     order?: boolean | Message$orderArgs<ExtArgs>
@@ -24071,6 +24105,7 @@ export namespace Prisma {
     createdAt?: boolean
     kind?: boolean
     orderId?: boolean
+    imagePath?: boolean
     senderId?: boolean
     receiverId?: boolean
     order?: boolean | Message$orderArgs<ExtArgs>
@@ -24085,6 +24120,7 @@ export namespace Prisma {
     createdAt?: boolean
     kind?: boolean
     orderId?: boolean
+    imagePath?: boolean
     senderId?: boolean
     receiverId?: boolean
     order?: boolean | Message$orderArgs<ExtArgs>
@@ -24099,11 +24135,12 @@ export namespace Prisma {
     createdAt?: boolean
     kind?: boolean
     orderId?: boolean
+    imagePath?: boolean
     senderId?: boolean
     receiverId?: boolean
   }
 
-  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "read" | "createdAt" | "kind" | "orderId" | "senderId" | "receiverId", ExtArgs["result"]["message"]>
+  export type MessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "read" | "createdAt" | "kind" | "orderId" | "imagePath" | "senderId" | "receiverId", ExtArgs["result"]["message"]>
   export type MessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | Message$orderArgs<ExtArgs>
     sender?: boolean | UserDefaultArgs<ExtArgs>
@@ -24134,6 +24171,7 @@ export namespace Prisma {
       createdAt: Date
       kind: string
       orderId: number | null
+      imagePath: string | null
       senderId: number
       receiverId: number
     }, ExtArgs["result"]["message"]>
@@ -24568,6 +24606,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Message", 'DateTime'>
     readonly kind: FieldRef<"Message", 'String'>
     readonly orderId: FieldRef<"Message", 'Int'>
+    readonly imagePath: FieldRef<"Message", 'String'>
     readonly senderId: FieldRef<"Message", 'Int'>
     readonly receiverId: FieldRef<"Message", 'Int'>
   }
@@ -34035,6 +34074,7 @@ export namespace Prisma {
     gcashName: 'gcashName',
     gcashNumber: 'gcashNumber',
     gcashQrUrl: 'gcashQrUrl',
+    gcashQrPath: 'gcashQrPath',
     deliveryLat: 'deliveryLat',
     deliveryLng: 'deliveryLng',
     deliveryAddress: 'deliveryAddress',
@@ -34189,6 +34229,7 @@ export namespace Prisma {
     payerName: 'payerName',
     payerNumber: 'payerNumber',
     paidAt: 'paidAt',
+    refundReference: 'refundReference',
     deliveryLat: 'deliveryLat',
     deliveryLng: 'deliveryLng',
     deliveryAddress: 'deliveryAddress',
@@ -34280,6 +34321,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     kind: 'kind',
     orderId: 'orderId',
+    imagePath: 'imagePath',
     senderId: 'senderId',
     receiverId: 'receiverId'
   };
@@ -34554,6 +34596,7 @@ export namespace Prisma {
     gcashName?: StringNullableFilter<"User"> | string | null
     gcashNumber?: StringNullableFilter<"User"> | string | null
     gcashQrUrl?: StringNullableFilter<"User"> | string | null
+    gcashQrPath?: StringNullableFilter<"User"> | string | null
     deliveryLat?: FloatNullableFilter<"User"> | number | null
     deliveryLng?: FloatNullableFilter<"User"> | number | null
     deliveryAddress?: StringNullableFilter<"User"> | string | null
@@ -34596,6 +34639,7 @@ export namespace Prisma {
     gcashName?: SortOrderInput | SortOrder
     gcashNumber?: SortOrderInput | SortOrder
     gcashQrUrl?: SortOrderInput | SortOrder
+    gcashQrPath?: SortOrderInput | SortOrder
     deliveryLat?: SortOrderInput | SortOrder
     deliveryLng?: SortOrderInput | SortOrder
     deliveryAddress?: SortOrderInput | SortOrder
@@ -34641,6 +34685,7 @@ export namespace Prisma {
     gcashName?: StringNullableFilter<"User"> | string | null
     gcashNumber?: StringNullableFilter<"User"> | string | null
     gcashQrUrl?: StringNullableFilter<"User"> | string | null
+    gcashQrPath?: StringNullableFilter<"User"> | string | null
     deliveryLat?: FloatNullableFilter<"User"> | number | null
     deliveryLng?: FloatNullableFilter<"User"> | number | null
     deliveryAddress?: StringNullableFilter<"User"> | string | null
@@ -34683,6 +34728,7 @@ export namespace Prisma {
     gcashName?: SortOrderInput | SortOrder
     gcashNumber?: SortOrderInput | SortOrder
     gcashQrUrl?: SortOrderInput | SortOrder
+    gcashQrPath?: SortOrderInput | SortOrder
     deliveryLat?: SortOrderInput | SortOrder
     deliveryLng?: SortOrderInput | SortOrder
     deliveryAddress?: SortOrderInput | SortOrder
@@ -34718,6 +34764,7 @@ export namespace Prisma {
     gcashName?: StringNullableWithAggregatesFilter<"User"> | string | null
     gcashNumber?: StringNullableWithAggregatesFilter<"User"> | string | null
     gcashQrUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
+    gcashQrPath?: StringNullableWithAggregatesFilter<"User"> | string | null
     deliveryLat?: FloatNullableWithAggregatesFilter<"User"> | number | null
     deliveryLng?: FloatNullableWithAggregatesFilter<"User"> | number | null
     deliveryAddress?: StringNullableWithAggregatesFilter<"User"> | string | null
@@ -35454,6 +35501,7 @@ export namespace Prisma {
     payerName?: StringNullableFilter<"Order"> | string | null
     payerNumber?: StringNullableFilter<"Order"> | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    refundReference?: StringNullableFilter<"Order"> | string | null
     deliveryLat?: FloatNullableFilter<"Order"> | number | null
     deliveryLng?: FloatNullableFilter<"Order"> | number | null
     deliveryAddress?: StringNullableFilter<"Order"> | string | null
@@ -35479,6 +35527,7 @@ export namespace Prisma {
     payerName?: SortOrderInput | SortOrder
     payerNumber?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
+    refundReference?: SortOrderInput | SortOrder
     deliveryLat?: SortOrderInput | SortOrder
     deliveryLng?: SortOrderInput | SortOrder
     deliveryAddress?: SortOrderInput | SortOrder
@@ -35507,6 +35556,7 @@ export namespace Prisma {
     payerName?: StringNullableFilter<"Order"> | string | null
     payerNumber?: StringNullableFilter<"Order"> | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    refundReference?: StringNullableFilter<"Order"> | string | null
     deliveryLat?: FloatNullableFilter<"Order"> | number | null
     deliveryLng?: FloatNullableFilter<"Order"> | number | null
     deliveryAddress?: StringNullableFilter<"Order"> | string | null
@@ -35532,6 +35582,7 @@ export namespace Prisma {
     payerName?: SortOrderInput | SortOrder
     payerNumber?: SortOrderInput | SortOrder
     paidAt?: SortOrderInput | SortOrder
+    refundReference?: SortOrderInput | SortOrder
     deliveryLat?: SortOrderInput | SortOrder
     deliveryLng?: SortOrderInput | SortOrder
     deliveryAddress?: SortOrderInput | SortOrder
@@ -35562,6 +35613,7 @@ export namespace Prisma {
     payerName?: StringNullableWithAggregatesFilter<"Order"> | string | null
     payerNumber?: StringNullableWithAggregatesFilter<"Order"> | string | null
     paidAt?: DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+    refundReference?: StringNullableWithAggregatesFilter<"Order"> | string | null
     deliveryLat?: FloatNullableWithAggregatesFilter<"Order"> | number | null
     deliveryLng?: FloatNullableWithAggregatesFilter<"Order"> | number | null
     deliveryAddress?: StringNullableWithAggregatesFilter<"Order"> | string | null
@@ -35941,6 +35993,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Message"> | Date | string
     kind?: StringFilter<"Message"> | string
     orderId?: IntNullableFilter<"Message"> | number | null
+    imagePath?: StringNullableFilter<"Message"> | string | null
     senderId?: IntFilter<"Message"> | number
     receiverId?: IntFilter<"Message"> | number
     order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
@@ -35955,6 +36008,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     kind?: SortOrder
     orderId?: SortOrderInput | SortOrder
+    imagePath?: SortOrderInput | SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
     order?: OrderOrderByWithRelationInput
@@ -35972,6 +36026,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Message"> | Date | string
     kind?: StringFilter<"Message"> | string
     orderId?: IntNullableFilter<"Message"> | number | null
+    imagePath?: StringNullableFilter<"Message"> | string | null
     senderId?: IntFilter<"Message"> | number
     receiverId?: IntFilter<"Message"> | number
     order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
@@ -35986,6 +36041,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     kind?: SortOrder
     orderId?: SortOrderInput | SortOrder
+    imagePath?: SortOrderInput | SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
     _count?: MessageCountOrderByAggregateInput
@@ -36005,6 +36061,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Message"> | Date | string
     kind?: StringWithAggregatesFilter<"Message"> | string
     orderId?: IntNullableWithAggregatesFilter<"Message"> | number | null
+    imagePath?: StringNullableWithAggregatesFilter<"Message"> | string | null
     senderId?: IntWithAggregatesFilter<"Message"> | number
     receiverId?: IntWithAggregatesFilter<"Message"> | number
   }
@@ -36573,6 +36630,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -36615,6 +36673,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -36656,6 +36715,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36698,6 +36758,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36740,6 +36801,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -36766,6 +36828,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36793,6 +36856,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37548,6 +37612,7 @@ export namespace Prisma {
     payerName?: string | null
     payerNumber?: string | null
     paidAt?: Date | string | null
+    refundReference?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -37572,6 +37637,7 @@ export namespace Prisma {
     payerName?: string | null
     payerNumber?: string | null
     paidAt?: Date | string | null
+    refundReference?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -37595,6 +37661,7 @@ export namespace Prisma {
     payerName?: NullableStringFieldUpdateOperationsInput | string | null
     payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refundReference?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37619,6 +37686,7 @@ export namespace Prisma {
     payerName?: NullableStringFieldUpdateOperationsInput | string | null
     payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refundReference?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37643,6 +37711,7 @@ export namespace Prisma {
     payerName?: string | null
     payerNumber?: string | null
     paidAt?: Date | string | null
+    refundReference?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -37664,6 +37733,7 @@ export namespace Prisma {
     payerName?: NullableStringFieldUpdateOperationsInput | string | null
     payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refundReference?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -37685,6 +37755,7 @@ export namespace Prisma {
     payerName?: NullableStringFieldUpdateOperationsInput | string | null
     payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refundReference?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38045,6 +38116,7 @@ export namespace Prisma {
     read?: boolean
     createdAt?: Date | string
     kind?: string
+    imagePath?: string | null
     order?: OrderCreateNestedOneWithoutMessagesInput
     sender: UserCreateNestedOneWithoutSentMessagesInput
     receiver: UserCreateNestedOneWithoutReceivedMessagesInput
@@ -38057,6 +38129,7 @@ export namespace Prisma {
     createdAt?: Date | string
     kind?: string
     orderId?: number | null
+    imagePath?: string | null
     senderId: number
     receiverId: number
   }
@@ -38066,6 +38139,7 @@ export namespace Prisma {
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     order?: OrderUpdateOneWithoutMessagesNestedInput
     sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
     receiver?: UserUpdateOneRequiredWithoutReceivedMessagesNestedInput
@@ -38078,6 +38152,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
     orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     senderId?: IntFieldUpdateOperationsInput | number
     receiverId?: IntFieldUpdateOperationsInput | number
   }
@@ -38089,6 +38164,7 @@ export namespace Prisma {
     createdAt?: Date | string
     kind?: string
     orderId?: number | null
+    imagePath?: string | null
     senderId: number
     receiverId: number
   }
@@ -38098,6 +38174,7 @@ export namespace Prisma {
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MessageUncheckedUpdateManyInput = {
@@ -38107,6 +38184,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
     orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     senderId?: IntFieldUpdateOperationsInput | number
     receiverId?: IntFieldUpdateOperationsInput | number
   }
@@ -38914,6 +38992,7 @@ export namespace Prisma {
     gcashName?: SortOrder
     gcashNumber?: SortOrder
     gcashQrUrl?: SortOrder
+    gcashQrPath?: SortOrder
     deliveryLat?: SortOrder
     deliveryLng?: SortOrder
     deliveryAddress?: SortOrder
@@ -38949,6 +39028,7 @@ export namespace Prisma {
     gcashName?: SortOrder
     gcashNumber?: SortOrder
     gcashQrUrl?: SortOrder
+    gcashQrPath?: SortOrder
     deliveryLat?: SortOrder
     deliveryLng?: SortOrder
     deliveryAddress?: SortOrder
@@ -38976,6 +39056,7 @@ export namespace Prisma {
     gcashName?: SortOrder
     gcashNumber?: SortOrder
     gcashQrUrl?: SortOrder
+    gcashQrPath?: SortOrder
     deliveryLat?: SortOrder
     deliveryLng?: SortOrder
     deliveryAddress?: SortOrder
@@ -39676,6 +39757,7 @@ export namespace Prisma {
     payerName?: SortOrder
     payerNumber?: SortOrder
     paidAt?: SortOrder
+    refundReference?: SortOrder
     deliveryLat?: SortOrder
     deliveryLng?: SortOrder
     deliveryAddress?: SortOrder
@@ -39706,6 +39788,7 @@ export namespace Prisma {
     payerName?: SortOrder
     payerNumber?: SortOrder
     paidAt?: SortOrder
+    refundReference?: SortOrder
     deliveryLat?: SortOrder
     deliveryLng?: SortOrder
     deliveryAddress?: SortOrder
@@ -39728,6 +39811,7 @@ export namespace Prisma {
     payerName?: SortOrder
     payerNumber?: SortOrder
     paidAt?: SortOrder
+    refundReference?: SortOrder
     deliveryLat?: SortOrder
     deliveryLng?: SortOrder
     deliveryAddress?: SortOrder
@@ -39990,6 +40074,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     kind?: SortOrder
     orderId?: SortOrder
+    imagePath?: SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
   }
@@ -40008,6 +40093,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     kind?: SortOrder
     orderId?: SortOrder
+    imagePath?: SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
   }
@@ -40019,6 +40105,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     kind?: SortOrder
     orderId?: SortOrder
+    imagePath?: SortOrder
     senderId?: SortOrder
     receiverId?: SortOrder
   }
@@ -42406,6 +42493,7 @@ export namespace Prisma {
     payerName?: string | null
     payerNumber?: string | null
     paidAt?: Date | string | null
+    refundReference?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -42429,6 +42517,7 @@ export namespace Prisma {
     payerName?: string | null
     payerNumber?: string | null
     paidAt?: Date | string | null
+    refundReference?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -42533,6 +42622,7 @@ export namespace Prisma {
     read?: boolean
     createdAt?: Date | string
     kind?: string
+    imagePath?: string | null
     order?: OrderCreateNestedOneWithoutMessagesInput
     receiver: UserCreateNestedOneWithoutReceivedMessagesInput
   }
@@ -42544,6 +42634,7 @@ export namespace Prisma {
     createdAt?: Date | string
     kind?: string
     orderId?: number | null
+    imagePath?: string | null
     receiverId: number
   }
 
@@ -42562,6 +42653,7 @@ export namespace Prisma {
     read?: boolean
     createdAt?: Date | string
     kind?: string
+    imagePath?: string | null
     order?: OrderCreateNestedOneWithoutMessagesInput
     sender: UserCreateNestedOneWithoutSentMessagesInput
   }
@@ -42573,6 +42665,7 @@ export namespace Prisma {
     createdAt?: Date | string
     kind?: string
     orderId?: number | null
+    imagePath?: string | null
     senderId: number
   }
 
@@ -42903,6 +42996,7 @@ export namespace Prisma {
     payerName?: StringNullableFilter<"Order"> | string | null
     payerNumber?: StringNullableFilter<"Order"> | string | null
     paidAt?: DateTimeNullableFilter<"Order"> | Date | string | null
+    refundReference?: StringNullableFilter<"Order"> | string | null
     deliveryLat?: FloatNullableFilter<"Order"> | number | null
     deliveryLng?: FloatNullableFilter<"Order"> | number | null
     deliveryAddress?: StringNullableFilter<"Order"> | string | null
@@ -43025,6 +43119,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Message"> | Date | string
     kind?: StringFilter<"Message"> | string
     orderId?: IntNullableFilter<"Message"> | number | null
+    imagePath?: StringNullableFilter<"Message"> | string | null
     senderId?: IntFilter<"Message"> | number
     receiverId?: IntFilter<"Message"> | number
   }
@@ -43309,6 +43404,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -43350,6 +43446,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -43406,6 +43503,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43447,6 +43545,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43487,6 +43586,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -43528,6 +43628,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -43584,6 +43685,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43625,6 +43727,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43665,6 +43768,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -43706,6 +43810,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -43762,6 +43867,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43803,6 +43909,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43843,6 +43950,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -43884,6 +43992,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -43940,6 +44049,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43981,6 +44091,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44096,6 +44207,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -44137,6 +44249,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -44371,6 +44484,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44412,6 +44526,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -44841,6 +44956,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -44882,6 +44998,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -45057,6 +45174,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45098,6 +45216,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45354,6 +45473,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -45395,6 +45515,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -45450,6 +45571,7 @@ export namespace Prisma {
     read?: boolean
     createdAt?: Date | string
     kind?: string
+    imagePath?: string | null
     sender: UserCreateNestedOneWithoutSentMessagesInput
     receiver: UserCreateNestedOneWithoutReceivedMessagesInput
   }
@@ -45460,6 +45582,7 @@ export namespace Prisma {
     read?: boolean
     createdAt?: Date | string
     kind?: string
+    imagePath?: string | null
     senderId: number
     receiverId: number
   }
@@ -45503,6 +45626,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45544,6 +45668,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45608,6 +45733,7 @@ export namespace Prisma {
     payerName?: string | null
     payerNumber?: string | null
     paidAt?: Date | string | null
+    refundReference?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -45631,6 +45757,7 @@ export namespace Prisma {
     payerName?: string | null
     payerNumber?: string | null
     paidAt?: Date | string | null
+    refundReference?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -45723,6 +45850,7 @@ export namespace Prisma {
     payerName?: NullableStringFieldUpdateOperationsInput | string | null
     payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refundReference?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45746,6 +45874,7 @@ export namespace Prisma {
     payerName?: NullableStringFieldUpdateOperationsInput | string | null
     payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refundReference?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45836,6 +45965,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -45877,6 +46007,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -45933,6 +46064,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -45974,6 +46106,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46014,6 +46147,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -46055,6 +46189,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -46165,6 +46300,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46206,6 +46342,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46298,6 +46435,7 @@ export namespace Prisma {
     payerName?: string | null
     payerNumber?: string | null
     paidAt?: Date | string | null
+    refundReference?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -46321,6 +46459,7 @@ export namespace Prisma {
     payerName?: string | null
     payerNumber?: string | null
     paidAt?: Date | string | null
+    refundReference?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -46356,6 +46495,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -46397,6 +46537,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -46442,6 +46583,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -46483,6 +46625,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -46531,6 +46674,7 @@ export namespace Prisma {
     payerName?: NullableStringFieldUpdateOperationsInput | string | null
     payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refundReference?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46554,6 +46698,7 @@ export namespace Prisma {
     payerName?: NullableStringFieldUpdateOperationsInput | string | null
     payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refundReference?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46595,6 +46740,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46636,6 +46782,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46687,6 +46834,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46728,6 +46876,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46768,6 +46917,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -46809,6 +46959,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -46919,6 +47070,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -46960,6 +47112,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47060,6 +47213,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -47101,6 +47255,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -47157,6 +47312,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47198,6 +47354,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47238,6 +47395,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -47279,6 +47437,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -47335,6 +47494,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47376,6 +47536,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47416,6 +47577,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -47457,6 +47619,7 @@ export namespace Prisma {
     gcashName?: string | null
     gcashNumber?: string | null
     gcashQrUrl?: string | null
+    gcashQrPath?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -47513,6 +47676,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47554,6 +47718,7 @@ export namespace Prisma {
     gcashName?: NullableStringFieldUpdateOperationsInput | string | null
     gcashNumber?: NullableStringFieldUpdateOperationsInput | string | null
     gcashQrUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    gcashQrPath?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -47780,6 +47945,7 @@ export namespace Prisma {
     payerName?: string | null
     payerNumber?: string | null
     paidAt?: Date | string | null
+    refundReference?: string | null
     deliveryLat?: number | null
     deliveryLng?: number | null
     deliveryAddress?: string | null
@@ -47822,6 +47988,7 @@ export namespace Prisma {
     createdAt?: Date | string
     kind?: string
     orderId?: number | null
+    imagePath?: string | null
     receiverId: number
   }
 
@@ -47832,6 +47999,7 @@ export namespace Prisma {
     createdAt?: Date | string
     kind?: string
     orderId?: number | null
+    imagePath?: string | null
     senderId: number
   }
 
@@ -48001,6 +48169,7 @@ export namespace Prisma {
     payerName?: NullableStringFieldUpdateOperationsInput | string | null
     payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refundReference?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48024,6 +48193,7 @@ export namespace Prisma {
     payerName?: NullableStringFieldUpdateOperationsInput | string | null
     payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refundReference?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48047,6 +48217,7 @@ export namespace Prisma {
     payerName?: NullableStringFieldUpdateOperationsInput | string | null
     payerNumber?: NullableStringFieldUpdateOperationsInput | string | null
     paidAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    refundReference?: NullableStringFieldUpdateOperationsInput | string | null
     deliveryLat?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryLng?: NullableFloatFieldUpdateOperationsInput | number | null
     deliveryAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -48134,6 +48305,7 @@ export namespace Prisma {
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     order?: OrderUpdateOneWithoutMessagesNestedInput
     receiver?: UserUpdateOneRequiredWithoutReceivedMessagesNestedInput
   }
@@ -48145,6 +48317,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
     orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     receiverId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -48155,6 +48328,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
     orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     receiverId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -48163,6 +48337,7 @@ export namespace Prisma {
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     order?: OrderUpdateOneWithoutMessagesNestedInput
     sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
   }
@@ -48174,6 +48349,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
     orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     senderId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -48184,6 +48360,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
     orderId?: NullableIntFieldUpdateOperationsInput | number | null
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     senderId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -48966,6 +49143,7 @@ export namespace Prisma {
     read?: boolean
     createdAt?: Date | string
     kind?: string
+    imagePath?: string | null
     senderId: number
     receiverId: number
   }
@@ -48995,6 +49173,7 @@ export namespace Prisma {
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     sender?: UserUpdateOneRequiredWithoutSentMessagesNestedInput
     receiver?: UserUpdateOneRequiredWithoutReceivedMessagesNestedInput
   }
@@ -49005,6 +49184,7 @@ export namespace Prisma {
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     senderId?: IntFieldUpdateOperationsInput | number
     receiverId?: IntFieldUpdateOperationsInput | number
   }
@@ -49015,6 +49195,7 @@ export namespace Prisma {
     read?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     kind?: StringFieldUpdateOperationsInput | string
+    imagePath?: NullableStringFieldUpdateOperationsInput | string | null
     senderId?: IntFieldUpdateOperationsInput | number
     receiverId?: IntFieldUpdateOperationsInput | number
   }

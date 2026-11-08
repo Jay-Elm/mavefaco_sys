@@ -10,13 +10,16 @@ export interface GcashDetails {
   gcashName: string | null
   gcashNumber: string | null
   gcashQrUrl: string | null
+  /** A customer's own QR (private): a short-lived view link. */
+  gcashQrViewUrl?: string | null
 }
 
 /**
  * The account's GCash name and number. For farmers, customers pay these
  * directly (with an optional QR code to scan); without them, GCash is
- * unavailable on the farmer's products. For customers they only prefill the
- * payment form.
+ * unavailable on the farmer's products. For customers they prefill the
+ * payment form, and an optional QR helps a farmer who owes them a refund
+ * (saved at once, privately: /api/users/me/gcash-qr).
  */
 export default function GcashSettings({
   initial,
@@ -33,7 +36,7 @@ export default function GcashSettings({
   const file = useRef<HTMLInputElement>(null)
   const [name, setName] = useState(initial.gcashName ?? '')
   const [number, setNumber] = useState(initial.gcashNumber ? fmtMobile(initial.gcashNumber) : '')
-  const [qrUrl, setQrUrl] = useState(initial.gcashQrUrl ?? '')
+  const [qrUrl, setQrUrl] = useState((forFarmer ? initial.gcashQrUrl : initial.gcashQrViewUrl) ?? '')
   const [hasSaved, setHasSaved] = useState(Boolean(initial.gcashNumber))
   const [busy, setBusy] = useState<'save' | 'remove' | 'upload' | null>(null)
   const [error, setError] = useState('')
@@ -47,11 +50,12 @@ export default function GcashSettings({
     try {
       const body = new FormData()
       body.append('file', f)
-      const res = await fetch('/api/upload', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body })
+      // A farmer's QR is public and saved with the form; a customer's is private and saved now.
+      const res = await fetch(forFarmer ? '/api/upload' : '/api/users/me/gcash-qr', { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body })
       const data = await res.json()
       if (!res.ok) { setError(data.error ?? 'Upload failed'); return }
-      setQrUrl(data.url)
-      setDone('')
+      setQrUrl(forFarmer ? data.url : data.gcashQrViewUrl ?? '')
+      setDone(forFarmer ? '' : 'QR code saved')
     } catch {
       setError('Upload failed. Please try again.')
     } finally {
@@ -79,6 +83,23 @@ export default function GcashSettings({
       onSaved?.(data)
     } catch {
       setError('Could not save')
+    } finally {
+      setBusy(null)
+    }
+  }
+
+  async function takeQrOff() {
+    if (forFarmer) { setQrUrl(''); return }
+    setError('')
+    setBusy('upload')
+    try {
+      const res = await fetch('/api/users/me/gcash-qr', { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } })
+      const data = await res.json()
+      if (!res.ok) { setError(data.error ?? 'Could not remove the QR code'); return }
+      setQrUrl('')
+      setDone('QR code removed')
+    } catch {
+      setError('Could not remove the QR code')
     } finally {
       setBusy(null)
     }
@@ -119,7 +140,7 @@ export default function GcashSettings({
       <p className="text-sm text-gray-600">
         {forFarmer
           ? 'Customers pay GCash orders straight to this account, then enter the reference number for you to check. Without it, GCash shows as unavailable on your products.'
-          : 'Saved here, these fill in the payment form when you pay a farmer by GCash.'}
+          : 'Saved here, these fill in the payment form when you pay a farmer by GCash. If an order is cancelled after you paid, the farmer sees them (and your QR code, if you add one) to send the refund.'}
       </p>
       <div>
         <label htmlFor="gcash-name" className="block text-sm font-medium text-gray-700 mb-1">Name on the GCash account</label>
@@ -132,7 +153,7 @@ export default function GcashSettings({
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-paddy" />
       </div>
 
-      {forFarmer && (
+      {(forFarmer || hasSaved) && (
         <div>
           <p className="block text-sm font-medium text-gray-700 mb-1">QR code <span className="font-normal text-gray-500">(optional)</span></p>
           <div className="flex items-center gap-4">
@@ -146,9 +167,12 @@ export default function GcashSettings({
                 <Upload size={14} /> {qrUrl ? 'Replace QR image' : 'Upload QR image'}
               </button>
               {qrUrl && (
-                <button type="button" onClick={() => setQrUrl('')} className="block text-xs text-gray-500 hover:text-red-600">Take the QR off</button>
+                <button type="button" onClick={takeQrOff} disabled={busy !== null} className="block text-xs text-gray-500 hover:text-red-600">Take the QR off</button>
               )}
-              <p className="text-xs text-gray-500">A screenshot of your GCash receive-money QR code. PNG, JPG or WEBP, max 4 MB.</p>
+              <p className="text-xs text-gray-500">
+                A screenshot of your GCash receive-money QR code. PNG, JPG or WEBP, max 4 MB.
+                {!forFarmer && ' Only a farmer who owes you a refund can see it.'}
+              </p>
             </div>
             <input ref={file} type="file" accept="image/png,image/jpeg,image/webp" onChange={upload} className="hidden" />
           </div>

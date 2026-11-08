@@ -10,6 +10,7 @@ import { useDialog } from '@/contexts/DialogContext'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 import ListToolbar from '@/components/ListToolbar'
 import { PAYMENT_METHOD_LABELS, fmtMobile, shipBlockedReason } from '@/lib/payment'
+import { CopyButton, QrViewer } from '@/components/PayHelpers'
 
 interface OrderRow {
   id: number
@@ -29,6 +30,8 @@ interface OrderRow {
   deliveryTown: string | null
   customer: { id: number; name: string; email: string }
   items: { id: number; quantity: number; price: number; product: { id: number; name: string; unit: string } }[]
+  /** Only while a refund is owed: where to send it. */
+  refundTo: { name: string | null; number: string | null; qrUrl: string | null } | null
 }
 
 const STATUS_COLORS: Record<string, string> = {
@@ -82,6 +85,8 @@ export default function FarmerOrdersPage() {
   // A note per order for the customer, sent with the next status or payment
   // change (the automatic "Order update" message), then cleared.
   const [notes, setNotes] = useState<Record<number, string>>({})
+  // The refund's GCash reference per order (optional), sent with "Refund sent".
+  const [refundRefs, setRefundRefs] = useState<Record<number, string>>({})
   const noteFor = (id: number) => notes[id]?.trim() || undefined
   const clearNote = (id: number) => setNotes((prev) => { const next = { ...prev }; delete next[id]; return next })
   const [search, setSearch] = useState('')
@@ -172,7 +177,11 @@ export default function FarmerOrdersPage() {
       const res = await fetch(`/api/farmer/orders/${order.id}/payment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ action, note: noteFor(order.id) }),
+        body: JSON.stringify({
+          action,
+          note: noteFor(order.id),
+          ...(action === 'refunded' && refundRefs[order.id]?.trim() && { refundReference: refundRefs[order.id] }),
+        }),
       })
       const data = await res.json()
       if (!res.ok) { setUpdateError({ id: order.id, msg: data.error ?? 'Failed to update the payment' }); return }
@@ -431,6 +440,41 @@ export default function FarmerOrdersPage() {
                             )}
                           </div>
                         </div>
+                        {order.paymentStatus === 'refund_due' && order.refundTo && (
+                          <div className="md:col-span-2 rounded-lg bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-gray-700">
+                            <p className="text-xs font-semibold text-amber-800">Refund owed: send it back by GCash</p>
+                            <div className="mt-2 flex flex-col sm:flex-row gap-4">
+                              {order.refundTo.qrUrl && (
+                                <QrViewer url={order.refundTo.qrUrl} alt={`GCash QR code of ${order.refundTo.name ?? order.customer.name}`} filename={`refund-qr-order-${order.id}.png`} size={120} />
+                              )}
+                              <div className="space-y-2">
+                                <p>To <span className="font-medium text-soil">{order.refundTo.name ?? order.customer.name}</span></p>
+                                {order.refundTo.number && (
+                                  <p className="flex flex-wrap items-center gap-2">
+                                    <span className="font-mono tabular text-soil">{fmtMobile(order.refundTo.number)}</span>
+                                    <CopyButton value={order.refundTo.number} label="Copy number" />
+                                  </p>
+                                )}
+                                <p className="flex flex-wrap items-center gap-2">
+                                  <span className="font-mono tabular text-soil">₱{order.totalAmount.toFixed(2)}</span>
+                                  <CopyButton value={order.totalAmount.toFixed(2)} label="Copy amount" />
+                                </p>
+                                <label className="block text-xs text-gray-600">
+                                  Refund reference number <span className="text-gray-500">(optional, shown to the customer)</span>
+                                  <input
+                                    value={refundRefs[order.id] ?? ''}
+                                    onChange={(e) => setRefundRefs((prev) => ({ ...prev, [order.id]: e.target.value }))}
+                                    inputMode="numeric"
+                                    autoComplete="off"
+                                    placeholder="1234 567 891234"
+                                    className="mt-0.5 w-full max-w-xs px-3 py-2 border border-gray-300 rounded-lg text-sm font-mono bg-white focus:outline-none focus:ring-2 focus:ring-paddy"
+                                  />
+                                </label>
+                                <p className="text-xs text-gray-500">Then press Refund sent.</p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                         {!['delivered', 'cancelled'].includes(order.status) || order.paymentStatus === 'refund_due' ? (
                           <div className="md:col-span-2 rounded-lg bg-white/80 border border-paddy/15 px-4 py-3">
                             <label htmlFor={`note-${order.id}`} className="text-xs font-semibold text-paddy-deep">

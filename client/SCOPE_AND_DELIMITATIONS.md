@@ -64,7 +64,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Track order status | Implemented | Pending → confirmed → shipped → delivered (or cancelled) |
 | Confirm received order | Implemented | Marks a shipped order delivered |
 | **Communication** | | |
-| Chat with farmer | Implemented | In-app messages with unread counts; conversations can be searched by name or message text, and removed from the customer's own list |
+| Chat with farmer | Implemented | In-app messages and photos (e.g. a GCash QR code) with unread counts; conversations can be searched by name or message text, and removed from the customer's own list |
 | Ask product questions | Implemented | "Message farmer" from the product page |
 | Receive notifications | Partial | Every order status or payment change sends an automatic "Order update" message (with the farmer's optional note) in the chat with the order's farmer, and red badges on My Orders and Messages; emails for account and security events; no email, SMS or push for orders, and no settings |
 | **Feedback** | | |
@@ -125,7 +125,7 @@ The system has four roles, from most to least privileged: Administrator, Manager
 | Mark ready for pickup | Partial | No separate "ready for pickup" status; "shipped" is used for both pickup and delivery |
 | Mark delivered | Implemented | |
 | **Communication** | | |
-| Chat with buyer | Implemented | Farmers can start a conversation from an order; conversations can be searched by name or message text, and removed from the farmer's own list |
+| Chat with buyer | Implemented | Messages and photos; farmers can start a conversation from an order; conversations can be searched by name or message text, and removed from the farmer's own list |
 | Chat with admin | Not implemented | Staff have no message inbox |
 | Receive announcements | Partial | Shown on the farmer overview (announcements for everyone or for farmers only); no notifications |
 | **Reports** | | |
@@ -226,7 +226,7 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 
 ### 3.2 Transactions and payments
 
-- **No online payment processing.** Customers pay cash on delivery or by **GCash straight to the farmer's own GCash account** (bank transfer is no longer offered). For GCash, the customer enters the 13-digit reference number and the farmer confirms or rejects it after checking their GCash; a GCash order can't be shipped until the farmer confirms it. The system never holds or moves money and does not check payments with GCash itself: it records what each side reports. When a paid order is cancelled, the system marks a refund as due and the farmer marks it sent; the refund itself happens in GCash.
+- **No online payment processing.** Customers pay cash on delivery or by **GCash straight to the farmer's own GCash account** (bank transfer is no longer offered). For GCash, the customer enters the 13-digit reference number and the farmer confirms or rejects it after checking their GCash; a GCash order can't be shipped until the farmer confirms it. The system never holds or moves money and does not check payments with GCash itself: it records what each side reports. When a paid order is cancelled, the system marks a refund as due and the farmer marks it sent, optionally with the refund's reference number; the refund itself happens in GCash. The system does not open the GCash app or fill in the payment: it shows the farmer's QR code (which can be saved to the phone and uploaded in GCash), the number and the amount with copy buttons, and the numbered steps.
 - Prices are in **Philippine pesos**; there are no taxes, fees, discounts or vouchers.
 - **One farmer per order.** A cart can only hold products from one farmer.
 - Order statuses are fixed: pending → confirmed → shipped → delivered, or cancelled.
@@ -262,7 +262,7 @@ Beyond the use cases, managers also approve, view and suspend product listings (
 
 - **Email** (via Brevo) is used only for account and security events (verification, password reset, email change, two-factor changes), to tell a farmer a listing was suspended, and to tell a farmer their ID was approved or rejected.
 - **Order updates are in-app only.** When the farmer or staff change an order's status or payment, the customer gets an automatic "Order update" message in their chat with the order's farmer (with the farmer's optional note), and red badges on My Orders and Messages until they look. There are no order emails, SMS or push notifications, and no notification settings.
-- Messaging is **one-to-one between customers and farmers**; staff have no inbox. The system sends farmers one-way **notices** (listing suspensions), shown in Messages without a reply box.
+- Messaging is **one-to-one between customers and farmers**, as text or photos (PNG, JPEG or WEBP up to 4 MB, such as a GCash QR code), stored privately and shown only to the two people in the conversation through links that expire after an hour; staff have no inbox. The system sends farmers one-way **notices** (listing suspensions), shown in Messages without a reply box.
 - The interface is **in English only**.
 
 ### 3.6 Platform
@@ -343,7 +343,7 @@ The study is limited to the following boundaries.
 
 **Platform.** The system is a responsive web application used through a modern web browser on desktop or mobile devices. It has no native mobile application and no offline mode. It is hosted on Vercel (application) and Supabase (database and file storage), so its availability, capacity, and data backups depend on those providers. Rate limits on sign-in, registration, password reset, and uploads are counted in fixed time windows.
 
-**Data privacy.** Following the Data Privacy Act of 2012 (Republic Act No. 10173), farmers' ID photos and selfies are visible to staff only through links that expire after five minutes, and are deleted automatically 30 days after they are reviewed. ID numbers are stored only as a keyed fingerprint and their last four characters. Deleting an account anonymizes the user's personal information, while order and audit records are kept for accountability. When a farmer's account is deleted, their products are archived and their plantings, crop logs, and ID submissions are deleted. A customer's delivery spot and address are shown only to the farmer of that order, and staff see only the town. Deleting an account also removes the user's GCash details and saved and past delivery addresses. An account cannot be deleted while it has an active order, or, for a farmer, while a customer is owed a GCash refund. Sales reports count only delivered orders and group monthly figures by Philippine Standard Time.
+**Data privacy.** Following the Data Privacy Act of 2012 (Republic Act No. 10173), farmers' ID photos and selfies are visible to staff only through links that expire after five minutes, and are deleted automatically 30 days after they are reviewed. ID numbers are stored only as a keyed fingerprint and their last four characters. Deleting an account anonymizes the user's personal information, while order and audit records are kept for accountability. When a farmer's account is deleted, their products are archived and their plantings, crop logs, and ID submissions are deleted. A customer's delivery spot and address are shown only to the farmer of that order, and staff see only the town. Deleting an account also removes the user's GCash details and QR code, the photos in their conversations, and saved and past delivery addresses. Photos sent in Messages and a customer's GCash QR code are stored privately and shown only through links that expire after an hour: photos to the two people in the conversation, and the QR code only to a farmer who owes that customer a refund. An account cannot be deleted while it has an active order, or, for a farmer, while a customer is owed a GCash refund. Sales reports count only delivered orders and group monthly figures by Philippine Standard Time.
 
 **Features outside the current scope.** The following features appeared in the initial use-case requirements but are not part of this study. They are recommended for future development:
 

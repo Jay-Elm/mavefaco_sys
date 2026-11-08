@@ -3,7 +3,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import Link from 'next/link'
-import { Loader2, Package, Send } from 'lucide-react'
+import Image from 'next/image'
+import { Download, ImagePlus, Loader2, Package, Send, X } from 'lucide-react'
+import { saveImage } from '@/components/PayHelpers'
 import { refreshNavBadges } from '@/components/NavBadge'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
@@ -16,7 +18,11 @@ interface Message {
   /** "order_update" = sent automatically when the order changed. */
   kind?: string
   orderId?: number | null
+  /** A photo sent with the message (short-lived link); `content` is then its caption. */
+  imageUrl?: string | null
 }
+
+const PHOTO_MAX_BYTES = 4 * 1024 * 1024
 
 interface Props {
   otherId: number
@@ -48,6 +54,10 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
   const [text, setText] = useState('')
   const [sending, setSending] = useState(false)
   const [sendError, setSendError] = useState('')
+  // A photo picked to send (with the typed text as its caption), and the one open full screen.
+  const [photo, setPhoto] = useState<{ file: File; preview: string } | null>(null)
+  const [viewing, setViewing] = useState<string | null>(null)
+  const fileInput = useRef<HTMLInputElement>(null)
   // The earliest message that was unread when the thread opened (null: none).
   // Fixed for the visit, so the "New messages" line doesn't jump as they're read.
   const [firstUnreadId, setFirstUnreadId] = useState<number | null>(null)
@@ -112,22 +122,46 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
     if (followLatest.current) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
   }, [messages, loading])
 
+  function pickPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    if (file.size > PHOTO_MAX_BYTES) { setSendError('Photo too large (max 4 MB)'); return }
+    setSendError('')
+    if (photo) URL.revokeObjectURL(photo.preview)
+    setPhoto({ file, preview: URL.createObjectURL(file) })
+  }
+
+  function dropPhoto() {
+    if (photo) URL.revokeObjectURL(photo.preview)
+    setPhoto(null)
+  }
+
   async function handleSend(e: React.FormEvent) {
     e.preventDefault()
-    if (!text.trim() || !token) return
+    if ((!text.trim() && !photo) || !token) return
     setSending(true)
     setSendError('')
     try {
-      const res = await fetch(`/api/messages/${otherId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ content: text.trim() }),
-      })
+      let res: Response
+      if (photo) {
+        const body = new FormData()
+        body.append('file', photo.file)
+        body.append('caption', text.trim())
+        res = await fetch(`/api/messages/${otherId}/image`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body })
+      } else {
+        res = await fetch(`/api/messages/${otherId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ content: text.trim() }),
+        })
+      }
       const d = await res.json()
       if (res.ok) {
         followLatest.current = true
         setMessages((prev) => [...prev, d])
         setText('')
+        dropPhoto()
       }
       else setSendError(d.error ?? 'Message not sent')
     } catch { setSendError('Message not sent') }
@@ -196,7 +230,20 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
                       ? 'bg-paddy text-white rounded-br-sm'
                       : 'bg-white border border-gray-200 text-gray-800 rounded-bl-sm'
                   }`}>
-                    <p>{m.content}</p>
+                    {m.imageUrl && (
+                      <button type="button" onClick={() => setViewing(m.imageUrl!)} aria-label="Open photo" className="block -mx-2 mb-1">
+                        <Image
+                          src={m.imageUrl}
+                          alt={m.content ? `Photo: ${m.content}` : 'Photo'}
+                          width={0}
+                          height={0}
+                          sizes="260px"
+                          unoptimized
+                          className="w-[260px] max-w-full h-auto max-h-80 object-contain rounded-md bg-white"
+                        />
+                      </button>
+                    )}
+                    {(m.content || !m.imageUrl) && <p className="whitespace-pre-line">{m.content || (m.imageUrl === null ? 'Photo (no longer available)' : '')}</p>}
                     <p className={`text-xs mt-1 ${isMe ? 'text-shoot' : 'text-gray-500'}`}>
                       <time dateTime={m.createdAt} title={new Date(m.createdAt).toLocaleString('en-PH', { dateStyle: 'full', timeStyle: 'short' })}>
                         {new Date(m.createdAt).toLocaleTimeString('en-PH', { timeStyle: 'short' })}
@@ -215,22 +262,67 @@ export default function MessageThread({ otherId, otherName, onOtherName }: Props
         <p className="px-4 pt-2 text-xs text-red-600 bg-white border-t border-gray-200">{sendError}</p>
       )}
 
+      {photo && (
+        <div className="px-4 pt-3 border-t border-gray-200 bg-white flex items-center gap-3">
+          <div className="relative w-14 h-14 rounded-md overflow-hidden border border-gray-200 bg-gray-50 shrink-0">
+            <Image src={photo.preview} alt="Photo to send" fill unoptimized className="object-cover" />
+          </div>
+          <p className="flex-1 min-w-0 text-xs text-gray-600 truncate">Photo ready to send.</p>
+          <button type="button" onClick={dropPhoto} aria-label="Remove the photo" className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100"><X size={16} /></button>
+        </div>
+      )}
+
       {/* Input */}
-      <form onSubmit={handleSend} className="px-4 py-3 border-t border-gray-200 bg-white flex gap-2">
+      <form onSubmit={handleSend} className={`px-4 py-3 bg-white flex gap-2 ${photo ? '' : 'border-t border-gray-200'}`}>
+        <input ref={fileInput} type="file" accept="image/png,image/jpeg,image/webp" onChange={pickPhoto} className="hidden" />
+        <button
+          type="button"
+          onClick={() => fileInput.current?.click()}
+          disabled={sending}
+          aria-label="Attach a photo"
+          title="Attach a photo (e.g. a GCash QR code)"
+          className="inline-flex items-center justify-center w-10 rounded-lg border border-gray-300 text-gray-600 hover:text-paddy hover:border-paddy disabled:opacity-50"
+        >
+          <ImagePlus size={17} />
+        </button>
         <input aria-label="Type a message"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Type a message…"
-          className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
+          placeholder={photo ? 'Add a caption (optional)…' : 'Type a message…'}
+          className="flex-1 min-w-0 border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy"
         />
         <button
           type="submit"
-          disabled={sending || !text.trim()}
+          disabled={sending || (!text.trim() && !photo)}
           className="inline-flex items-center gap-1.5 bg-paddy hover:bg-paddy-deep disabled:opacity-50 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
         >
           {sending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
         </button>
       </form>
+
+      {viewing && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Photo"
+          className="fixed inset-0 z-[3000] flex flex-col items-center justify-center gap-4 bg-black/85 p-4"
+          onClick={() => setViewing(null)}
+        >
+          <div className="relative w-full max-w-2xl h-[75vh]" onClick={(e) => e.stopPropagation()}>
+            <Image src={viewing} alt="Photo" fill unoptimized className="object-contain" />
+          </div>
+          <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+            <button type="button" onClick={() => saveImage(viewing, 'photo.jpg')}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-white px-4 py-2 text-sm font-medium text-soil">
+              <Download size={14} /> Save photo
+            </button>
+            <button type="button" onClick={() => setViewing(null)}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-white/15 px-4 py-2 text-sm font-medium text-white">
+              <X size={14} /> Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

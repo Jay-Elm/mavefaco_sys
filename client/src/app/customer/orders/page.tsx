@@ -25,6 +25,7 @@ interface Order {
   paymentMethod: string
   paymentStatus: string
   gcashReference: string | null
+  refundReference: string | null
   deliveryMethod: string
   deliveryAddress: string | null
   deliveryTown: string | null

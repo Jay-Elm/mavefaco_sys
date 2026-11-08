@@ -2,10 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { NextRequest, NextResponse } from "next/server";
 import { messageCreateSchema } from "@/validators/message";
-import { ROLES } from "@/lib/roles";
-
-// Sender role : receiver role pairs allowed to message each other.
-const CAN_MESSAGE = new Set([`${ROLES.CUSTOMER}:${ROLES.FARMER}`, `${ROLES.FARMER}:${ROLES.CUSTOMER}`]);
+import { messageRefusal, withImageUrls } from "@/lib/messaging";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
   const actor = await getActiveAuthUser(req);
@@ -40,7 +37,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ user
       data: { read: true },
     });
 
-    return NextResponse.json(messages);
+    // Photos are private: each comes with a short-lived view link.
+    return NextResponse.json(await withImageUrls(messages));
   } catch {
     return NextResponse.json({ error: "Failed to fetch messages" }, { status: 500 });
   }
@@ -52,14 +50,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ use
 
   const { userId } = await params;
   const receiverId = Number(userId);
-  if (isNaN(receiverId)) return NextResponse.json({ error: "Invalid user ID" }, { status: 400 });
-  if (receiverId === actor.id) return NextResponse.json({ error: "Cannot message yourself" }, { status: 400 });
-
-  const receiver = await prisma.user.findUnique({ where: { id: receiverId, deletedAt: null }, select: { id: true, name: true, role: true } });
-  if (!receiver) return NextResponse.json({ error: "User not found" }, { status: 404 });
   // Messaging is between a customer and a farmer only; staff have no inbox.
-  if (!CAN_MESSAGE.has(`${actor.role}:${receiver.role}`))
-    return NextResponse.json({ error: "Messages can only be sent between customers and farmers" }, { status: 403 });
+  const refused = await messageRefusal(actor, receiverId);
+  if (refused) return NextResponse.json({ error: refused.error }, { status: refused.status });
 
   try {
     const parsed = messageCreateSchema.safeParse(await req.json());
@@ -71,7 +64,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ use
       include: { sender: { select: { id: true, name: true } } },
     });
 
-    return NextResponse.json(message, { status: 201 });
+    const [sent] = await withImageUrls([message]);
+    return NextResponse.json(sent, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
   }

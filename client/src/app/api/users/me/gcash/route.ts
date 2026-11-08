@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { deletePrivateImages } from "@/lib/privateImages";
 import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { NextRequest, NextResponse } from "next/server";
 import { gcashSettingsSchema } from "@/validators/payment";
@@ -43,9 +44,12 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const actor = await getActiveAuthUser(req);
   if (!actor) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // A customer's private QR goes too; kept if storage won't delete it, so it isn't lost track of.
+  const me = await prisma.user.findUniqueOrThrow({ where: { id: actor.id }, select: { gcashQrPath: true } });
+  const qrGone = await deletePrivateImages([me.gcashQrPath]);
   const updated = await prisma.user.update({
     where: { id: actor.id },
-    data: { gcashName: null, gcashNumber: null, gcashQrUrl: null },
+    data: { gcashName: null, gcashNumber: null, gcashQrUrl: null, ...(qrGone && { gcashQrPath: null }) },
     select: SELECT,
   });
   return NextResponse.json(updated);

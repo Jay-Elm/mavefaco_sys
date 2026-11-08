@@ -52,6 +52,9 @@ model User {
   gcashName   String?
   gcashNumber String?
   gcashQrUrl  String?
+  // A customer's own GCash QR (optional), kept private (src/lib/privateImages.ts):
+  // shown only to the farmer of an order that owes them a refund.
+  gcashQrPath String?
   // A customer's saved delivery spot: the pin, the house/street/landmark
   // details they typed, and the delivery-area town the pin is in (null when
   // outside the area; see src/lib/deliveryArea.ts).
@@ -307,6 +310,8 @@ model Order {
   payerNumber     String?
   // When the farmer confirmed the money arrived.
   paidAt          DateTime?
+  // The GCash reference of the refund, if the farmer gave it.
+  refundReference String?
   // Delivery orders: a copy of the customer's saved spot at checkout. Only
   // the order's farmer is shown the pin and address.
   deliveryLat     Float?
@@ -414,6 +419,9 @@ model Message {
   // farmer to the customer when the order changes (src/lib/orderUpdates.ts).
   kind       String   @default("text")
   orderId    Int?
+  // A photo sent with the message (private bucket, src/lib/privateImages.ts);
+  // `content` is then an optional caption.
+  imagePath  String?
   order      Order?   @relation(fields: [orderId], references: [id])
 
   senderId   Int

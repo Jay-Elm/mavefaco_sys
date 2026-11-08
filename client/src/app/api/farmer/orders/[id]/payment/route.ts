@@ -40,6 +40,7 @@ export async function POST(req: NextRequest, context: { params: Promise<{ id: st
   const parsed = farmerPaymentActionSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
   const action = parsed.data.action;
+  const refundReference = action === "refunded" ? parsed.data.refundReference : undefined;
   const move = MOVES[action];
   const note = orderNoteSchema.safeParse((body as { note?: unknown }).note ?? undefined);
   if (!note.success) return NextResponse.json({ error: note.error.issues[0].message }, { status: 400 });
@@ -71,6 +72,7 @@ export async function POST(req: NextRequest, context: { params: Promise<{ id: st
           ...(move.to === "confirmed" && { paidAt: new Date() }),
           // A rejected reference is freed so the customer can enter the right one.
           ...(move.to === "rejected" && { gcashReference: null }),
+          ...(refundReference && { refundReference }),
         },
       });
       if (count === 0) throw new StaleOrderError();

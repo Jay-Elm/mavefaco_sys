@@ -1,4 +1,5 @@
 import { randomBytes } from "crypto";
+import { deletePrivateImages } from "@/lib/privateImages";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { deleteIdImages } from "@/lib/idImageStorage";
@@ -69,7 +70,7 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
 
   const target = await prisma.user.findUnique({
     where: { id: userId },
-    select: { deletedAt: true, idSubmissions: { select: { frontPath: true, backPath: true, selfiePath: true } } },
+    select: { deletedAt: true, gcashQrPath: true, idSubmissions: { select: { frontPath: true, backPath: true, selfiePath: true } } },
   });
   if (!target || target.deletedAt) return { ok: false, status: 404, error: "User not found" };
 
@@ -82,6 +83,20 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
       ok: false,
       status: 502,
       error: "Couldn't remove the stored ID image. Please try again in a moment.",
+    };
+  }
+
+  // The same for private photos: those in the conversations being deleted
+  // (sent by either side) and the customer's own GCash QR.
+  const chatImages = await prisma.message.findMany({
+    where: { OR: [{ senderId: userId }, { receiverId: userId }], imagePath: { not: null } },
+    select: { imagePath: true },
+  });
+  if (!(await deletePrivateImages([target.gcashQrPath, ...chatImages.map((m) => m.imagePath)]))) {
+    return {
+      ok: false,
+      status: 502,
+      error: "Couldn't remove the stored photos. Please try again in a moment.",
     };
   }
 
@@ -129,6 +144,7 @@ export async function deleteUserAccount(userId: number): Promise<DeleteAccountRe
         gcashName: null,
         gcashNumber: null,
         gcashQrUrl: null,
+        gcashQrPath: null,
         deliveryLat: null,
         deliveryLng: null,
         deliveryAddress: null,

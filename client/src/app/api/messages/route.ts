@@ -49,7 +49,9 @@ export async function GET(req: NextRequest) {
 
       let c = conversations.get(other.id);
       if (!c) {
-        c = { user: other, lastMessage: m.content, lastAt: m.createdAt, unread: 0 };
+        // A photo shows as "📷 Photo" (with its caption, if any).
+        const preview = m.imagePath ? `📷 ${m.content || "Photo"}` : m.content;
+        c = { user: other, lastMessage: preview, lastAt: m.createdAt, unread: 0 };
         conversations.set(other.id, c);
       }
       if (m.receiverId === actor.id && !m.read) c.unread++;
