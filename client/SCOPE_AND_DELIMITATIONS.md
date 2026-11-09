@@ -1,6 +1,6 @@
 # Scope and Delimitations
 
-**System:** MaVeFaCo Marketplace — the online marketplace of the Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo)
+**System:** Market-Driven Crop Monitoring and E-Marketplace System for the Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo)
 **As of:** 2026-10-26 · checked against the code on `master`, including the crop monitoring redesign, grouped advisory and "coming soon" listings of 2026-10-26 and the stronger ID verification of 2026-10-26 · deployed at https://mavefaco-sys.vercel.app
 
 This document states what the system covers (**scope**) and the boundaries it deliberately stays within (**delimitations**). The scope is measured against the four use-case documents written at the start of the project — [`ADMIN_USE_CASE.md`](ADMIN_USE_CASE.md), [`MANAGER_USE_CASE.md`](MANAGER_USE_CASE.md), [`FARMER_USE_CASE.md`](FARMER_USE_CASE.md) and [`CUSTOMER_USE_CASE.md`](CUSTOMER_USE_CASE.md) — which describe the full long-term vision. The implemented system covers the core marketplace workflow end to end; the remaining items are documented below as outside the current scope.
@@ -303,7 +303,7 @@ The same scope and delimitations written as prose for Chapter 1 (Introduction) o
 
 #### Scope
 
-This study covers the design, development, and deployment of the MaVeFaCo Marketplace, a web-based online marketplace for the Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo) in Albay, Philippines. The system lets the cooperative's member farmers sell fresh produce directly to customers. Cooperative staff use it to oversee product listings, orders, membership, and site content. It was developed during [School Year 2026–2027] and is accessible online through a web browser.
+This study covers the design, development, and deployment of the Market-Driven Crop Monitoring and E-Marketplace System, a web-based system that combines crop monitoring with an online marketplace for the Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo) in Albay, Philippines. The system lets the cooperative's member farmers sell fresh produce directly to customers. Cooperative staff use it to oversee product listings, orders, membership, and site content. It was developed during [School Year 2026–2027] and is accessible online through a web browser.
 
 The system has four user roles, listed from most to least privileged: Administrator, Manager, Farmer, and Customer. Each role has its own set of functions.
 
