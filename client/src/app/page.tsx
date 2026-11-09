@@ -6,12 +6,11 @@ import { redirectRoles } from "@/lib/serverSession";
 import HomeHeroActions from "@/components/HomeHeroActions";
 import HomeBottomCTAButtons from "@/components/HomeBottomCTAButtons";
 import HarvestBoard from "@/components/HarvestBoard";
-import { ArrowRight, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { ANNOUNCEMENT_ORDER } from "@/validators/announcement";
 import AnnouncementBoard from "@/components/AnnouncementList";
-import { isSafeUrl } from "@/lib/url";
 import { withComingSoon } from "@/lib/comingSoon";
-import { bannerStyle } from "@/components/bannerStyles";
+import BannerList from "@/components/BannerList";
 import { addDays, harvestBoard, toDateString, todayPH, weekStart } from "@/lib/planting";
 
 const WRAP = "mx-auto max-w-[1200px] px-6";
@@ -205,25 +204,10 @@ export default async function HomePage() {
       {(banners.length > 0 || announcements.length > 0) && (
         <section className="py-8 border-b border-gray-100">
           <div className={`${WRAP} space-y-4`}>
-            {banners.map((b) => {
-              const style = bannerStyle(b.color);
-              return (
-                <div key={b.id} className={`rounded-card px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${style.surface}`}>
-                  <div>
-                    <h2 className="font-display text-2xl font-bold leading-tight">{b.title}</h2>
-                    {b.subtitle && <p className={`text-sm mt-1 ${style.muted}`}>{b.subtitle}</p>}
-                  </div>
-                  {b.ctaText && b.ctaLink && isSafeUrl(b.ctaLink) && (
-                    <Link href={b.ctaLink} className={`shrink-0 inline-flex items-center gap-2 font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm ${style.action}`}>
-                      {b.ctaText} <ArrowRight size={14} aria-hidden="true" />
-                    </Link>
-                  )}
-                </div>
-              );
-            })}
+            <BannerList banners={banners} />
             {announcements.length > 0 && (
               <div className={banners.length > 0 ? "pt-4" : ""}>
-                <AnnouncementBoard announcements={announcements} shown={4} />
+                <AnnouncementBoard announcements={announcements} shown={2} />
               </div>
             )}
           </div>
