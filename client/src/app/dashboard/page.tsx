@@ -87,7 +87,7 @@ export default function DashboardOverviewPage() {
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
         <div className="bg-white rounded-lg border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
-          <div className="bg-shoot text-paddy-deep p-3 rounded-lg"><Users size={22} /></div>
+          <div className="text-paddy-deep"><Users size={22} /></div>
           <div>
             <p className="text-2xl font-bold text-soil">{stats.userCount}</p>
             <p className="text-sm text-gray-500">Total Users</p>
@@ -95,7 +95,7 @@ export default function DashboardOverviewPage() {
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
-          <div className="bg-shoot text-paddy-deep p-3 rounded-lg"><Package size={22} /></div>
+          <div className="text-paddy-deep"><Package size={22} /></div>
           <div>
             <p className="text-2xl font-bold text-soil">{stats.approvedProductCount + stats.pendingProductCount + stats.suspendedProductCount}</p>
             <p className="text-sm text-gray-500">Products</p>
@@ -120,7 +120,7 @@ export default function DashboardOverviewPage() {
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
-          <div className="bg-shoot text-paddy-deep p-3 rounded-lg"><ShoppingCart size={22} /></div>
+          <div className="text-paddy-deep"><ShoppingCart size={22} /></div>
           <div>
             <p className="text-2xl font-bold text-soil">{stats.orderCount}</p>
             <p className="text-sm text-gray-500">Total Orders</p>
@@ -128,7 +128,7 @@ export default function DashboardOverviewPage() {
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-5 flex items-center gap-4 shadow-sm">
-          <div className="bg-shoot text-paddy-deep p-3 rounded-lg shrink-0"><TrendingUp size={22} /></div>
+          <div className="text-paddy-deep shrink-0"><TrendingUp size={22} /></div>
           <div className="min-w-0">
             <p className="text-2xl font-bold text-soil break-all">₱{stats.totalRevenue.toFixed(2)}</p>
             <p className="text-sm text-gray-500">Total Revenue</p>

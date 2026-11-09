@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
-import { Info, AlertTriangle, Leaf, X, ArrowRight, Megaphone } from 'lucide-react'
+import { Info, AlertTriangle, Leaf, X, ArrowRight, Megaphone, Pin } from 'lucide-react'
 
 export interface AnnouncementItem {
   id: number
@@ -9,6 +9,8 @@ export interface AnnouncementItem {
   body: string
   type: string
   createdAt: string | Date
+  /** Set when staff pinned it: shown first. */
+  pinnedAt?: string | Date | null
 }
 
 /*
@@ -27,6 +29,9 @@ type TypeKey = keyof typeof STYLES
 const PHONE_SHOWN = 2
 const styleOf = (type: string) => STYLES[(type in STYLES ? type : 'info') as TypeKey]
 const fmtDate = (d: string | Date) => new Date(d).toLocaleDateString('en-PH', { dateStyle: 'medium' })
+const time = (d: string | Date | null | undefined) => (d ? new Date(d).getTime() : 0)
+/** Pinned first (newest pin first), then newest first. */
+export const pinnedFirst = (a: AnnouncementItem, b: AnnouncementItem) => time(b.pinnedAt) - time(a.pinnedAt) || time(b.createdAt) - time(a.createdAt)
 
 /**
  * The newest announcements as a grid of same-height cards, with "Read more"
@@ -47,9 +52,7 @@ export default function AnnouncementBoard({
   const [showAll, setShowAll] = useState(false)
   if (announcements.length === 0) return null
 
-  const newest = [...announcements]
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .slice(0, shown)
+  const newest = [...announcements].sort(pinnedFirst).slice(0, shown)
   // More than fit on a phone, or more than the cards on a wider screen.
   const hiddenOnPhone = announcements.length - Math.min(shown, PHONE_SHOWN)
 
@@ -121,6 +124,11 @@ function AnnouncementCard({ a, onOpen }: { a: AnnouncementItem; onOpen: () => vo
         <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-semibold ${style.chip}`}>
           <Icon size={11} aria-hidden /> {style.label}
         </span>
+        {a.pinnedAt && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-soil/80 px-2 py-0.5 font-semibold text-white">
+            <Pin size={11} aria-hidden /> Pinned
+          </span>
+        )}
         <time className="text-soil/70">{fmtDate(a.createdAt)}</time>
       </div>
       <div

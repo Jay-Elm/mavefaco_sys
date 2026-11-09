@@ -7,6 +7,7 @@ import HomeHeroActions from "@/components/HomeHeroActions";
 import HomeBottomCTAButtons from "@/components/HomeBottomCTAButtons";
 import HarvestBoard from "@/components/HarvestBoard";
 import { ArrowRight, Star } from "lucide-react";
+import { ANNOUNCEMENT_ORDER } from "@/validators/announcement";
 import AnnouncementBoard from "@/components/AnnouncementList";
 import { isSafeUrl } from "@/lib/url";
 import { withComingSoon } from "@/lib/comingSoon";
@@ -75,7 +76,7 @@ async function getBanners() {
 async function getAnnouncements() {
   return prisma.announcement.findMany({
     where: { audience: { in: ["everyone", "customers"] } },
-    orderBy: { createdAt: "desc" },
+    orderBy: [...ANNOUNCEMENT_ORDER],
     include: { author: { select: { name: true } } },
   });
 }

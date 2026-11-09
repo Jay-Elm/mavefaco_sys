@@ -357,13 +357,15 @@ model OrderItem {
 }
 
 model Announcement {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   title     String
   body      String
-  type      String   @default("info")
+  type      String    @default("info")
   /// "everyone" (home page and farmer overview), "farmers" or "customers" (home page)
-  audience  String   @default("everyone")
-  createdAt DateTime @default(now())
+  audience  String    @default("everyone")
+  // Set when staff pin it; pinned announcements come first, newest pin first.
+  pinnedAt  DateTime?
+  createdAt DateTime  @default(now())
 
   authorId Int
   author   User @relation(fields: [authorId], references: [id])

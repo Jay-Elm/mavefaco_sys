@@ -4,7 +4,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { authorize } from "@/lib/authorize";
 import { ROLES } from "@/lib/roles";
 import { NextRequest, NextResponse } from "next/server";
-import { announcementCreateSchema, type AnnouncementAudience } from "@/validators/announcement";
+import { ANNOUNCEMENT_ORDER, announcementCreateSchema, type AnnouncementAudience } from "@/validators/announcement";
 
 /**
  * GET /api/announcements — the announcements the caller may see: staff see
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
       viewer?.role === ROLES.FARMER ? ["everyone", "farmers"] : ["everyone", "customers"];
     const announcements = await prisma.announcement.findMany({
       where: isStaff ? {} : { audience: { in: audiences } },
-      orderBy: { createdAt: "desc" },
+      orderBy: [...ANNOUNCEMENT_ORDER],
       include: { author: { select: { name: true, role: true } } },
     });
     return NextResponse.json(announcements);

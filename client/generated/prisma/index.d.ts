@@ -18543,6 +18543,7 @@ export namespace Prisma {
     body: string | null
     type: string | null
     audience: string | null
+    pinnedAt: Date | null
     createdAt: Date | null
     authorId: number | null
   }
@@ -18553,6 +18554,7 @@ export namespace Prisma {
     body: string | null
     type: string | null
     audience: string | null
+    pinnedAt: Date | null
     createdAt: Date | null
     authorId: number | null
   }
@@ -18563,6 +18565,7 @@ export namespace Prisma {
     body: number
     type: number
     audience: number
+    pinnedAt: number
     createdAt: number
     authorId: number
     _all: number
@@ -18585,6 +18588,7 @@ export namespace Prisma {
     body?: true
     type?: true
     audience?: true
+    pinnedAt?: true
     createdAt?: true
     authorId?: true
   }
@@ -18595,6 +18599,7 @@ export namespace Prisma {
     body?: true
     type?: true
     audience?: true
+    pinnedAt?: true
     createdAt?: true
     authorId?: true
   }
@@ -18605,6 +18610,7 @@ export namespace Prisma {
     body?: true
     type?: true
     audience?: true
+    pinnedAt?: true
     createdAt?: true
     authorId?: true
     _all?: true
@@ -18702,6 +18708,7 @@ export namespace Prisma {
     body: string
     type: string
     audience: string
+    pinnedAt: Date | null
     createdAt: Date
     authorId: number
     _count: AnnouncementCountAggregateOutputType | null
@@ -18731,6 +18738,7 @@ export namespace Prisma {
     body?: boolean
     type?: boolean
     audience?: boolean
+    pinnedAt?: boolean
     createdAt?: boolean
     authorId?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -18742,6 +18750,7 @@ export namespace Prisma {
     body?: boolean
     type?: boolean
     audience?: boolean
+    pinnedAt?: boolean
     createdAt?: boolean
     authorId?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -18753,6 +18762,7 @@ export namespace Prisma {
     body?: boolean
     type?: boolean
     audience?: boolean
+    pinnedAt?: boolean
     createdAt?: boolean
     authorId?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -18764,11 +18774,12 @@ export namespace Prisma {
     body?: boolean
     type?: boolean
     audience?: boolean
+    pinnedAt?: boolean
     createdAt?: boolean
     authorId?: boolean
   }
 
-  export type AnnouncementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "body" | "type" | "audience" | "createdAt" | "authorId", ExtArgs["result"]["announcement"]>
+  export type AnnouncementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "body" | "type" | "audience" | "pinnedAt" | "createdAt" | "authorId", ExtArgs["result"]["announcement"]>
   export type AnnouncementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     author?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -18793,6 +18804,7 @@ export namespace Prisma {
        * "everyone" (home page and farmer overview), "farmers" or "customers" (home page)
        */
       audience: string
+      pinnedAt: Date | null
       createdAt: Date
       authorId: number
     }, ExtArgs["result"]["announcement"]>
@@ -19224,6 +19236,7 @@ export namespace Prisma {
     readonly body: FieldRef<"Announcement", 'String'>
     readonly type: FieldRef<"Announcement", 'String'>
     readonly audience: FieldRef<"Announcement", 'String'>
+    readonly pinnedAt: FieldRef<"Announcement", 'DateTime'>
     readonly createdAt: FieldRef<"Announcement", 'DateTime'>
     readonly authorId: FieldRef<"Announcement", 'Int'>
   }
@@ -34275,6 +34288,7 @@ export namespace Prisma {
     body: 'body',
     type: 'type',
     audience: 'audience',
+    pinnedAt: 'pinnedAt',
     createdAt: 'createdAt',
     authorId: 'authorId'
   };
@@ -35713,6 +35727,7 @@ export namespace Prisma {
     body?: StringFilter<"Announcement"> | string
     type?: StringFilter<"Announcement"> | string
     audience?: StringFilter<"Announcement"> | string
+    pinnedAt?: DateTimeNullableFilter<"Announcement"> | Date | string | null
     createdAt?: DateTimeFilter<"Announcement"> | Date | string
     authorId?: IntFilter<"Announcement"> | number
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -35724,6 +35739,7 @@ export namespace Prisma {
     body?: SortOrder
     type?: SortOrder
     audience?: SortOrder
+    pinnedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     authorId?: SortOrder
     author?: UserOrderByWithRelationInput
@@ -35738,6 +35754,7 @@ export namespace Prisma {
     body?: StringFilter<"Announcement"> | string
     type?: StringFilter<"Announcement"> | string
     audience?: StringFilter<"Announcement"> | string
+    pinnedAt?: DateTimeNullableFilter<"Announcement"> | Date | string | null
     createdAt?: DateTimeFilter<"Announcement"> | Date | string
     authorId?: IntFilter<"Announcement"> | number
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -35749,6 +35766,7 @@ export namespace Prisma {
     body?: SortOrder
     type?: SortOrder
     audience?: SortOrder
+    pinnedAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     authorId?: SortOrder
     _count?: AnnouncementCountOrderByAggregateInput
@@ -35767,6 +35785,7 @@ export namespace Prisma {
     body?: StringWithAggregatesFilter<"Announcement"> | string
     type?: StringWithAggregatesFilter<"Announcement"> | string
     audience?: StringWithAggregatesFilter<"Announcement"> | string
+    pinnedAt?: DateTimeNullableWithAggregatesFilter<"Announcement"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Announcement"> | Date | string
     authorId?: IntWithAggregatesFilter<"Announcement"> | number
   }
@@ -37849,6 +37868,7 @@ export namespace Prisma {
     body: string
     type?: string
     audience?: string
+    pinnedAt?: Date | string | null
     createdAt?: Date | string
     author: UserCreateNestedOneWithoutAnnouncementsInput
   }
@@ -37859,6 +37879,7 @@ export namespace Prisma {
     body: string
     type?: string
     audience?: string
+    pinnedAt?: Date | string | null
     createdAt?: Date | string
     authorId: number
   }
@@ -37868,6 +37889,7 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     audience?: StringFieldUpdateOperationsInput | string
+    pinnedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     author?: UserUpdateOneRequiredWithoutAnnouncementsNestedInput
   }
@@ -37878,6 +37900,7 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     audience?: StringFieldUpdateOperationsInput | string
+    pinnedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     authorId?: IntFieldUpdateOperationsInput | number
   }
@@ -37888,6 +37911,7 @@ export namespace Prisma {
     body: string
     type?: string
     audience?: string
+    pinnedAt?: Date | string | null
     createdAt?: Date | string
     authorId: number
   }
@@ -37897,6 +37921,7 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     audience?: StringFieldUpdateOperationsInput | string
+    pinnedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -37906,6 +37931,7 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     audience?: StringFieldUpdateOperationsInput | string
+    pinnedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     authorId?: IntFieldUpdateOperationsInput | number
   }
@@ -39916,6 +39942,7 @@ export namespace Prisma {
     body?: SortOrder
     type?: SortOrder
     audience?: SortOrder
+    pinnedAt?: SortOrder
     createdAt?: SortOrder
     authorId?: SortOrder
   }
@@ -39931,6 +39958,7 @@ export namespace Prisma {
     body?: SortOrder
     type?: SortOrder
     audience?: SortOrder
+    pinnedAt?: SortOrder
     createdAt?: SortOrder
     authorId?: SortOrder
   }
@@ -39941,6 +39969,7 @@ export namespace Prisma {
     body?: SortOrder
     type?: SortOrder
     audience?: SortOrder
+    pinnedAt?: SortOrder
     createdAt?: SortOrder
     authorId?: SortOrder
   }
@@ -42599,6 +42628,7 @@ export namespace Prisma {
     body: string
     type?: string
     audience?: string
+    pinnedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -42608,6 +42638,7 @@ export namespace Prisma {
     body: string
     type?: string
     audience?: string
+    pinnedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -43090,6 +43121,7 @@ export namespace Prisma {
     body?: StringFilter<"Announcement"> | string
     type?: StringFilter<"Announcement"> | string
     audience?: StringFilter<"Announcement"> | string
+    pinnedAt?: DateTimeNullableFilter<"Announcement"> | Date | string | null
     createdAt?: DateTimeFilter<"Announcement"> | Date | string
     authorId?: IntFilter<"Announcement"> | number
   }
@@ -48059,6 +48091,7 @@ export namespace Prisma {
     body: string
     type?: string
     audience?: string
+    pinnedAt?: Date | string | null
     createdAt?: Date | string
   }
 
@@ -48345,6 +48378,7 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     audience?: StringFieldUpdateOperationsInput | string
+    pinnedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -48354,6 +48388,7 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     audience?: StringFieldUpdateOperationsInput | string
+    pinnedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -48363,6 +48398,7 @@ export namespace Prisma {
     body?: StringFieldUpdateOperationsInput | string
     type?: StringFieldUpdateOperationsInput | string
     audience?: StringFieldUpdateOperationsInput | string
+    pinnedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

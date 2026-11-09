@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Megaphone, Trash2, AlertCircle, Plus, Info, AlertTriangle, Leaf } from 'lucide-react'
+import { Loader2, Megaphone, Trash2, AlertCircle, Plus, Info, AlertTriangle, Leaf, Pin, PinOff } from 'lucide-react'
 import { useDialog } from '@/contexts/DialogContext'
 import { ANNOUNCEMENT_AUDIENCES, type AnnouncementAudience } from '@/validators/announcement'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
@@ -15,8 +15,13 @@ interface Announcement {
   type: string
   audience: AnnouncementAudience
   createdAt: string
+  pinnedAt: string | null
   author: { name: string; role: string }
 }
+
+const ms = (d: string | null) => (d ? new Date(d).getTime() : 0)
+/** Pinned first (newest pin first), then newest first, as the site shows them. */
+const pinnedFirst = (a: Announcement, b: Announcement) => ms(b.pinnedAt) - ms(a.pinnedAt) || ms(b.createdAt) - ms(a.createdAt)
 
 const TYPE_CONFIG = {
   info:     { label: 'Info',     icon: Info,          badge: 'bg-blue-100 text-blue-700',   border: 'border-l-blue-500' },
@@ -47,6 +52,7 @@ export default function AnnouncementsPage() {
   const [posting, setPosting]   = useState(false)
   const [postError, setPostError] = useState('')
   const [deletingId, setDeletingId] = useState<number | null>(null)
+  const [pinningId, setPinningId] = useState<number | null>(null)
   const titleRef = useRef<HTMLInputElement>(null)
 
   // A draft handed over from the AI crop report: fill the form once, then forget it.
@@ -89,7 +95,7 @@ export default function AnnouncementsPage() {
       })
       const data = await res.json()
       if (!res.ok) { setPostError(data.error); return }
-      setItems((prev) => [data, ...prev])
+      setItems((prev) => [data, ...prev].sort(pinnedFirst))
       setTitle('')
       setBody('')
       setType('info')
@@ -118,6 +124,25 @@ export default function AnnouncementsPage() {
       await dialog.alert({ title: "Couldn't delete announcement", message: 'Please try again.' })
     } finally {
       setDeletingId(null)
+    }
+  }
+
+  async function handlePin(a: Announcement) {
+    if (!token) return
+    setPinningId(a.id)
+    try {
+      const res = await fetch(`/api/announcements/${a.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ pinned: !a.pinnedAt }),
+      })
+      const data = await res.json()
+      if (!res.ok) { await dialog.alert({ title: a.pinnedAt ? "Couldn't unpin" : "Couldn't pin", message: data.error }); return }
+      setItems((prev) => prev.map((x) => (x.id === a.id ? data : x)).sort(pinnedFirst))
+    } catch {
+      await dialog.alert({ title: a.pinnedAt ? "Couldn't unpin" : "Couldn't pin", message: 'Please try again.' })
+    } finally {
+      setPinningId(null)
     }
   }
 
@@ -223,6 +248,11 @@ export default function AnnouncementsPage() {
                       <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${cfg.badge}`}>
                         <Icon size={10} /> {cfg.label}
                       </span>
+                      {a.pinnedAt && (
+                        <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-soil text-white">
+                          <Pin size={10} /> Pinned
+                        </span>
+                      )}
                       <h3 className="font-semibold text-soil text-sm">{a.title}</h3>
                     </div>
                     <p className="text-sm text-gray-600 whitespace-pre-wrap">{a.body}</p>
@@ -230,14 +260,26 @@ export default function AnnouncementsPage() {
                       For {(AUDIENCE_CONFIG[a.audience] ?? AUDIENCE_CONFIG.everyone).label.toLowerCase()} · Posted by {a.author.name} · {new Date(a.createdAt).toLocaleDateString('en-PH', { dateStyle: 'medium' })}
                     </p>
                   </div>
+                  <div className="shrink-0 flex items-center gap-1">
+                  <button
+                    onClick={() => handlePin(a)}
+                    disabled={pinningId === a.id}
+                    className={`p-1.5 transition-colors disabled:opacity-40 ${a.pinnedAt ? 'text-soil hover:text-gray-500' : 'text-gray-500 hover:text-soil'}`}
+                    title={a.pinnedAt ? 'Unpin' : 'Pin: show it first to its audience'}
+                    aria-label={a.pinnedAt ? 'Unpin' : 'Pin'}
+                    aria-pressed={!!a.pinnedAt}
+                  >
+                    {pinningId === a.id ? <Loader2 size={14} className="animate-spin" /> : a.pinnedAt ? <PinOff size={14} /> : <Pin size={14} />}
+                  </button>
                   <button
                     onClick={() => handleDelete(a.id)}
                     disabled={deletingId === a.id}
-                    className="shrink-0 p-1.5 text-gray-500 hover:text-red-500 transition-colors disabled:opacity-40"
+                    className="p-1.5 text-gray-500 hover:text-red-500 transition-colors disabled:opacity-40"
                     title="Delete" aria-label="Delete"
                   >
                     {deletingId === a.id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                   </button>
+                  </div>
                 </div>
               </div>
             )

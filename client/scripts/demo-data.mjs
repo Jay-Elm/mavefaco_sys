@@ -217,14 +217,14 @@ export async function backup(db, file) {
 export async function clearDemo(db, env, { yes }) {
   const demo = (await db.query(`SELECT id FROM "User" WHERE email LIKE $1`, [DEMO_EMAIL])).rows.map((r) => r.id);
   if (!yes) {
-    console.log(`Would delete ${demo.length} demo account(s) and everything they made, plus the demo announcements. Run again with --yes.`);
+    console.log(`Would delete ${demo.length} demo account(s) and everything they made and the demo announcements, and put back the banners, FAQs and coop info from before the demo. Run again with --yes.`);
     return null;
   }
   const images = await imagesOf(db, demo);
-  const n = await withTransaction(db, () => deleteUsersData(db, demo));
+  const { n, site } = await withTransaction(db, async () => ({ n: await deleteUsersData(db, demo), site: await restoreSiteContent(db) }));
   const storage = [];
   for (const [b, p] of Object.entries(images)) storage.push(await deleteFromStorage(env, b, p));
-  return { deleted: n, storage };
+  return { deleted: n, site, storage };
 }
 
 // ---------- the demo data ----------
@@ -233,6 +233,7 @@ const FARMERS = [
   { name: "Rogelio Bañares", email: "rogelio.banares", gcash: "09171234501", barangay: "Brgy. Comon, Tabaco City" },
   { name: "Maricel Odiaman", email: "maricel.odiaman", gcash: "09171234502", barangay: "Brgy. Bantayan, Tabaco City" },
   { name: "Danilo Bermas", email: "danilo.bermas", gcash: "09171234503", barangay: "Brgy. San Lorenzo, Tabaco City" },
+  { name: "Teresita Bobis", email: "teresita.bobis", gcash: "09171234504", barangay: "Brgy. Mariroc, Tabaco City" },
 ];
 const CUSTOMERS = [
   { name: "Ana Lim", email: "ana.lim" },
@@ -243,33 +244,115 @@ const CUSTOMERS = [
 ];
 
 /**
- * One listing per crop. `weeks`: kilos (or bundles) sold in each of the last
- * 8 weeks, newest first, chosen to give each Market signal; `plan`: kilos
- * members plan to harvest in the next 8 weeks (0 = no planting).
+ * One listing per crop, in the site's categories. `weeks`: amount sold in
+ * each of the last 8 weeks, newest first, chosen to give each Market
+ * signal (kilo crops under 5 kg in 8 weeks read "not enough sales yet");
+ * `plan`: kilos members plan to harvest in the next 8 weeks; `later`: a
+ * growing planting whose harvest ends that many days from now.
  */
 const LISTINGS = [
-  { crop: "Tomato", farmer: 0, name: "Kamatis (Tomato)", price: 70, unit: "kg", weeks: [8, 8, 7, 8, 7, 7, 8, 7], plan: 20, note: "demand above supply" },
-  { crop: "Pechay", farmer: 1, name: "Pechay Tagalog", price: 60, unit: "kg", weeks: [4, 4, 4, 4, 4, 4, 4, 4], plan: 0, note: "demand above supply, nothing planted" },
-  { crop: "Ampalaya", farmer: 1, name: "Ampalaya (Bitter Gourd)", price: 100, unit: "kg", weeks: [6, 5, 5, 4, 2, 1, 2, 1], plan: 25, note: "rising demand" },
-  { crop: "Eggplant", farmer: 0, name: "Talong (Eggplant)", price: 80, unit: "kg", weeks: [5, 5, 5, 5, 5, 5, 5, 5], plan: 40, note: "balanced" },
-  { crop: "Siling Labuyo", farmer: 2, name: "Siling Labuyo", price: 300, unit: "kg", weeks: [1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5], plan: 12, note: "balanced" },
-  { crop: "Squash", farmer: 2, name: "Kalabasa (Squash)", price: 40, unit: "kg", weeks: [3, 2, 3, 2, 3, 2, 3, 2], plan: 80, note: "possible oversupply" },
-  { crop: "Okra", farmer: 0, name: "Okra", price: 60, unit: "kg", weeks: [1, 0, 1, 0, 0, 1, 0, 0], plan: 30, note: "little recent demand" },
-  { crop: "Kangkong", farmer: 1, name: "Kangkong", price: 25, unit: "bundle", weeks: [10, 9, 10, 8, 9, 10, 9, 8], plan: 0, note: "sold by the bundle" },
-  { crop: "Camote", farmer: 2, name: "Camote (Sweet Potato)", price: 50, unit: "kg", weeks: [2, 2, 3, 2, 2, 3, 2, 2], plan: 0, note: "harvest later than 8 weeks", later: 150 },
+  // Vegetables
+  { crop: "Tomato", category: "Vegetables", farmer: 0, name: "Kamatis (Tomato)", price: 70, unit: "kg", weeks: [8, 8, 7, 8, 7, 7, 8, 7], plan: 20, note: "demand above supply" },
+  { crop: "Pechay", category: "Vegetables", farmer: 1, name: "Pechay Tagalog", price: 60, unit: "kg", weeks: [4, 4, 4, 4, 4, 4, 4, 4], plan: 0, note: "demand above supply, nothing planted" },
+  { crop: "Ampalaya", category: "Vegetables", farmer: 1, name: "Ampalaya (Bitter Gourd)", price: 100, unit: "kg", weeks: [6, 5, 5, 4, 2, 1, 2, 1], plan: 25, note: "rising demand" },
+  { crop: "Eggplant", category: "Vegetables", farmer: 0, name: "Talong (Eggplant)", price: 80, unit: "kg", weeks: [5, 5, 5, 5, 5, 5, 5, 5], plan: 40, note: "balanced" },
+  { crop: "Squash", category: "Vegetables", farmer: 2, name: "Kalabasa (Squash)", price: 40, unit: "kg", weeks: [3, 2, 3, 2, 3, 2, 3, 2], plan: 80, note: "possible oversupply" },
+  { crop: "Okra", category: "Vegetables", farmer: 0, name: "Okra", price: 60, unit: "kg", weeks: [1, 0, 1, 0, 0, 1, 0, 0], plan: 30, note: "little recent demand" },
+  { crop: "Kangkong", category: "Vegetables", farmer: 1, name: "Kangkong", price: 25, unit: "bundle", weeks: [10, 9, 10, 8, 9, 10, 9, 8], plan: 0, note: "sold by the bundle" },
+  { crop: "Upo", category: "Vegetables", farmer: 2, name: "Upo (Bottle Gourd)", price: 45, unit: "piece", weeks: [3, 2, 3, 2, 3, 2, 2, 3], plan: 0, note: "sold by the piece" },
+  { crop: "Sayote", category: "Vegetables", farmer: 3, name: "Sayote (Chayote)", price: 50, unit: "kg", weeks: [1, 0, 1, 1, 0, 1, 0, 0], plan: 0, note: "not enough sales yet" },
+  // Herbs and Spices
+  { crop: "Siling Labuyo", category: "Herbs and Spices", farmer: 2, name: "Siling Labuyo", price: 300, unit: "kg", weeks: [1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5], plan: 12, note: "balanced" },
+  { crop: "Ginger", category: "Herbs and Spices", farmer: 3, name: "Luya (Ginger)", price: 160, unit: "kg", weeks: [0.5, 0.5, 0, 0.5, 0.5, 0, 0.5, 0.5], plan: 0, later: 200, note: "not enough sales yet" },
+  { crop: "Tanglad", category: "Herbs and Spices", farmer: 1, name: "Tanglad (Lemongrass)", price: 20, unit: "bundle", weeks: [3, 2, 3, 2, 2, 3, 2, 3], plan: 0, note: "sold by the bundle" },
+  // Root Crops
+  { crop: "Camote", category: "Root Crops", farmer: 2, name: "Camote (Sweet Potato)", price: 50, unit: "kg", weeks: [2, 2, 3, 2, 2, 3, 2, 2], plan: 0, later: 150, note: "demand above supply, harvest after 8 weeks" },
+  { crop: "Gabi", category: "Root Crops", farmer: 3, name: "Gabi (Taro)", price: 70, unit: "kg", weeks: [1, 0, 1, 0, 1, 0, 1, 0], plan: 0, note: "not enough sales yet" },
+  { crop: "Ube", category: "Root Crops", farmer: 3, name: "Ube (Purple Yam)", price: 120, unit: "kg", weeks: [0.5, 0.5, 1, 0.5, 0.5, 0.5, 0.5, 0.5], plan: 0, later: 240, note: "not enough sales yet" },
+  // Legumes
+  { crop: "Sitaw", category: "Legumes", farmer: 0, name: "Sitaw (String Beans)", price: 30, unit: "bundle", weeks: [6, 5, 6, 5, 6, 5, 6, 5], plan: 0, note: "sold by the bundle" },
+  { crop: "Munggo", category: "Legumes", farmer: 1, name: "Munggo (Mung Beans)", price: 120, unit: "kg", weeks: [0.5, 0.5, 1, 0.5, 0.5, 0.5, 0.5, 0.5], plan: 0, note: "not enough sales yet" },
+  { crop: "Peanut", category: "Legumes", farmer: 2, name: "Mani (Peanuts)", price: 140, unit: "kg", weeks: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5], plan: 0, note: "not enough sales yet" },
+  // Fruits
+  { crop: "Saba", category: "Fruits", farmer: 3, name: "Saging na Saba", price: 60, unit: "dozen", weeks: [3, 3, 2, 3, 3, 2, 3, 3], plan: 0, note: "sold by the dozen" },
+  { crop: "Lakatan", category: "Fruits", farmer: 3, name: "Lakatan Banana", price: 90, unit: "dozen", weeks: [2, 2, 2, 2, 1, 2, 2, 2], plan: 0, note: "sold by the dozen" },
+  { crop: "Papaya", category: "Fruits", farmer: 1, name: "Papaya", price: 50, unit: "piece", weeks: [3, 3, 2, 3, 2, 3, 3, 2], plan: 0, note: "sold by the piece" },
+  { crop: "Calamansi", category: "Fruits", farmer: 2, name: "Calamansi", price: 80, unit: "kg", weeks: [0.5, 1, 0.5, 0.5, 1, 0.5, 0.5, 0.5], plan: 0, note: "not enough sales yet" },
+  { crop: "Pineapple", category: "Fruits", farmer: 3, name: "Pinya (Queen Pineapple)", price: 55, unit: "piece", weeks: [2, 3, 2, 2, 3, 2, 2, 2], plan: 0, note: "sold by the piece" },
+  // Grains
+  { crop: "Palay", category: "Grains", farmer: 0, name: "Bigas (Well-milled Rice)", price: 52, unit: "kg", weeks: [4, 4, 4, 4, 4, 4, 4, 4], plan: 30, note: "balanced", desc: "Rice from members' palay, milled in Tabaco City. Sold per kg." },
+  { crop: "Corn", category: "Grains", farmer: 2, name: "Mais (White Corn Grits)", price: 45, unit: "kg", weeks: [0.5, 1, 0.5, 0.5, 1, 0.5, 0.5, 0.5], plan: 0, note: "not enough sales yet", desc: "Dried white corn from members' farms, milled into grits. Sold per kg." },
+  // Plantation Crops
+  { crop: "Pili", category: "Plantation Crops", farmer: 3, name: "Pili Nuts (Shelled)", price: 180, unit: "pack", weeks: [3, 2, 3, 3, 2, 3, 2, 3], plan: 0, note: "sold by the pack", desc: "Shelled pili nuts from Albay trees, 250 g per pack." },
+  { crop: "Buko", category: "Plantation Crops", farmer: 3, name: "Buko (Young Coconut)", price: 40, unit: "piece", weeks: [5, 4, 5, 4, 5, 4, 5, 4], plan: 0, note: "sold by the piece", desc: "Young coconut, picked to order. Sold per piece." },
+  { crop: "Cacao", category: "Plantation Crops", farmer: 3, name: "Tablea (Pure Cacao)", price: 120, unit: "pack", weeks: [2, 1, 2, 1, 2, 1, 2, 1], plan: 0, note: "sold by the pack", desc: "Pure cacao tablea from members' cacao beans, 10 tablets per pack." },
 ];
 
-const DEMO_ANNOUNCEMENTS = [
-  { title: "Welcome to the MaVeFaCo Marketplace", type: "info", audience: "everyone", body: "Buy fresh vegetables straight from MaVeFaCo member farms in Tabaco City. Orders can be picked up at the farm or delivered within Tabaco City, Malinao, Malilipot, Ligao City and Oas." },
-  { title: "Plant more tomato and pechay", type: "advisory", audience: "farmers", body: "Customers bought more tomato and pechay over the last eight weeks than members plan to harvest in the next eight. See the Market page for the harvest window if you plant today." },
-  { title: "Fruit and shoot borer on eggplant", type: "alert", audience: "farmers", body: "Two farms reported fruit and shoot borer on eggplant this month. Remove and bury damaged shoots and fruits weekly, and report new cases in your crop log." },
+/**
+ * Crop reports from the last few weeks, in the farmers' own words (English,
+ * Filipino and Bikol), for the community advisory and the AI crop report.
+ * Several farms report the same problem, as happens in a real outbreak.
+ */
+const CROP_LOGS = [
+  { crop: "Eggplant", farmer: 0, type: "pest_disease", ago: 4, note: "Fruit and shoot borer: wilted shoot tips and small holes in about 1 in 10 fruits. Cut and buried the damaged shoots and fruits." },
+  { crop: "Eggplant", farmer: 2, type: "pest_disease", ago: 8, note: "May uod sa laog kan bunga nin talong, mga 15 na bunga an nadaot. Pigpupuo ko na an mga apektado asin pigbabaon." },
+  { crop: "Eggplant", farmer: 3, type: "pest_disease", ago: 12, note: "Butas-butas ang bunga ng talong at nalalanta ang dulo ng sanga. Mga 5 puno ang tinamaan." },
+  { crop: "Ampalaya", farmer: 1, type: "pest_disease", ago: 6, note: "Fruit flies stinging the young fruits; some fruits turning yellow and rotting. Started bagging fruits with newspaper." },
+  { crop: "Ampalaya", farmer: 2, type: "pest_disease", ago: 11, note: "Maraming langaw sa bunga ng ampalaya, nabubulok ang ilan bago pa mahinog." },
+  { crop: "Tomato", farmer: 0, type: "weather_impact", ago: 3, note: "Heavy rain overnight; plants leaning and some ripe fruits cracked. Re-staked the rows and picked the cracked fruits." },
+  { crop: "Tomato", farmer: 1, type: "pest_disease", ago: 9, note: "Brown spots with rings on the lower leaves, spreading upward. Removed the affected leaves; looks like early blight." },
+  { crop: "Squash", farmer: 2, type: "weather_impact", ago: 3, note: "Nabahaan an ibabang parte kan uma pagkatapos kan uran; may mga bunga na nagrunot." },
+  { crop: "Okra", farmer: 0, type: "pest_disease", ago: 13, note: "Aphids on young leaves and pods. Sprayed soapy water twice this week." },
+  { crop: "Siling Labuyo", farmer: 2, type: "pest_disease", ago: 7, note: "Kulot an dahon nin sili, may mga sadit na insekto sa irarom kan dahon. Baka thrips o mites." },
+  { crop: "Palay", farmer: 0, type: "pest_disease", ago: 10, note: "Rice black bug seen at the base of the plants at night, about 4 to 5 per hill near the canal." },
+  { crop: "Palay", farmer: 1, type: "weather_impact", ago: 5, note: "Malakas na hangin, natumba ang bahagi ng palay malapit sa ilog." },
+  { crop: "Camote", farmer: 2, type: "damage", ago: 14, note: "Rats dug up several mounds at the edge of the field; about 10 plants lost." },
+  { crop: "Eggplant", farmer: 0, type: "note", ago: 2, note: "Applied vermicompost and mulched with rice straw after weeding." },
 ];
+
+/** `pinned`: shown first to its audience (staff can pin and unpin). */
+const DEMO_ANNOUNCEMENTS = [
+  { title: "Welcome to the MaVeFaCo Marketplace", type: "info", audience: "everyone", pinned: true, body: "Buy fresh produce straight from MaVeFaCo member farms in Tabaco City. Pick up your order at the farm, or have it delivered within Tabaco City, Malinao, Malilipot, Ligao City and Oas." },
+  { title: "Saturday pickup at the cooperative", type: "info", audience: "customers", body: "Orders confirmed by Friday can be picked up on Saturday from 7:00 to 11:00 in the morning. Bring your order number from My Orders." },
+  { title: "Pay your farmer directly with GCash", type: "info", audience: "customers", body: "Choose GCash at checkout and the farmer's GCash name, number and QR code appear in My Orders. Send the exact amount, then enter the 13-digit reference number so the farmer can confirm your payment." },
+  { title: "Pili nuts and tablea now available", type: "info", audience: "customers", body: "Shelled pili nuts and pure cacao tablea from members' trees are now in the shop, under Plantation Crops." },
+  { title: "Fruit and shoot borer on eggplant", type: "alert", audience: "farmers", pinned: true, body: "Three farms reported fruit and shoot borer on eggplant this month. Cut and bury damaged shoots and fruits every week, and report new cases in your crop log." },
+  { title: "Plant more tomato and pechay", type: "advisory", audience: "farmers", body: "Customers bought more tomato and pechay over the last eight weeks than members plan to harvest in the next eight. See the Market page for the harvest window if you plant today." },
+  { title: "Record every planting", type: "info", audience: "farmers", body: "Record each planting with its expected harvest in Crop Monitor. The Market page uses it to show customers what's coming and to warn of oversupply before harvest." },
+];
+
+const DEMO_BANNERS = [
+  { title: "Fresh from the farms of Tabaco", subtitle: "Vegetables, fruits, rice and pili harvested by MaVeFaCo member farmers.", ctaText: "Shop now", ctaLink: "/products", color: "green" },
+  { title: "Pay your farmer directly", subtitle: "GCash straight to the farmer, or cash on pickup. Delivery within Tabaco City, Malinao, Malilipot, Ligao City and Oas.", ctaText: "Start shopping", ctaLink: "/products", color: "orange" },
+  { title: "Are you a farmer in Tabaco?", subtitle: "Sell your harvest online, see what customers are buying, and plan your next planting.", ctaText: "Register", ctaLink: "/register", color: "teal" },
+];
+
+const DEMO_FAQS = [
+  { question: "How do I place an order?", answer: "Create a customer account, add products to your cart and choose pickup or delivery at checkout. Each farmer confirms their part of your order, and you can follow it in My Orders." },
+  { question: "How can I pay?", answer: "Pay by GCash straight to the farmer, or pay cash when you pick up or receive your order. For GCash, send the exact amount and enter the 13-digit reference number in My Orders so the farmer can confirm it." },
+  { question: "Where do you deliver?", answer: "Delivery covers Tabaco City, Malinao, Malilipot, Ligao City and Oas. Pin your location on the map at checkout; orders outside these towns are for pickup only." },
+  { question: "Can I cancel my order?", answer: "Yes, while it is still pending. Open the order in My Orders and press Cancel. If you already paid by GCash, the farmer sends the refund and the reference appears on your order." },
+  { question: "Who sets the prices?", answer: "Each farmer sets the price of their own listings. The Market page shows the Philippine Statistics Authority's farmgate prices for Albay and Bicol as a reference." },
+  { question: "How do I sell on the marketplace?", answer: "Register as a farmer and verify your identity with a government ID, such as your RSBSA ID. Once the cooperative approves your account, you can list your produce; each listing is checked by staff before it goes live." },
+];
+
+const DEMO_SITE_CONTENT = {
+  cooperative_name: "Mayon Vegetable Farmers Agriculture Cooperative (MaVeFaCo)",
+  about_text: "MaVeFaCo is a cooperative of farmers in Tabaco City, Albay, at the foot of Mayon Volcano. This marketplace lets members sell their harvest directly to customers, and helps them decide what to plant using what customers buy and what members plan to harvest.",
+  mission: "To raise the income of member farmers by connecting them directly with buyers, and to help them plant what the market needs.",
+  vision: "A thriving farming community in Tabaco City where every member farmer sells their harvest at a fair price.",
+  contact_email: "mavefaco@gmail.com",
+  contact_address: "Tabaco City, Albay",
+};
+
+/** Where seed keeps the banners, FAQs and site texts it replaced, so clear-demo can put them back. */
+const BACKUP_KEY = "_demo_backup";
 
 const REVIEWS = [
   [5, "Fresh and well packed. Will order again."],
   [5, "Sariwa po, salamat!"],
   [4, "Good quality, ready on time for pickup."],
-  [5, "Matamis ang kamatis, very fresh."],
+  [5, "Very fresh, and the farmer replied quickly."],
   [4, "Nice produce. Sana may delivery sa amin."],
 ];
 
@@ -299,18 +382,61 @@ function split(total, unit, rand) {
   return out;
 }
 
+/** Banners, FAQs and site texts: back up what's there, then put the demo ones in. */
+async function seedSiteContent(db, createdCategories) {
+  const banners = (await db.query(`SELECT * FROM "Banner" ORDER BY id`)).rows;
+  const faqs = (await db.query(`SELECT * FROM "Faq" ORDER BY id`)).rows;
+  const texts = (await db.query(`SELECT * FROM "SiteContent" WHERE key = ANY($1)`, [Object.keys(DEMO_SITE_CONTENT)])).rows;
+  await db.query(`INSERT INTO "SiteContent" (key, value) VALUES ($1, $2)`, [BACKUP_KEY, JSON.stringify({ banners, faqs, texts, createdCategories })]);
+
+  await db.query(`DELETE FROM "Banner"`);
+  await db.query(`DELETE FROM "Faq"`);
+  for (const [i, b] of DEMO_BANNERS.entries())
+    await db.query(`INSERT INTO "Banner" (title, subtitle, "ctaText", "ctaLink", color, active, "displayOrder") VALUES ($1, $2, $3, $4, $5, true, $6)`, [b.title, b.subtitle, b.ctaText, b.ctaLink, b.color, i + 1]);
+  for (const [i, f] of DEMO_FAQS.entries())
+    await db.query(`INSERT INTO "Faq" (question, answer, "displayOrder") VALUES ($1, $2, $3)`, [f.question, f.answer, i + 1]);
+  for (const [key, value] of Object.entries(DEMO_SITE_CONTENT))
+    await db.query(`INSERT INTO "SiteContent" (key, value) VALUES ($1, $2) ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value`, [key, value]);
+}
+
+/** Puts back the banners, FAQs and site texts seed replaced, and removes categories it added. */
+async function restoreSiteContent(db) {
+  const row = (await db.query(`SELECT value FROM "SiteContent" WHERE key = $1`, [BACKUP_KEY])).rows[0];
+  if (!row) return { restored: false };
+  const saved = JSON.parse(row.value);
+  await db.query(`DELETE FROM "Banner"`);
+  await db.query(`DELETE FROM "Faq"`);
+  for (const b of saved.banners)
+    await db.query(`INSERT INTO "Banner" (id, title, subtitle, "ctaText", "ctaLink", color, active, "displayOrder", "createdAt") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, [b.id, b.title, b.subtitle, b.ctaText, b.ctaLink, b.color, b.active, b.displayOrder, b.createdAt]);
+  for (const f of saved.faqs)
+    await db.query(`INSERT INTO "Faq" (id, question, answer, "displayOrder", "createdAt") VALUES ($1, $2, $3, $4, $5)`, [f.id, f.question, f.answer, f.displayOrder, f.createdAt]);
+  await db.query(`DELETE FROM "SiteContent" WHERE key = ANY($1)`, [Object.keys(DEMO_SITE_CONTENT)]);
+  for (const t of saved.texts) await db.query(`INSERT INTO "SiteContent" (key, value) VALUES ($1, $2)`, [t.key, t.value]);
+  if (saved.createdCategories?.length)
+    await db.query(`DELETE FROM "Category" WHERE id = ANY($1) AND NOT EXISTS (SELECT 1 FROM "Product" p WHERE p."categoryId" = "Category".id)`, [saved.createdCategories]);
+  await db.query(`DELETE FROM "SiteContent" WHERE key = $1`, [BACKUP_KEY]);
+  return { restored: true, banners: saved.banners.length, faqs: saved.faqs.length };
+}
+
 export async function seed(db, { yes, today = todayPH() }) {
   const existing = Number((await db.query(`SELECT count(*) FROM "User" WHERE email LIKE $1`, [DEMO_EMAIL])).rows[0].count);
   if (existing > 0) throw new Error(`Demo data is already there (${existing} demo accounts). Run clear-demo first.`);
+  if ((await db.query(`SELECT 1 FROM "SiteContent" WHERE key = $1`, [BACKUP_KEY])).rowCount > 0)
+    throw new Error("A demo site-content backup is already there. Run clear-demo first.");
   const admin = (await db.query(`SELECT id FROM "User" WHERE role = 'admin' AND "deletedAt" IS NULL ORDER BY id LIMIT 1`)).rows[0];
   if (!admin) throw new Error("No admin account found.");
   const crops = new Map((await db.query(`SELECT id, name, "daysToHarvestMin" AS min, "daysToHarvestMax" AS max FROM "CropType"`)).rows.map((c) => [c.name, c]));
-  for (const l of LISTINGS) if (!crops.has(l.crop)) throw new Error(`Crop "${l.crop}" is missing from Crop Types.`);
+  for (const l of [...LISTINGS, ...CROP_LOGS]) if (!crops.has(l.crop)) throw new Error(`Crop "${l.crop}" is missing from Crop Types.`);
+  for (const c of CROP_LOGS) {
+    const crop = crops.get(c.crop);
+    if (crop.min === null || crop.max === null) throw new Error(`Crop "${c.crop}" needs a growing time for its crop reports.`);
+  }
 
   if (!yes) {
-    console.log(`Would add ${FARMERS.length} farmers and ${CUSTOMERS.length} customers (@${DEMO_DOMAIN}), ${LISTINGS.length} listings,`);
-    console.log("about a year of orders, plantings for the next 8 weeks, reviews, crop reports and 3 announcements:");
-    for (const l of LISTINGS) console.log(`  ${l.name.padEnd(26)} ${l.note}`);
+    console.log(`Would add ${FARMERS.length} farmers and ${CUSTOMERS.length} customers (@${DEMO_DOMAIN}), ${LISTINGS.length} listings in 7 categories,`);
+    console.log(`about a year of orders, plantings, reviews, ${CROP_LOGS.length} crop reports, ${DEMO_ANNOUNCEMENTS.length} announcements,`);
+    console.log(`and replace the banners, FAQs and coop info with demo ones (clear-demo puts the current ones back):`);
+    for (const l of LISTINGS) console.log(`  ${l.category.padEnd(17)} ${l.name.padEnd(26)} ${l.note}`);
     console.log("Run again with --yes to do it.");
     return null;
   }
@@ -344,9 +470,17 @@ export async function seed(db, { yes, today = todayPH() }) {
       customerIds.push(r.id);
     }
 
-    // A category for the listings: "Vegetables" if the site has one.
-    let category = (await db.query(`SELECT id FROM "Category" WHERE lower(name) LIKE 'vegetable%' ORDER BY id LIMIT 1`)).rows[0];
-    if (!category) category = await one(`INSERT INTO "Category" (name) VALUES ('Vegetables') RETURNING id`);
+    // Categories by name (any letter case); any the site lacks are added, and clear-demo removes them.
+    const categoryIds = new Map();
+    const createdCategories = [];
+    for (const name of new Set(LISTINGS.map((l) => l.category))) {
+      let c = (await db.query(`SELECT id FROM "Category" WHERE lower(name) = lower($1) ORDER BY id LIMIT 1`, [name])).rows[0];
+      if (!c) {
+        c = await one(`INSERT INTO "Category" (name) VALUES ($1) RETURNING id`, [name]);
+        createdCategories.push(c.id);
+      }
+      categoryIds.set(name, c.id);
+    }
 
     // Listings.
     const products = [];
@@ -355,7 +489,7 @@ export async function seed(db, { yes, today = todayPH() }) {
       const r = await one(
         `INSERT INTO "Product" (name, description, price, stock, unit, approved, "farmerId", "categoryId", "cropTypeId", "createdAt", "updatedAt")
          VALUES ($1, $2, $3, $4, $5, true, $6, $7, $8, $9, now()) RETURNING id`,
-        [l.name, `Freshly harvested ${l.name.toLowerCase()} from ${FARMERS[l.farmer].barangay}. Sold per ${l.unit}.`, l.price, l.unit === "kg" ? 25 : 40, l.unit, farmerIds[l.farmer], category.id, crop.id, createdAt],
+        [l.name, l.desc ?? `Freshly harvested ${l.name.toLowerCase()} from ${FARMERS[l.farmer].barangay}. Sold per ${l.unit}.`, l.price, l.unit === "kg" ? 25 : 40, l.unit, farmerIds[l.farmer], categoryIds.get(l.category), crop.id, createdAt],
       );
       products.push({ ...l, id: r.id, cropId: crop.id, farmerId: farmerIds[l.farmer] });
     }
@@ -396,44 +530,44 @@ export async function seed(db, { yes, today = todayPH() }) {
     }
 
     // Plantings: harvests inside the next 8 weeks add up to each listing's
-    // `plan`; a past season already harvested; Camote ready in ~5 months.
+    // `plan`; a past season already harvested; `later` ones further out.
     let plantings = 0;
-    const plant = async (p, plantedOn, crop, expectedYield, status = "growing") => {
+    const growing = []; // { id, crop, farmer }
+    const plant = async (farmer, crop, plantedOn, expectedYield, productId, status = "growing") => {
       const start = addDays(plantedOn, crop.min);
       const end = addDays(plantedOn, crop.max);
       const r = await one(
         `INSERT INTO "Planting" ("plantedOn", "harvestStart", "harvestEnd", "expectedYield", "areaSqm", status, "harvestedOn", "actualYield", "farmerId", "cropTypeId", "productId", "createdAt", "updatedAt")
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, now()) RETURNING id`,
-        [plantedOn, start, end, expectedYield, Math.round(expectedYield * 4), status, status === "harvested" ? start : null, status === "harvested" ? Math.round(expectedYield * 0.9) : null, p.farmerId, crop.id, p.id, atPH(plantedOn)],
+        [plantedOn, start, end, expectedYield, expectedYield === null ? null : Math.round(expectedYield * 4), status, status === "harvested" ? start : null, status === "harvested" ? Math.round(expectedYield * 0.9) : null, farmerIds[farmer], crop.id, productId, atPH(plantedOn)],
       );
       plantings++;
+      if (status === "growing") growing.push({ id: r.id, crop: crop.name, farmer });
       return r.id;
     };
-    const logged = [];
     for (const p of products) {
       const crop = crops.get(p.crop);
       if (crop.min === null || crop.max === null) continue;
       if (p.plan > 0) {
-        // Harvest starts in 2 weeks; split between two plantings when big.
+        // One planting started harvesting this week (the home page's harvest
+        // board); a second, when the plan is big, starts in 2 weeks.
         const shares = p.plan >= 30 ? [p.plan * 0.6, p.plan * 0.4] : [p.plan];
-        for (const [i, kg] of shares.entries()) {
-          const id = await plant(p, addDays(today, 14 + i * 7 - crop.min), crop, Math.round(kg));
-          if (i === 0) logged.push({ id, crop: p.crop });
-        }
+        for (const [i, kg] of shares.entries()) await plant(p.farmer, crop, addDays(today, (i === 0 ? -3 : 14) - crop.min), Math.round(kg), p.id);
       }
-      if (p.later) await plant(p, addDays(today, p.later - crop.max), crop, 120);
-      await plant(p, addDays(today, -crop.max - 30), crop, 30, "harvested");
+      if (p.later) await plant(p.farmer, crop, addDays(today, p.later - crop.max), 120, p.id);
+      await plant(p.farmer, crop, addDays(today, -crop.max - 30), 30, p.id, "harvested");
     }
 
-    // Crop reports, for the community advisory.
-    const reports = [
-      { crop: "Eggplant", type: "pest", note: "Fruit and shoot borer on some fruits; removed and buried the damaged ones.", ago: 5 },
-      { crop: "Ampalaya", type: "pest", note: "Fruit flies on young fruits. Bagging the fruits now.", ago: 9 },
-      { crop: "Tomato", type: "weather", note: "Strong rain last night, some plants leaning. Re-staked them.", ago: 3 },
-    ];
-    for (const r of reports) {
-      const target = logged.find((l) => l.crop === r.crop);
-      if (target) await db.query(`INSERT INTO "CropLog" (type, note, "observedOn", "plantingId") VALUES ($1, $2, $3, $4)`, [r.type, r.note, addDays(today, -r.ago), target.id]);
+    // Crop reports. A farm reporting on a crop it has no growing planting of
+    // gets one (planted a month ago, no yield estimate, so supply is unchanged).
+    for (const c of CROP_LOGS) {
+      let target = growing.find((g) => g.crop === c.crop && g.farmer === c.farmer);
+      if (!target) {
+        const crop = crops.get(c.crop);
+        const id = await plant(c.farmer, crop, addDays(today, -30), null, null);
+        target = growing.find((g) => g.id === id);
+      }
+      await db.query(`INSERT INTO "CropLog" (type, note, "observedOn", "plantingId", "createdAt") VALUES ($1, $2, $3, $4, $5)`, [c.type, c.note, addDays(today, -c.ago), target.id, atPH(addDays(today, -c.ago), 17)]);
     }
 
     // Reviews on some delivered orders (one per customer and product).
@@ -441,21 +575,25 @@ export async function seed(db, { yes, today = todayPH() }) {
     let reviews = 0;
     for (const d of delivered) {
       const key = `${d.customer}:${d.product}`;
-      if (reviewed.has(key) || reviews >= REVIEWS.length * 3 || rand() < 0.7) continue;
+      if (reviewed.has(key) || reviews >= REVIEWS.length * 4 || rand() < 0.8) continue;
       reviewed.add(key);
       const [rating, comment] = REVIEWS[reviews % REVIEWS.length];
       await db.query(`INSERT INTO "Review" (rating, comment, "customerId", "productId", "createdAt") VALUES ($1, $2, $3, $4, $5)`, [rating, comment, d.customer, d.product, new Date(d.at.getTime() + 2 * 86400000)]);
       reviews++;
     }
 
-    for (const [i, a] of DEMO_ANNOUNCEMENTS.entries())
-      await db.query(`INSERT INTO "Announcement" (title, body, type, audience, "authorId", "createdAt") VALUES ($1, $2, $3, $4, $5, $6)`, [a.title, a.body, a.type, a.audience, admin.id, atPH(addDays(today, -10 + i * 4))]);
+    for (const [i, a] of DEMO_ANNOUNCEMENTS.entries()) {
+      const at = atPH(addDays(today, -20 + i * 3));
+      await db.query(`INSERT INTO "Announcement" (title, body, type, audience, "authorId", "createdAt", "pinnedAt") VALUES ($1, $2, $3, $4, $5, $6, $7)`, [a.title, a.body, a.type, a.audience, admin.id, at, a.pinned ? at : null]);
+    }
+
+    await seedSiteContent(db, createdCategories);
 
     return {
       password,
       farmers: FARMERS.map((f) => `${f.email}@${DEMO_DOMAIN}`),
       customers: CUSTOMERS.map((c) => `${c.email}@${DEMO_DOMAIN}`),
-      counts: { listings: products.length, orders, plantings, reviews, announcements: DEMO_ANNOUNCEMENTS.length },
+      counts: { listings: products.length, orders, plantings, cropLogs: CROP_LOGS.length, reviews, announcements: DEMO_ANNOUNCEMENTS.length, banners: DEMO_BANNERS.length, faqs: DEMO_FAQS.length },
     };
   });
 }
@@ -500,6 +638,7 @@ async function main() {
       const r = await clearDemo(db, env, opts);
       if (r) {
         console.log("Deleted rows:", r.deleted);
+        console.log(r.site.restored ? `Put back ${r.site.banners} banner(s), ${r.site.faqs} FAQ(s) and the coop info from before the demo.` : "No saved banners, FAQs or coop info to put back.");
         for (const s of r.storage) console.log(`  storage ${s.bucket}: ${s.deleted} deleted${s.ok ? "" : ` (NOT finished: ${s.reason})`}`);
       }
     }

@@ -26,6 +26,7 @@ import { GET as cropTypes, POST as addCropType } from "./crop-types/route";
 import { PUT as editCropType } from "./crop-types/[id]/route";
 import { GET as categories, POST as addCategory } from "./categories/route";
 import { GET as announcements, POST as postAnnouncement } from "./announcements/route";
+import { PATCH as pinAnnouncement } from "./announcements/[id]/route";
 import { GET as navBadges } from "./nav-badges/route";
 
 /**
@@ -92,6 +93,10 @@ const calls: Record<string, () => Promise<Call>> = {
   announcements: async () => (as) => announcements(request("/api/announcements", { as })),
   "post an announcement": async () => (as) =>
     postAnnouncement(request("/api/announcements", { method: "POST", as, body: { title: "Parity check", body: "Both staff roles can post.", type: "info", audience: "everyone" } })),
+  "pin an announcement": async () => {
+    const a = await prisma.announcement.create({ data: { title: "Pin me", body: "b", authorId: (await createUser({ role: "manager" })).id } });
+    return (as) => pinAnnouncement(request(`/api/announcements/${a.id}`, { method: "PATCH", as, body: { pinned: true } }), params({ id: String(a.id) }));
+  },
   "sidebar badges": async () => (as) => navBadges(request("/api/nav-badges", { as })),
 };
 

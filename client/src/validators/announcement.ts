@@ -20,3 +20,11 @@ export const announcementCreateSchema = z.object({
 });
 
 export type AnnouncementCreateInput = z.infer<typeof announcementCreateSchema>;
+
+// PATCH /api/announcements/[id]
+export const announcementPinSchema = z.object({
+  pinned: z.boolean({ message: "Say whether to pin or unpin" }),
+});
+
+/** Pinned announcements first (newest pin first), then newest first. */
+export const ANNOUNCEMENT_ORDER = [{ pinnedAt: { sort: "desc", nulls: "last" } }, { createdAt: "desc" }] as const;
