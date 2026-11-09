@@ -13,7 +13,7 @@
     "test:e2e": "next build && playwright test"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.9.1",
+    "@hookform/resolvers": "^7.0.3",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "@supabase/realtime-js": "2.117.3",
