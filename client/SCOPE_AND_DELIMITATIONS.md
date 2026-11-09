@@ -326,7 +326,7 @@ The system includes several security measures:
 
 Measured against the use-case requirements gathered at the start of the project, the system covers 129 use-case items. Eighty-six (86) are fully implemented, twenty-four (24) are partially implemented, and nineteen (19) are outside the scope of the current version.
 
-[The study also covers the evaluation of the system by [respondents, e.g., cooperative officers, member farmers, customers, and IT experts] using [evaluation instrument, e.g., the ISO/IEC 25010 software quality model] in terms of [criteria, e.g., functional suitability, usability, reliability, and security].]
+The study also covers the evaluation of the system's usability by member farmers, the cooperative's officers and staff, and customers, using the System Usability Scale (SUS).
 
 #### Delimitations
 
