@@ -5,12 +5,13 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { useDialog } from '@/contexts/DialogContext'
-import { ArrowLeft, CheckCircle2, Loader2, Plus, Save, Sprout, Trash2, Wheat, XCircle } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Coins, Loader2, Plus, Save, Sprout, Trash2, Wheat, XCircle } from 'lucide-react'
 import { daysBetween, todayPH } from '@/lib/planting'
 import {
-  INPUT, LOG_TYPES, fmtDate, fmtKg, fmtWindow, plantingBadge,
+  INPUT, LOG_TYPES, fmtDate, fmtKg, fmtPerKg, fmtPesos, fmtWindow, plantingBadge,
   type CropLog, type Planting,
 } from '@/components/cropDisplay'
+import { PSA_AREA_LABEL } from '@/lib/income'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 
 type Detail = Planting & { logs: CropLog[] }
@@ -127,6 +128,8 @@ export default function PlantingPage() {
         </div>
       )}
 
+      {p.status !== 'failed' && <IncomeCard planting={p} />}
+
       <DetailsForm planting={p} listings={listings} send={send} onSaved={applyUpdate} />
       <LogSection planting={p} send={send} onChange={(logs) => setPlanting((prev) => (prev ? { ...prev, logs } : prev))} />
 
@@ -147,6 +150,60 @@ function Fact({ label, value }: { label: string; value: string }) {
       <p className="text-xs text-gray-500">{label}</p>
       <p className="text-sm font-semibold text-soil">{value}</p>
     </div>
+  )
+}
+
+const fmtMonth = (ym: string) =>
+  new Date(`${ym}-01T00:00:00Z`).toLocaleDateString('en-PH', { month: 'short', year: 'numeric', timeZone: 'UTC' })
+
+/** What this planting could earn (or the harvest is worth), at the farmer's price and at PSA's. */
+function IncomeCard({ planting: p }: { planting: Planting }) {
+  const e = p.income
+  const harvested = p.status === 'harvested'
+  return (
+    <section aria-labelledby="income-h" className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 mb-6">
+      <h2 id="income-h" className="flex items-center gap-2 text-base font-semibold text-soil mb-3">
+        <Coins size={17} className="text-paddy" aria-hidden />
+        {harvested ? 'Value of the harvest' : 'Expected income'} <span className="text-sm font-normal text-gray-500">(estimate)</span>
+      </h2>
+      {!e ? (
+        <p className="text-sm text-gray-600">
+          {harvested
+            ? 'Record the actual yield to see what this harvest is worth.'
+            : 'Add an expected yield in kilos under Details below to see what this planting could earn.'}
+        </p>
+      ) : !e.own && !e.psa ? (
+        <p className="text-sm text-gray-600">
+          No price for {p.cropType.name} yet. Link a listing sold by the kilo, or wait for PSA farmgate prices for this crop.
+        </p>
+      ) : (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {e.own && (
+              <div>
+                <p className="text-2xl font-bold text-soil tabular">{fmtPesos(e.own.amount)}</p>
+                <p className="text-xs text-gray-600 mt-0.5">
+                  at your price of {fmtPerKg(e.own.pricePerKg)} ({e.own.listing.name})
+                </p>
+              </div>
+            )}
+            {e.psa && (
+              <div>
+                <p className={`font-bold text-soil tabular ${e.own ? 'text-lg' : 'text-2xl'}`}>{fmtPesos(e.psa.amount)}</p>
+                <p className="text-xs text-gray-600 mt-0.5">
+                  at the PSA farmgate price of {fmtPerKg(e.psa.pricePerKg)} ({PSA_AREA_LABEL[e.psa.area]}, {fmtMonth(e.psa.month)})
+                </p>
+              </div>
+            )}
+          </div>
+          <p className="text-xs text-gray-500 mt-3">
+            Based on {fmtKg(e.kg)} {e.basis === 'actual' ? 'harvested' : 'expected'}, all sold at that price.
+            {e.psa && ' Farmgate is what traders pay at the farm, so it is usually lower than a retail price.'}
+            {!e.own && ' Link a listing sold by the kilo to see the figure at your own price.'}
+          </p>
+        </>
+      )}
+    </section>
   )
 }
 

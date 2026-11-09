@@ -3,6 +3,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { addDays, daysBetween, fromDateString, plantingInclude, serializePlanting, toDateString } from "@/lib/planting";
 import { NextRequest, NextResponse } from "next/server";
 import { plantingUpdateSchema } from "@/validators/crop";
+import { withIncome } from "@/lib/incomeQuery";
 
 type Context = { params: Promise<{ id: string }> };
 
@@ -27,8 +28,9 @@ export async function GET(req: NextRequest, context: Context) {
       where: { id: own.planting.id },
       include: { ...plantingInclude, logs: { orderBy: [{ observedOn: "desc" }, { id: "desc" }] } },
     });
+    const [priced] = await withIncome([planting]);
     return NextResponse.json({
-      ...serializePlanting(planting),
+      ...serializePlanting(priced),
       logs: planting.logs.map((l) => ({ ...l, observedOn: toDateString(l.observedOn) })),
     });
   } catch {
@@ -91,7 +93,7 @@ export async function PATCH(req: NextRequest, context: Context) {
       return NextResponse.json({ error: "This planting changed, please refresh" }, { status: 409 });
 
     const updated = await prisma.planting.findUniqueOrThrow({ where: { id: planting.id }, include: plantingInclude });
-    return NextResponse.json(serializePlanting(updated));
+    return NextResponse.json(serializePlanting((await withIncome([updated]))[0]));
   } catch {
     return NextResponse.json({ error: "Failed to update planting" }, { status: 500 });
   }

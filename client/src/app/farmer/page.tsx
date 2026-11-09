@@ -3,13 +3,16 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { Loader2, Package, ShoppingCart, TrendingUp, Plus, AlertTriangle, Bug } from 'lucide-react'
+import { Loader2, Package, ShoppingCart, TrendingUp, Plus, AlertTriangle, Bug, Coins } from 'lucide-react'
 import WeatherWidget from '@/components/WeatherWidget'
+import WeatherForecast from '@/components/weather/WeatherForecast'
 import AdvisoryList from '@/components/AdvisoryList'
 import AnnouncementBoard, { type AnnouncementItem } from '@/components/AnnouncementList'
 import type { AdvisoryGroup } from '@/lib/advisory'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 import MarketAlertsCard from '@/components/market/MarketAlertsCard'
+import { expectedIncomeTotal } from '@/lib/income'
+import { fmtPesos } from '@/components/cropDisplay'
 
 const LOW_STOCK_THRESHOLD = 5
 /** Newest announcements shown as cards; the rest are under "View all". */
@@ -21,6 +24,7 @@ interface Stats {
   totalRevenue: number
   outOfStock: number
   lowStock: number
+  expectedIncome: ReturnType<typeof expectedIncomeTotal>
 }
 
 export default function FarmerOverviewPage() {
@@ -47,8 +51,9 @@ export default function FarmerOverviewPage() {
     Promise.all([
       fetch(`/api/products?farmerId=${user.id}`, { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json()),
       fetch('/api/farmer/orders', { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json()),
+      fetch('/api/farmer/plantings', { headers: { Authorization: `Bearer ${token}` } }).then((r) => r.json()).catch(() => []),
     ])
-      .then(([products, orders]) => {
+      .then(([products, orders, plantings]) => {
         const productList = Array.isArray(products) ? products : []
         const productCount = productList.length
         const orderList = Array.isArray(orders) ? orders : []
@@ -60,7 +65,8 @@ export default function FarmerOverviewPage() {
             sum + (o.items ?? []).reduce((s, item) => s + item.price * item.quantity, 0), 0)
         const outOfStock = productList.filter((p: { stock: number }) => p.stock === 0).length
         const lowStock = productList.filter((p: { stock: number }) => p.stock > 0 && p.stock <= LOW_STOCK_THRESHOLD).length
-        setStats({ productCount, orderCount, totalRevenue, outOfStock, lowStock })
+        const expectedIncome = expectedIncomeTotal(Array.isArray(plantings) ? plantings : [])
+        setStats({ productCount, orderCount, totalRevenue, outOfStock, lowStock, expectedIncome })
       })
       .finally(() => setLoading(false))
   }, [token, user, live])
@@ -83,7 +89,7 @@ export default function FarmerOverviewPage() {
         <WeatherWidget />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-5">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-gray-500">My Products</span>
@@ -109,7 +115,26 @@ export default function FarmerOverviewPage() {
             ₱{(stats?.totalRevenue ?? 0).toFixed(2)}
           </p>
         </div>
+
+        <Link href="/farmer/crops" className="bg-white rounded-lg border border-gray-200 shadow-sm p-5 hover:border-paddy/40 transition-colors">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm text-gray-500 min-w-0 truncate">Expected Income</span>
+            <Coins size={18} className="text-paddy shrink-0 ml-2" />
+          </div>
+          <p className="text-2xl sm:text-3xl font-bold text-soil break-all">
+            {stats?.expectedIncome.counted ? fmtPesos(stats.expectedIncome.total) : '—'}
+          </p>
+          <p className="text-xs text-gray-500 mt-1">
+            {stats?.expectedIncome.counted
+              ? 'Estimate from growing crops'
+              : (stats?.expectedIncome.missing ?? 0) > 0
+                ? 'Add expected yields to your plantings'
+                : 'Record a planting to see an estimate'}
+          </p>
+        </Link>
       </div>
+
+      <WeatherForecast className="mb-8" />
 
       <MarketAlertsCard token={token} />
 

@@ -3,9 +3,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { AlertTriangle, Bug, ChevronRight, Loader2, Plus, Sprout, Wheat } from 'lucide-react'
+import { AlertTriangle, Bug, ChevronRight, Coins, Loader2, Plus, Sprout, Wheat } from 'lucide-react'
 import { addDays, todayPH } from '@/lib/planting'
-import { LOG_TYPES, STATUS_STYLES, fmtDate, fmtKg, fmtWindow, plantingBadge, type Planting } from '@/components/cropDisplay'
+import { LOG_TYPES, STATUS_STYLES, fmtDate, fmtKg, fmtPesos, fmtWindow, plantingBadge, type Planting } from '@/components/cropDisplay'
+import { bestAmount, expectedIncomeTotal } from '@/lib/income'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
 import ListToolbar from '@/components/ListToolbar'
 
@@ -84,6 +85,7 @@ export default function CropsPage() {
     }
   }, [plantings, search, show, crop, sort])
   const shownCount = growing.length + history.length
+  const income = useMemo(() => expectedIncomeTotal(plantings), [plantings])
   const filtered = search.trim() !== '' || show !== 'all' || crop !== ''
 
   if (loading) return (
@@ -177,6 +179,8 @@ export default function CropsPage() {
             </section>
           )}
 
+          {!filtered && income.counted + income.missing > 0 && <IncomeSummary {...income} />}
+
           {(!filtered || growing.length > 0) && <section className="mb-8">
             <h2 className="text-sm font-semibold text-gray-700 mb-3">Growing <span className="text-gray-500 font-normal">({growing.length})</span></h2>
             {growing.length === 0 ? (
@@ -193,7 +197,7 @@ export default function CropsPage() {
               <h2 className="text-sm font-semibold text-gray-700 mb-3">Past seasons</h2>
               <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[600px] text-sm">
+                  <table className="w-full min-w-[680px] text-sm">
                     <thead className="bg-gray-50 border-b border-gray-200">
                       <tr>
                         <th className="px-4 py-3 text-left font-medium text-gray-500">Crop</th>
@@ -201,6 +205,7 @@ export default function CropsPage() {
                         <th className="px-4 py-3 text-left font-medium text-gray-500">Outcome</th>
                         <th className="px-4 py-3 text-right font-medium text-gray-500">Expected</th>
                         <th className="px-4 py-3 text-right font-medium text-gray-500">Harvested</th>
+                        <th className="px-4 py-3 text-right font-medium text-gray-500">Value (estimate)</th>
                         <th className="px-4 py-3" />
                       </tr>
                     </thead>
@@ -217,6 +222,7 @@ export default function CropsPage() {
                           </td>
                           <td className="px-4 py-3 text-right text-gray-600 tabular-nums">{fmtKg(p.expectedYield)}</td>
                           <td className="px-4 py-3 text-right text-soil tabular-nums">{fmtKg(p.actualYield)}</td>
+                          <td className="px-4 py-3 text-right text-gray-600 tabular-nums">{fmtPesos(bestAmount(p.income))}</td>
                           <td className="px-4 py-3 text-right">
                             <Link href={`/farmer/crops/${p.id}`} className="text-xs font-medium text-paddy hover:text-paddy-deep">View</Link>
                           </td>
@@ -263,8 +269,29 @@ function GrowingCard({ planting: p }: { planting: Row }) {
         </div>
       </div>
       {p.expectedYield !== null && (
-        <p className="text-xs text-gray-500 mt-2">Expected yield: <span className="text-gray-700">{fmtKg(p.expectedYield)}</span></p>
+        <p className="text-xs text-gray-500 mt-2">
+          Expected yield: <span className="text-gray-700">{fmtKg(p.expectedYield)}</span>
+          {bestAmount(p.income) !== null && <> · about <span className="text-gray-700">{fmtPesos(bestAmount(p.income))}</span></>}
+        </p>
       )}
     </Link>
+  )
+}
+
+/** What the plantings still growing could earn, as one figure. */
+function IncomeSummary({ total, counted, missing }: { total: number; counted: number; missing: number }) {
+  return (
+    <section aria-labelledby="income-h" className="mb-8 bg-white rounded-lg border border-gray-200 shadow-sm p-5 flex flex-wrap items-start gap-x-6 gap-y-2">
+      <Coins size={20} className="text-paddy shrink-0 mt-1" aria-hidden />
+      <div className="min-w-0 flex-1">
+        <h2 id="income-h" className="text-sm text-gray-500">Expected income from growing crops (estimate)</h2>
+        <p className="text-2xl font-bold text-soil tabular">{counted > 0 ? fmtPesos(total) : '—'}</p>
+        <p className="text-xs text-gray-500 mt-1 max-w-2xl">
+          Each planting&apos;s expected yield × your own price per kilo, or the PSA farmgate price for the crop when you
+          have no listing sold by the kilo. It assumes the whole harvest sells at that price.
+          {missing > 0 && <> {missing} growing {missing === 1 ? 'planting isn’t' : 'plantings aren’t'} counted: add an expected yield, or a listing sold by the kilo.</>}
+        </p>
+      </div>
+    </section>
   )
 }

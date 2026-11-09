@@ -117,7 +117,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 - `announcements/` — post/delete announcements (info/alert/advisory types) for everyone, farmers only or customers only; pin/unpin (pinned shown first, newest pin first)
 - `crop-types/` — add/edit/delete crop types and their approximate growing times (delete refused while plantings use one); audit logged
 - `supply/` — Upcoming Supply: expected kg per crop per week for 8 weeks (heat grid, hover details, expandable planting lists), 3+ farms in a week flagged as possible oversupply, overdue plantings listed separately; CSV export
-- `advisory/` — Crop Advisory: the same grouped community advisory farmers see (last 30 days, by crop and kind of problem, farms counted not named), with a link to post an announcement; **AI crop report** panel on top (`AiReportPanel`): Google Gemini writes an overview, per-problem reading, suggested actions, a draft advisory ("Edit and post it" hands it to Announcements through sessionStorage) and English versions of non-English notes, shown under each note
+- `advisory/` — Crop Advisory: the 7-day forecast for Tabaco City, then the same grouped community advisory farmers see (last 30 days, by crop and kind of problem, farms counted not named), with a link to post an announcement; **AI crop report** panel on top (`AiReportPanel`): Google Gemini writes an overview, per-problem reading, suggested actions, a draft advisory ("Edit and post it" hands it to Announcements through sessionStorage) and English versions of non-English notes, shown under each note
 - `reports/` — Sales, Crop Demand, Users, Farmers tabs; CSS bar charts; per-section CSV + full report export; print button
 - `site/` — **Admin only**: 3-tab CMS:
   - **Banners** — add/toggle/delete homepage banners (5 color themes, CTA link); move up/down to order them
@@ -126,12 +126,12 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 ### Farmer Dashboard (`/farmer/`) — farmer role only
 - `layout.tsx` — green-accent sidebar (184px), auth guard, isolated scroll; red count badges on Messages (unread messages + notices), Orders (new), My Products (suspended), Crop Monitor (plantings whose harvest window has opened), Profile (no ID submitted)
-- `page.tsx` — product count, orders, revenue; **stock alerts** (out of stock + low stock); **weather widget** (Tabaco City, Albay via Open-Meteo); **community advisory** (top 5 groups of members' pest/weather/damage reports by crop and kind of problem, last 30 days; "See all" → `advisory/`)
+- `page.tsx` — product count, orders, revenue; **stock alerts** (out of stock + low stock); **weather widget** (Tabaco City, Albay via Open-Meteo) and a **7-day forecast** (`src/components/weather/WeatherForecast.tsx`); **Expected Income** tile (growing plantings, `expectedIncomeTotal()`); **community advisory** (top 5 groups of members' pest/weather/damage reports by crop and kind of problem, last 30 days; "See all" → `advisory/`)
 - `products/` — search, status/stock/category filters and sort; stock changed in place from the table (`StockQuickEdit`; unit rules apply, no re-review); table with stock badges (Out of Stock / Low / normal) and status (Approved / Pending / Suspended with its deletion date and reasons); alert banners for stock problems and suspended listings; Edit ("Fix & resubmit" when suspended)/Delete; CSV export
 - `products/new/` — create product form; requires `verified: true`
 - `products/[id]/edit/` — pre-filled edit form; content edits reset `approved: false`; on a suspended listing shows the reasons and deadline, saving a content change resubmits it; Delete button
 - `orders/` — orders with farmer's products; a Message button beside each customer opens the conversation; search (customer, product, #ID), status filter, sort by date or total; an opened order and its items share one tinted block; Accept/Reject/Ship/Deliver state machine (Ship waits for a confirmed GCash payment); GCash chips and Payment received / Not received / Refund sent; the delivery town, address and a map link; CSV export
-- `crops/` — Crop Monitor (search, filters by state and crop, sort): "Needs attention" (harvest window open, overdue, pest/weather/damage report in 14 days), growing plantings with a Growing / Ready to harvest / Overdue badge and progress to harvest, past seasons with expected vs actual yield
+- `crops/` — Crop Monitor (search, filters by state and crop, sort): "Needs attention" (harvest window open, overdue, pest/weather/damage report in 14 days), growing plantings with a Growing / Ready to harvest / Overdue badge and progress to harvest, past seasons with expected vs actual yield; expected income from growing crops (estimate), per planting and in a summary card; the planting page has an Expected income card (own price and PSA farmgate price)
 - `crops/new/` — record a planting (crop type, date, optional area, expected yield, linked listing); previews the harvest window
 - `crops/[id]/` — planting detail: season bar (growing, then the harvest window, with today marked), record harvest (optionally adding to the linked listing's stock) or mark failed, edit details/harvest window, crop log (type, date seen, note), delete
 - `messages/` — conversation inbox (`src/components/ConversationList.tsx`, shared with customers) with unread counts, a search over names and message text, and a delete button per conversation, plus a "MaVeFaCo notices" entry pinned first (can't be deleted); `/farmer/messages/notices` — one-way system notices (no reply); an open suspension notice links to the listing's edit page, and once resolved (`Notice.resolvedAt`/`resolution`: resubmitted, or removed by a delete or the 7-day cleanup) it shows that outcome instead; `/farmer/messages/[userId]` — message thread
@@ -232,7 +232,7 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 | GET | `/api/market` | admin, manager, farmer | market signals per crop (`src/lib/market.ts`, `src/lib/marketQuery.ts`): last-8-week demand vs next-8-week planned supply, signal, rising demand, selling price by month, alerts, suggested crops; totals only |
 | PUT/DELETE | `/api/users/me/gcash` | farmer, customer | GCash name/number (+ QR for farmers) |
 | PUT/DELETE | `/api/users/me/location` | customer | delivery pin + address; server works out the delivery-area town (`src/lib/deliveryArea.ts`) |
-| GET | `/api/farmer/plantings` | farmer | own plantings with computed attention/progress and the latest pest/weather/damage report |
+| GET | `/api/farmer/plantings` | farmer | own plantings with computed attention/progress, the latest pest/weather/damage report and an income estimate (`income`; every planting response carries it) |
 | POST | `/api/farmer/plantings` | farmer | record a planting; harvest window from the crop type |
 | GET | `/api/farmer/plantings/[id]` | farmer | one planting + its log |
 | PATCH | `/api/farmer/plantings/[id]` | farmer | details, harvest window (a new planting date shifts it), linked listing, status failed/growing; conditional on `updatedAt` |
@@ -271,6 +271,11 @@ Single Next.js app (`/proj/client/`) — API routes and frontend pages colocated
 
 ### `getActiveAuthUser` (async, `/lib/getActiveAuthUser.ts`)
 Verifies the JWT (from the `httpOnly` cookie, via `getAuthUser`) then checks the DB for `suspended: true` and a stale `tokenVersion`. Returns `null` if suspended, revoked, or not found. Used in essentially every authenticated API route.
+
+### Expected income and the forecast
+Every planting response carries `income` (`withIncome()` in `src/lib/incomeQuery.ts`, pure logic in `src/lib/income.ts`): the expected yield (or the actual yield once harvested) in kg times (a) the farmer's own price per kilo — the linked listing if it is for the same crop or has none, else their most recently updated live kilo listing of that crop — and (b) the latest PSA farmgate price for Albay, else Bicol. Listings sold by other units are ignored. Failed plantings and plantings without a yield get `null`. Totals use the own price when known, else PSA's, and count growing plantings only. It is an estimate and says so on screen.
+
+Weather: `src/lib/weather.ts` builds the Open-Meteo request (current conditions + 7 daily days, Asia/Manila), parses it and names rainy days (chance ≥ 60% or ≥ 20 mm; heavy ≥ 20 mm). `useWeather()` shares one browser request between the widget and the forecast for 10 minutes.
 
 ### Revenue counting
 Only `status: 'delivered'` orders count as revenue — in stats API, farmer-stats API, and farmer overview page.
@@ -374,7 +379,7 @@ Vitest (`npm test`, or `npm run test:watch`) covers `src/validators/` (auth/orde
 | Product images orphaned by edits aren't cleaned up | Low | Replaced product photos stay in the public bucket |
 | Messaging is polling, not WebSocket | Low | 8s interval; acceptable for the cooperative's use |
 | A resubmitted listing keeps no record of its previous details | Low | The audit log records the suspension and resubmission (who, when) and the notice keeps the reasons, but not the before/after values |
-| End-to-end tests cover a few flows | Low | `npm run test:e2e` (Playwright, 10 tests) covers browsing, the GCash order from payment to shipping with the customer's update messages and badges, the delivery area, the Add Product crop guess, and staff Crop Types, Products (icons, crop linking) and the Market pages; photos in Messages need Supabase storage and are covered by integration tests only |
+| End-to-end tests cover a few flows | Low | `npm run test:e2e` (Playwright, 15 tests) covers browsing, the GCash order from payment to shipping with the customer's update messages and badges, the delivery area, the Add Product crop guess, and staff Crop Types, Products (icons, crop linking) and the Market pages; photos in Messages need Supabase storage and are covered by integration tests only |
 
 Every finding from `SECURITY_REVIEW.md` (through 2026-09-08), the 10-item gap list, and the 2026-10-03 whole-project review (`PROJECT_REVIEW.md`) is fixed. L4 (per-instance rate limiting) was fixed on 2026-11-07 by counting in Postgres (`RateLimit` table, `src/lib/rateLimit.ts`) instead of adding Upstash.
 

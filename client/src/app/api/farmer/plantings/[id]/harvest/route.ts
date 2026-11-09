@@ -4,6 +4,7 @@ import { fromDateString, plantingInclude, serializePlanting, toDateString } from
 import { NextRequest, NextResponse } from "next/server";
 import { harvestSchema } from "@/validators/crop";
 import { unitStep } from "@/lib/units";
+import { withIncome } from "@/lib/incomeQuery";
 
 /** Thrown inside the transaction to roll it back. */
 class HarvestError extends Error {
@@ -61,7 +62,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     });
 
     const updated = await prisma.planting.findUniqueOrThrow({ where: { id }, include: plantingInclude });
-    return NextResponse.json(serializePlanting(updated));
+    return NextResponse.json(serializePlanting((await withIncome([updated]))[0]));
   } catch (error) {
     if (error instanceof HarvestError) return NextResponse.json({ error: error.message }, { status: error.status });
     return NextResponse.json({ error: "Failed to record harvest" }, { status: 500 });

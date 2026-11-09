@@ -59,7 +59,7 @@ export interface PlannedSupply {
   farms: number;
 }
 
-const isKg = (unit: string) => /^(kg|kgs|kilo|kilos|kilogram|kilograms)$/i.test(unit.trim());
+export const isKg = (unit: string) => /^(kg|kgs|kilo|kilos|kilogram|kilograms)$/i.test(unit.trim());
 const round1 = (n: number) => Math.round(n * 10) / 10;
 const round2 = (n: number) => Math.round(n * 100) / 100;
 

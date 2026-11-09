@@ -1,6 +1,7 @@
 // Shared labels and styles for the Crop Monitor pages.
 import { Bug, CloudRain, FileText, Flame } from 'lucide-react'
 import type { ElementType } from 'react'
+import type { IncomeEstimate } from '@/lib/income'
 
 export interface CropType {
   id: number
@@ -29,6 +30,7 @@ export interface Planting {
   attention: 'harvest-now' | 'overdue' | null
   progress: number | null
   day: number
+  income: IncomeEstimate | null
 }
 
 export interface CropLog {
@@ -74,6 +76,14 @@ export function fmtWindow(start: string, end: string) {
 
 export const fmtKg = (n: number | null) =>
   n === null ? '—' : `${n.toLocaleString('en-PH', { maximumFractionDigits: 1 })} kg`
+
+/** Whole pesos, for estimates ("₱12,500"). */
+export const fmtPesos = (n: number | null) =>
+  n === null ? '—' : `₱${Math.round(n).toLocaleString('en-PH')}`
+
+/** A price per kilo ("₱45.50/kg"). */
+export const fmtPerKg = (n: number) =>
+  `₱${n.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/kg`
 
 export const INPUT =
   'w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-paddy'

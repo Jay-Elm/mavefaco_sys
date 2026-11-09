@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { Bug, Loader2, Megaphone } from 'lucide-react'
 import AdvisoryList from '@/components/AdvisoryList'
+import WeatherForecast from '@/components/weather/WeatherForecast'
 import AiReportPanel, { type SavedAiReport } from '@/components/AiReportPanel'
 import type { AdvisoryGroup } from '@/lib/advisory'
 import { useLiveVersion } from '@/contexts/LiveUpdatesContext'
@@ -74,6 +75,8 @@ export default function StaffAdvisoryPage() {
       </p>
 
       {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+
+      <WeatherForecast className="mb-6" />
 
       <AiReportPanel enabled={ai.enabled} report={ai.report} onGenerate={generate} />
 

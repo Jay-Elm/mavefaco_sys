@@ -3,6 +3,7 @@ import { getActiveAuthUser } from "@/lib/getActiveAuthUser";
 import { fromDateString, harvestWindow, plantingInclude, serializePlanting, todayPH } from "@/lib/planting";
 import { NextRequest, NextResponse } from "next/server";
 import { plantingCreateSchema } from "@/validators/crop";
+import { withIncome } from "@/lib/incomeQuery";
 
 /** GET /api/farmer/plantings — the farmer's plantings, newest first. */
 export async function GET(req: NextRequest) {
@@ -28,7 +29,7 @@ export async function GET(req: NextRequest) {
     });
     const today = todayPH();
     return NextResponse.json(
-      plantings.map(({ logs, ...p }) => ({
+      (await withIncome(plantings)).map(({ logs, ...p }) => ({
         ...serializePlanting(p, today),
         latestProblem: logs[0] ? { ...logs[0], observedOn: logs[0].observedOn.toISOString().slice(0, 10) } : null,
       })),
@@ -79,7 +80,7 @@ export async function POST(req: NextRequest) {
     // A listing with no crop yet is counted under this planting's crop.
     if (productId != null)
       await prisma.product.updateMany({ where: { id: productId, cropTypeId: null }, data: { cropTypeId } });
-    return NextResponse.json(serializePlanting(planting), { status: 201 });
+    return NextResponse.json(serializePlanting((await withIncome([planting]))[0]), { status: 201 });
   } catch {
     return NextResponse.json({ error: "Failed to record planting" }, { status: 500 });
   }
