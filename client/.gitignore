@@ -45,3 +45,6 @@ next-env.d.ts
 # Playwright
 /test-results/
 /playwright-report/
+
+# Database copies written by scripts/demo-data.mjs reset (hold account data).
+backups/
